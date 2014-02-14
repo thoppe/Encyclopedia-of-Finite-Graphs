@@ -1,4 +1,4 @@
-Encyclopedia-of-Finite-Graphs
+Encyclopedia of Finite Graphs
 =============================
 
-Set of tools and data to compute all known invariants for small finite graphs [incomplete]
+Set of tools and data to compute all known invariants for small finite graphs [incomplete].
