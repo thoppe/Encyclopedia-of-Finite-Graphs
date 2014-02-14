@@ -3,8 +3,8 @@ commit:
 
 push:
 	-@make all
-	git status
 	git add -A
+	git status
 	-git commit
 	git push
 pull:
