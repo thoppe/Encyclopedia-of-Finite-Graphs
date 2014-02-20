@@ -1,4 +1,4 @@
-test_N = 6
+test_N = 5
 
 all:
 	python src/generate_db.py $(test_N)
