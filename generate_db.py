@@ -1,9 +1,10 @@
-import sqlite3
+import sqlite3, logging
 
-N = 4
+N = 8
 #conn = sqlite3.connect(':memory:')
-database_name = "graph{}".format(N)
-conn = sqlite3.connect('database/{}.db'.format(database_name))
+table_name = "graph{}".format(N)
+f_database = 'database/{}.db'.format(table_name)
+conn = sqlite3.connect(f_database)
 
 def load_template(f_template, **kwargs):
     template = []
@@ -17,11 +18,11 @@ def load_template(f_template, **kwargs):
 def create_table_cmd(N, template):
 
     args = {}
-    args["vertices"]  = N
+    args["table_name"] = table_name
     args["max_edges"] = N**2
     args["cols"] = template.format(**args)
 
-    cmd = "CREATE TABLE IF NOT EXISTS graph{vertices} ({cols})"
+    cmd = "CREATE TABLE IF NOT EXISTS {table_name} ({cols})"
     cmd = cmd.format(**args)
     return cmd
 
@@ -34,11 +35,14 @@ def select_itr(cmd, arraysize=100):
         if not results:         break
         for result in results:  yield result      
 
+# Load the template from file
 f_graph_template = "graph_template.txt"
 template = load_template(f_graph_template)
 
+# Create the database if it doesn't exist
 conn.execute( create_table_cmd(N, template) )
 
+'''
 # Test case, generate a few random graphs and try to add them
 import numpy as np
 for _ in xrange(5):
@@ -52,12 +56,11 @@ for _ in xrange(5):
     cmd = "INSERT INTO graph{} ({}) VALUES ({})"
     cmd = cmd.format(N,keys,vals)
     conn.execute(cmd)
-
 conn.commit()
   
 cmd = "SELECT * from {}".format(database_name)
 
 for item in select_itr(cmd):
     print item
-    
+'''    
 
