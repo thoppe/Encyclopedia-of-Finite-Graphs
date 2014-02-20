@@ -38,7 +38,7 @@ def create_table_cmd(template, **cargs):
     return cmd
 
 # Load the template from file
-f_graph_template = "graph_template.txt"
+f_graph_template = "templates/graph_template.txt"
 template = load_template(f_graph_template)
 
 # Create the database if it doesn't exist
