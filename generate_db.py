@@ -53,7 +53,7 @@ for _ in xrange(5):
     cmd = cmd.format(N,keys,vals)
     conn.execute(cmd)
 
-#conn.commit()
+conn.commit()
   
 cmd = "SELECT * from {}".format(database_name)
 
