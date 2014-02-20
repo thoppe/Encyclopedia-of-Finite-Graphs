@@ -1,6 +1,9 @@
 import sqlite3
 
-conn = sqlite3.connect(':memory:')
+N = 4
+#conn = sqlite3.connect(':memory:')
+database_name = "graph{}".format(N)
+conn = sqlite3.connect('database/{}.db'.format(database_name))
 
 def load_template(f_template, **kwargs):
     template = []
@@ -31,8 +34,6 @@ def select_itr(cmd, arraysize=100):
         if not results:         break
         for result in results:  yield result      
 
-N = 4
-
 f_graph_template = "graph_template.txt"
 template = load_template(f_graph_template)
 
@@ -54,7 +55,7 @@ for _ in xrange(5):
 
 #conn.commit()
   
-cmd = "SELECT * from graph4"
+cmd = "SELECT * from {}".format(database_name)
 
 for item in select_itr(cmd):
     print item

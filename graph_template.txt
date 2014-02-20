@@ -1,5 +1,5 @@
 # Graph (with fixed N) object for database
 
-adj      VARCHAR({max_edges}) NOT NULL PRIMARY KEY,
-n_edge   INT NULL
-
+id       INTEGER PRIMARY KEY AUTOINCREMENT,
+adj      CHAR({max_edges}) NOT NULL,
+n_edge   INTEGER NULL
