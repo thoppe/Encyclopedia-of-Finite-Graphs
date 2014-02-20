@@ -1,9 +1,19 @@
 import sqlite3, subprocess, multiprocessing
+import logging, argparse
 import numpy as np
 
-args = {"N":8}
+desc   = "Populates the database at fixed N (WARNING ERASES CURRENT)"
+parser = argparse.ArgumentParser(description=desc)
+parser.add_argument('N', type=int)
+args = vars(parser.parse_args())
+
+# Start the logger
+logging.root.setLevel(logging.INFO)
+
 args["table_name"] = "graph{N}".format(**args)
 f_database = 'database/{table_name}.db'.format(**args)
+
+logging.info("Loading database "+f_database)
 conn = sqlite3.connect(f_database)
 
 def nauty_simple_graph_itr(**args):
@@ -38,6 +48,7 @@ def add_graph_to_database(edges):
     adj = convert_edge_to_adj(edges)
     
 # First empty the database
+logging.warn("Cleaning all entries in current database")
 conn.execute("DELETE FROM {table_name}".format(**args))
 conn.commit()
 
@@ -48,27 +59,25 @@ sol = P.imap(convert_edge_to_adj, gitr)
 P.close()
 P.join()
 
-for adj in sol:
+for k,adj in enumerate(sol):
     cmd_add = "INSERT INTO {table_name} (adj) VALUES ('{adj}')"
     cmd_add = cmd_add.format(adj = adj, **args)
     conn.execute(cmd_add)
 
+    if k and not k%1000: 
+        logging.info("Processed %i graphs"%k)
+k += 1
+logging.info("Complete. Processed %i graphs"%k)
 conn.commit()
 
-# Debug method to check
-'''
-def select_itr(cmd, arraysize=1000):
-    itr = conn.execute(cmd)
-    
-    "An interator over the search using chunks"
-    while True:
-        results = itr.fetchmany(arraysize)
-        if not results:         break
-        for result in results:  yield result  
-
+# Double check we added this many
 cmd = "SELECT * from {table_name}".format(**args)
-print len(list(select_itr(cmd)))
-'''
+actually_present = len(conn.execute(cmd).fetchall())
+logging.info("Database reports %i entries."%actually_present)
+
+assert(actually_present==k)
+
+
 
 
 

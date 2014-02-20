@@ -1,9 +1,20 @@
-import sqlite3, logging
+import sqlite3, logging, argparse
 
-N = 8
+desc   = "Builds the database for fixed N"
+parser = argparse.ArgumentParser(description=desc)
+parser.add_argument('N', type=int)
+cargs = vars(parser.parse_args())
+
+# Start the logger
+logging.root.setLevel(logging.INFO)
+
+# Debug mode, do everything in memory
 #conn = sqlite3.connect(':memory:')
-table_name = "graph{}".format(N)
-f_database = 'database/{}.db'.format(table_name)
+
+cargs["table_name"] = "graph{N}".format(**cargs)
+f_database = 'database/{table_name}.db'.format(**cargs)
+
+logging.info("Creating database "+f_database)
 conn = sqlite3.connect(f_database)
 
 def load_template(f_template, **kwargs):
@@ -15,10 +26,10 @@ def load_template(f_template, **kwargs):
                 template.append(line)
     return "\n".join(template)
 
-def create_table_cmd(N, template):
+def create_table_cmd(template, **cargs):
 
-    args = {}
-    args["table_name"] = table_name
+    N = cargs["N"]
+    args = cargs.copy()
     args["max_edges"] = N**2
     args["cols"] = template.format(**args)
 
@@ -26,6 +37,15 @@ def create_table_cmd(N, template):
     cmd = cmd.format(**args)
     return cmd
 
+# Load the template from file
+f_graph_template = "graph_template.txt"
+template = load_template(f_graph_template)
+
+# Create the database if it doesn't exist
+cmd = create_table_cmd(template, **cargs)
+conn.execute(cmd)
+
+'''
 def select_itr(cmd, arraysize=100):
     itr = conn.execute(cmd)
     
@@ -35,14 +55,6 @@ def select_itr(cmd, arraysize=100):
         if not results:         break
         for result in results:  yield result      
 
-# Load the template from file
-f_graph_template = "graph_template.txt"
-template = load_template(f_graph_template)
-
-# Create the database if it doesn't exist
-conn.execute( create_table_cmd(N, template) )
-
-'''
 # Test case, generate a few random graphs and try to add them
 import numpy as np
 for _ in xrange(5):
