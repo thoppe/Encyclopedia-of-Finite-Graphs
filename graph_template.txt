@@ -1,0 +1,5 @@
+# Graph (with fixed N) object for database
+
+adj      VARCHAR({max_edges}) NOT NULL PRIMARY KEY,
+n_edge   INT NULL
+
