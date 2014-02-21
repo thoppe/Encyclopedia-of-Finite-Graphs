@@ -1,3 +1,6 @@
+# Graph database (don't auto store)
+database/*
+
 *.py[cod]
 
 # C extensions

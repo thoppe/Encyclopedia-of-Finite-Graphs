@@ -2,7 +2,7 @@ test_N = 5
 
 all:
 	python src/generate_db.py $(test_N)
-	python src/populate_simple_graphs.py $(test_N)
+	python src/update_schema.py $(test_N)
 
 commit:
 	-@make push
@@ -16,3 +16,6 @@ push:
 pull:
 	git pull
 
+
+full_clean:
+	rm -vf database/*
