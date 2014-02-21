@@ -1,8 +1,10 @@
-test_N = 5
+test_N = 9
 
 all:
-	python src/generate_db.py $(test_N)
-	python src/update_schema.py $(test_N)
+	rm -vf database/graph$(test_N).db
+	time python src/generate_db.py $(test_N)
+	time python src/update_schema.py $(test_N)
+	time python src/update_invariants.py $(test_N)
 
 commit:
 	-@make push
