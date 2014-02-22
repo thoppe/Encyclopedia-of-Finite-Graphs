@@ -68,6 +68,7 @@ def nauty_simple_graph_itr(**args):
         if not header_line: break
         yield edge_line.strip()
 
+upper_matrix_index = np.triu_indices(cargs["N"])
 
 def convert_edge_to_adj(edges):
     # Map the edge list into an index list
@@ -76,12 +77,15 @@ def convert_edge_to_adj(edges):
     
     # Since graph in undirected assign both sides
     A = np.zeros((cargs["N"],cargs["N"]),dtype=int)
-    A[idx[0],idx[1]] = A[idx[1],idx[0]] = 1
+    A[idx[0],idx[1]] = 1
+    
+    # The string representation of the upper triangular adj matrix
+    au = ''.join(map(str,A[upper_matrix_index]))
+    
+    # Convert the binary string to an int
+    int_index = int(au,2)
 
-    # Convert output into a string
-    s = ''.join(map(str,A.ravel()))
-
-    return s
+    return int_index
 
 # Process input in parallel
 logging.info("Generating graphs in parallel from nauty")
@@ -92,16 +96,15 @@ P.close()
 P.join()
 
 logging.info("Adding graphs from nauty")
-
+count = 0
 for count,adj in enumerate(sol):
     cmd_add = "INSERT INTO {table_name} (adj) VALUES ('{adj}')"
     cmd_add = cmd_add.format(adj = adj, **cargs)
     conn.execute(cmd_add)
-
+    count += 1
     #if count and not k%1000: 
     #    logging.info("Processed %i graphs"%k)
 
-count += 1
 logging.info("Complete. Processed %i graphs"%count)
 conn.commit()
 # Double check we added this many
@@ -110,7 +113,6 @@ actually_present = len(conn.execute(cmd).fetchall())
 logging.info("Database reports %i entries."%actually_present)
 
 assert(actually_present==count)
-
 
 
 '''

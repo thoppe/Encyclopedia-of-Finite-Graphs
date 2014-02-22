@@ -1,4 +1,4 @@
 # Graph (with fixed N) object for database
 
 id       INTEGER PRIMARY KEY AUTOINCREMENT
-adj      CHAR({max_edges}) NOT NULL
+adj      UNSIGNED BIG INT NOT NULL

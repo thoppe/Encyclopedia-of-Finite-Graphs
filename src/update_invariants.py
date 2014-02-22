@@ -57,7 +57,7 @@ for func in func_found:
     update_count = 0
 
     for (idx,adj) in itr:
-        val = eval(func)(adj)
+        val = eval(func)(adj,**cargs)
         cmd = update_cmd.format(val=val, idx=idx, **cargs)
         conn.execute(cmd)
         update_count += 1
