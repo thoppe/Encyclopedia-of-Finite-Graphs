@@ -1,45 +1,45 @@
 import sqlite3, logging, argparse, os
-import multiprocessing, subprocess
+import multiprocessing, subprocess, itertools
 import numpy as np
+from helper_functions import grouper, load_template
 
 desc   = "Builds the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
+parser.add_argument('-f','--force',default=False,action='store_true')
+parser.add_argument('--chunksize',type=int,
+                    help="Entries to compute before insert is called",
+                    default=10000)
 cargs = vars(parser.parse_args())
 
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-# Debug mode, do everything in memory
-#conn = sqlite3.connect(':memory:')
-
 cargs["table_name"] = "graph{N}".format(**cargs)
 f_database = 'database/{table_name}.db'.format(**cargs)
+
+# If forced, removed the old database
+if cargs["force"] and os.path.exists(f_database):
+    logging.warning("Removing database %s"%f_database)
+    os.remove(f_database)
 
 # Check if database exists, if so exit!
 if os.path.exists(f_database):
     err = "Database %s already exists, exiting"%f_database
-    logging.critical(err)
+    logging.warning(err)
     exit()
 
 logging.info("Creating database "+f_database)
-conn = sqlite3.connect(f_database)
+conn = sqlite3.connect(f_database,check_same_thread=False)
 
-def load_template(f_template, **kwargs):
-    template = []
-    with open(f_template) as FIN:
-        for line in FIN:
-            line = line.strip()
-            if line and line[0][0] != "#":
-                template.append(line)
-    return ",\n".join(template)
+
 
 def create_table_cmd(template, **cargs):
 
     N = cargs["N"]
     args = cargs.copy()
     args["max_edges"] = N**2
-    args["cols"] = template.format(**args)
+    args["cols"] = (',\n'.join(template)).format(**args)
 
     cmd = "CREATE TABLE IF NOT EXISTS {table_name} ({cols})"
     cmd = cmd.format(**args)
@@ -87,43 +87,38 @@ def convert_edge_to_adj(edges):
 
     return int_index
 
+def insert_graph_list(index_list):
+    logging.info("Inserting {} values into table".format(len(index_list)))
+    cmd_add = "INSERT INTO {table_name} (adj) VALUES (?)"
+    cmd_add = cmd_add.format(**cargs)
+    conn.executemany(cmd_add, zip(*[index_list]))
+    return True
+    #conn.commit()
+
 # Process input in parallel
 logging.info("Generating graphs in parallel from nauty")
+
+
+
 P = multiprocessing.Pool()
-gitr = nauty_simple_graph_itr(**cargs)
-sol = P.imap(convert_edge_to_adj, gitr, chunksize=10)
+all_graph_itr = nauty_simple_graph_itr(**cargs)
+graph_allocator = grouper(all_graph_itr, cargs["chunksize"])
+
+for gitr in graph_allocator:
+    sol = P.map_async(convert_edge_to_adj, gitr, 
+                      chunksize=10, callback=insert_graph_list)
+
 P.close()
 P.join()
 
-logging.info("Adding graphs from nauty")
-count = 0
-for count,adj in enumerate(sol):
-    cmd_add = "INSERT INTO {table_name} (adj) VALUES ('{adj}')"
-    cmd_add = cmd_add.format(adj = adj, **cargs)
-    conn.execute(cmd_add)
-    count += 1
-    #if count and not k%1000: 
-    #    logging.info("Processed %i graphs"%k)
-
-logging.info("Complete. Processed %i graphs"%count)
 conn.commit()
+
 # Double check we added this many
 cmd = "SELECT * from {table_name}".format(**cargs)
 actually_present = len(conn.execute(cmd).fetchall())
 logging.info("Database reports %i entries."%actually_present)
 
-assert(actually_present==count)
+#assert(actually_present==count)
 
-
-'''
-def select_itr(cmd, arraysize=100):
-    itr = conn.execute(cmd)
-    
-    "An interator over the search using chunks"
-    while True:
-        results = itr.fetchmany(arraysize)
-        if not results:         break
-        for result in results:  yield result      
-
-'''    
+   
 
