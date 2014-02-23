@@ -11,6 +11,8 @@ cargs = vars(parser.parse_args())
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
+logging.info("Starting invariant calculation for {N}".format(**cargs))
+
 cargs["table_name"] = "graph{N}".format(**cargs)
 f_database = 'database/{table_name}.db'.format(**cargs)
 conn = sqlite3.connect(f_database)
@@ -36,10 +38,10 @@ cursor = conn.execute(cmd)
 col_names = set([x[1] for x in cursor.fetchall()])
 col_names.discard("id")
 col_names.discard("adj")
-logging.info("Columns found %s"%col_names)
+#logging.info("Columns found %s"%col_names)
 
 known_invariant_functions = set(invariant_function_map.keys())
-logging.info("Invariant functions found %s"%known_invariant_functions)
+#logging.info("Invariant functions found %s"%known_invariant_functions)
 
 func_missing = col_names.difference(known_invariant_functions)
 if func_missing:
@@ -51,6 +53,12 @@ for func in func_found:
     cargs["column"] = func
     cmd = "SELECT id,adj FROM {table_name} WHERE {column} IS NULL"
     cmd = cmd.format(**cargs)
+
+    #compute_n = len(conn.execute(cmd).fetchall())
+    #if compute_n:
+    #    msg = "Computing {} values for {column}"
+    #    logging.info(msg.format(compute_n, **cargs))
+
     itr = select_itr(cmd)
 
     update_cmd = "UPDATE {table_name} SET {column}={val} WHERE id={idx}"
@@ -62,8 +70,9 @@ for func in func_found:
         conn.execute(cmd)
         update_count += 1
 
-    if update_count:
-        msg = "Updated {n} entries in {table_name}.{column}"
-        logging.info(msg.format(n=update_count, **cargs))
+        if update_count and not (update_count%100): 
+            msg = "Updated {n} entries in {table_name}.{column}"
+            logging.info(msg.format(n=update_count, **cargs))           
+            conn.commit()
 
 conn.commit()
