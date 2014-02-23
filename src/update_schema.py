@@ -25,8 +25,26 @@ if not os.path.exists(f_database):
 f_graph_template = "templates/graph_invariants.txt"
 template = load_template(f_graph_template)
 
-for column_entry in template:
+# Add the ref table if it doesn't exist
+cols = "invariant_id INTEGER PRIMARY KEY,name TEXT,dtype TEXT"
+cmd = "CREATE TABLE IF NOT EXISTS invariant_ref (%s)"%cols
+conn.execute(cmd)
 
+# Add the integer invariant table if it doesn't exist
+cols = "graph_id INTEGER,invariant_id INTEGER,value INTEGER"
+cmd = "CREATE TABLE IF NOT EXISTS invariant_int (%s)"%cols
+sol=conn.execute(cmd)
+# Here we might add new tables for non integer dtypes
+pass
+
+# Add invariants to invariant_ref
+for column_entry in template:
+    name,dtype = column_entry.split()
+    cmd = "INSERT INTO invariant_ref (name,dtype) VALUES (?,?)"
+    conn.execute(cmd, (name,dtype))
+
+    
+    '''
     # Add the column if it is missing
     cmd = "ALTER TABLE {table_name} ADD COLUMN {column_entry}"
     cmd = cmd.format(column_entry=column_entry, **cargs)
@@ -39,6 +57,6 @@ for column_entry in template:
         else:
             print E
             exit()
-
-
+            '''
+conn.commit()
 

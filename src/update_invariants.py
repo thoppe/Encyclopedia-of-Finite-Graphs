@@ -26,12 +26,10 @@ if not os.path.exists(f_database):
     exit()
 
 # Find all the columns
-cmd = "PRAGMA table_info({table_name})".format(**cargs)
-cursor = conn.execute(cmd)
-col_names = set([x[1] for x in cursor.fetchall()])
-col_names.discard("id")
-col_names.discard("adj")
-#logging.info("Columns found %s"%col_names)
+cmd = "SELECT * FROM invariant_ref"
+invariant_search = conn.execute(cmd).fetchall()
+integer_invariants = [x for x in invariant_search if x[2]=="INTEGER"]
+col_names = set(zip(*integer_invariants)[1])
 
 known_invariant_functions = set(invariant_function_map.keys())
 #logging.info("Invariant functions found %s"%known_invariant_functions)
@@ -65,6 +63,17 @@ def insert_invariants(vals):
 for func in func_found:
 
     cargs["column"] = func
+
+    # First get the invariant_id
+    cmd = "SELECT (invariant_id) from invariant_ref WHERE name='{column}'"
+    cmd = cmd.format(**cargs)
+    cargs["invariant_id"] = conn.execute(cmd).fetchone()[0]
+
+    cmd = "SELECT * from {table_name} as A join invariant_ref as B"
+    cmd = cmd.format(**cargs)
+    #print "HI"
+    print conn.execute(cmd).fetchall()
+    exit()
 
     cmd  = "SELECT id,adj FROM {table_name} WHERE {column} IS NULL"
     cmd  = cmd.format(**cargs)

@@ -1,7 +1,7 @@
 # Bools
 
-is_planar TINYINT NULL
+is_planar INTEGER
 
 # Scalars
 
-n_edge   INTEGER NULL
+n_edge   INTEGER
