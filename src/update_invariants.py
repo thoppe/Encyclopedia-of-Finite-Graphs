@@ -1,4 +1,5 @@
 import sqlite3, logging, argparse, os, multiprocessing
+from helper_functions import select_itr
 from calc_invariants import *
 
 desc   = "Updates the database for fixed N"
@@ -20,15 +21,6 @@ if not os.path.exists(f_database):
     err = "Database %s does not exist. Run generate_db.py first."%f_database
     logging.critical(err)
     exit()
-
-def select_itr(cmd, arraysize=100):
-    itr = conn.execute(cmd)
-    
-    "An interator over the search using chunks"
-    while True:
-        results = itr.fetchmany(arraysize)
-        if not results:         break
-        for result in results:  yield result      
 
 # Find all the columns
 cmd = "PRAGMA table_info({table_name})".format(**cargs)
