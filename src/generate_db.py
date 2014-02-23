@@ -88,7 +88,10 @@ def convert_edge_to_adj(edges):
     return int_index
 
 def insert_graph_list(index_list):
-    logging.info("Inserting {} values into table".format(len(index_list)))
+    msg = "Inserting {} values into {table_name}.adj"
+    msg = msg.format(len(index_list), **cargs)
+    logging.info(msg)
+
     cmd_add = "INSERT INTO {table_name} (adj) VALUES (?)"
     cmd_add = cmd_add.format(**cargs)
     conn.executemany(cmd_add, zip(*[index_list]))

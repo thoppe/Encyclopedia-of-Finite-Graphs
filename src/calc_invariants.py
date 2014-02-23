@@ -27,7 +27,7 @@ def convert_to_numpy(adj,**args):
 def n_edge(adj,**args):
     # Only true for undirected graphs
     A = convert_to_numpy(adj,**args)
-    return A.sum()/2
+    return int(A.sum()/2)
 
 invariant_function_map = {}
 invariant_function_map['n_edge'] = n_edge
