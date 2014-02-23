@@ -62,22 +62,25 @@ def insert_invariants(vals):
 
 #########################################################################
 
-func = func_found.pop()
+for func in func_found:
 
-cargs["column"] = func
+    cargs["column"] = func
 
-cmd  = "SELECT id,adj FROM {table_name} WHERE {column} IS NULL"
-cmd  = cmd.format(**cargs)
-graph_allocator = grouper(select_itr(conn,cmd), cargs["chunksize"])
+    cmd  = "SELECT id,adj FROM {table_name} WHERE {column} IS NULL"
+    cmd  = cmd.format(**cargs)
+    graph_allocator = grouper(select_itr(conn,cmd), cargs["chunksize"])
 
-# Note, we are passing "func" globally, make sure everything is closed
-P = multiprocessing.Pool()
+    # Note, we are passing "func" globally, make sure everything is closed
+    P = multiprocessing.Pool()
 
-for gitr in graph_allocator:
-    P.map_async(compute_invariant, gitr,
-                chunksize=10, 
-                callback=insert_invariants)
+    for gitr in graph_allocator:
+        P.map_async(compute_invariant, gitr,
+                    chunksize=10, 
+                    callback=insert_invariants)
 
-P.close()
-P.join()
-conn.commit()
+    P.close()
+    P.join()
+
+    logging.info("Completed calculation for {column}".format(**cargs))
+
+    conn.commit()

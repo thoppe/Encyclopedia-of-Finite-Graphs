@@ -95,13 +95,9 @@ def insert_graph_list(index_list):
     cmd_add = "INSERT INTO {table_name} (adj) VALUES (?)"
     cmd_add = cmd_add.format(**cargs)
     conn.executemany(cmd_add, zip(*[index_list]))
-    return True
-    #conn.commit()
 
 # Process input in parallel
 logging.info("Generating graphs in parallel from nauty")
-
-
 
 P = multiprocessing.Pool()
 all_graph_itr = nauty_simple_graph_itr(**cargs)
