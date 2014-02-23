@@ -1,6 +1,4 @@
-import sqlite3, logging, argparse, os
-import multiprocessing, subprocess
-import numpy as np
+import sqlite3, logging, argparse, os, multiprocessing
 from calc_invariants import *
 
 desc   = "Updates the database for fixed N"
@@ -43,9 +41,10 @@ col_names.discard("adj")
 known_invariant_functions = set(invariant_function_map.keys())
 #logging.info("Invariant functions found %s"%known_invariant_functions)
 
-func_missing = col_names.difference(known_invariant_functions)
-if func_missing:
-    logging.warning("Missing functions %s"%list(func_missing))
+# Warn here, for now turn this off
+#func_missing = col_names.difference(known_invariant_functions)
+#if func_missing:
+#    logging.warning("Missing functions %s"%list(func_missing))
 
 func_found = col_names.intersection(known_invariant_functions)
 
@@ -53,11 +52,6 @@ for func in func_found:
     cargs["column"] = func
     cmd = "SELECT id,adj FROM {table_name} WHERE {column} IS NULL"
     cmd = cmd.format(**cargs)
-
-    #compute_n = len(conn.execute(cmd).fetchall())
-    #if compute_n:
-    #    msg = "Computing {} values for {column}"
-    #    logging.info(msg.format(compute_n, **cargs))
 
     itr = select_itr(cmd)
 
