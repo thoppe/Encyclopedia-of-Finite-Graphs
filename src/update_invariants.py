@@ -44,18 +44,17 @@ func_found = col_names.intersection(known_invariant_functions)
 #########################################################################
 
 def compute_invariant(terms):
-    idx = terms[0]
-    graph_adj = terms[1]
+    adj,idx = terms
     func = cargs["column"]
-    result = eval(func)(graph_adj,N = cargs["N"])
-    return (result,idx)
+    result = eval(func)(adj,N = cargs["N"])
+    return (idx,cargs["invariant_id"],result)
 
 def insert_invariants(vals):
     msg = "Inserting {} values into {table_name}.{column}"
     msg = msg.format(len(vals), **cargs)
     logging.info(msg)
-    cmd = "UPDATE {table_name} SET {column}=? WHERE id=?"
-    cmd = cmd.format(**cargs)
+    cmd  = "INSERT or REPLACE INTO invariant_int "
+    cmd += "(graph_id, invariant_id, value) VALUES (?,?,?)"
     conn.executemany(cmd, vals)
 
 #########################################################################
@@ -69,16 +68,22 @@ for func in func_found:
     cmd = cmd.format(**cargs)
     cargs["invariant_id"] = conn.execute(cmd).fetchone()[0]
 
-    cmd = "SELECT * from {table_name} as A join invariant_ref as B"
+    cmd  = "SELECT adj,idx FROM {table_name} as a "
+    cmd += "LEFT JOIN invariant_int as b "
+    cmd += "ON a.idx = b.graph_id WHERE b.invariant_id IS NULL"
     cmd = cmd.format(**cargs)
-    #print "HI"
-    print conn.execute(cmd).fetchall()
-    exit()
-
-    cmd  = "SELECT id,adj FROM {table_name} WHERE {column} IS NULL"
-    cmd  = cmd.format(**cargs)
     graph_allocator = grouper(select_itr(conn,cmd), cargs["chunksize"])
 
+    '''
+    # Test run without multiprocessing
+    for gitr in graph_allocator:
+        for g in gitr:
+            v = compute_invariant(g)
+            print g, v
+            insert_invariants(v)
+
+    exit()
+    '''
     # Note, we are passing "func" globally, make sure everything is closed
     P = multiprocessing.Pool()
 

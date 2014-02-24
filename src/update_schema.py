@@ -43,20 +43,5 @@ for column_entry in template:
     cmd = "INSERT INTO invariant_ref (name,dtype) VALUES (?,?)"
     conn.execute(cmd, (name,dtype))
 
-    
-    '''
-    # Add the column if it is missing
-    cmd = "ALTER TABLE {table_name} ADD COLUMN {column_entry}"
-    cmd = cmd.format(column_entry=column_entry, **cargs)
-    try:
-        conn.execute(cmd)
-        #logging.info(cmd)
-    except Exception as E:
-        if "duplicate column name" in E.message:
-            pass
-        else:
-            print E
-            exit()
-            '''
 conn.commit()
 
