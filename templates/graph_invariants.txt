@@ -1,7 +1,7 @@
 # Bools
 
-is_planar TINYINT NULL
-
 # Scalars
 
-n_edge   INTEGER NULL
+diameter INTEGER
+n_edge   INTEGER
+

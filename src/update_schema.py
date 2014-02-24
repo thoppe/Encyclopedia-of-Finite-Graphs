@@ -1,8 +1,7 @@
 import sqlite3, logging, argparse, os
-import multiprocessing, subprocess
-import numpy as np
+from helper_functions import load_template
 
-desc   = "Updates the database for fixed N"
+desc   = "Updates the column names for fixed N"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
 cargs = vars(parser.parse_args())
@@ -20,33 +19,29 @@ if not os.path.exists(f_database):
     logging.critical(err)
     exit()
 
-def load_template(f_template, **kwargs):
-    template = []
-    with open(f_template) as FIN:
-        for line in FIN:
-            line = line.strip()
-            if line and line[0][0] != "#":
-                template.append(line)
-    return template
-
 # Update the table based off of the columns in the invariants
 # this should be done with a schema, but this works for now
 
 f_graph_template = "templates/graph_invariants.txt"
 template = load_template(f_graph_template)
 
+# Add the ref table if it doesn't exist
+cols = "invariant_id INTEGER PRIMARY KEY,name TEXT,dtype TEXT"
+cmd = "CREATE TABLE IF NOT EXISTS invariant_ref (%s)"%cols
+conn.execute(cmd)
+
+# Add the integer invariant table if it doesn't exist
+cols = "graph_id INTEGER,invariant_id INTEGER,value INTEGER"
+cmd = "CREATE TABLE IF NOT EXISTS invariant_int (%s)"%cols
+sol=conn.execute(cmd)
+# Here we might add new tables for non integer dtypes
+pass
+
+# Add invariants to invariant_ref
 for column_entry in template:
-    cmd = "ALTER TABLE {table_name} ADD COLUMN {column_entry}"
-    cmd = cmd.format(column_entry=column_entry, **cargs)
-    try:
-        conn.execute(cmd)
-        logging.info(cmd)
-    except Exception as E:
-        if "duplicate column name" in E.message:
-            pass
-        else:
-            print E
-            exit()
+    name,dtype = column_entry.split()
+    cmd = "INSERT INTO invariant_ref (name,dtype) VALUES (?,?)"
+    conn.execute(cmd, (name,dtype))
 
-
+conn.commit()
 
