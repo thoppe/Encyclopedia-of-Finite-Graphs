@@ -61,11 +61,12 @@ for func in func_found:
     cmd = cmd.format(**cargs)
     cargs["invariant_id"] = conn.execute(cmd).fetchone()[0]
 
-    cmd  = "SELECT adj,a.graph_id FROM graph as a "
+    cmd  = "SELECT a.adj,a.graph_id FROM graph as a "
     cmd += "LEFT JOIN invariant_int as b "
     cmd += "ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id} "
     cmd += "WHERE b.value IS NULL"
     cmd = cmd.format(**cargs)
+    print cmd
     graph_allocator = grouper(select_itr(conn,cmd), cargs["chunksize"])
 
     '''

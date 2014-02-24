@@ -32,21 +32,11 @@ if os.path.exists(f_database):
 logging.info("Creating database "+f_database)
 conn = helper_functions.load_graph_database(cargs["N"], False)
 
-def create_table_cmd(template, **cargs):
-    args = cargs.copy()
-    args["cols"] = (',\n'.join(template)).format(**args)
-
-    cmd = "CREATE TABLE IF NOT EXISTS graph ({cols})"
-    cmd = cmd.format(**args)
-    return cmd
-
 # Load the template from file
-f_graph_template = "templates/graph_template.txt"
-template = load_template(f_graph_template)
-
-# Create the database if it doesn't exist
-cmd = create_table_cmd(template, **cargs)
-conn.execute(cmd)
+f_graph_template = "templates/graph.sql"
+with open(f_graph_template) as FIN:
+    script = FIN.read()
+    conn.executescript(script)
 
 # Start populating it with graphs from nauty
 
