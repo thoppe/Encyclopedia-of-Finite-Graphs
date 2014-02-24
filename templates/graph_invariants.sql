@@ -12,9 +12,7 @@ CREATE TABLE IF NOT EXISTS invariant_integer(
 );
 
 INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES 
-    ("diameter");
-
-INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES 
+    ("diameter"), 
     ("n_edge");
 
 

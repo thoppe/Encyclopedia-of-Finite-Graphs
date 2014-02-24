@@ -22,20 +22,32 @@ if cargs["force"] and os.path.exists(f_database):
     logging.warning("Removing database %s"%f_database)
     os.remove(f_database)
 
+does_db_file_exist = os.path.exists(f_database)
+
+# Connect to the database
+conn = helper_functions.load_graph_database(cargs["N"], False)
+
+# Load the invariant template from file, add new columns if needed
+f_invariant_template = "templates/graph_invariants.sql"
+with open(f_invariant_template) as FIN:
+    logging.info("Updating invariants from %s"%f_invariant_template)
+    script = FIN.read()
+    conn.executescript(script);
+
 # Check if database exists, if so exit!
-if os.path.exists(f_database):
+if does_db_file_exist:
     err = "Database %s already exists, exiting"%f_database
     logging.warning(err)
     exit()
 
 logging.info("Creating database "+f_database)
-conn = helper_functions.load_graph_database(cargs["N"], False)
 
 # Load the template from file
 f_graph_template = "templates/graph.sql"
 with open(f_graph_template) as FIN:
     script = FIN.read()
     conn.executescript(script)
+
 
 # Start populating it with graphs from nauty
 
