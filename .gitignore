@@ -3,6 +3,7 @@ database/*
 
 *.py[cod]
 .\#*
+*.bz2
 
 # C extensions
 *.so
