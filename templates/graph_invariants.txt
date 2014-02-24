@@ -1,7 +1,7 @@
 # Bools
 
-is_planar INTEGER
-
 # Scalars
 
+diameter INTEGER
 n_edge   INTEGER
+

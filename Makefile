@@ -1,4 +1,4 @@
-#test_N = 9
+test_N = 7
 
 all:
 	rm -vf database/graph$(test_N).db

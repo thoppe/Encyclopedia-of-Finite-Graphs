@@ -70,7 +70,8 @@ for func in func_found:
 
     cmd  = "SELECT adj,idx FROM {table_name} as a "
     cmd += "LEFT JOIN invariant_int as b "
-    cmd += "ON a.idx = b.graph_id WHERE b.invariant_id IS NULL"
+    cmd += "ON a.idx = b.graph_id AND b.invariant_id={invariant_id} "
+    cmd += "WHERE b.value IS NULL"
     cmd = cmd.format(**cargs)
     graph_allocator = grouper(select_itr(conn,cmd), cargs["chunksize"])
 
