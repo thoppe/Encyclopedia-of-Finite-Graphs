@@ -1,5 +1,5 @@
 import sqlite3
-import itertools, os, logging
+import itertools, os, logging, multiprocessing
 
 def generate_database_name(N):
     return os.path.join("database", "graph{}.db".format(N))  
@@ -37,3 +37,23 @@ def grouper(iterable, n):
        if not chunk:
            return
        yield chunk
+
+
+def parallel_compute(itr, func, callback=None, **cargs):
+    ''' Helper function to compute a function over a query in parallel.
+    Uses the grouper function to prevent loading too much into memeory at
+    one time. '''
+
+    allocator = grouper(itr, cargs["chunksize"])
+
+    P = multiprocessing.Pool()
+
+    map_args = {"chunksize":10}
+    if callback!=None:
+        map_args["callback"] = callback
+
+    for gitr in allocator:
+        P.map_async(func, gitr, **map_args)
+
+    P.close()
+    P.join()

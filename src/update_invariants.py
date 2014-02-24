@@ -1,5 +1,5 @@
-import sqlite3, logging, argparse, os, multiprocessing
-from helper_functions import grouper, select_itr, load_graph_database
+import sqlite3, logging, argparse, os
+from helper_functions import load_graph_database, parallel_compute, select_itr
 from calc_invariants import *
 
 desc   = "Updates the database for fixed N"
@@ -35,6 +35,7 @@ func_found = col_names.intersection(known_invariant_functions)
 
 #########################################################################
 
+# TODO, handle error checking in eval(func)
 def compute_invariant(terms):
     adj,idx = terms
     func = cargs["column"]
@@ -66,29 +67,13 @@ for func in func_found:
     cmd += "ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id} "
     cmd += "WHERE b.value IS NULL"
     cmd = cmd.format(**cargs)
-    graph_allocator = grouper(select_itr(conn,cmd), cargs["chunksize"])
 
-    '''
-    # Test run without multiprocessing
-    for gitr in graph_allocator:
-        for g in gitr:
-            v = compute_invariant(g)
-            print g, v
-            insert_invariants(v)
+    # Note, we are passing cargs globally, only do one at a time
+    itr = select_itr(conn, cmd)
 
-    exit()
-    '''
-    # Note, we are passing "func" globally, make sure everything is closed
-    P = multiprocessing.Pool()
-
-    for gitr in graph_allocator:
-        P.map_async(compute_invariant, gitr,
-                    chunksize=10, 
-                    callback=insert_invariants)
-
-    P.close()
-    P.join()
+    parallel_compute(itr, 
+                     compute_invariant, 
+                     callback=insert_invariants, **cargs)
 
     logging.info("Completed calculation for {column}".format(**cargs))
-
     conn.commit()

@@ -1,5 +1,5 @@
 import sqlite3, logging, argparse, os
-import multiprocessing, subprocess, itertools
+import subprocess, itertools
 import numpy as np
 import helper_functions
 
@@ -95,16 +95,12 @@ def insert_graph_list(index_list):
 # Process input in parallel
 logging.info("Generating graphs in parallel from nauty")
 
-P = multiprocessing.Pool()
 all_graph_itr = nauty_simple_graph_itr(**cargs)
-graph_allocator = helper_functions.grouper(all_graph_itr, cargs["chunksize"])
 
-for gitr in graph_allocator:
-    sol = P.map_async(convert_edge_to_adj, gitr, 
-                      chunksize=10, callback=insert_graph_list)
-
-P.close()
-P.join()
+PC = helper_functions.parallel_compute
+PC(all_graph_itr, 
+   convert_edge_to_adj, 
+   callback=insert_graph_list, **cargs)
 
 conn.commit()
 
@@ -113,7 +109,6 @@ cmd = "SELECT * from graph".format(**cargs)
 actually_present = len(conn.execute(cmd).fetchall())
 logging.info("Database reports %i entries."%actually_present)
 
-#assert(actually_present==count)
 
    
 
