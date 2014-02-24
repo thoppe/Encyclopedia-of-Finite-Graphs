@@ -10,10 +10,11 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 + [ampetr](https://github.com/ampetr) 
 
 
-## Roadmap:
+*Roadmap*:
 
-+ Document database structure here
++ Document database structure
 + Add a few invariants, easy ones that can be computed with networkx
++ Write a better invariant "manager", right now just a loose collection
 + Compute the database for N=10 over these invariants
 + Build the query maker
 + Write the OEIS checker
@@ -21,4 +22,4 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 + Check set relations for _interesting_ queries
 + Add harder invariants and repeat!
 + Submit new sequences to OEIS
-+ Writeup project as an experimental math paper (data mining integer sequences over graphs!)
++ Writeup project as an experimental math paper (data mining integer sequences over graphs?)
