@@ -1,7 +1,0 @@
-# Bools
-
-# Scalars
-
-diameter INTEGER
-n_edge   INTEGER
-

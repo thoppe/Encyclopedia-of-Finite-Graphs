@@ -1,7 +1,6 @@
 import sqlite3, logging, argparse, os
 import multiprocessing, subprocess, itertools
 import numpy as np
-from helper_functions import grouper, load_template
 import helper_functions
 
 desc   = "Builds the database for fixed N"
@@ -86,7 +85,7 @@ logging.info("Generating graphs in parallel from nauty")
 
 P = multiprocessing.Pool()
 all_graph_itr = nauty_simple_graph_itr(**cargs)
-graph_allocator = grouper(all_graph_itr, cargs["chunksize"])
+graph_allocator = helper_functions.grouper(all_graph_itr, cargs["chunksize"])
 
 for gitr in graph_allocator:
     sol = P.map_async(convert_edge_to_adj, gitr, 

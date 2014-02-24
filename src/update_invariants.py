@@ -19,10 +19,9 @@ conn = load_graph_database(cargs["N"])
 logging.info("Starting invariant calculation for {N}".format(**cargs))
 
 # Find all the columns
-cmd = "SELECT * FROM invariant_ref"
+cmd = "SELECT * FROM ref_invariant_integer"
 invariant_search = conn.execute(cmd).fetchall()
-integer_invariants = [x for x in invariant_search if x[2]=="INTEGER"]
-col_names = set(zip(*integer_invariants)[1])
+col_names = set(zip(*invariant_search)[1])
 
 known_invariant_functions = set(invariant_function_map.keys())
 #logging.info("Invariant functions found %s"%known_invariant_functions)
@@ -46,7 +45,7 @@ def insert_invariants(vals):
     msg = "Inserting {} values into graph.{column}"
     msg = msg.format(len(vals), **cargs)
     logging.info(msg)
-    cmd  = "INSERT or REPLACE INTO invariant_int "
+    cmd  = "INSERT or REPLACE INTO invariant_integer "
     cmd += "(graph_id, invariant_id, value) VALUES (?,?,?)"
     conn.executemany(cmd, vals)
 
@@ -57,16 +56,16 @@ for func in func_found:
     cargs["column"] = func
 
     # First get the invariant_id
-    cmd = "SELECT (invariant_id) from invariant_ref WHERE name='{column}'"
+    cmd  = "SELECT (invariant_id) from ref_invariant_integer "
+    cmd += "WHERE function_name='{column}'"
     cmd = cmd.format(**cargs)
     cargs["invariant_id"] = conn.execute(cmd).fetchone()[0]
 
     cmd  = "SELECT a.adj,a.graph_id FROM graph as a "
-    cmd += "LEFT JOIN invariant_int as b "
+    cmd += "LEFT JOIN invariant_integer as b "
     cmd += "ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id} "
     cmd += "WHERE b.value IS NULL"
     cmd = cmd.format(**cargs)
-    print cmd
     graph_allocator = grouper(select_itr(conn,cmd), cargs["chunksize"])
 
     '''

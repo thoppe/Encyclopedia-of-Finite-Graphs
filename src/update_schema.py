@@ -12,6 +12,13 @@ logging.root.setLevel(logging.INFO)
 # Load the database
 conn = load_graph_database(cargs["N"])
 
+f_invariant_template = "templates/graph_invariants.sql"
+with open(f_invariant_template) as FIN:
+    script = FIN.read()
+    conn.executescript(script);
+
+exit()
+
 # Update the table based off of the columns in the invariants
 # this should be done with a schema, but this works for now
 f_graph_template = "templates/graph_invariants.txt"
