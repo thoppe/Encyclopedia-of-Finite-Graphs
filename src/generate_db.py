@@ -2,6 +2,7 @@ import sqlite3, logging, argparse, os
 import multiprocessing, subprocess, itertools
 import numpy as np
 from helper_functions import grouper, load_template
+import helper_functions
 
 desc   = "Builds the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -15,8 +16,7 @@ cargs = vars(parser.parse_args())
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-cargs["table_name"] = "graph{N}".format(**cargs)
-f_database = 'database/{table_name}.db'.format(**cargs)
+f_database = helper_functions.generate_database_name(cargs["N"])
 
 # If forced, removed the old database
 if cargs["force"] and os.path.exists(f_database):
@@ -30,15 +30,9 @@ if os.path.exists(f_database):
     exit()
 
 logging.info("Creating database "+f_database)
-conn = sqlite3.connect(f_database,check_same_thread=False)
-
-
+conn = helper_functions.load_graph_database(cargs["N"], False)
 
 def create_table_cmd(template, **cargs):
-
-    #N = cargs["N"]
-    #args["max_edges"] = N**2
-
     args = cargs.copy()
     args["cols"] = (',\n'.join(template)).format(**args)
 

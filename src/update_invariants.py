@@ -1,5 +1,5 @@
 import sqlite3, logging, argparse, os, multiprocessing
-from helper_functions import grouper, select_itr
+from helper_functions import grouper, select_itr, load_graph_database
 from calc_invariants import *
 
 desc   = "Updates the database for fixed N"
@@ -13,17 +13,10 @@ cargs = vars(parser.parse_args())
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
+# Load the database
+conn = load_graph_database(cargs["N"])
+
 logging.info("Starting invariant calculation for {N}".format(**cargs))
-
-cargs["table_name"] = "graph{N}".format(**cargs)
-f_database = 'database/{table_name}.db'.format(**cargs)
-conn = sqlite3.connect(f_database, check_same_thread=False)
-
-# Check if database exists, if so exit!
-if not os.path.exists(f_database):
-    err = "Database %s does not exist. Run generate_db.py first."%f_database
-    logging.critical(err)
-    exit()
 
 # Find all the columns
 cmd = "SELECT * FROM invariant_ref"

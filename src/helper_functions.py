@@ -1,4 +1,23 @@
-import itertools
+import sqlite3
+import itertools, os, logging
+
+def generate_database_name(N):
+    return os.path.join("database", "graph{}.db".format(N))  
+
+def load_graph_database(N, check_exist=True):
+    ''' Given an input value of N, return a connection to the 
+        cooresponding database '''
+
+    f_database = generate_database_name(N)
+
+    # Check if database exists, if so exit!
+    if check_exist and not os.path.exists(f_database):
+        err = "Database %s does not exist."%f_database
+        logging.critical(err)
+        exit()
+    
+    return sqlite3.connect(f_database, check_same_thread=False)
+    
 
 def select_itr(conn, cmd, chunksize=100):  
     ''' Creates an iterator over an SQL query so the
