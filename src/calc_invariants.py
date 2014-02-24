@@ -2,8 +2,6 @@ import numpy as np
 from numpy import binary_repr
 import networkx as nx
 
-#square_map = dict((x**2,x) for x in range(100))
-
 def convert_to_numpy(adj,**args):
     N = args["N"]
 
@@ -16,7 +14,7 @@ def convert_to_numpy(adj,**args):
     
     A[idx] = edge_int
 
-    # Works for loopless graphs
+    # Works for loopless graphs only
     A += A.T
     return A
 

@@ -1,4 +1,4 @@
 # Graph (with fixed N) object for database
 
-idx   INTEGER PRIMARY KEY AUTOINCREMENT
-adj   UNSIGNED BIG INT NOT NULL
+graph_id   INTEGER PRIMARY KEY AUTOINCREMENT
+adj        UNSIGNED BIG INT NOT NULL

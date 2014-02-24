@@ -36,12 +36,13 @@ conn = sqlite3.connect(f_database,check_same_thread=False)
 
 def create_table_cmd(template, **cargs):
 
-    N = cargs["N"]
+    #N = cargs["N"]
+    #args["max_edges"] = N**2
+
     args = cargs.copy()
-    args["max_edges"] = N**2
     args["cols"] = (',\n'.join(template)).format(**args)
 
-    cmd = "CREATE TABLE IF NOT EXISTS {table_name} ({cols})"
+    cmd = "CREATE TABLE IF NOT EXISTS graph ({cols})"
     cmd = cmd.format(**args)
     return cmd
 
@@ -88,11 +89,11 @@ def convert_edge_to_adj(edges):
     return int_index
 
 def insert_graph_list(index_list):
-    msg = "Inserting {} values into {table_name}.adj"
+    msg = "Inserting {} values into graph.adj"
     msg = msg.format(len(index_list), **cargs)
     logging.info(msg)
 
-    cmd_add = "INSERT INTO {table_name} (adj) VALUES (?)"
+    cmd_add = "INSERT INTO graph (adj) VALUES (?)"
     cmd_add = cmd_add.format(**cargs)
     conn.executemany(cmd_add, zip(*[index_list]))
 
@@ -113,7 +114,7 @@ P.join()
 conn.commit()
 
 # Double check we added this many
-cmd = "SELECT * from {table_name}".format(**cargs)
+cmd = "SELECT * from graph".format(**cargs)
 actually_present = len(conn.execute(cmd).fetchall())
 logging.info("Database reports %i entries."%actually_present)
 
