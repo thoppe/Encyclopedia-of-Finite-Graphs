@@ -37,14 +37,3 @@ def grouper(iterable, n):
        if not chunk:
            return
        yield chunk
-
-    
-def load_template(f_template):
-    ''' Loads a file into a list and skips "# comments" '''
-    template = []
-    with open(f_template) as FIN:
-        for line in FIN:
-            line = line.strip()
-            if line and line[0][0] != "#":
-                template.append(line)
-    return template
