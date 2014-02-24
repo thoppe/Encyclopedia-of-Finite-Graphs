@@ -40,9 +40,10 @@ def grouper(iterable, n):
 
 
 def parallel_compute(itr, func, callback=None, **cargs):
-    ''' Helper function to compute a function over a query in parallel.
-    Uses the grouper function to prevent loading too much into memeory at
-    one time. '''
+    ''' 
+    Helper to compute a function over a in parallel. Uses a grouper 
+    function to prevent loading too much into memeory at one time. 
+    '''
 
     allocator = grouper(itr, cargs["chunksize"])
 
