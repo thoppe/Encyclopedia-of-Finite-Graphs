@@ -9,7 +9,6 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 + [Travis Hoppe](https://github.com/thoppe)
 + [ampetr](https://github.com/ampetr) 
 
-
 *Roadmap*:
 
 + Document database structure
@@ -23,3 +22,31 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 + Add harder invariants and repeat!
 + Submit new sequences to OEIS
 + Writeup project as an experimental math paper (data mining integer sequences over graphs?)
+
+====================================
+
+*Invariants*:
+
+Calculated Invariants
+
++ `n_edge number of edges` (trival)
++ `diameter` (networkx)
++ `radius` (networkx)
++ `is_eulerian` (networkx)
++ `is_distance_regular` (networkx)
++ `is_planar` (graph_tool)
++ `is_bipartite` (graph_tool)
++ `n_articulation_points` (graph_tool)
+
+Proposed Invariants
+
++ `n_vertex` (trivial)
++ `cliques_k` Cliques of size k (graph_tool, networkx)
++ `n_subgraph_A` Number of subgraphs of type A (graph_tool)
++ `girth`
++ `is_regular` 
++ `is_integral`
++ `automorphism_group_order` (nauty)
+
+
+
