@@ -1,4 +1,4 @@
-import sqlite3, logging, argparse, os
+import sqlite3, logging, argparse, os, gc
 from helper_functions import load_graph_database, parallel_compute, select_itr
 from calc_invariants import *
 
@@ -87,7 +87,8 @@ for invariant_id,func in compute_invariant_ids:
           UPDATE ref_invariant_integer SET computed=1 
           WHERE invariant_id={invariant_id}'''
     conn.execute(cmd.format(**cargs))
-
     conn.commit()
+
+    gc.collect()
     
 conn.close()
