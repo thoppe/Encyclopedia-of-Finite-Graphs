@@ -48,6 +48,9 @@ def insert_invariants(vals):
     logging.info(msg)
     cmd  = "INSERT or REPLACE INTO invariant_integer "
     cmd += "(graph_id, invariant_id, value) VALUES (?,?,?)"
+
+    # Cast vals to ints
+    vals = [map(int, x) for x in vals]
     conn.executemany(cmd, vals)
 
 #########################################################################
@@ -66,6 +69,7 @@ for func in func_found:
     cmd += "LEFT JOIN invariant_integer as b "
     cmd += "ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id} "
     cmd += "WHERE b.value IS NULL"
+
     cmd = cmd.format(**cargs)
 
     # Note, we are passing cargs globally, only do one at a time
@@ -73,7 +77,8 @@ for func in func_found:
 
     parallel_compute(itr, 
                      compute_invariant, 
-                     callback=insert_invariants, **cargs)
-
+                     callback=insert_invariants, 
+                     **cargs)
+      
     logging.info("Completed calculation for {column}".format(**cargs))
     conn.commit()

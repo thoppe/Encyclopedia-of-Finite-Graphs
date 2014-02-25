@@ -39,7 +39,7 @@ def viz_graph(g):
 def n_edge(adj,**args):
     # Only true for undirected graphs
     A = convert_to_numpy(adj,**args)
-    return int(A.sum()/2)
+    return A.sum()/2
 
 def diameter(adj,**args):
     A = convert_to_numpy(adj,**args)
