@@ -1,11 +1,11 @@
 -- Base sequence values
 
 CREATE TABLE IF NOT EXISTS ref_invariant_integer_unique(
-    max_n        INTEGER DEFAULT 0    
+    max_n INTEGER PRIMARY KEY
 );
 
 -- Default arguments
-INSERT INTO ref_invariant_integer_unique (max_n) VALUES (0);
+INSERT OR IGNORE INTO ref_invariant_integer_unique (max_n) VALUES (0);
 
 
 CREATE TABLE IF NOT EXISTS invariant_integer_unique(
