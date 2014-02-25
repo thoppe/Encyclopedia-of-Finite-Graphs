@@ -29,4 +29,10 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("is_bipartite"),
     ("n_articulation_points");
 
+-- Unique values for the invariants, needed as separate table for combinations
+CREATE TABLE IF NOT EXISTS invariant_integer_unique(
+    invariant_id INTEGER,
+    unique_value INTEGER,
+    PRIMARY KEY (invariant_id, unique_value)
+);
 
