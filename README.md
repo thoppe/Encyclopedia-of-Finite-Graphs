@@ -29,13 +29,13 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 
 Calculated Invariants
 
-+ `n_edge number of edges` (trival)
-+ `diameter` (networkx)
-+ `radius` (networkx)
++ `n_edge number of edges` (trivial)
++ [`diameter`](http://mathworld.wolfram.com/GraphDiameter.html) (networkx)
++ [`radius`](http://mathworld.wolfram.com/GraphRadius.html) (networkx)
 + `is_eulerian` (networkx)
 + `is_distance_regular` (networkx)
-+ `is_planar` (graph_tool)
-+ `is_bipartite` (graph_tool)
++ [`is_planar`](http://mathworld.wolfram.com/PlanarGraph.html) (graph_tool)
++ [`is_bipartite`](http://mathworld.wolfram.com/BipartiteGraph.html) (graph_tool)
 + `n_articulation_points` (graph_tool)
 
 Proposed Invariants
