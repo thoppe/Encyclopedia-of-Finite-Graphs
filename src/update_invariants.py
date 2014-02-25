@@ -55,30 +55,39 @@ def insert_invariants(vals):
 
 #########################################################################
 
-for func in func_found:
+# Identify the invariants that have not been computed
+cmd = '''
+SELECT invariant_id, function_name 
+FROM ref_invariant_integer WHERE NOT computed'''
+compute_invariant_ids = conn.execute(cmd).fetchall()
 
+for invariant_id,func in compute_invariant_ids:
     cargs["column"] = func
+    cargs["invariant_id"] = invariant_id
 
-    # First get the invariant_id
-    cmd  = "SELECT (invariant_id) from ref_invariant_integer "
-    cmd += "WHERE function_name='{column}'"
-    cmd = cmd.format(**cargs)
-    cargs["invariant_id"] = conn.execute(cmd).fetchone()[0]
+    logging.info("Starting calculation for {column}".format(**cargs))
 
-    cmd  = "SELECT a.adj,a.graph_id FROM graph as a "
-    cmd += "LEFT JOIN invariant_integer as b "
-    cmd += "ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id} "
-    cmd += "WHERE b.value IS NULL"
+    cmd = '''
+    SELECT a.adj,a.graph_id FROM graph as a
+    LEFT JOIN invariant_integer as b
+    ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id}
+    WHERE b.value IS NULL '''
 
     cmd = cmd.format(**cargs)
-
     # Note, we are passing cargs globally, only do one at a time
     itr = select_itr(conn, cmd)
 
     parallel_compute(itr, 
                      compute_invariant, 
                      callback=insert_invariants, 
-                     **cargs)
-      
-    logging.info("Completed calculation for {column}".format(**cargs))
+                     **cargs)     
+
+    # Once changes have been completed, mark the invariant as complete
+    cmd = '''
+          UPDATE ref_invariant_integer SET computed=1 
+          WHERE invariant_id={invariant_id}'''
+    conn.execute(cmd.format(**cargs))
+
     conn.commit()
+    
+conn.close()

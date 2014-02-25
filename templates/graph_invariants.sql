@@ -2,7 +2,8 @@
 
 CREATE TABLE IF NOT EXISTS ref_invariant_integer(
     invariant_id INTEGER PRIMARY KEY,  
-    function_name TEXT, 
+    function_name TEXT,
+    computed TINYINY DEFAULT false,
     UNIQUE (function_name)
 );
 
