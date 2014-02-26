@@ -29,7 +29,7 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 
 Calculated Invariants
 
-+ [`n_edges`](http://mathworld.wolfram.com/EdgeCount.html) (trivial)
++ [`n_edges`](http://mathworld.wolfram.com/EdgeCount.html), [`n_vertex`](http://mathworld.wolfram.com/VertexCount.html) (trivial)
 + [`diameter`](http://mathworld.wolfram.com/GraphDiameter.html) (networkx)
 + [`radius`](http://mathworld.wolfram.com/GraphRadius.html) (networkx)
 + [`is_eulerian`](http://mathworld.wolfram.com/EulerianGraph.html) (networkx)
@@ -40,7 +40,6 @@ Calculated Invariants
 
 Proposed Invariants
 
-+ [`n_vertex`](http://mathworld.wolfram.com/VertexCount.html) (trivial)
 + [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html)
 + [`circumference`](http://mathworld.wolfram.com/GraphCircumference.html), [`girth`](http://mathworld.wolfram.com/Girth.html)
 + [`is_tree`](http://mathworld.wolfram.com/Tree.html)
