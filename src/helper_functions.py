@@ -56,7 +56,7 @@ def parallel_compute(itr, func, callback=None, **cargs):
 
     results = [P.map_async(func, gitr, **map_args) for
                gitr in allocator]
-        
+
     P.close()
     P.join()
 

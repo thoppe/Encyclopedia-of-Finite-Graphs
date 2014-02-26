@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS ref_invariant_integer(
 CREATE TABLE IF NOT EXISTS invariant_integer(
     graph_id INTEGER,
     invariant_id INTEGER,
-    value INTEGER,
-    PRIMARY KEY (graph_id, invariant_id)
+    value INTEGER
+    --PRIMARY KEY (graph_id, invariant_id)
 );
 
 -- Unique values for the invariants, needed as separate table for combinations
@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS invariant_integer_unique(
 -- List of invariants
 
 INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES 
+    ("n_vertex"),
     ("diameter"), 
     ("n_edge"),
     ("radius"),
@@ -42,5 +43,4 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("is_distance_regular"),    
     ("is_planar"),
     ("is_bipartite"),
-    ("n_articulation_points"),
-    ("n_vertex");
+    ("n_articulation_points");

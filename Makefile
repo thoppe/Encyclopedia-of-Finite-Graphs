@@ -1,7 +1,7 @@
 
 # Debugging/Testing commands
 
-test_N = 6
+test_N = 5
 all:
 	rm -vf database/graph$(test_N).db
 	python src/generate_db.py $(test_N)
@@ -9,7 +9,7 @@ all:
 view:
 	sqlitebrowser database/graph$(test_N).db
 
-possible_N_values = 1 2 3 4 5 6
+possible_N_values = 1 2 3 4 5 6 7 8 9
 rebuild_database:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
 	make compute

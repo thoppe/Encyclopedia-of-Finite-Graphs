@@ -42,11 +42,13 @@ def n_vertex(adj,**args):
     return args["N"]
 
 def diameter(adj,**args):
+    if args["N"]==1: return 0
     A = convert_to_numpy(adj,**args)
     g = nx.from_numpy_matrix(A)
     return nx.diameter(g)
 
 def radius(adj,**args):
+    if args["N"]==1: return 0
     A = convert_to_numpy(adj,**args)
     g = nx.from_numpy_matrix(A)
     return nx.radius(g)
