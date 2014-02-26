@@ -41,7 +41,7 @@ Calculated Invariants
 Proposed Invariants
 
 + [`n_vertex`](http://mathworld.wolfram.com/VertexCount.html) (trivial)
-+ `is_tree`
++ [`is_tree`](http://mathworld.wolfram.com/Tree.html)
 + [`is_k_connected`](http://mathworld.wolfram.com/k-ConnectedGraph.html) Can k vertices be removed and graph is still planar? [`is_k_edge_connected`](http://mathworld.wolfram.com/k-Edge-ConnectedGraph.html)
 + [`n_non_adjacent_vertex_pairs`](http://mathworld.wolfram.com/NonadjacentVertexPairs.html)
 + [`crossing_number`](http://mathworld.wolfram.com/GraphCrossingNumber.html), [`toroidal_crossing_number`](http://mathworld.wolfram.com/ToroidalCrossingNumber.html)
@@ -55,7 +55,7 @@ Proposed Invariants
 + [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html)
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)
 + [`circumference`](http://mathworld.wolfram.com/GraphCircumference.html)
-+ [`is_hamiltonian`](http://mathworld.wolfram.com/HamiltonianGraph.html), [`n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianCycle.html), ['n_hamiltonian_paths'](http://mathworld.wolfram.com/HamiltonianPath.html)
++ [`is_hamiltonian`](http://mathworld.wolfram.com/HamiltonianGraph.html), [`n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianCycle.html), [`n_hamiltonian_paths`](http://mathworld.wolfram.com/HamiltonianPath.html)
 + [`is_perfect`](http://mathworld.wolfram.com/PerfectGraph.html)
 + [`chromatic_number`](http://mathworld.wolfram.com/ChromaticNumber.html), [`chromatic_polynomial`](http://mathworld.wolfram.com/ChromaticPolynomial.html), [`k_colorings`](http://mathworld.wolfram.com/k-Coloring.html)
 + [`is_arc_transitive`](http://mathworld.wolfram.com/Arc-TransitiveGraph.html)
