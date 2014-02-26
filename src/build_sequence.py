@@ -33,7 +33,7 @@ for n in range(1, cargs["max_n"]+1):
 # Assume that ref's are the same for all DB's
 cmd = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''
 invariant_list = graph_conn[1].execute(cmd).fetchall()
-
+invariant_dict = dict(invariant_list)
 
 # Find the unique values for each invariant and save them
 
@@ -126,7 +126,10 @@ for seq_id,q_text in conn.execute(cmd_search.format(**cargs)):
 
     conn.execute(cmd_record_seq, vals)
     if(c1):
-        print seq, q_text
+        func = int(q_text.split("id=")[1].split(' ')[0])
+        val = int(q_text.split("value=")[1].split(' ')[0])
+        print seq, invariant_dict[func], val
+
     #logging.info("New sequence %s"%seq)
 
 conn.commit()

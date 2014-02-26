@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
 parser.add_argument('--chunksize',type=int,
                     help="Entries to compute before insert is called",
-                    default=200)
+                    default=1000)
 cargs = vars(parser.parse_args())
 
 # Start the logger
@@ -39,7 +39,7 @@ def compute_invariant(terms):
 
 def insert_invariants(vals):
 
-    with open(cargs["f_landing_table"], 'wa') as FOUT:
+    with open(cargs["f_landing_table"], 'a') as FOUT:
         for item in vals:
             # Cast vals to ints
             FOUT.write("%i %i %i\n"%item)
