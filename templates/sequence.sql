@@ -18,7 +18,9 @@ CREATE TABLE IF NOT EXISTS invariant_integer_sequence(
     seq_id    INTEGER PRIMARY KEY AUTOINCREMENT,   
     query     TEXT,
     seq       TEXT NULL,  
-    max_n     INTEGER DEFAULT 0,  
+    is_interesting INTEGER NULL,
+    is_empty       INTEGER NULL,
+    max_n        INTEGER DEFAULT 0,  
     OEIS_search TEXT NULL,
     UNIQUE(query)
 );

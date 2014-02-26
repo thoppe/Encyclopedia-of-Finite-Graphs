@@ -102,13 +102,31 @@ WHERE max_n < {max_n} OR seq IS NULL
 
 cmd_record_seq = '''
 UPDATE invariant_integer_sequence
-SET max_n=(?), seq=(?) WHERE seq_id=(?)'''
+SET max_n=(?), seq=(?), is_interesting=(?), is_empty=(?)
+WHERE seq_id=(?)'''
+
+def is_interesting(seq):
+    seq = np.array(seq)
+    if sum(seq>0) > 3: return True
+    return False
+def is_empty(seq):
+    seq = np.array(seq)
+    if (seq==0).all(): return True
+    return False
+    
 
 for seq_id,q_text in conn.execute(cmd_search.format(**cargs)):
     seq = [grab_vector(graph_conn[n], q_text)[0] for n in graph_conn]
     seq_text = str(seq)[1:-1].replace(' ','')
-    vals = (cargs["max_n"], seq_text, seq_id)
+    c1 = is_interesting(seq)
+    c2 = is_empty(seq)
+
+    vals = (cargs["max_n"], seq_text, 
+            c1,c2,seq_id)
+
     conn.execute(cmd_record_seq, vals)
-    print vals, q_text, seq
+    if(c1):
+        print seq, q_text
+    #logging.info("New sequence %s"%seq)
 
 conn.commit()
