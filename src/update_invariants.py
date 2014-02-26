@@ -27,7 +27,7 @@ def compute_invariant(terms):
     adj,idx   = terms
     try:
         func   = invariant_funcs[func_name]
-        result = func(adj,N = cargs["N"])
+        result = func(adj,**cargs)
     except Exception as ex:
         err = "{}:{} idx:{} adj:{}".format(func_name, ex, idx, adj)
         logging.critical(err)
@@ -36,12 +36,13 @@ def compute_invariant(terms):
     return (idx,cargs["invariant_id"],result)
 
 def insert_invariants(vals):
-    cmd  = "INSERT or REPLACE INTO invariant_integer "
-    cmd += "(graph_id, invariant_id, value) VALUES (?,?,?)"
+    cmd_insert = '''
+    INSERT or REPLACE INTO invariant_integer
+    (graph_id, invariant_id, value) VALUES (?,?,?)'''
 
     # Cast vals to ints, skip if Error was reached
     vals = [map(int, x) for x in vals]
-    conn.executemany(cmd, vals)
+    conn.executemany(cmd_insert, vals)
 
     msg = "Inserting {} values into graph.{column}"
     msg = msg.format(len(vals), **cargs)

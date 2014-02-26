@@ -27,27 +27,29 @@ does_db_file_exist = os.path.exists(f_database)
 # Connect to the database
 conn = helper_functions.load_graph_database(cargs["N"], False)
 
-# Load the invariant template from file, add new columns if needed
-f_invariant_template = "templates/graph_invariants.sql"
-with open(f_invariant_template) as FIN:
-    logging.info("Updating invariants from %s"%f_invariant_template)
-    script = FIN.read()
-    conn.executescript(script);
-
-# Check if database exists, if so exit!
-if does_db_file_exist:
-    #err = "Database %s already exists, exiting"%f_database
-    #logging.warning(err)
-    exit()
-
-logging.info("Creating database "+f_database)
-
-# Load the template from file
 f_graph_template = "templates/graph.sql"
+f_invariant_template = "templates/graph_invariants.sql"
+
+logging.info("Templating database via %s"%f_invariant_template)
+
+# Load the graph template
 with open(f_graph_template) as FIN:
     script = FIN.read()
     conn.executescript(script)
+    conn.commit()
 
+# Load the invariant template from file, add new columns if needed
+with open(f_invariant_template) as FIN:
+    script = FIN.read()
+    conn.executescript(script);
+
+# Check if database exists, if so exit (silently?)
+cmd_check = "SELECT COUNT(*) FROM graph LIMIT 1"
+is_populated = conn.execute(cmd_check).fetchone()[0] > 0 
+if is_populated:
+    err = "Database has been populated. Skipping nauty."
+    logging.info(err)
+    exit()
 
 # Start populating it with graphs from nauty
 
@@ -64,7 +66,7 @@ def nauty_simple_graph_itr(**args):
         if not header_line: break
         yield edge_line.strip()
 
-upper_matrix_index = np.triu_indices(cargs["N"])
+__upper_matrix_index = np.triu_indices(cargs["N"])
 
 def convert_edge_to_adj(edges):
     # Map the edge list into an index list
@@ -76,7 +78,7 @@ def convert_edge_to_adj(edges):
     A[idx[0],idx[1]] = 1
     
     # The string representation of the upper triangular adj matrix
-    au = ''.join(map(str,A[upper_matrix_index]))
+    au = ''.join(map(str,A[__upper_matrix_index]))
     
     # Convert the binary string to an int
     int_index = int(au,2)
@@ -85,11 +87,9 @@ def convert_edge_to_adj(edges):
 
 def insert_graph_list(index_list):
     msg = "Inserting {} values into graph.adj"
-    msg = msg.format(len(index_list), **cargs)
-    logging.info(msg)
+    logging.info(msg.format(len(index_list)))
 
     cmd_add = "INSERT INTO graph (adj) VALUES (?)"
-    cmd_add = cmd_add.format(**cargs)
     conn.executemany(cmd_add, zip(*[index_list]))
 
 # Process input in parallel
@@ -105,8 +105,8 @@ PC(all_graph_itr,
 conn.commit()
 
 # Double check we added this many
-cmd = "SELECT * from graph".format(**cargs)
-actually_present = len(conn.execute(cmd).fetchall())
+cmd = "SELECT COUNT(*) from graph"
+actually_present = conn.execute(cmd).fetchone()[0]
 logging.info("Database reports %i entries."%actually_present)
 
 
