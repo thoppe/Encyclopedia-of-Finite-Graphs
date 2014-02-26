@@ -33,13 +33,20 @@ known_invariant_functions = set(invariant_function_map.keys())
 
 func_found = col_names.intersection(known_invariant_functions)
 
+
 #########################################################################
 
 # TODO, handle error checking in eval(func)
 def compute_invariant(terms):
     adj,idx = terms
     func = cargs["column"]
-    result = eval(func)(adj,N = cargs["N"])
+    try:
+        result = eval(func)(adj,N = cargs["N"])
+    except Exception as ex:
+        err = "{}:{} idx:{} adj:{}".format(func, ex, idx, adj)
+        logging.critical(err)
+        raise ex
+    
     return (idx,cargs["invariant_id"],result)
 
 def insert_invariants(vals):
@@ -49,7 +56,7 @@ def insert_invariants(vals):
     cmd  = "INSERT or REPLACE INTO invariant_integer "
     cmd += "(graph_id, invariant_id, value) VALUES (?,?,?)"
 
-    # Cast vals to ints
+    # Cast vals to ints, skip if Error was reached
     vals = [map(int, x) for x in vals]
     conn.executemany(cmd, vals)
 
@@ -74,20 +81,26 @@ for invariant_id,func in compute_invariant_ids:
     WHERE b.value IS NULL '''
 
     cmd = cmd.format(**cargs)
+
     # Note, we are passing cargs globally, only do one at a time
     itr = select_itr(conn, cmd)
 
-    parallel_compute(itr, 
-                     compute_invariant, 
-                     callback=insert_invariants, 
-                     **cargs)     
+    success = parallel_compute(itr, compute_invariant, 
+                               callback=insert_invariants, 
+                               **cargs)
 
-    # Once changes have been completed, mark the invariant as complete
+    # Once changes have been completed, 
+    # mark the invariant as complete if successful
     cmd = '''
           UPDATE ref_invariant_integer SET computed=1 
           WHERE invariant_id={invariant_id}'''
-    conn.execute(cmd.format(**cargs))
-    conn.commit()
+
+    if success:
+        conn.execute(cmd.format(**cargs))
+        conn.commit()
+    else:
+        err = "{column} calculation failed"
+        logging.critical(err.format(**cargs))
 
     gc.collect()
     

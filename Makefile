@@ -1,7 +1,7 @@
 
 # Debugging/Testing commands
 
-test_N = 7
+test_N = 6
 all:
 	rm -vf database/graph$(test_N).db
 	python src/generate_db.py $(test_N)
@@ -9,18 +9,18 @@ all:
 view:
 	sqlitebrowser database/graph$(test_N).db
 
-possible_N_values = 1 2 3 4 5 6 7 8 9 10
+possible_N_values = 1 2 3 4 5 6
 rebuild_database:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
 	make compute
 	make package
 
 compute:
-	$(foreach n,$(possible_N_values),time python src/update_invariants.py $(n);)
+	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 package:
 	tar -cvf bak_database.tar database/
-	pbzip2 bak_database.tar
+	pbzip2 -f bak_database.tar
 
 commit:
 	-@make push

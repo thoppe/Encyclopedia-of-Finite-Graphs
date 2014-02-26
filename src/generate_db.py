@@ -36,8 +36,8 @@ with open(f_invariant_template) as FIN:
 
 # Check if database exists, if so exit!
 if does_db_file_exist:
-    err = "Database %s already exists, exiting"%f_database
-    logging.warning(err)
+    #err = "Database %s already exists, exiting"%f_database
+    #logging.warning(err)
     exit()
 
 logging.info("Creating database "+f_database)

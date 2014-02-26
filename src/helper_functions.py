@@ -41,8 +41,9 @@ def grouper(iterable, n):
 
 def parallel_compute(itr, func, callback=None, **cargs):
     ''' 
-    Helper to compute a function over a in parallel. Uses a grouper 
-    function to prevent loading too much into memeory at one time. 
+    Helper to compute a function over the graphs in parallel. Uses a 
+    grouper to prevent loading too much into memeory at one time.
+    Returns True/False if any exceptions have been called.
     '''
 
     allocator = grouper(itr, cargs["chunksize"])
@@ -53,8 +54,18 @@ def parallel_compute(itr, func, callback=None, **cargs):
     if callback!=None:
         map_args["callback"] = callback
 
-    for gitr in allocator:
-        P.map_async(func, gitr, **map_args)
-
+    results = [P.map_async(func, gitr, **map_args) for
+               gitr in allocator]
+        
     P.close()
     P.join()
+
+    # Cycle through the results and see if any exceptions have been called
+    for x in results:
+        if not x.successful():
+            return False
+
+    return True
+
+    
+

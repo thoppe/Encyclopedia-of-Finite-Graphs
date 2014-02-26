@@ -1,5 +1,5 @@
-import numpy as np
 from numpy import binary_repr
+import numpy as np
 
 import networkx as nx
 import graph_tool
@@ -40,6 +40,9 @@ def n_edge(adj,**args):
     # Only true for undirected graphs
     A = convert_to_numpy(adj,**args)
     return A.sum()/2
+
+def n_vertex(adj,**args):
+    return args["N"]
 
 def diameter(adj,**args):
     A = convert_to_numpy(adj,**args)
