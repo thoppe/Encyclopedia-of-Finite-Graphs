@@ -27,10 +27,9 @@ does_db_file_exist = os.path.exists(f_database)
 # Connect to the database
 conn = helper_functions.load_graph_database(cargs["N"], False)
 
-f_graph_template = "templates/graph.sql"
-f_invariant_template = "templates/graph_invariants.sql"
+f_graph_template = "templates/graphs.sql"
 
-logging.info("Templating database via %s"%f_invariant_template)
+logging.info("Templating database via %s"%f_graph_template)
 
 # Load the graph template
 with open(f_graph_template) as FIN:
@@ -38,12 +37,7 @@ with open(f_graph_template) as FIN:
     conn.executescript(script)
     conn.commit()
 
-# Load the invariant template from file, add new columns if needed
-with open(f_invariant_template) as FIN:
-    script = FIN.read()
-    conn.executescript(script);
-
-# Check if database exists, if so exit (silently?)
+# Check if the database is populated, if so exit
 cmd_check = "SELECT COUNT(*) FROM graph LIMIT 1"
 is_populated = conn.execute(cmd_check).fetchone()[0] > 0 
 if is_populated:
@@ -51,7 +45,7 @@ if is_populated:
     logging.info(err)
     exit()
 
-# Start populating it with graphs from nauty
+######################################################################
 
 def nauty_simple_graph_itr(**args):
     ''' Creates a generator for all simple graphs using nauty '''
@@ -91,6 +85,8 @@ def insert_graph_list(index_list):
 
     cmd_add = "INSERT INTO graph (adj) VALUES (?)"
     conn.executemany(cmd_add, zip(*[index_list]))
+
+######################################################################
 
 # Process input in parallel
 logging.info("Generating graphs in parallel from nauty")
