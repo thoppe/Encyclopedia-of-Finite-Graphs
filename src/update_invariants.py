@@ -1,6 +1,5 @@
-import sqlite3, logging, argparse, os, gc
+import sqlite3, logging, argparse, os, gc, inspect
 from helper_functions import load_graph_database, parallel_compute, select_itr
-from calc_invariants import *
 
 desc   = "Updates the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -17,20 +16,20 @@ logging.root.setLevel(logging.INFO)
 conn = load_graph_database(cargs["N"])
 logging.info("Starting invariant calculation for {N}".format(**cargs))
 
-# Find all the columns
-cmd = "SELECT * FROM ref_invariant_integer"
-invariant_search = conn.execute(cmd).fetchall()
-col_names = set(zip(*invariant_search)[1])
+# Create a mapping to all the known invariant functions
+import invariants
+invariant_funcs = dict(inspect.getmembers(invariants,inspect.isfunction))
 
 #########################################################################
 
 def compute_invariant(terms):
-    adj,idx = terms
-    func = cargs["column"]
+    func_name = cargs["column"]
+    adj,idx   = terms
     try:
-        result = eval(func)(adj,N = cargs["N"])
+        func   = invariant_funcs[func_name]
+        result = func(adj,N = cargs["N"])
     except Exception as ex:
-        err = "{}:{} idx:{} adj:{}".format(func, ex, idx, adj)
+        err = "{}:{} idx:{} adj:{}".format(func_name, ex, idx, adj)
         logging.critical(err)
         raise ex
     

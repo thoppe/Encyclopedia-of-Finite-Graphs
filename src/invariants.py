@@ -1,6 +1,4 @@
-from numpy import binary_repr
 import numpy as np
-
 import networkx as nx
 import graph_tool
 import graph_tool.topology
