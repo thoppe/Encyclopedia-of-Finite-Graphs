@@ -1,5 +1,4 @@
-import sqlite3, logging, argparse, os
-import subprocess, itertools
+import logging, argparse, os, subprocess
 import numpy as np
 import helper_functions
 

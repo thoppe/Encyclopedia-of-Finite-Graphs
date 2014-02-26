@@ -1,4 +1,4 @@
-import sqlite3, logging, argparse, os, gc, inspect
+import logging, argparse, gc, inspect
 from helper_functions import load_graph_database, parallel_compute, select_itr
 
 desc   = "Updates the database for fixed N"

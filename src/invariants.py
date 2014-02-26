@@ -1,6 +1,5 @@
 import numpy as np
 import networkx as nx
-import graph_tool
 import graph_tool.topology
 import graph_tool.draw
 
@@ -74,18 +73,6 @@ def n_articulation_points(adj,**args):
     g = graph_tool_representation(adj,**args)
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
-
-# graph_tool can do subgraph isomorphism
-
-invariant_function_map = {}
-invariant_function_map['n_edge'] = n_edge
-invariant_function_map['diameter'] = diameter
-invariant_function_map['radius'] = radius
-invariant_function_map['is_eulerian'] = is_eulerian
-invariant_function_map['is_distance_regular'] = is_distance_regular
-invariant_function_map['is_planar'] = is_planar
-invariant_function_map['is_bipartite'] = is_bipartite
-invariant_function_map['n_articulation_points'] = n_articulation_points
 
 
 if __name__ == "__main__":
