@@ -19,7 +19,7 @@ compute:
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 package:
-	tar -cvf bak_database.tar database/
+	tar -cf bak_database.tar database/
 	pbzip2 -f bak_database.tar
 
 commit:
