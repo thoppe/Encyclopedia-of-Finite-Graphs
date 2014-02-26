@@ -42,14 +42,15 @@ Proposed Invariants
 
 + `n_vertex` (trivial)
 + [`maximum_clique`](http://mathworld.wolfram.com/MaximalClique.html) (graph_tool, networkx)
-+ `n_subgraph_A` Number of subgraphs of type A (graph_tool)
++ `n_subgraph_A` Number of subgraphs of type A (graph_tool), ['is_triangle_free'](http://mathworld.wolfram.com/Triangle-FreeGraph.html), ['is_square_free'](http://mathworld.wolfram.com/Square-FreeGraph.html)
 + [`n_eulerian_cycle`](http://mathworld.wolfram.com/EulerianCycle.html)
 + [`girth`](http://mathworld.wolfram.com/Girth.html)
 + [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html)
 + [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html)
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)
 + [`circumference`](http://mathworld.wolfram.com/GraphCircumference.html)
-+ [`is_hamiltonian` and `n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianGraph.html)
-
++ [`is_hamiltonian`](http://mathworld.wolfram.com/HamiltonianGraph.html), [`n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianCycle.html), ['n_hamiltonian_paths'](http://mathworld.wolfram.com/HamiltonianPath.html)
++ ['is_perfect'](http://mathworld.wolfram.com/PerfectGraph.html)
++ ['chromatic_number'](http://mathworld.wolfram.com/ChromaticNumber.html), ['chromatic_polynomial](http://mathworld.wolfram.com/ChromaticPolynomial.html), ['k_colorings'](http://mathworld.wolfram.com/k-Coloring.html)
 
 
