@@ -50,7 +50,7 @@ Proposed Invariants
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)
 + [`circumference`](http://mathworld.wolfram.com/GraphCircumference.html)
 + [`is_hamiltonian`](http://mathworld.wolfram.com/HamiltonianGraph.html), [`n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianCycle.html), ['n_hamiltonian_paths'](http://mathworld.wolfram.com/HamiltonianPath.html)
-+ ['is_perfect'](http://mathworld.wolfram.com/PerfectGraph.html)
-+ ['chromatic_number'](http://mathworld.wolfram.com/ChromaticNumber.html), ['chromatic_polynomial](http://mathworld.wolfram.com/ChromaticPolynomial.html), ['k_colorings'](http://mathworld.wolfram.com/k-Coloring.html)
++ [`is_perfect`](http://mathworld.wolfram.com/PerfectGraph.html)
++ [`chromatic_number`](http://mathworld.wolfram.com/ChromaticNumber.html), [`chromatic_polynomial`](http://mathworld.wolfram.com/ChromaticPolynomial.html), [`k_colorings`](http://mathworld.wolfram.com/k-Coloring.html)
 
 
