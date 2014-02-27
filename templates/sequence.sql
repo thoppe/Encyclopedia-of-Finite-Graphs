@@ -21,8 +21,7 @@ CREATE TABLE IF NOT EXISTS invariant_integer_sequence(
     seq       TEXT NULL,  
     is_interesting INTEGER NULL,
     is_empty       INTEGER NULL,
-    query     TEXT,    
     OEIS_search TEXT NULL,
-    UNIQUE(query)
+    UNIQUE(terms)
 );
 
