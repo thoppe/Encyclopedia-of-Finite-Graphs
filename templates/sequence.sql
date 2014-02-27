@@ -16,11 +16,12 @@ CREATE TABLE IF NOT EXISTS invariant_integer_unique(
 
 CREATE TABLE IF NOT EXISTS invariant_integer_sequence(
     seq_id    INTEGER PRIMARY KEY AUTOINCREMENT,   
-    query     TEXT,
+    terms     TEXT,
+    term_n    INTEGER,
     seq       TEXT NULL,  
     is_interesting INTEGER NULL,
     is_empty       INTEGER NULL,
-    max_n        INTEGER DEFAULT 0,  
+    query     TEXT,    
     OEIS_search TEXT NULL,
     UNIQUE(query)
 );

@@ -25,6 +25,13 @@ CREATE TABLE IF NOT EXISTS invariant_integer(
     --PRIMARY KEY (graph_id, invariant_id)
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS "idx_invariant_integer" 
+ON "invariant_integer" ("graph_id" ASC, "invariant_id" ASC);
+
+CREATE UNIQUE INDEX IF NOT EXISTS "idx_ref_invariant_integer" 
+ON "ref_invariant_integer" ("invariant_id" ASC);
+
+
 -- Unique values for the invariants, needed as separate table for combinations
 CREATE TABLE IF NOT EXISTS invariant_integer_unique(
     invariant_id INTEGER,

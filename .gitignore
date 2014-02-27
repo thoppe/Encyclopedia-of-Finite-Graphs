@@ -4,6 +4,7 @@ database/*
 *.py[cod]
 .\#*
 *.bz2
+sequence.db
 
 # C extensions
 *.so
