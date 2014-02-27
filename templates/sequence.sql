@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS invariant_integer_sequence(
     terms     TEXT,
     term_n    INTEGER,
     seq       TEXT NULL,  
+    human_text TEXT NULL,
     is_interesting INTEGER NULL,
     is_empty       INTEGER NULL,
     OEIS_search TEXT NULL,

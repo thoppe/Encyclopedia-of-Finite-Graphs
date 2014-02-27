@@ -6,7 +6,7 @@ import sys
 
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=8,
+parser.add_argument('--max_n',type=int,default=7,
                     help="Maximum graph size n to compute sequence over")
 cargs = vars(parser.parse_args())
 
@@ -131,10 +131,11 @@ def query_vals(items):
         sval = "%s %s"%(seq_text,human_text(items))
         #print ".",
         sys.stdout.flush()
-        print "Sequence: ", sval
+        print "Sequence:", sval
 
     return (seq_text, t_text, len(items),
-            is_interesting(seq), is_empty(seq))
+            is_interesting(seq), is_empty(seq),
+            human_text(items))
 
 ###########################################################################
 
@@ -149,7 +150,7 @@ cmd_union_search = '''
 
 cmd_record_seq = '''
   INSERT INTO invariant_integer_sequence
-  (seq,terms,term_n,is_interesting,is_empty) VALUES (?,?,?,?,?)'''
+  (seq,terms,term_n,is_interesting,is_empty,human_text) VALUES (?,?,?,?,?,?)'''
 
 # First run through the inital list of invariant terms,
 # do not compute these terms if they have already been found
