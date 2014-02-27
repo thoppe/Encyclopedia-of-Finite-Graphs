@@ -6,11 +6,8 @@ import sys
 
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=6,
+parser.add_argument('--max_n',type=int,default=8,
                     help="Maximum graph size n to compute sequence over")
-#parser.add_argument('--skip_table_build',default=False,
-#                    action="store_true",
-#                    help="Skip the unique calculation")
 cargs = vars(parser.parse_args())
 
 # Start the logger
@@ -164,8 +161,10 @@ ENTRY_VALS = []
 
 for invariant_id in UNIQUE_TERMS:
     for x in UNIQUE_TERMS[invariant_id]:
-        vals  = query_vals({invariant_id:x})
-        ENTRY_VALS.append(vals)
+        items = {invariant_id:x}
+        if not term_text(items) in known_inital_terms:
+            vals  = query_vals(items)
+            ENTRY_VALS.append(vals)
 
 conn.executemany(cmd_record_seq, ENTRY_VALS)
 conn.commit()
@@ -182,9 +181,13 @@ WHERE term_n={} AND is_interesting=1'''
 
 for comb_n in xrange(1,len(invariant_dict)+1):
     cmd_builder = cmd_find_next_interesting_terms.format(1)
-    cmd_next    = cmd_find_next_interesting_terms.format(comb_n)
-    next_terms = grab_vector(conn, cmd_next)
     builder_terms = grab_vector(conn, cmd_builder)
+
+    cmd_next   = cmd_find_next_interesting_terms.format(comb_n)
+    next_terms = grab_vector(conn, cmd_next)
+
+    cmd_computed = cmd_find_terms.format(comb_n+1)
+    computed_terms = set(grab_vector(conn, cmd_computed))
 
     ENTRY_VALS = []
     interesting_count = 0
@@ -194,11 +197,14 @@ for comb_n in xrange(1,len(invariant_dict)+1):
         t0,t1 = map(ast.literal_eval,(t0,t1))
         if check_multi(t0,t1):
             items = dict(t0,**t1)
-            CHECK_TERMS.append(items)
-
+            name  = term_text(items)
+            if name not in computed_terms:
+                CHECK_TERMS.append(items)
 
     # Inefficent but functioning way to checking for multiple items
     CHECK_TERMS = map(dict, set(tuple(sorted(d.items())) for d in CHECK_TERMS))
+
+    # Find out which terms have been done before
 
     for items in CHECK_TERMS:
         vals = query_vals( items )
@@ -210,35 +216,3 @@ for comb_n in xrange(1,len(invariant_dict)+1):
     conn.executemany(cmd_record_seq, ENTRY_VALS)
     conn.commit()
 
-
-exit()
-
-
-cmd_search = '''
-SELECT seq_id,query FROM invariant_integer_sequence 
-WHERE max_n < {max_n} OR seq IS NULL
-'''
-
-
-
-
-    
-
-for seq_id,q_text in conn.execute(cmd_search.format(**cargs)):
-    seq = [grab_vector(graph_conn[n], q_text)[0] for n in graph_conn]
-    seq_text = str(seq)[1:-1].replace(' ','')
-    c1 = is_interesting(seq)
-    c2 = is_empty(seq)
-
-    vals = (cargs["max_n"], seq_text, 
-            c1,c2,seq_id)
-
-    conn.execute(cmd_record_seq, vals)
-    if(c1):
-        func = int(q_text.split("id=")[1].split(' ')[0])
-        val = int(q_text.split("value=")[1].split(' ')[0])
-        print seq, invariant_dict[func], val
-
-    #logging.info("New sequence %s"%seq)
-
-conn.commit()

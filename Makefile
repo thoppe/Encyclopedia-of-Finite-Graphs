@@ -9,7 +9,7 @@ all:
 view:
 	sqlitebrowser database/graph$(test_N).db
 
-possible_N_values = 1 2 3 4 5 6 7
+possible_N_values = 1 2 3 4 5 6 7 8
 rebuild_database:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
 	make compute
