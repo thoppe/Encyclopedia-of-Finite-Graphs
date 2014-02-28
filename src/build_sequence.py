@@ -219,3 +219,31 @@ for comb_n in xrange(1,len(invariant_dict)+1):
     conn.executemany(cmd_record_seq, ENTRY_VALS)
     conn.commit()
 
+###########################################################################
+
+import time,json
+from OEIS_pull import pull_OEIS_seq
+
+# Find all sequences missing OEIS search
+cmd_search = '''
+SELECT seq,seq_id FROM invariant_integer_sequence
+WHERE is_interesting=1 AND OEIS_search IS NULL '''
+cmd_insert = '''
+UPDATE invariant_integer_sequence SET
+OEIS_search=?, OEIS_search_n=?
+WHERE seq_id=(?)'''
+
+for seq,idx in conn.execute(cmd_search).fetchall():
+    # strip the inital results
+    while seq[0] in ["0",","]: seq = seq[1:]
+
+    results = pull_OEIS_seq(seq)
+    n = len(results)
+    logging.info("Pulled %s, result count %i"%(seq,n))
+    formated_results = json.dumps(results,indent=2)
+    conn.execute(cmd_insert, (formated_results, n, idx))
+    conn.commit()
+    time.sleep(.5)
+    
+
+

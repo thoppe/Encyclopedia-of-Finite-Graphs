@@ -2,6 +2,10 @@ import requests, json
 
 OEIS_base_url = '''http://oeis.org/search'''
 
+import logging
+requests_log = logging.getLogger("requests")
+requests_log.setLevel(logging.WARNING)
+
 # Graph OEIS keywords will have "nonn" non-negative numbers
 
 def strip_comments(text):
