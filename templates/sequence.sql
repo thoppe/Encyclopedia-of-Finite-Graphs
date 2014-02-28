@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS ref_invariant_integer_unique(
 -- Default arguments
 INSERT OR IGNORE INTO ref_invariant_integer_unique (max_n) VALUES (0);
 
-
 CREATE TABLE IF NOT EXISTS invariant_integer_unique(
     invariant_id INTEGER,
     unique_value INTEGER,
