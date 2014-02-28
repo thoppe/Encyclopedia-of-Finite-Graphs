@@ -87,7 +87,7 @@ for invariant_id,func in compute_invariant_ids:
     if success:
         raw = np.loadtxt(cargs["f_landing_table"],dtype=int)
         if len(raw.shape)==1: raw = raw.reshape(1,-1)
-        conn.executemany(cmd_insert.format(**cargs),raw)
+        conn.executemany(cmd_insert.format(**cargs),raw.tolist())
         conn.executescript(cmd_mark_success.format(**cargs))
         conn.commit()
         msg = "Saved {} to values to {column}"
