@@ -4,6 +4,9 @@ import numpy as np
 import helper_functions
 import sys
 
+# These variants will not be used in the powerset construction
+__ignored_invariants = ["n_vertex", "n_edge"]
+
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('--max_n',type=int,default=7,
@@ -77,8 +80,9 @@ invariant_integer_sequence (query) VALUES (?)'''
 
 UNIQUE_TERMS = {}
 for idx, function_name in invariant_list:
-    cmd = cmd_find_unique.format(idx)
-    UNIQUE_TERMS[idx] = grab_vector(conn,cmd)
+    if function_name not in __ignored_invariants:
+        cmd = cmd_find_unique.format(idx)
+        UNIQUE_TERMS[idx] = grab_vector(conn,cmd)
 
 ###########################################################################
 
@@ -220,6 +224,8 @@ for comb_n in xrange(1,len(invariant_dict)+1):
     conn.commit()
 
 ###########################################################################
+
+exit()
 
 import time,json
 from OEIS_pull import pull_OEIS_seq
