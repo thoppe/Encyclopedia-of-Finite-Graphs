@@ -225,7 +225,6 @@ for comb_n in xrange(1,len(invariant_dict)+1):
 
 ###########################################################################
 
-exit()
 
 import time,json
 from OEIS_pull import pull_OEIS_seq
