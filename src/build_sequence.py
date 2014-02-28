@@ -89,8 +89,9 @@ def build_structured_terms(terms):
 
 def build_union_search(terms):
     sterms = build_structured_terms(terms)
-    return cmd_union_search.format(structured_terms=sterms,
-                             num_terms= len(terms))
+    s = cmd_union_search.format(structured_terms=sterms,
+                                num_terms= len(terms))
+    return s
 
 def sequence_search(cmd_query):
     vec = []
@@ -127,6 +128,8 @@ def query_vals(items):
     seq_text = sequence_text(seq)
     t_text   = term_text(items)
 
+    #print cmd_query, seq
+
     if is_interesting(seq):
         sval = "%s %s"%(seq_text,human_text(items))
         #print ".",
@@ -143,8 +146,7 @@ cmd_union_search = '''
   SELECT graph_id, 
   SUM(CASE WHEN {structured_terms} THEN 1 ELSE 0 END) 
   AS match_count
-  FROM invariant_integer AS a JOIN ref_invariant_integer AS b
-  ON a.invariant_id = b.invariant_id
+  FROM invariant_integer AS a
   GROUP BY graph_id 
   HAVING match_count={num_terms}'''
 

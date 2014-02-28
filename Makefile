@@ -20,7 +20,7 @@ compute:
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
-	python src/build_sequence.py
+	time python src/build_sequence.py
 
 package:
 	tar -cf bak_database.tar database/
