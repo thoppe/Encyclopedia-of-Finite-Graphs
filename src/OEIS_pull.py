@@ -46,11 +46,32 @@ def pull_OEIS_seq(seq,**fmt_args):
     r = requests.get(OEIS_base_url, params=payload)
     return jsonify_OEIS(r.text,**fmt_args)
 
+def pull_OEIS_bfile(OEIS_seq_id, **fmt_args):
+    if OEIS_seq_id[0] != "A":
+        msg = "Valid OEIS sequence ID start with A"
+        raise SyntaxError(msg)
+    seq = OEIS_seq_id[1:]
+    url = "http://www.oeis.org/A{seq}/b{seq}.txt"
+    r = requests.get(url.format(seq=seq))
+
+    terms = []
+    for line in strip_comments(r.text).split('\n'):
+        try: 
+            n,val = map(int,line.split())
+        except Exception as ex:
+            msg = "Problem with bfile %s, %s"%(r.url,ex)
+            raise ValueError(msg)
+        terms.append((n,val))
+
+    return zip(*terms)
+
 
 if __name__ == "__main__":
     seq_id = "A000109"
+
     print "Testing pull of", seq_id
     print pull_OEIS_seq_id(seq_id)
+    print pull_OEIS_bfile(seq_id)
     print
 
     seq = [14,50,233,1249]
