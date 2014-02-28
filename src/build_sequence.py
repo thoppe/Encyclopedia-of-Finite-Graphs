@@ -4,6 +4,9 @@ import numpy as np
 import helper_functions
 import sys
 
+# These variants will not be used in the powerset construction
+__ignored_invariants = ["n_vertex", "n_edge"]
+
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('--max_n',type=int,default=7,
@@ -77,8 +80,9 @@ invariant_integer_sequence (query) VALUES (?)'''
 
 UNIQUE_TERMS = {}
 for idx, function_name in invariant_list:
-    cmd = cmd_find_unique.format(idx)
-    UNIQUE_TERMS[idx] = grab_vector(conn,cmd)
+    if function_name not in __ignored_invariants:
+        cmd = cmd_find_unique.format(idx)
+        UNIQUE_TERMS[idx] = grab_vector(conn,cmd)
 
 ###########################################################################
 
@@ -218,4 +222,34 @@ for comb_n in xrange(1,len(invariant_dict)+1):
                  (comb_n,interesting_count))
     conn.executemany(cmd_record_seq, ENTRY_VALS)
     conn.commit()
+
+###########################################################################
+
+exit()
+
+import time,json
+from OEIS_pull import pull_OEIS_seq
+
+# Find all sequences missing OEIS search
+cmd_search = '''
+SELECT seq,seq_id FROM invariant_integer_sequence
+WHERE is_interesting=1 AND OEIS_search IS NULL '''
+cmd_insert = '''
+UPDATE invariant_integer_sequence SET
+OEIS_search=?, OEIS_search_n=?
+WHERE seq_id=(?)'''
+
+for seq,idx in conn.execute(cmd_search).fetchall():
+    # strip the inital results
+    while seq[0] in ["0",","]: seq = seq[1:]
+
+    results = pull_OEIS_seq(seq)
+    n = len(results)
+    logging.info("Pulled %s, result count %i"%(seq,n))
+    formated_results = json.dumps(results,indent=2)
+    conn.execute(cmd_insert, (formated_results, n, idx))
+    conn.commit()
+    time.sleep(.5)
+    
+
 
