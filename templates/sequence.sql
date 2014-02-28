@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS ref_invariant_integer_unique(
 -- Default arguments
 INSERT OR IGNORE INTO ref_invariant_integer_unique (max_n) VALUES (0);
 
-
 CREATE TABLE IF NOT EXISTS invariant_integer_unique(
     invariant_id INTEGER,
     unique_value INTEGER,
@@ -16,12 +15,13 @@ CREATE TABLE IF NOT EXISTS invariant_integer_unique(
 
 CREATE TABLE IF NOT EXISTS invariant_integer_sequence(
     seq_id    INTEGER PRIMARY KEY AUTOINCREMENT,   
-    query     TEXT,
+    terms     TEXT,
+    term_n    INTEGER,
     seq       TEXT NULL,  
+    human_text TEXT NULL,
     is_interesting INTEGER NULL,
     is_empty       INTEGER NULL,
-    max_n        INTEGER DEFAULT 0,  
     OEIS_search TEXT NULL,
-    UNIQUE(query)
+    UNIQUE(terms)
 );
 
