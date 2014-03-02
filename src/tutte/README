@@ -1,0 +1,70 @@
+README
+------
+
+An implementation of the algorithm to compute Tutte polynomials from
+
+   Andreas Björklund, Thore Husfeldt, Petteri Kaski, Mikko Koivisto: 
+   Computing the Tutte Polynomial in Vertex-Exponential Time. 
+   49th Annual IEEE Symposium on Foundations of Computer Science, 
+   FOCS 2008, October 25-28, 2008, Philadelphia, PA, USA. 
+   IEEE Computer Society 2008, pages 677-686.
+
+The work is done in the program "tutte_bhkk", which can be run from 
+the command line. The input is given in 0/1 adjacency matrix format;
+more precisely, the input is "<N> <row1> <row2> ... <rowN>", where <N> 
+is the number of vertices and <rowJ> is the Jth row of the adjacency
+matrix. For example, a triangle is given as
+
+   3 0 1 1 1 0 1 1 1 0
+
+The output is a table of coefficients, where the entry at row i, column j
+gives the coefficient of the monomial x^iy^j for i,j=0,1,2,... in
+       
+   T_G(x,y) = \sum_{F\subseteq E} (x-1)^{c_F(G)-c(G)}(y-1)^{c_F(G)+|F|-n(G)}
+
+where G is the input graph, 
+      V is the vertex set of G,
+      E is the edge set of G,
+      c(G) is the number of connected components in G, 
+      c_F(G) is the number of connected components in the
+             subgraph of G with vertex set V and edge set F, and
+      n(G) is the number of vertices in G.
+
+For example, for the triangle we obtain the output
+
+   0 1
+   1
+   1
+
+or equivalently, T_G(x,y) = x + x^2 + y.
+
+The python module "tutte.py" is a very simple wrapper that serves two
+purposes.
+
+First, it connects "tutte_bhkk" to the networkx library
+(networkx.lanl.gov), which is a collection of graph algorithms and
+data structures for python. In particular, "tutte.py" exports the
+function tutte_poly(G), which returns the Tutte polynomial of a given
+networkx.Graph. 
+
+For example, you can write another python script like this:
+
+	from tutte import tutte_poly
+	from networkx import chvatal_graph
+
+	print tutte_poly(chvatal_graph())
+
+Second, "tutte.py" can be called from the command line and serves as a
+convenient interface to "tutte_bhkk". The input can be given either as an
+edge list on standard input, or in a compact shorthand format. 
+The output is either a table of coefficients (default) or TeX. 
+
+Some examples:
+
+	$ python tutte.py --petersen
+	$ python tutte.py --short="0--1 1--2 2--0" --output=tex
+	$ python tutte.py
+	0 1
+	1 2
+	2 0
+	^D
