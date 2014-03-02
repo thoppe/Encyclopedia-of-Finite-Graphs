@@ -51,4 +51,14 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("n_cycle_basis"),
     ("is_subgraph_free_K3"),
     ("is_subgraph_free_K4"),
-    ("is_subgraph_free_K5");
+    ("is_subgraph_free_K5"),
+
+    ("is_subgraph_free_C4"),
+    ("is_subgraph_free_C5"),
+    ("is_subgraph_free_C6"),
+    ("is_subgraph_free_C7"),
+    ("is_subgraph_free_C8"),
+    ("is_subgraph_free_C9"),
+    ("is_subgraph_free_C10")
+
+;

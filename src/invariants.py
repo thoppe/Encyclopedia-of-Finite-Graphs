@@ -91,11 +91,24 @@ def __generate_KN(n):
         g.add_edge(i,j)
     return g
 
+def __generate_CN(n):
+    g = graph_tool.Graph(directed=False)
+    g.add_vertex(n)
+    labels = range(n)
+    for i in range(-1,n-1):
+        g.add_edge(labels[i],labels[i+1])
+    return g
+
 _complete_graphs = [__generate_KN(n) for n in xrange(0, 15)]
+_cycle_graphs    = [__generate_CN(n) for n in xrange(0, 15)]
 _has_subgraph = graph_tool.topology.subgraph_isomorphism
 
 def _is_subgraph_free(subg):
+    subg_n = len([x for x in subg.vertices()])
+    
     def f(adj,**args):
+        # Early breakout if input graph is too small
+        if args["N"] < subg_n: return 0
         g = graph_tool_representation(adj,**args)
         return len(_has_subgraph(subg,g)[0])==0
     return f
@@ -104,6 +117,14 @@ def _is_subgraph_free(subg):
 is_subgraph_free_K3 = _is_subgraph_free(_complete_graphs[3])
 is_subgraph_free_K4 = _is_subgraph_free(_complete_graphs[4])
 is_subgraph_free_K5 = _is_subgraph_free(_complete_graphs[5])
+
+is_subgraph_free_C4 = _is_subgraph_free(_cycle_graphs[4])
+is_subgraph_free_C5 = _is_subgraph_free(_cycle_graphs[5])
+is_subgraph_free_C6 = _is_subgraph_free(_cycle_graphs[6])
+is_subgraph_free_C7 = _is_subgraph_free(_cycle_graphs[7])
+is_subgraph_free_C8 = _is_subgraph_free(_cycle_graphs[8])
+is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
+is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
 
 if __name__ == "__main__":
     # Function testing here
