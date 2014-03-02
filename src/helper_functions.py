@@ -50,7 +50,7 @@ def parallel_compute(itr, func, callback=None, **cargs):
 
     P = multiprocessing.Pool()
 
-    map_args = {"chunksize":10}
+    map_args = {"chunksize":20}
     if callback!=None:
         map_args["callback"] = callback
 

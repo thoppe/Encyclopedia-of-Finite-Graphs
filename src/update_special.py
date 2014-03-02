@@ -3,7 +3,7 @@ import logging, argparse, gc, inspect, os, csv
 from helper_functions import load_graph_database, parallel_compute, select_itr
 from helper_functions import grouper
 
-desc   = "Updates the database for fixed N"
+desc   = "Updates the special invariants for fixed N"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
 parser.add_argument('--chunksize',type=int,
@@ -22,59 +22,43 @@ logging.info("Starting invariant calculation for {N}".format(**cargs))
 import invariants
 invariant_funcs = dict(inspect.getmembers(invariants,inspect.isfunction))
 
-# Get the special column names
-cmd = '''SELECT * from graph LIMIT 1'''
-graph_args_names = zip(*conn.execute(cmd).description)[0]
-
 #########################################################################
 
 def compute_invariant(terms):
     func_name = cargs["column"]
-    idx,adj   = terms[0], terms[1]
-
-    graph_args = cargs.copy()
-    for k,name in enumerate(graph_args_names[2:]):
-        graph_args[name] = terms[k+2]
-
+    adj,idx   = terms
     try:
         func   = invariant_funcs[func_name] 
-        result = func(adj,**graph_args)
+        result = func(adj,**cargs)
     except Exception as ex:
         err = "{}:{} idx:{} adj:{}".format(func_name, ex, idx, adj)
         logging.critical(err)
         raise ex
-    
-    return (idx,cargs["invariant_id"],result)
+    return (cargs["column"],idx,result)
 
 def insert_invariants(vals):
-
     with open(cargs["f_landing_table"], 'a') as FOUT:
         for item in vals:
-            # Cast vals to ints
-            FOUT.write("%i %i %i\n"%item)
+            FOUT.write("%s %s %s\n"%item)
 
 #########################################################################
 
-# Identify the invariants that have not been computed
-cmd = '''
-SELECT invariant_id, function_name 
-FROM ref_invariant_integer WHERE NOT computed'''
-compute_invariant_ids = conn.execute(cmd).fetchall()
+# Get the special column names
+cmd = '''SELECT * from graph LIMIT 1'''
+graph_args_names = zip(*conn.execute(cmd).description)[0]
+special_functions = [x for x in graph_args_names if "special" in x]
 
-for invariant_id,func in compute_invariant_ids:
+for func in special_functions:
+
     cargs["column"] = func
-    cargs["invariant_id"] = invariant_id
-
-    f_landing = "landing_{N}_{invariant_id}.txt".format(**cargs)
+    f_landing = "landing_{N}_{column}.txt".format(**cargs)
     cargs["f_landing_table"] = os.path.join("database",f_landing)
 
     logging.info("Starting calculation for {column}".format(**cargs))
 
     cmd = '''
-      SELECT a.* FROM graph as a
-      LEFT JOIN invariant_integer as b
-      ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id}
-      WHERE b.value IS NULL '''
+      SELECT adj,graph_id FROM graph
+      WHERE  {column} IS NULL'''
 
     cmd = cmd.format(**cargs)
     itr = select_itr(conn, cmd)
@@ -85,20 +69,20 @@ for invariant_id,func in compute_invariant_ids:
 
     # Once changes have been completed, 
     # mark the invariant as complete if successful
-    cmd_mark_success = '''
-      UPDATE ref_invariant_integer SET computed=1 
-      WHERE invariant_id={invariant_id}'''
+    #cmd_mark_success = '''
+    #  UPDATE ref_invariant_special SET computed=1 
+    #  WHERE invariant_special_id={invariant_special_id}'''
 
     cmd_insert = '''
-      INSERT or IGNORE INTO invariant_integer
-      (graph_id, invariant_id, value) VALUES (?,?,?)'''
+      UPDATE graph SET {column}=(?) WHERE graph_id = (?)'''.format(**cargs)
       
     if success:
-        raw = np.loadtxt(cargs["f_landing_table"],dtype=int)
+        #raw = np.loadtxt(cargs["f_landing_table"])
+        raw = np.genfromtxt(cargs["f_landing_table"],dtype=str)
         if len(raw.shape)==1: raw = raw.reshape(1,-1)
-        conn.executemany(cmd_insert.format(**cargs),raw.tolist())
-        conn.executescript(cmd_mark_success.format(**cargs))
+        raw = raw[:,1:].T[::-1].T
 
+        conn.executemany(cmd_insert.format(**cargs),raw.tolist())
         msg = "Saved {} to values to {column}"
         logging.info(msg.format(raw.shape[0],**cargs))
     else:

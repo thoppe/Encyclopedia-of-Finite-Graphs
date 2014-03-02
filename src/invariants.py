@@ -1,8 +1,10 @@
 import numpy as np
-import itertools
+import ast,itertools
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
+
+######################### Conversion code ######################### 
 
 def convert_to_numpy(adj,**args):
     N = args["N"]
@@ -30,17 +32,57 @@ def graph_tool_representation(adj, **args):
             g.add_edge(n0,n1)
     return g
 
-def viz_graph(g):
-    pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
-    graph_tool.draw.graph_draw(g,pos)
+######################### Special invariant code #################
 
-def n_edge(adj,**args):
-    # Only true for undirected graphs
+def compress_input(val):
+    return str(val).replace(' ','')
+
+def special_cycle_basis(adj,**args):
     A = convert_to_numpy(adj,**args)
-    return A.sum()/2
+    g = nx.from_numpy_matrix(A)
+    val = nx.cycle_basis(g)
+    return compress_input(val)
+
+def special_degree_sequence(adj,**args):
+    A = convert_to_numpy(adj,**args)
+    deg = A.sum(axis=0)
+    deg.sort()
+    return compress_input(deg.tolist())
+
+######################### Invariant code ######################### 
 
 def n_vertex(adj,**args):
     return args["N"]
+
+def n_cycle_basis(adj, **args):
+    # is_tree == n_cycle_basis=0
+    cycle_b = ast.literal_eval(args["special_cycle_basis"])
+    return len(cycle_b)
+
+def n_edge(adj,**args):
+    # Defined this way for loopless simple graphs
+    deg = ast.literal_eval(args["special_degree_sequence"])
+    return sum(deg) / 2
+
+def n_endpoints(adj,**args):
+    # Defined this way for loopless simple graphs
+    deg = ast.literal_eval(args["special_degree_sequence"])
+    return sum([True for d in deg if d==1])
+
+# Generator for k-regular
+def _is_k_regular(k):
+    def f(adj, **args):
+        # Early breakout if input graph is too small
+        if args["N"] < k: return 0
+        deg = ast.literal_eval(args["special_degree_sequence"])
+        deg = np.array(deg,dtype=int)
+        return (deg==k).all()
+    return f
+
+# Cubic graphs are related to http://oeis.org/A002851
+is_3_regular = _is_k_regular(3)
+is_4_regular = _is_k_regular(4)
+is_5_regular = _is_k_regular(5)
 
 def diameter(adj,**args):
     if args["N"]==1: return 0
@@ -53,11 +95,6 @@ def radius(adj,**args):
     A = convert_to_numpy(adj,**args)
     g = nx.from_numpy_matrix(A)
     return nx.radius(g)
-
-def n_cycle_basis(adj, **args):
-    A = convert_to_numpy(adj,**args)
-    g = nx.from_numpy_matrix(A)
-    return len(nx.cycle_basis(g))
 
 def is_eulerian(adj,**args):
     A = convert_to_numpy(adj,**args)
@@ -127,6 +164,11 @@ is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
 is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
 
 if __name__ == "__main__":
+
+    def viz_graph(g):
+        pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
+        graph_tool.draw.graph_draw(g,pos)
+
     # Function testing here
 
     N = 7

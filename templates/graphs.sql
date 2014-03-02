@@ -2,9 +2,10 @@
 
 CREATE TABLE IF NOT EXISTS graph(
        graph_id   INTEGER PRIMARY KEY AUTOINCREMENT,
-       adj        UNSIGNED BIG INT NOT NULL
+       adj        UNSIGNED BIG INT NOT NULL,
+       special_cycle_basis STRING,
+       special_degree_sequence STRING
 );
-
 
 -- Invariant reference table for integers
 
@@ -41,18 +42,24 @@ CREATE TABLE IF NOT EXISTS invariant_integer_unique(
 INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES 
     ("n_vertex"),
     ("diameter"), 
+    ("n_cycle_basis"),
     ("n_edge"),
+    ("n_endpoints"),
+
+    ("is_3_regular"),
+    ("is_4_regular"),
+    ("is_5_regular"),
+
     ("radius"),
-    ("is_eulerian"), 
+    ("is_eulerian"),
     ("is_distance_regular"),    
     ("is_planar"),
     ("is_bipartite"),
+
     ("n_articulation_points"),
-    ("n_cycle_basis"),
     ("is_subgraph_free_K3"),
     ("is_subgraph_free_K4"),
     ("is_subgraph_free_K5"),
-
     ("is_subgraph_free_C4"),
     ("is_subgraph_free_C5"),
     ("is_subgraph_free_C6"),

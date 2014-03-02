@@ -38,10 +38,11 @@ Calculated Invariants
 + [`is_planar`](http://mathworld.wolfram.com/PlanarGraph.html) (graph_tool)
 + [`is_bipartite`](http://mathworld.wolfram.com/BipartiteGraph.html) (graph_tool)
 + [`n_articulation_points`](http://mathworld.wolfram.com/ArticulationVertex.html) (graph_tool)
-+ [`n_cycle_basis`](http://en.wikipedia.org/wiki/Cycle_space) of which the n=0 case is a tree. (networkx)
++ [`n_cycle_basis`](http://en.wikipedia.org/wiki/Cycle_space) of which the n=0 case [`is_tree`](http://mathworld.wolfram.com/Tree.html) (networkx)
 + [`is_subgraph_free_K3`](http://mathworld.wolfram.com/Triangle-FreeGraph.html) of which the n=0 case is a triangle-free graph. (graph_tool)
 + `is_subgraph_free_K4`, `is_subgraph_free_K5` (graph_tool)
 + [`is_subgraph_free_C4`](http://mathworld.wolfram.com/Square-FreeGraph.html), ..., `is_subgraph_free_C10` checks for cycles of length k (graph_tool)
++ [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html)
 
 Proposed Invariants
 
@@ -50,9 +51,7 @@ Proposed Invariants
 + [`chromatic_number`](http://mathworld.wolfram.com/ChromaticNumber.html), [`chromatic_polynomial`](http://mathworld.wolfram.com/ChromaticPolynomial.html), [`k_colorings`](http://mathworld.wolfram.com/k-Coloring.html)
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)
 + [`is_hamiltonian`](http://mathworld.wolfram.com/HamiltonianGraph.html), [`n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianCycle.html), [`n_hamiltonian_paths`](http://mathworld.wolfram.com/HamiltonianPath.html)
-+ [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html)
 + [`circumference`](http://mathworld.wolfram.com/GraphCircumference.html), [`girth`](http://mathworld.wolfram.com/Girth.html)
-+ [`is_tree`](http://mathworld.wolfram.com/Tree.html)
 + [`is_k_connected`](http://mathworld.wolfram.com/k-ConnectedGraph.html) Can k vertices be removed and graph is still planar? [`is_k_edge_connected`](http://mathworld.wolfram.com/k-Edge-ConnectedGraph.html)
 + [`n_non_adjacent_vertex_pairs`](http://mathworld.wolfram.com/NonadjacentVertexPairs.html)
 + [`crossing_number`](http://mathworld.wolfram.com/GraphCrossingNumber.html), [`toroidal_crossing_number`](http://mathworld.wolfram.com/ToroidalCrossingNumber.html)
