@@ -99,8 +99,10 @@ for invariant_id,func in compute_invariant_ids:
         conn.executemany(cmd_insert.format(**cargs),raw.tolist())
         conn.executescript(cmd_mark_success.format(**cargs))
 
-        msg = "Saved {} to values to {column}"
-        logging.info(msg.format(raw.shape[0],**cargs))
+        non_zero_terms = (raw[:,-1]>0).sum()
+        msg = "Saved {} to values to {column}, {} nonzero"
+        logging.info(msg.format(raw.shape[0],non_zero_terms,
+                                **cargs))
     else:
         err = "{column} calculation failed"
         logging.critical(err.format(**cargs))
