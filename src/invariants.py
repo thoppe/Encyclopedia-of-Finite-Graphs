@@ -1,5 +1,6 @@
 import numpy as np
-import ast,itertools
+import ast,itertools, os
+from subprocess import Popen, PIPE, STDOUT
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
@@ -48,6 +49,15 @@ def special_degree_sequence(adj,**args):
     deg = A.sum(axis=0)
     deg.sort()
     return compress_input(deg.tolist())
+
+def special_polynomial_tutte(adj,**args):
+    A = convert_to_numpy(adj,**args)
+    cmd = os.path.join('src','tutte','tutte_bhkk')
+    tutte_args = ' '.join(map(str, [args["N"],] + A.ravel().tolist()))
+    p = Popen([cmd,], stdin=PIPE, stdout=PIPE)
+    (out,err)= p.communicate(tutte_args)
+    sval = [[int(x) for x in line.split()] for line in out.split('\n')]
+    return compress_input(sval)
 
 ######################### Invariant code ######################### 
 
