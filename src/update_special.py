@@ -76,8 +76,7 @@ for func in special_functions:
     cmd_insert = '''
       UPDATE graph SET {column}=(?) WHERE graph_id = (?)'''.format(**cargs)
       
-    if success:
-        #raw = np.loadtxt(cargs["f_landing_table"])
+    if success and os.path.exists(cargs["f_landing_table"]):
         raw = np.genfromtxt(cargs["f_landing_table"],dtype=str)
         if len(raw.shape)==1: raw = raw.reshape(1,-1)
         raw = raw[:,1:].T[::-1].T

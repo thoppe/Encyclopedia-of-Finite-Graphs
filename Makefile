@@ -1,7 +1,7 @@
 
 # Debugging/Testing commands
 
-test_N = 6
+test_N = 5
 all:
 	rm -vf database/graph$(test_N).db
 	python src/generate_db.py $(test_N)
@@ -37,7 +37,7 @@ commit:
 
 push:
 #	-@make all
-	git add -A
+#	git add -A
 	git status
 	-git commit
 	git push

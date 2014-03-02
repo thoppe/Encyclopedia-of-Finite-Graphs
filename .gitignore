@@ -1,6 +1,10 @@
 # Graph database (don't auto store)
 database/*
 
+# Tutte src files
+src/tutte/* 
+*tutte/tutte_bhkk
+
 *.py[cod]
 .\#*
 *.bz2

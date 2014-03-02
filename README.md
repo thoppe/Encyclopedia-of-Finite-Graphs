@@ -43,6 +43,7 @@ Calculated Invariants
 + `is_subgraph_free_K4`, `is_subgraph_free_K5` (graph_tool)
 + [`is_subgraph_free_C4`](http://mathworld.wolfram.com/Square-FreeGraph.html), ..., `is_subgraph_free_C10` checks for cycles of length k (graph_tool)
 + [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html)
++ [`tutte_polynomial`](http://mathworld.wolfram.com/TuttePolynomial.html)
 
 Proposed Invariants
 

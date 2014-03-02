@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS graph(
        graph_id   INTEGER PRIMARY KEY AUTOINCREMENT,
        adj        UNSIGNED BIG INT NOT NULL,
        special_cycle_basis STRING,
-       special_degree_sequence STRING
+       special_degree_sequence STRING,
+       special_polynomial_tutte STRING
 );
 
 -- Invariant reference table for integers
