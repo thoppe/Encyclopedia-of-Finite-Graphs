@@ -1,4 +1,5 @@
 import numpy as np
+import itertools
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
@@ -81,15 +82,26 @@ def n_articulation_points(adj,**args):
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
 
-_triangle = graph_tool.Graph(directed=False)
-_triangle.add_vertex(3)
-_triangle.add_edge(0,1)
-_triangle.add_edge(1,2)
-_triangle.add_edge(2,0)
+######################### Subgraph code ######################### 
+
+def __generate_KN(n):
+    g = graph_tool.Graph(directed=False)
+    g.add_vertex(n)
+    for i,j in itertools.combinations(range(n),2):
+        g.add_edge(i,j)
+    return g
+
+_complete_graphs = [__generate_KN(n) for n in xrange(0, 15)]
+_has_subgraph = graph_tool.topology.subgraph_isomorphism
+
+def _count_subgraphs(subg, g):
+    return len(_has_subgraph(subg,g)[0])
+
 def n_subgraph_triangle(adj, **args):
     ''' n_subgraph_triangle=0, OEIS:A024607 '''
     g = graph_tool_representation(adj,**args)
-    return len(graph_tool.topology.subgraph_isomorphism(_triangle,g)[0])
+    return _count_subgraphs(_complete_graphs[3], g)
+
 
 if __name__ == "__main__":
     # Function testing here

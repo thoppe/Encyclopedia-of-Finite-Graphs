@@ -3,6 +3,20 @@ import subprocess, itertools
 import numpy as np
 import helper_functions
 import sys
+'''
+select id1, id2, v1, v2, count(graph_id)
+from
+(
+SELECT a.graph_id, a.invariant_id as id1, b.invariant_id as id2,  a.value as v1, b.value as v2
+from invariant_integer as a
+join invariant_integer as b
+on  a.graph_id = b.graph_id
+and a.invariant_id <> b.invariant_id
+) as A
+
+group by 1,2,3,4
+order by 1,2,3
+'''
 
 # These variants will not be used in the powerset construction
 __ignored_invariants = ["n_vertex", "n_edge"]
