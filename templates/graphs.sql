@@ -41,6 +41,9 @@ CREATE TABLE IF NOT EXISTS invariant_integer_unique(
 -- List of invariants
 
 INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES 
+
+    ("chromatic_number"),
+
     ("n_vertex"),
     ("diameter"), 
     ("n_cycle_basis"),

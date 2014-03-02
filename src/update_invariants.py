@@ -43,11 +43,10 @@ def compute_invariant(terms):
         err = "{}:{} idx:{} adj:{}".format(func_name, ex, idx, adj)
         logging.critical(err)
         raise ex
-    
+
     return (idx,cargs["invariant_id"],result)
 
 def insert_invariants(vals):
-
     with open(cargs["f_landing_table"], 'a') as FOUT:
         for item in vals:
             # Cast vals to ints

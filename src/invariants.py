@@ -4,6 +4,7 @@ from subprocess import Popen, PIPE, STDOUT
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
+import sympy
 
 ######################### Conversion code ######################### 
 
@@ -32,6 +33,16 @@ def graph_tool_representation(adj, **args):
         if n0>n1:
             g.add_edge(n0,n1)
     return g
+
+symX = sympy.symbols("x")
+symY = sympy.symbols("y")
+def tutte_poly_representation(string_rep):
+    L = ast.literal_eval(string_rep)
+    p = []
+    for i in xrange(len(L)):
+        for j in xrange(len(L[i])):
+            p.append( L[i][j]*symX**i*symY**j )
+    return sympy.Poly(sum(p))
 
 ######################### Special invariant code #################
 
@@ -173,6 +184,27 @@ is_subgraph_free_C8 = _is_subgraph_free(_cycle_graphs[8])
 is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
 is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
 
+def chromatic_number(adj,**args):
+    # Read in the tutte poly
+    string_T =  args["special_polynomial_tutte"]
+    T = tutte_poly_representation(string_T)+0*symX*symY
+    C = T*(-1)**(args["N"])*symX
+
+    for k in range(1,args["N"]+1):
+        try:    c2 = C.eval({symX:1-k})
+        except: c2 = C
+        
+        try: c2 = c2.eval({symY:0})
+        except: c2 = c2
+
+        k_n = c2
+
+        if k_n != 0:  return k
+
+    msg = "Should have exited by now"
+    raise ValueError(msg)
+
+
 if __name__ == "__main__":
 
     def viz_graph(g):
@@ -184,6 +216,10 @@ if __name__ == "__main__":
     N = 7
     adj = 14781504
     args= {"N":N}
+    
+    p = special_polynomial_tutte(adj, **args)
+    args["special_polynomial_tutte"] = p
+    print chromatic_number(adj, **args)
 
     A  = convert_to_numpy(adj,**args)    
     gx = nx.from_numpy_matrix(A)
