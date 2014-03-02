@@ -49,4 +49,6 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("is_bipartite"),
     ("n_articulation_points"),
     ("n_cycle_basis"),
-    ("n_subgraph_triangle");
+    ("is_subgraph_free_K3"),
+    ("is_subgraph_free_K4"),
+    ("is_subgraph_free_K5");

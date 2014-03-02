@@ -38,7 +38,8 @@ Calculated Invariants
 + [`is_bipartite`](http://mathworld.wolfram.com/BipartiteGraph.html) (graph_tool)
 + [`n_articulation_points`](http://mathworld.wolfram.com/ArticulationVertex.html) (graph_tool)
 + [`n_cycle_basis`](http://en.wikipedia.org/wiki/Cycle_space) of which the n=0 case is a tree. (networkx)
-+ [`n_subgraph_triangle`](http://mathworld.wolfram.com/Triangle-FreeGraph.html) of which the n=0 case is a triangle-free graph. (graph_tool)
++ [`is_subgraph_free_K3`](http://mathworld.wolfram.com/Triangle-FreeGraph.html) of which the n=0 case is a triangle-free graph. (graph_tool)
++ [`is_subgraph_free_K4`], [`is_subgraph_free_K5`] (graph_tool)
 
 Proposed Invariants
 

@@ -94,14 +94,16 @@ def __generate_KN(n):
 _complete_graphs = [__generate_KN(n) for n in xrange(0, 15)]
 _has_subgraph = graph_tool.topology.subgraph_isomorphism
 
-def _count_subgraphs(subg, g):
-    return len(_has_subgraph(subg,g)[0])
+def _is_subgraph_free(subg):
+    def f(adj,**args):
+        g = graph_tool_representation(adj,**args)
+        return len(_has_subgraph(subg,g)[0])==0
+    return f
 
-def n_subgraph_triangle(adj, **args):
-    ''' n_subgraph_triangle=0, OEIS:A024607 '''
-    g = graph_tool_representation(adj,**args)
-    return _count_subgraphs(_complete_graphs[3], g)
-
+# is_subgraph_free_K3=0, OEIS:A024607
+is_subgraph_free_K3 = _is_subgraph_free(_complete_graphs[3])
+is_subgraph_free_K4 = _is_subgraph_free(_complete_graphs[4])
+is_subgraph_free_K5 = _is_subgraph_free(_complete_graphs[5])
 
 if __name__ == "__main__":
     # Function testing here
