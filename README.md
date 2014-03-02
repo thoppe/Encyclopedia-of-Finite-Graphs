@@ -37,10 +37,12 @@ Calculated Invariants
 + [`is_planar`](http://mathworld.wolfram.com/PlanarGraph.html) (graph_tool)
 + [`is_bipartite`](http://mathworld.wolfram.com/BipartiteGraph.html) (graph_tool)
 + [`n_articulation_points`](http://mathworld.wolfram.com/ArticulationVertex.html) (graph_tool)
-+ [`n_cycle_basis`](http://en.wikipedia.org/wiki/Cycle_space)
++ [`n_cycle_basis`](http://en.wikipedia.org/wiki/Cycle_space) of which the n=0 case is a tree. (networkx)
++ [`n_subgraph_triangle`](http://mathworld.wolfram.com/Triangle-FreeGraph.html) of which the n=0 case is a triangle-free graph. (graph_tool)
 
 Proposed Invariants
 
++ `n_subgraph_A` Number of subgraphs of type A (graph_tool),  [`is_square_free`](http://mathworld.wolfram.com/Square-FreeGraph.html), [`hajos_number`](http://mathworld.wolfram.com/HajosNumber.html)
 + [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html)
 + [`circumference`](http://mathworld.wolfram.com/GraphCircumference.html), [`girth`](http://mathworld.wolfram.com/Girth.html)
 + [`is_tree`](http://mathworld.wolfram.com/Tree.html)
@@ -50,7 +52,6 @@ Proposed Invariants
 + [`n_peripheral_points`](http://mathworld.wolfram.com/PeripheralPoint.html)
 + [`sigma_polynomial`](http://mathworld.wolfram.com/SigmaPolynomial.html), [`is_royle`](http://mathworld.wolfram.com/RoyleGraphs.html)
 + [`maximum_clique`](http://mathworld.wolfram.com/MaximalClique.html) (graph_tool, networkx)
-+ `n_subgraph_A` Number of subgraphs of type A (graph_tool), [`is_triangle_free`](http://mathworld.wolfram.com/Triangle-FreeGraph.html), [`is_square_free`](http://mathworld.wolfram.com/Square-FreeGraph.html), [`hajos_number`](http://mathworld.wolfram.com/HajosNumber.html)
 + [`n_eulerian_cycle`](http://mathworld.wolfram.com/EulerianCycle.html)
 + [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html)
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)

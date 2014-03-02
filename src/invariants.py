@@ -81,6 +81,16 @@ def n_articulation_points(adj,**args):
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
 
+_triangle = graph_tool.Graph(directed=False)
+_triangle.add_vertex(3)
+_triangle.add_edge(0,1)
+_triangle.add_edge(1,2)
+_triangle.add_edge(2,0)
+def n_subgraph_triangle(adj, **args):
+    ''' n_subgraph_triangle=0, OEIS:A024607 '''
+    g = graph_tool_representation(adj,**args)
+    return len(graph_tool.topology.subgraph_isomorphism(_triangle,g)[0])
+
 if __name__ == "__main__":
     # Function testing here
 
@@ -90,11 +100,11 @@ if __name__ == "__main__":
 
     A  = convert_to_numpy(adj,**args)    
     gx = nx.from_numpy_matrix(A)
-    print n_cycle_basis(adj,**args)
-
     g = graph_tool_representation(adj,**args)
-    print is_planar(adj,**args), is_bipartite(adj,**args)
-    print n_articulation_points(adj,**args)
+
+    print "n_cycle_basis:",n_cycle_basis(adj,**args)
+    print "is_planar",is_planar(adj,**args), is_bipartite(adj,**args)
+    print "n_articulation_points",n_articulation_points(adj,**args)
     viz_graph(g)
     
 
