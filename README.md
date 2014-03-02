@@ -11,12 +11,13 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 
 *Roadmap*:
 
++ Write unit-tests for known sequences
 + Signup and template OEIS response (bfile and submission)
 + Submit new sequences to OEIS
 + Document these submissions
 + Add harder invariants and repeat!
 + Check set relations for _interesting_ queries
-+ Writeup project as an experimental math paper (data mining integer sequences over graphs?)
++ Writeup project as an experimental math paper (Automatic integer sequence discovery from small graphs?)
 
 *Lower priority tasks*
 
@@ -39,7 +40,7 @@ Calculated Invariants
 + [`n_articulation_points`](http://mathworld.wolfram.com/ArticulationVertex.html) (graph_tool)
 + [`n_cycle_basis`](http://en.wikipedia.org/wiki/Cycle_space) of which the n=0 case is a tree. (networkx)
 + [`is_subgraph_free_K3`](http://mathworld.wolfram.com/Triangle-FreeGraph.html) of which the n=0 case is a triangle-free graph. (graph_tool)
-+ [`is_subgraph_free_K4`], `is_subgraph_free_K5` (graph_tool)
++ `is_subgraph_free_K4`, `is_subgraph_free_K5` (graph_tool)
 + [`is_subgraph_free_C4`](http://mathworld.wolfram.com/Square-FreeGraph.html), ..., `is_subgraph_free_C10` checks for cycles of length k (graph_tool)
 
 Proposed Invariants
