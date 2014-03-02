@@ -37,7 +37,7 @@ commit:
 
 push:
 #	-@make all
-#	git add -A
+	git add -u
 	git status
 	-git commit
 	git push
