@@ -37,6 +37,7 @@ Calculated Invariants
 + [`is_planar`](http://mathworld.wolfram.com/PlanarGraph.html) (graph_tool)
 + [`is_bipartite`](http://mathworld.wolfram.com/BipartiteGraph.html) (graph_tool)
 + [`n_articulation_points`](http://mathworld.wolfram.com/ArticulationVertex.html) (graph_tool)
++ [`n_cycle_basis`](http://en.wikipedia.org/wiki/Cycle_space)
 
 Proposed Invariants
 

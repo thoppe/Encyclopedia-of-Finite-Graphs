@@ -53,6 +53,11 @@ def radius(adj,**args):
     g = nx.from_numpy_matrix(A)
     return nx.radius(g)
 
+def n_cycle_basis(adj, **args):
+    A = convert_to_numpy(adj,**args)
+    g = nx.from_numpy_matrix(A)
+    return len(nx.cycle_basis(g))
+
 def is_eulerian(adj,**args):
     A = convert_to_numpy(adj,**args)
     g = nx.from_numpy_matrix(A)
@@ -76,15 +81,18 @@ def n_articulation_points(adj,**args):
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
 
-
 if __name__ == "__main__":
     # Function testing here
 
     N = 7
     adj = 14781504
     args= {"N":N}
+
+    A  = convert_to_numpy(adj,**args)    
+    gx = nx.from_numpy_matrix(A)
+    print n_cycle_basis(adj,**args)
+
     g = graph_tool_representation(adj,**args)
-    print g
     print is_planar(adj,**args), is_bipartite(adj,**args)
     print n_articulation_points(adj,**args)
     viz_graph(g)

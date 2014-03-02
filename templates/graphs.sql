@@ -47,4 +47,5 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("is_distance_regular"),    
     ("is_planar"),
     ("is_bipartite"),
-    ("n_articulation_points");
+    ("n_articulation_points"),
+    ("n_cycle_basis");
