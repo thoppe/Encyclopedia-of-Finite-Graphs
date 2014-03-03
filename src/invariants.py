@@ -4,7 +4,6 @@ from subprocess import Popen, PIPE, STDOUT
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
-import sympy
 
 ######################### Conversion code ######################### 
 
@@ -33,16 +32,6 @@ def graph_tool_representation(adj, **args):
         if n0>n1:
             g.add_edge(n0,n1)
     return g
-
-symX = sympy.symbols("x")
-symY = sympy.symbols("y")
-def tutte_poly_representation(string_rep):
-    L = ast.literal_eval(string_rep)
-    p = []
-    for i in xrange(len(L)):
-        for j in xrange(len(L[i])):
-            p.append( L[i][j]*symX**i*symY**j )
-    return sympy.Poly(sum(p))
 
 ######################### Special invariant code #################
 
@@ -187,19 +176,19 @@ is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
 def chromatic_number(adj,**args):
     # Read in the tutte poly
     string_T =  args["special_polynomial_tutte"]
-    T = tutte_poly_representation(string_T)+0*symX*symY
-    C = T*(-1)**(args["N"])*symX
+    T = ast.literal_eval(string_T)
+    C = [row[0] if row else 0 for row in T]
+
+    def eval_chromatic(T,k):
+        # The chromatic polynomial use y=0, so only the top row
+        # and evaluates T(x,y) at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)
+        terms = [c*(1-k)**exponent for exponent,c in enumerate(C)]
+        c = sum(terms)*(-1)**(args["N"])*(1-k)
+        return c
 
     for k in range(1,args["N"]+1):
-        try:    c2 = C.eval({symX:1-k})
-        except: c2 = C
-        
-        try: c2 = c2.eval({symY:0})
-        except: c2 = c2
-
-        k_n = c2
-
-        if k_n != 0:  return k
+        if eval_chromatic(T,k) != 0:
+            return k
 
     msg = "Should have exited by now"
     raise ValueError(msg)
@@ -220,6 +209,8 @@ if __name__ == "__main__":
     p = special_polynomial_tutte(adj, **args)
     args["special_polynomial_tutte"] = p
     print chromatic_number(adj, **args)
+
+    exit()
 
     A  = convert_to_numpy(adj,**args)    
     gx = nx.from_numpy_matrix(A)
