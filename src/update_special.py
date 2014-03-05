@@ -41,6 +41,26 @@ def insert_invariants(vals):
         for item in vals:
             FOUT.write("%s %s %s\n"%item)
 
+def insert_from_landing_table(f_landing_table):
+
+    cmd_insert = '''
+      UPDATE graph SET {column}=(?) WHERE graph_id = (?)'''.format(**cargs)
+
+    raw = np.genfromtxt(f_landing_table,dtype=str)
+
+    if len(raw.shape)==1: raw = raw.reshape(1,-1)
+    raw = raw[:,1:].T[::-1].T
+    msg = "Starting insert of {} values to {column}"
+    logging.info(msg.format(raw.shape[0],**cargs))  
+
+    conn.executemany(cmd_insert.format(**cargs),raw.tolist())
+    msg = "Saved {} to values to {column}"
+    logging.info(msg.format(raw.shape[0],**cargs))  
+
+    conn.commit()    
+    os.remove(f_landing_table)
+    logging.info("Removing %s"%f_landing_table)
+
 #########################################################################
 
 # Get the special column names
@@ -52,9 +72,14 @@ for func in special_functions:
 
     cargs["column"] = func
     f_landing = "landing_{N}_{column}.txt".format(**cargs)
-    cargs["f_landing_table"] = os.path.join("database",f_landing)
+    cargs["f_landing_table"] = os.path.join("database",f_landing)  
+    f_land = cargs["f_landing_table"]
 
     logging.info("Starting calculation for {column}".format(**cargs))
+
+    # If computation exists from a previous run, add it in
+    if os.path.exists(f_land):
+        insert_from_landing_table(f_land)
 
     cmd = '''
       SELECT adj,graph_id FROM graph
@@ -66,32 +91,17 @@ for func in special_functions:
     success = parallel_compute(itr, compute_invariant, 
                                callback=insert_invariants, 
                                **cargs)
-
-    # Once changes have been completed, 
-    # mark the invariant as complete if successful
-    #cmd_mark_success = '''
-    #  UPDATE ref_invariant_special SET computed=1 
-    #  WHERE invariant_special_id={invariant_special_id}'''
-
-    cmd_insert = '''
-      UPDATE graph SET {column}=(?) WHERE graph_id = (?)'''.format(**cargs)
       
-    if success:
-        raw = np.genfromtxt(cargs["f_landing_table"],dtype=str)
-        if len(raw.shape)==1: raw = raw.reshape(1,-1)
-        raw = raw[:,1:].T[::-1].T
+    if success and os.path.exists(f_land):
+        insert_from_landing_table(f_land)
 
-        conn.executemany(cmd_insert.format(**cargs),raw.tolist())
-        msg = "Saved {} to values to {column}"
-        logging.info(msg.format(raw.shape[0],**cargs))
+    elif not os.path.exists(f_land):
+        msg = "{column}, no landing table found (calculation may be complete"
+        logging.warning(msg.format(**cargs))
     else:
         err = "{column} calculation failed"
         logging.critical(err.format(**cargs))
-     
-    if os.path.exists(cargs["f_landing_table"]):
-        os.remove(cargs["f_landing_table"])
 
-    conn.commit()    
     gc.collect()
 
 conn.close()

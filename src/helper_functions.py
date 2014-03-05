@@ -48,7 +48,10 @@ def parallel_compute(itr, func, callback=None, **cargs):
 
     allocator = grouper(itr, cargs["chunksize"])
 
-    P = multiprocessing.Pool()
+    if "CORES" in cargs:
+        P = multiprocessing.Pool(cargs["CORES"])
+    else:
+        P = multiprocessing.Pool()
 
     map_args = {"chunksize":20}
     if callback!=None:

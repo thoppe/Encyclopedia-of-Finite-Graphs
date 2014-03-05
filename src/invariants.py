@@ -1,6 +1,7 @@
 import numpy as np
 import ast,itertools, os
-from subprocess import Popen, PIPE, STDOUT
+#from subprocess import Popen, PIPE, STDOUT
+import subprocess
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
@@ -54,9 +55,9 @@ def special_polynomial_tutte(adj,**args):
     A = convert_to_numpy(adj,**args)
     cmd = os.path.join('src','tutte','tutte_bhkk')
     tutte_args = ' '.join(map(str, [args["N"],] + A.ravel().tolist()))
-    p = Popen([cmd,], stdin=PIPE, stdout=PIPE)
-    (out,err)= p.communicate(tutte_args)
-    sval = [[int(x) for x in line.split()] for line in out.split('\n')]
+    cmd = 'echo %s | %s ' % (tutte_args, cmd)
+    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    sval = [[int(x) for x in line.split()] for line in proc.stdout]
     return compress_input(sval)
 
 ######################### Invariant code ######################### 
