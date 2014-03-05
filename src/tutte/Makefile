@@ -2,6 +2,9 @@ CC=gcc
 CFLAGS=-O3 -Wall
 CFLAGS=-O3 -pedantic -std=iso9899:1999 -Wall 
 
+all: tutte_bhkk
+	./tutte_bhkk 3 0 1 1 1 0 1 1 1 0
+
 tutte_bhkk: tutte_bhkk.o
 	$(CC) -o tutte_bhkk tutte_bhkk.o -lgmp
 

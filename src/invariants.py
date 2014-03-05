@@ -55,7 +55,7 @@ def special_polynomial_tutte(adj,**args):
     A = convert_to_numpy(adj,**args)
     cmd = os.path.join('src','tutte','tutte_bhkk')
     tutte_args = ' '.join(map(str, [args["N"],] + A.ravel().tolist()))
-    cmd = 'echo %s | %s ' % (tutte_args, cmd)
+    cmd += ' ' + tutte_args
     proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
     sval = [[int(x) for x in line.split()] for line in proc.stdout]
     return compress_input(sval)

@@ -908,6 +908,7 @@ static void solve(FILE *out)
 
 }
 
+/*
 static void skipws(FILE *in)
 {
     int c;
@@ -919,64 +920,35 @@ static void skipws(FILE *in)
     if(c != EOF)
         ungetc(c, in);
 }
+*/
 
 /* Program entry point. */
 
 int main(int argc, char **argv)
 {
-    int ap = 1;
-    while(ap < argc) {
-        if(!strcmp(argv[ap], "-v")) {
-            verbose = 1;
-            verb_out = stderr;
-            ap++;
-            continue;
-        }
-        break;
+
+  // Stripped down version from original program that reads directly from
+  // the argument list
+
+  //verbose = 1;
+  //verb_out = stderr;
+
+  n = atoi(argv[1]);
+
+  m = 0;
+  for(int row_idx=0;row_idx<n;row_idx++) {
+    for(int col_idx=0;col_idx<n;col_idx++) {
+      int idx = 2 + (row_idx*n) + col_idx;
+      int edge = atoi(argv[idx]);
+
+      E[row_idx][col_idx] = edge;
+      m += edge;
+      //printf("INPUT ARG %d %d %d\n", edge, row_idx, col_idx);
     }
-    const char *fn;
-    FILE *in;
-    if(ap >= argc) {
-        fn = "stdin";
-        in = stdin;
-        if(verbose)
-            fprintf(verb_out, 
-                    "main: no input file given -- reading from stdin\n");
-    } else {
-        fn = argv[ap];
-        in = fopen(fn, "r");
-        if(in == NULL)
-            ERROR("error opening \"%s\" for input", fn);
-        if(verbose)
-            fprintf(verb_out, "main: reading input from \"%s\"\n", fn);
-    }
-    while (!feof(in)) {
-        skipws(in);
-        if(fscanf(in, "%d", &n) != 1 || n < 0)
-            ERROR("parse error reading \"%s\"", fn);
-        if(n > MAXN)
-            ERROR("MAXN exceeded");
-        m = 0;
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++) {
-                if(fscanf(in, "%d", &E[i][j]) != 1 || 
-                   E[i][j] < 0 || 
-                   E[i][j] > 1 ||
-                   (i == j && E[i][j] != 0) ||
-                   (i > j && E[i][j] != E[j][i]))
-                    ERROR("parse error reading \"%s\"", fn);
-                m += E[i][j];
-            }
-        m /= 2;
-        if(verbose)
-            fprintf(verb_out, 
-                    "main: input graph has %d vertices and %d edges\n", 
-                    n, m);
-        solve(stdout);
-        skipws(in);
-    }
-    if(verbose)
-        fprintf(verb_out, "main: closing input\n");
-    fclose(in);
-    return 0;
+  }
+  m /= 2;
+  solve(stdout);
+
+  return 0;
+
 }
