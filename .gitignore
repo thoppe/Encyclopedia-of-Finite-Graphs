@@ -1,5 +1,6 @@
 # Graph database (don't auto store)
 database/*
+bak_database.tar*
 
 # Tutte src files
 src/tutte/* 

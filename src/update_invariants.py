@@ -117,7 +117,9 @@ for invariant_id,func in compute_invariant_ids:
         logging.info(msg.format(**cargs))
 
     else:
-        logging.info("Starting calculation for {column}".format(**cargs))
+        msg = "Starting calculation for {column} ({})"
+        logging.info(msg.format(counts,**cargs))  
+
         itr = select_itr(conn, cmd_grab)    
 
         success = parallel_compute(itr, compute_invariant, 

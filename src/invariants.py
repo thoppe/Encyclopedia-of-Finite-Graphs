@@ -156,12 +156,12 @@ def _is_subgraph_free(subg):
     
     def f(adj,**args):
         # Early breakout if input graph is too small
-        if args["N"] < subg_n: return 0
+        if args["N"] < subg_n: return 1
         g = graph_tool_representation(adj,**args)
         return len(_has_subgraph(subg,g)[0])==0
     return f
 
-# is_subgraph_free_K3=0, OEIS:A024607
+# is_subgraph_free_K3=1, OEIS:A024607
 is_subgraph_free_K3 = _is_subgraph_free(_complete_graphs[3])
 is_subgraph_free_K4 = _is_subgraph_free(_complete_graphs[4])
 is_subgraph_free_K5 = _is_subgraph_free(_complete_graphs[5])

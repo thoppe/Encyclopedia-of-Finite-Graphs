@@ -18,7 +18,7 @@ def load_graph_database(N, check_exist=True):
     
     return sqlite3.connect(f_database, check_same_thread=False)
 
-def landing_table_itr(f_landing_table, index_args, max_iter=10000):
+def landing_table_itr(f_landing_table, index_args, max_iter=50000):
     with open(f_landing_table,'r') as FIN:
         for group in grouper(FIN,max_iter):
             VALS = []
