@@ -41,24 +41,35 @@ def insert_invariants(vals):
         for item in vals:
             FOUT.write("%s %s %s\n"%item)
 
+def landing_table_itr(f_landing_table, max_iter):
+    with open(f_landing_table,'r') as FIN:
+        for group in grouper(FIN,max_iter):
+            VALS = []
+            for item in group:
+                ix = item.strip().split()
+                VALS.append( (int(ix[1]), ix[2]) )
+            yield VALS
+
 def insert_from_landing_table(f_landing_table):
 
     cmd_insert = '''
       UPDATE graph SET {column}=(?) WHERE graph_id = (?)'''.format(**cargs)
 
-    raw = np.genfromtxt(f_landing_table,dtype=str)
+    count = 0
 
-    if len(raw.shape)==1: raw = raw.reshape(1,-1)
-    raw = raw[:,1:].T[::-1].T
-    msg = "Starting insert of {} values to {column}"
-    logging.info(msg.format(raw.shape[0],**cargs))  
+    for raw in landing_table_itr(f_landing_table, max_iter=100000):
+        count += len(raw)
+        msg = "Starting insert of {} values to {column}"
+        logging.info(msg.format(len(raw),**cargs))  
+        conn.executemany(cmd_insert.format(**cargs),raw)
 
-    conn.executemany(cmd_insert.format(**cargs),raw.tolist())
-    msg = "Saved {} to values to {column}"
-    logging.info(msg.format(raw.shape[0],**cargs))  
 
     conn.commit()    
     os.remove(f_landing_table)
+
+    msg = "Saved {} to values to {column}"
+    logging.info(msg.format(count,**cargs))  
+
     logging.info("Removing %s"%f_landing_table)
 
 #########################################################################
@@ -67,6 +78,8 @@ def insert_from_landing_table(f_landing_table):
 cmd = '''SELECT * from graph LIMIT 1'''
 graph_args_names = zip(*conn.execute(cmd).description)[0]
 special_functions = [x for x in graph_args_names if "special" in x]
+
+special_functions = ["special_polynomial_tutte"]
 
 for func in special_functions:
 

@@ -17,13 +17,13 @@ possible_N_values = 1 2 3 4 5 6 7 8 9 10
 
 rebuild_database:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
-#	make compute
+	make compute
 #	make sequence
 #	make package
 
 compute:
 	$(foreach n,$(possible_N_values),python src/update_special.py $(n);)
-	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
+#	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
 	time python src/build_sequence.py --max_n $(test_N)
