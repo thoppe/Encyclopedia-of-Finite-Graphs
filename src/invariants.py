@@ -175,6 +175,9 @@ is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
 is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
 
 def chromatic_number(adj,**args):
+    # Return 0 for the singleton graph (it's really infinity)
+    if args["N"]==1: return 0
+
     # Read in the tutte poly
     string_T =  args["special_polynomial_tutte"]
     T = ast.literal_eval(string_T)
@@ -185,7 +188,7 @@ def chromatic_number(adj,**args):
         # and evaluates T(x,y) at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)
         terms = [c*(1-k)**exponent for exponent,c in enumerate(C)]
         c = sum(terms)*(-1)**(args["N"])*(1-k)
-        return c
+        return c   
 
     for k in range(1,args["N"]+1):
         if eval_chromatic(T,k) != 0:
