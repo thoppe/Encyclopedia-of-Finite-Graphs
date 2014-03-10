@@ -197,7 +197,28 @@ def chromatic_number(adj,**args):
     msg = "Should have exited by now"
     raise ValueError(msg)
 
+######################### Bliss code ######################### 
 
+
+
+def automorphism_group_n(adj,**args):
+    ''' Calls the BLISS program from the command line '''
+
+    A = convert_to_numpy(adj,**args)
+    edges = np.where(A)
+    s = ["p edge {N} {}".format(A.sum()/2,**args)]
+    for i,j in zip(*edges):
+        s.append("e {} {}".format(i+1,j+1))
+    s_echo = '"%s"'%('\n'.join(s))
+    cmd = "echo %s | src/bliss/bliss" % s_echo
+    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    for line in proc.stdout:
+        if "|Aut|" in line:
+            return int(line.split()[-1])
+
+    err = "BLISS failed with adj: "+adj
+    raise ValueError(err)
+    
 if __name__ == "__main__":
 
     def viz_graph(g):
@@ -209,18 +230,18 @@ if __name__ == "__main__":
     N = 7
     adj = 14781504
     args= {"N":N}
+
+    print "AUT: ", automorphism_group_n(adj,**args)
     
     p = special_polynomial_tutte(adj, **args)
     args["special_polynomial_tutte"] = p
-    print chromatic_number(adj, **args)
-
-    exit()
+    print "Chromatic number: ", chromatic_number(adj, **args)
 
     A  = convert_to_numpy(adj,**args)    
     gx = nx.from_numpy_matrix(A)
     g = graph_tool_representation(adj,**args)
 
-    print "n_cycle_basis:",n_cycle_basis(adj,**args)
+    #print "n_cycle_basis:",n_cycle_basis(adj,**args)
     print "is_planar",is_planar(adj,**args), is_bipartite(adj,**args)
     print "n_articulation_points",n_articulation_points(adj,**args)
     viz_graph(g)
