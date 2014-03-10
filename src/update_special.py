@@ -47,7 +47,7 @@ def landing_table_itr(f_landing_table, max_iter):
             VALS = []
             for item in group:
                 ix = item.strip().split()
-                VALS.append( (int(ix[1]), ix[2]) )
+                VALS.append( (ix[2], int(ix[1])) )
             yield VALS
 
 def insert_from_landing_table(f_landing_table):
@@ -58,19 +58,18 @@ def insert_from_landing_table(f_landing_table):
     count = 0
 
     for raw in landing_table_itr(f_landing_table, max_iter=100000):
-        count += len(raw)
         msg = "Starting insert of {} values to {column}"
         logging.info(msg.format(len(raw),**cargs))  
+
         conn.executemany(cmd_insert.format(**cargs),raw)
+        count += len(raw)
 
-
-    conn.commit()    
-    os.remove(f_landing_table)
 
     msg = "Saved {} to values to {column}"
     logging.info(msg.format(count,**cargs))  
 
-    logging.info("Removing %s"%f_landing_table)
+    os.remove(f_landing_table)
+    #logging.info("Removing %s"%f_landing_table)
 
 #########################################################################
 
@@ -79,8 +78,6 @@ cmd = '''SELECT * from graph LIMIT 1'''
 graph_args_names = zip(*conn.execute(cmd).description)[0]
 special_functions = [x for x in graph_args_names if "special" in x]
 
-special_functions = ["special_polynomial_tutte"]
-
 for func in special_functions:
 
     cargs["column"] = func
@@ -88,33 +85,36 @@ for func in special_functions:
     cargs["f_landing_table"] = os.path.join("database",f_landing)  
     f_land = cargs["f_landing_table"]
 
-    logging.info("Starting calculation for {column}".format(**cargs))
-
     # If computation exists from a previous run, add it in
     if os.path.exists(f_land):
         insert_from_landing_table(f_land)
 
-    cmd = '''
-      SELECT adj,graph_id FROM graph
+    cmd_count = '''
+      SELECT COUNT(*) FROM graph
       WHERE  {column} IS NULL'''
+    counts = conn.execute(cmd_count.format(**cargs)).fetchone()[0]
 
-    cmd = cmd.format(**cargs)
-    itr = select_itr(conn, cmd)
+    cmd_grab = '''
+      SELECT adj,graph_id FROM graph
+      WHERE  {column} IS NULL'''.format(**cargs)
 
-    success = parallel_compute(itr, compute_invariant, 
-                               callback=insert_invariants, 
-                               **cargs)
-      
-    if success and os.path.exists(f_land):
-        insert_from_landing_table(f_land)
+    if not counts:
+        msg = "Calculation previously completed for {column}"
+        logging.info(msg.format(**cargs))
 
-    elif not os.path.exists(f_land):
-        msg = "{column}, no landing table found (calculation may be complete"
-        logging.warning(msg.format(**cargs))
     else:
-        err = "{column} calculation failed"
-        logging.critical(err.format(**cargs))
+        logging.info("Starting calculation for {column}".format(**cargs))
+        itr = select_itr(conn, cmd_grab)
 
-    gc.collect()
+        success = parallel_compute(itr, compute_invariant, 
+                                   callback=insert_invariants, 
+                                   **cargs)
+        if success:
+            insert_from_landing_table(f_land)       
+        else:
+            err = "{column} calculation failed"
+            logging.critical(err.format(**cargs))
 
-conn.close()
+conn.commit()
+    #gc.collect()
+#conn.close()

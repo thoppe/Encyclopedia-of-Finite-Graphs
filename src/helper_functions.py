@@ -19,15 +19,24 @@ def load_graph_database(N, check_exist=True):
     return sqlite3.connect(f_database, check_same_thread=False)
     
 
-def select_itr(conn, cmd, chunksize=100):  
+def select_itr(conn, cmd, chunksize=1000):  
     ''' Creates an iterator over an SQL query so the
         result isn't spammed in memory '''
 
+    count = 0
     itr = conn.execute(cmd)
+
     while True:
         results = itr.fetchmany(chunksize)
+
         if not results:         break
-        for result in results:  yield result      
+        for result in results:  
+            yield result      
+            count += 1
+
+    #logging.info("Selected {} results".format(count))
+
+
 
 def grouper(iterable, n):
     ''' Groups an iterator into chunks of at most size n '''
