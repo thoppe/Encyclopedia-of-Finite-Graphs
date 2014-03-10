@@ -5,6 +5,7 @@ bak_database.tar*
 # Tutte src files
 src/tutte/* 
 *tutte/tutte_bhkk
+src/bliss/*
 
 *.py[cod]
 .\#*

@@ -13,7 +13,7 @@ view:
 view_db:
 	sqlitebrowser database/sequence.db
 
-possible_N_values = 1 2 3 4 5 6 7 8 9
+possible_N_values = 1 2 3 4 5 6 7 8 9 10
 
 rebuild_database:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
@@ -44,8 +44,8 @@ push:
 pull:
 	git pull
 
-
-
-
 full_clean:
 	rm -vf database/*
+
+compile:
+	(cd src/bliss && make gmp)
