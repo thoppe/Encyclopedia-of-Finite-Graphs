@@ -43,6 +43,8 @@ CREATE TABLE IF NOT EXISTS invariant_integer_unique(
 
 INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES 
 
+    ("automorphism_group_n"),
+
     ("chromatic_number"),
 
     ("n_vertex"),
