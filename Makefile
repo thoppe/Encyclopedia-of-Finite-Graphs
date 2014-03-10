@@ -1,9 +1,9 @@
 
 # Debugging/Testing commands
 
-test_N = 8
+test_N = 9
 all:
-	rm -vf database/graph$(test_N).db
+#	rm -vf database/graph$(test_N).db
 	python src/generate_db.py $(test_N)
 	python src/update_special.py $(test_N)
 	python src/update_invariants.py $(test_N)
@@ -13,7 +13,7 @@ view:
 view_db:
 	sqlitebrowser database/sequence.db
 
-possible_N_values = 1 2 3 4 5 6 7 8 9 10
+possible_N_values = 1 2 3 4 5 6 7 8 9
 
 rebuild_database:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
@@ -23,7 +23,7 @@ rebuild_database:
 
 compute:
 	$(foreach n,$(possible_N_values),python src/update_special.py $(n);)
-#	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
+	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
 	time python src/build_sequence.py --max_n $(test_N)

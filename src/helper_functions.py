@@ -17,6 +17,16 @@ def load_graph_database(N, check_exist=True):
         exit()
     
     return sqlite3.connect(f_database, check_same_thread=False)
+
+def landing_table_itr(f_landing_table, index_args, max_iter=10000):
+    with open(f_landing_table,'r') as FIN:
+        for group in grouper(FIN,max_iter):
+            VALS = []
+            for item in group:
+                ix = item.strip().split()
+                val = [ix[n] for n in index_args]
+                VALS.append(val)
+            yield VALS
     
 
 def select_itr(conn, cmd, chunksize=1000):  
