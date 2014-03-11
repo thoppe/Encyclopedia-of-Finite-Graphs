@@ -54,6 +54,7 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("n_endpoints"),
 
     ("is_k_regular"),
+    ("is_strongly_regular"),
 
     ("radius"),
     ("is_eulerian"),

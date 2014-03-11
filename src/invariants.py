@@ -90,6 +90,34 @@ def is_k_regular(adj, **args):
     else:
         return 0
 
+def is_strongly_regular(adj, **args):
+    # Check with http://oeis.org/A088741
+    # Returns the value of k if it is k strongly regular, otherwise 0
+    # Strongly regular graphs satisfy AJ = kJ, where J is a ones matrix
+    # Assume that N=1,2 is NOT strongly regular
+    N = args["N"]
+    if N<=2: return 0
+    
+    A = convert_to_numpy(adj,**args)
+    connections = zip(*np.triu_indices(N,1))
+
+    K = A.sum(axis=0)
+
+    if len(set(K)) != 1:
+        return False
+
+    L, V = None, None
+   
+    for v0,v1 in itertools.combinations(range(N),2):
+        common = (A[v0] * A[v1]).sum()
+        if A[v0,v1]:
+            if L == None: L = common
+            if L and common != L: return False
+        if not A[v0,v1]:
+            if V == None: V = common
+            if V and common != V: return False
+    return True
+
 def diameter(adj,**args):
     if args["N"]==1: return 0
     A = convert_to_numpy(adj,**args)
@@ -242,9 +270,10 @@ if __name__ == "__main__":
     adj = 14781504
     args= {"N":N}
 
-    print is_integral(adj, **args)
+    print is_k_strongly_regular(adj, **args)
     exit()
 
+    print "is_integral:", is_integral(adj, **args)
     print "AUT: ", automorphism_group_n(adj,**args)
     p = special_polynomial_tutte(adj, **args)
     args["special_polynomial_tutte"] = p

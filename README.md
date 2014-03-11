@@ -42,7 +42,7 @@ Calculated Invariants
 + [`is_subgraph_free_K3`](http://mathworld.wolfram.com/Triangle-FreeGraph.html) of which the n=0 case is a triangle-free graph. (graph_tool)
 + `is_subgraph_free_K4`, `is_subgraph_free_K5` (graph_tool)
 + [`is_subgraph_free_C4`](http://mathworld.wolfram.com/Square-FreeGraph.html), ..., `is_subgraph_free_C10` checks for cycles of length k (graph_tool)
-+ [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html)
++ [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html), [`is_strongly_regular`](http://mathworld.wolfram.com/StronglyRegularGraph.html)
 + [`tutte_polynomial`](http://mathworld.wolfram.com/TuttePolynomial.html) leads to the [`chromatic_number`](http://mathworld.wolfram.com/ChromaticNumber.html)
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)
 + [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html) (numpy,sympy)
