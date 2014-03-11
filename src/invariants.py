@@ -80,20 +80,15 @@ def n_endpoints(adj,**args):
     deg = ast.literal_eval(args["special_degree_sequence"])
     return sum([True for d in deg if d==1])
 
-# Generator for k-regular
-def _is_k_regular(k):
-    def f(adj, **args):
-        # Early breakout if input graph is too small
-        if args["N"] < k: return 0
-        deg = ast.literal_eval(args["special_degree_sequence"])
-        deg = np.array(deg,dtype=int)
-        return (deg==k).all()
-    return f
-
 # Cubic graphs are related to http://oeis.org/A002851
-is_3_regular = _is_k_regular(3)
-is_4_regular = _is_k_regular(4)
-is_5_regular = _is_k_regular(5)
+def is_k_regular(adj, **args):
+   # Returns the value of k if it is k regular, otherwise 0
+    deg = ast.literal_eval(args["special_degree_sequence"])
+
+    if len(set(deg)) == 1:
+        return deg[0]
+    else:
+        return 0
 
 def diameter(adj,**args):
     if args["N"]==1: return 0

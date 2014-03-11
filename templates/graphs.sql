@@ -53,9 +53,7 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("n_edge"),
     ("n_endpoints"),
 
-    ("is_3_regular"),
-    ("is_4_regular"),
-    ("is_5_regular"),
+    ("is_k_regular"),
 
     ("radius"),
     ("is_eulerian"),
@@ -73,6 +71,4 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("is_subgraph_free_C7"),
     ("is_subgraph_free_C8"),
     ("is_subgraph_free_C9"),
-    ("is_subgraph_free_C10")
-
-;
+    ("is_subgraph_free_C10");
