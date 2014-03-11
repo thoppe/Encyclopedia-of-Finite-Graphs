@@ -48,8 +48,12 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("chromatic_number"),
 
     ("n_vertex"),
+
     ("diameter"), 
     ("n_cycle_basis"),
+    ("circumference"),
+    ("girth"),
+
     ("n_edge"),
     ("n_endpoints"),
 

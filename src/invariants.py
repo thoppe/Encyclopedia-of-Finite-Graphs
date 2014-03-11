@@ -70,6 +70,32 @@ def n_cycle_basis(adj, **args):
     cycle_b = ast.literal_eval(args["special_cycle_basis"])
     return len(cycle_b)
 
+def girth(adj,**args):
+    # Since the cycle basis is the minimal set of fundemental cycles
+    # the girth has to be the length of the smallest of these cycles
+    # Graphs with no cycles have girth=0 (defined) as placeholder for infinity
+    cycle_b = ast.literal_eval(args["special_cycle_basis"])
+    if not cycle_b: return 0
+
+    return min(map(len,cycle_b))
+
+def circumference(adj,**args):
+    # The circumference is found from the cycle_basis be the largest 
+    # direct combination of terms 
+    # Graphs with no cycles have cir=0 (defined) as placeholder for infinity
+    cycle_b = ast.literal_eval(args["special_cycle_basis"])
+    if not cycle_b: return 0
+
+    N = args["N"]
+
+    def combine_cycle(C):
+        idx = np.zeros(N,dtype=int)
+        for c in C: idx[c] = 1
+        return np.where(idx)[0].tolist()
+    
+    return len(combine_cycle(cycle_b))
+
+
 def n_edge(adj,**args):
     # Defined this way for loopless simple graphs
     deg = ast.literal_eval(args["special_degree_sequence"])
@@ -117,6 +143,8 @@ def is_strongly_regular(adj, **args):
             if V == None: V = common
             if V and common != V: return False
     return True
+
+
 
 def diameter(adj,**args):
     if args["N"]==1: return 0
@@ -270,11 +298,15 @@ if __name__ == "__main__":
     adj = 14781504
     args= {"N":N}
 
-    print is_k_strongly_regular(adj, **args)
-    exit()
+    args["special_cycle_basis"] = special_cycle_basis(adj,**args)
+    print "n_cycle_basis:",n_cycle_basis(adj,**args)
+    print "Girth: ", girth(adj, **args)
+    print "Circumference: ", circumference(adj, **args)
 
+    print "is_strongly_regular: ", is_strongly_regular(adj, **args)
     print "is_integral:", is_integral(adj, **args)
     print "AUT: ", automorphism_group_n(adj,**args)
+
     p = special_polynomial_tutte(adj, **args)
     args["special_polynomial_tutte"] = p
     print "Chromatic number: ", chromatic_number(adj, **args)
@@ -283,7 +315,6 @@ if __name__ == "__main__":
     gx = nx.from_numpy_matrix(A)
     g = graph_tool_representation(adj,**args)
 
-    #print "n_cycle_basis:",n_cycle_basis(adj,**args)
     print "is_planar",is_planar(adj,**args), is_bipartite(adj,**args)
     print "n_articulation_points",n_articulation_points(adj,**args)
 
