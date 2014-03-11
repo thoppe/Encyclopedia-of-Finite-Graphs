@@ -45,7 +45,7 @@ Calculated Invariants
 + [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html)
 + [`tutte_polynomial`](http://mathworld.wolfram.com/TuttePolynomial.html) leads to the [`chromatic_number`](http://mathworld.wolfram.com/ChromaticNumber.html)
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)
-
++ [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html) (numpy,sympy)
 
 Proposed Invariants
 
@@ -60,7 +60,6 @@ Proposed Invariants
 + [`sigma_polynomial`](http://mathworld.wolfram.com/SigmaPolynomial.html), [`is_royle`](http://mathworld.wolfram.com/RoyleGraphs.html)
 + [`maximum_clique`](http://mathworld.wolfram.com/MaximalClique.html) (graph_tool, networkx)
 + [`n_eulerian_cycle`](http://mathworld.wolfram.com/EulerianCycle.html)
-+ [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html)
 + [`is_perfect`](http://mathworld.wolfram.com/PerfectGraph.html)
 + [`is_arc_transitive`](http://mathworld.wolfram.com/Arc-TransitiveGraph.html), [`is_vertex_transitive`](http://mathworld.wolfram.com/Vertex-TransitiveGraph.html)
 + [`is_bridge`](http://mathworld.wolfram.com/BridgedGraph.html)

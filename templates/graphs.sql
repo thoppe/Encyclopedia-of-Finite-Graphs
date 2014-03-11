@@ -71,4 +71,6 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("is_subgraph_free_C7"),
     ("is_subgraph_free_C8"),
     ("is_subgraph_free_C9"),
-    ("is_subgraph_free_C10");
+    ("is_subgraph_free_C10"),
+
+    ("is_integral");

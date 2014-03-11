@@ -1,7 +1,7 @@
 
 # Debugging/Testing commands
 
-test_N = 7
+test_N = 8
 all:
 #	rm -vf database/graph$(test_N).db
 	python src/generate_db.py $(test_N)

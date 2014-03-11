@@ -125,6 +125,25 @@ def n_articulation_points(adj,**args):
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
 
+import sympy
+def is_integral(adj, **args):
+    # Check with http://oeis.org/A064731
+    # Symbolically determine the char poly and evaluate it on
+    # the rounded eigenvalues. A non-zero result is a non-intergral eigenvalue
+    # this avoids the "all_close" condition
+
+    A = convert_to_numpy(adj,**args)
+    N = args["N"]
+    M = sympy.Matrix(A)
+    p = M.charpoly()
+    s = np.linalg.eigvalsh(A)
+    s_round = set(np.round(s).astype(int))
+
+    for x in s_round:
+        if p(x) != 0:
+            return False
+    return True
+
 ######################### Subgraph code ######################### 
 
 def __generate_KN(n):
@@ -194,8 +213,6 @@ def chromatic_number(adj,**args):
 
 ######################### Bliss code ######################### 
 
-
-
 def automorphism_group_n(adj,**args):
     ''' Calls the BLISS program from the command line '''
 
@@ -213,12 +230,11 @@ def automorphism_group_n(adj,**args):
 
     err = "BLISS failed with adj: "+adj
     raise ValueError(err)
+
+
+######################### Test code ######################### 
     
 if __name__ == "__main__":
-
-    def viz_graph(g):
-        pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
-        graph_tool.draw.graph_draw(g,pos)
 
     # Function testing here
 
@@ -226,8 +242,10 @@ if __name__ == "__main__":
     adj = 14781504
     args= {"N":N}
 
+    print is_integral(adj, **args)
+    exit()
+
     print "AUT: ", automorphism_group_n(adj,**args)
-    
     p = special_polynomial_tutte(adj, **args)
     args["special_polynomial_tutte"] = p
     print "Chromatic number: ", chromatic_number(adj, **args)
@@ -239,6 +257,11 @@ if __name__ == "__main__":
     #print "n_cycle_basis:",n_cycle_basis(adj,**args)
     print "is_planar",is_planar(adj,**args), is_bipartite(adj,**args)
     print "n_articulation_points",n_articulation_points(adj,**args)
+
+    def viz_graph(g):
+        pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
+        graph_tool.draw.graph_draw(g,pos)
+
     viz_graph(g)
     
 
