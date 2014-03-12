@@ -77,12 +77,16 @@ f_known_sequence = "src/verify_seq/known.txt"
 def parse_known_sequence(line):
     info, seq = line.split('|')
 
-    seq = map(int, seq.split(','))
     key_names = ["function_name","conditional","value"]
-
     info = [key_names,info.strip().split(' ')]
     args = dict(zip(*info))
-    args['seq'] = seq
+
+    seq = seq.strip()
+    if seq:
+        seq = map(int, seq.split(','))
+        args['seq'] = seq
+    else:
+        args['seq'] = []
 
     return args
 
