@@ -71,8 +71,6 @@ def report_seq(**args):
         OEIS    : {check_seq}
         received: {database_seq}'''
         print msg.rstrip().format(**args)
-    
-
 
 f_known_sequence = "src/verify_seq/known.txt"
 
