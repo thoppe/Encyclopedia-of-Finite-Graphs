@@ -63,18 +63,18 @@ for adj in grab_vector(graph_conn[N], cmd):
             s.append("e {} {}".format(i+1,j+1))
 
     f_save = "test_{}.txt".format(adj)
-    with open(f_save,'w') as FOUT:
-        for line in s:
-            FOUT.write("%s\n"%line)
+    #with open(f_save,'w') as FOUT:
+    #    for line in s:
+    #        FOUT.write("%s\n"%line)
          
     s_echo = '"%s"'%('\n'.join(s))
     cmd = "echo %s | src/bliss/bliss" % s_echo
 
     proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
     for line in proc.stdout:
-        print line.strip()
-        #if "|Aut|" in line:
-        #    return int(line.split()[-1])
+        #print line.strip()
+        if "|Aut|" in line:
+            print int(line.split()[-1])
 
 
     pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
