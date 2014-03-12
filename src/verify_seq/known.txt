@@ -3,6 +3,18 @@
 # [OEIS name) (link)
 # [sequence_name)[conditional)[value) | [n1), [n2), ... [nk)
 
+# (http://oeis.org/A124059) This one _is_ for connected graphs
+automorphism_group_n = 1 | 1, 0, 0, 0, 0, 8, 144, 3552, 131452, 7840396, 797524380
+
+
+# (http://oeis.org/A075095) NOTE THAT THIS IS FOR UNCONNECTED GRAPHS...
+automorphism_group_n = 2 | 0, 2, 2, 3, 11, 46, 354, 4431, 89004, 3026014, 179282248
+
+# (http://oeis.org/A064731)
+is_integral = 1 | 1, 1, 1, 2, 3, 6, 7, 22, 24, 83, 113
+
+exit
+
 # NOT FOUND?
 is_subgraph_free_C5 = 1|
 is_subgraph_free_C6 = 1|
@@ -35,12 +47,6 @@ is_distance_regular = 1 | 0
 
 diameter = 3 | 0
 radius = 2 | 0
-
-# (http://oeis.org/A075095)
-# automorphism_group_n = 2 | 0, 2, 2, 3, 11, 46, 354, 4431, 89004, 3026014, 179282248
-
-# (http://oeis.org/A064731)
-# is_integral = 1 | 1, 1, 1, 2, 3, 6, 7, 22, 24, 83, 113
 
 ################################ DOCUMENTED AND CORRECT ##################
 

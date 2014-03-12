@@ -275,7 +275,8 @@ def automorphism_group_n(adj,**args):
     edges = np.where(A)
     s = ["p edge {N} {}".format(A.sum()/2,**args)]
     for i,j in zip(*edges):
-        s.append("e {} {}".format(i+1,j+1))
+        if i<=j:
+            s.append("e {} {}".format(i+1,j+1))
     s_echo = '"%s"'%('\n'.join(s))
     cmd = "echo %s | src/bliss/bliss" % s_echo
     proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
