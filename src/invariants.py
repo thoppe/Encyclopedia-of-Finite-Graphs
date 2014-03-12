@@ -1,6 +1,5 @@
 import numpy as np
 import ast,itertools, os
-#from subprocess import Popen, PIPE, STDOUT
 import subprocess
 import networkx as nx
 import graph_tool.topology

@@ -30,7 +30,7 @@ cargs = vars(parser.parse_args())
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-# Connect to the database and add structure info
+# Connect to the sequence database
 f_database = "database/sequence.db"
 conn = sqlite3.connect(f_database, check_same_thread=False)
 

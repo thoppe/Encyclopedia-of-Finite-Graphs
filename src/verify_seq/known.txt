@@ -1,0 +1,9 @@
+# List of sequences to verify, format
+# [OEIS name] (link)
+# [sequence_name][conditional][value] | [n1], [n2], [n3], ... [nk]
+
+# [A075095](http://oeis.org/A075095)
+automorphism_group_n = 2 | 0, 2, 2, 3, 11, 46, 354, 4431, 89004, 3026014, 179282248
+
+# [A064731](http://oeis.org/A064731)
+is_integral = 1 | 1, 1, 1, 2, 3, 6, 7, 22, 24, 83, 113
