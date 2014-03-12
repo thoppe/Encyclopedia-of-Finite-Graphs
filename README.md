@@ -69,3 +69,17 @@ Proposed Invariants
 + [`genus`](http://mathworld.wolfram.com/GraphGenus.html), [`skewness`](http://mathworld.wolfram.com/GraphSkewness.html)
 + [`independence_number`](http://mathworld.wolfram.com/IndependenceNumber.html)
 + [`chromatic_polynomial`](http://mathworld.wolfram.com/ChromaticPolynomial.html), [`k_colorings`](http://mathworld.wolfram.com/k-Coloring.html)
+
+====================================
+
+*Unit tests*:
+
+Passed
+
+[`is_eulerian = 1`](http://oeis.org/A003049)
+[`is_k_regular = 3`](http://oeis.org/A002851)
+[`is_k_regular = 4`](http://oeis.org/A006820)
+[`is_k_regular = 5`](http://oeis.org/A006820)
+[`is_k_regular = 6`](http://oeis.org/A006822)
+[`is_k_regular = 7`](http://oeis.org/A014377)
+[`is_k_regular = 8`](http://oeis.org/A014378)

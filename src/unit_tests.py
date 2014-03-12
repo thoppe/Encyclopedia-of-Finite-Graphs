@@ -7,7 +7,7 @@ desc   = "Verify the sequences produced are the correct ones"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('--max_n',type=int,default=8,
                     help="Maximum graph size n to compute tests")
-parser.add_argument('--min_n',type=int,default=3,
+parser.add_argument('--min_n',type=int,default=2,
                     help="Minimum graph size n to match tests")
 cargs = vars(parser.parse_args())
 
@@ -19,12 +19,12 @@ f_database = "database/sequence.db"
 conn = sqlite3.connect(f_database, check_same_thread=False)
 
 graph_conn = collections.OrderedDict()
-for n in range(cargs["min_n"], cargs["max_n"]+1):
+for n in range(1, cargs["max_n"]+1):
     graph_conn[n] = helper_functions.load_graph_database(n)
 
 # Assume that ref's are the same for all DB's
 cmd = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''
-invariant_list = graph_conn[cargs["min_n"]].execute(cmd).fetchall()
+invariant_list = graph_conn[1].execute(cmd).fetchall()
 invariant_dict = dict(invariant_list)
 
 def grab_vector(connection, cmd):
@@ -51,8 +51,11 @@ def grab_sequence(**args):
 
 def test_seq(**args):
     n0,n1 = cargs["min_n"],cargs["max_n"]
-    args["check_seq"] = args['seq'][n0-1:n1]
-    args["database_seq"] = grab_sequence(**args)
+    #args["check_seq"] = args['seq'][n0:n1]
+    #args["database_seq"] = grab_sequence(**args)[::args["skip"]]
+
+    args["check_seq"] = args['seq'][n0:n1]
+    args["database_seq"] = grab_sequence(**args)[n0:n1]   
 
     # Check and record the match
     args["status"] = args["check_seq"] == args["database_seq"]
@@ -60,11 +63,12 @@ def test_seq(**args):
 
 def report_seq(**args):
     if args["status"]:
-        print "GOOD"
+        msg = "PASSED: {function_name}{conditional}{value}"
+        print msg.format(**args)
     else:
         msg = '''
         FAILED  : {function_name}{conditional}{value}
-        expected: {check_seq}
+        OEIS    : {check_seq}
         received: {database_seq}'''
         print msg.rstrip().format(**args)
     
@@ -74,12 +78,14 @@ f_known_sequence = "src/verify_seq/known.txt"
 
 def parse_known_sequence(line):
     info, seq = line.split('|')
+
     seq = map(int, seq.split(','))
     key_names = ["function_name","conditional","value"]
 
     info = [key_names,info.strip().split(' ')]
     args = dict(zip(*info))
     args['seq'] = seq
+
     return args
 
 with open(f_known_sequence) as FIN:
