@@ -5,7 +5,7 @@ from helper_functions import load_graph_database, grab_scalar
 
 desc   = "Verify the sequences produced are the correct ones"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=8,
+parser.add_argument('--max_n',type=int,default=9,
                     help="Maximum graph size n to compute tests")
 parser.add_argument('--min_n',type=int,default=3,
                     help="Minimum graph size n to match tests")
@@ -53,8 +53,6 @@ def grab_sequence(**args):
 def test_seq(**args):
     n0,n1 = cargs["min_n"],cargs["max_n"]
     n0 -= 1
-    #args["check_seq"] = args['seq'][n0:n1]
-    #args["database_seq"] = grab_sequence(**args)[::args["skip"]]
 
     args["check_seq"] = args['seq'][n0:n1]
     args["database_seq"] = grab_sequence(**args)[n0:n1]   
