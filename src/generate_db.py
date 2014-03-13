@@ -40,8 +40,8 @@ with open(f_graph_template) as FIN:
 cmd_check = "SELECT COUNT(*) FROM graph LIMIT 1"
 is_populated = conn.execute(cmd_check).fetchone()[0] > 0 
 if is_populated:
-    err = "Database has been populated. Skipping nauty."
-    logging.info(err)
+    err = "Database {N} has been populated. Skipping nauty."
+    logging.info(err.format(**cargs))
     exit()
 
 ######################################################################

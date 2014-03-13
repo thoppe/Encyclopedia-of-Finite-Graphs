@@ -16,7 +16,7 @@ logging.root.setLevel(logging.INFO)
 
 # Load the database
 conn = load_graph_database(cargs["N"])
-logging.info("Starting invariant calculation for {N}".format(**cargs))
+logging.info("Starting special invariant calculation for {N}".format(**cargs))
 
 # Create a mapping to all the known invariant functions
 import invariants
@@ -66,9 +66,11 @@ def insert_from_landing_table(f_landing_table):
 #########################################################################
 
 # Get the special column names
-cmd = '''SELECT * from graph LIMIT 1'''
-graph_args_names = zip(*conn.execute(cmd).description)[0]
-special_functions = [x for x in graph_args_names if "special" in x]
+cmd = '''SELECT function_name,computed FROM ref_special_invariant'''
+special_invariant_itr = conn.execute(cmd).fetchall()
+
+# Remove the previously computed invariants from the list
+special_functions = [x[0] for x in special_invariant_itr if x[1]=='false']
 
 for func in special_functions:
 
@@ -91,9 +93,14 @@ for func in special_functions:
       SELECT adj,graph_id FROM graph
       WHERE  {column} IS NULL'''.format(**cargs)
 
+    cmd_mark_success = '''
+          UPDATE ref_special_invariant SET computed=1 
+          WHERE function_name="{column}"'''.format(**cargs)
+
     if not counts:
         msg = "Calculation previously completed for {column}"
         logging.info(msg.format(**cargs))
+        conn.execute(cmd_mark_success)
 
     else:
         msg = "Starting calculation for {column} ({})"
