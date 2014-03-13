@@ -1,11 +1,11 @@
 import sqlite3, logging, argparse, os, collections, ast
 import subprocess, itertools
 import numpy as np
-from helper_functions from load_graph_database, grab_scalar
+from helper_functions import load_graph_database, grab_scalar
 
 desc   = "Verify the sequences produced are the correct ones"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=8,
+parser.add_argument('--max_n',type=int,default=9,
                     help="Maximum graph size n to compute tests")
 parser.add_argument('--min_n',type=int,default=2,
                     help="Minimum graph size n to match tests")
@@ -27,6 +27,12 @@ cmd = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''
 invariant_list = graph_conn[1].execute(cmd).fetchall()
 invariant_dict = dict(invariant_list)
 
+f_known_sequence = "verification/known.txt"
+f_report = "verification/report.md"
+F_REPORT = open(f_report,'w')
+
+msg = "# Unit tests for N={min_n}, ..., {max_n}\n\n"
+F_REPORT.write(msg.format(**cargs))
 
 
 cmd_count = '''
@@ -57,18 +63,22 @@ def test_seq(**args):
     args["status"] = args["check_seq"] == args["database_seq"]
     return args
 
+
+fail_msg = '''
+**FAILED**  : `{function_name}{conditional}{value}`
+OEIS        : [`{check_seq}`]({comment})
+received    : `{database_seq}`\n'''.lstrip()
+
+pass_msg = '''*passed* [`{function_name}{conditional}{value}`]({comment})'''
+
 def report_seq(**args):
     if args["status"]:
-        msg = "PASSED: {function_name}{conditional}{value}"
-        print msg.format(**args)
+        s = pass_msg.format(**args)
     else:
-        msg = '''
-        FAILED  : {function_name}{conditional}{value}
-        OEIS    : {check_seq}
-        received: {database_seq}'''
-        print msg.rstrip().format(**args)
+        s= fail_msg.format(**args)
 
-f_known_sequence = "src/verify_seq/known.txt"
+    F_REPORT.write(s+'\n')
+    print s
 
 def parse_known_sequence(line):
     info, seq = line.split('|')
@@ -86,18 +96,25 @@ def parse_known_sequence(line):
 
     return args
 
+previous_comment = ''
+
 with open(f_known_sequence) as FIN:
     for line in FIN:
         line = line.strip()
+
+        if line and line[0] == "#":
+            previous_comment = line[1:].strip()
+
         if line and line[0] != "#":
 
             try: seq_args = parse_known_sequence(line)
             except Exception as ex:
                 err = "Error parsing unit_test line: %s\n%s"%(line,ex)
                 raise SyntaxError(err)
+
+            seq_args['comment'] = previous_comment
           
             seq_args = test_seq(**seq_args)
             report_seq(**seq_args)
 
-
-#print grab_sequence(function_name="automorphism_group_n", value=2)
+F_REPORT.close()

@@ -20,8 +20,6 @@ INSERT OR IGNORE INTO ref_special_invariant (function_name) VALUES
     ("special_degree_sequence"),
     ("special_polynomial_tutte");
 
-
-
 -- Invariant reference table for integers
 
 CREATE TABLE IF NOT EXISTS ref_invariant_integer(
@@ -30,7 +28,6 @@ CREATE TABLE IF NOT EXISTS ref_invariant_integer(
     computed TINYINY DEFAULT false,
     UNIQUE (function_name)
 );
-
 
 -- Invariant table for integers
 

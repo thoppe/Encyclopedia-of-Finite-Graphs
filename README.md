@@ -76,21 +76,6 @@ Other Invariants (trivial)
 
 ====================================
 
-*Unit tests*:
+*Unit tests*
 
-Passed
-
-[`is_eulerian = 1`](http://oeis.org/A003049)
-[`is_k_regular = 3`](http://oeis.org/A002851)
-[`is_k_regular = 4`](http://oeis.org/A006820)
-[`is_k_regular = 5`](http://oeis.org/A006820)
-[`is_k_regular = 6`](http://oeis.org/A006822)
-[`is_k_regular = 7`](http://oeis.org/A014377)
-[`is_k_regular = 8`](http://oeis.org/A014378)
-[`is_strongly_regular = 1`](http://oeis.org/A088741)
-
-[`chromatic_number = 2`](http://oeis.org/A005142)
-[`chromatic_number = 3`](http://oeis.org/A126737)
-[`chromatic_number = 4`](http://oeis.org/A126738)
-[`chromatic_number = 5`](http://oeis.org/A126739)
-[`chromatic_number = 6`](http://oeis.org/A126740)
+An auto-generated reported for various base queries can be found here in the [unit tests](verification/report.md).
