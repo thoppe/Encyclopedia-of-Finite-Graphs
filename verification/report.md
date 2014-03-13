@@ -5,6 +5,11 @@ OEIS        : [`[1, 2, 3, 6, 7, 22, 24]`](http://oeis.org/A064731)
 received    : `[1, 2, 3, 6, 7, 24, 32]`
 
 
+*passed*  : `automorphism_group_n=1`
+OEIS      : [`[0, 0, 0, 8, 144, 3552, 131452]`](http://oeis.org/A124059)
+received  :  `[0, 0, 0, 8, 144, 3552, 131452]`
+
+
 *passed*  : `is_subgraph_free_C4=1`
 OEIS      : [`[2, 3, 8, 19, 57, 186, 740]`](http://oeis.org/A077269)
 received  :  `[2, 3, 8, 19, 57, 186, 740]`
@@ -43,6 +48,16 @@ received  :  `[1, 2, 3, 6, 11, 23, 47]`
 *passed*  : `n_articulation_points=0`
 OEIS      : [`[1, 3, 10, 56, 468, 7123, 194066]`](http://oeis.org/A002218)
 received  :  `[1, 3, 10, 56, 468, 7123, 194066]`
+
+
+*passed*  : `is_planar=1`
+OEIS      : [`[2, 6, 20, 99, 646, 5974, 71885]`](https://oeis.org/A003094)
+received  :  `[2, 6, 20, 99, 646, 5974, 71885]`
+
+
+*passed*  : `n_endpoints=0`
+OEIS      : [`[1, 3, 11, 61, 507, 7442, 197772]`](https://oeis.org/A004108)
+received  :  `[1, 3, 11, 61, 507, 7442, 197772]`
 
 
 *passed*  : `chromatic_number=2`
