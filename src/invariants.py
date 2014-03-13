@@ -70,9 +70,13 @@ def n_vertex(adj,**args):
     return args["N"]
 
 def n_cycle_basis(adj, **args):
-    # is_tree == n_cycle_basis=0
     cycle_b = ast.literal_eval(args["special_cycle_basis"])
     return len(cycle_b)
+
+def is_tree(adj, **args):
+    # Trees have no cycles
+    cycle_b = ast.literal_eval(args["special_cycle_basis"])
+    return len(cycle_b)==0
 
 def girth(adj,**args):
     # Since the cycle basis is the minimal set of fundemental cycles

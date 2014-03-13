@@ -91,4 +91,6 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("is_integral"),
 
     ("vertex_connectivity"),
-    ("edge_connectivity");
+    ("edge_connectivity"),
+
+    ("is_tree");

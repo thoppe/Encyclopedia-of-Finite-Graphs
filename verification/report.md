@@ -90,6 +90,11 @@ OEIS      : [`[1, 2, 2, 3, 1, 3, 3]`](http://oeis.org/A088741)
 received  :  `[1, 2, 2, 3, 1, 3, 3]`
 
 
+*passed*  : `is_tree=1`
+OEIS      : [`[1, 2, 3, 6, 11, 23, 47]`](http://oeis.org/A000055)
+received  :  `[1, 2, 3, 6, 11, 23, 47]`
+
+
 *passed*  : `is_eulerian=1`
 OEIS      : [`[1, 1, 4, 8, 37, 184, 1782]`](http://oeis.org/A003049)
 received  :  `[1, 1, 4, 8, 37, 184, 1782]`
