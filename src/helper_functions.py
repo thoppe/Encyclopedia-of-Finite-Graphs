@@ -18,6 +18,14 @@ def load_graph_database(N, check_exist=True):
     
     return sqlite3.connect(f_database, check_same_thread=False)
 
+# Helper functions to grab a vector of data
+def grab_vector(connection, cmd):
+    return [x[0] for x in connection.execute(cmd).fetchall()]
+
+# Helper function to only grab a scalar, like COUNT(*)
+def grab_scalar(connection, cmd):
+    return [x[0] for x in connection.execute(cmd).fetchall()][0]
+
 def landing_table_itr(f_landing_table, index_args, max_iter=50000):
     with open(f_landing_table,'r') as FIN:
         for group in grouper(FIN,max_iter):

@@ -9,6 +9,17 @@ CREATE TABLE IF NOT EXISTS graph(
        special_polynomial_tutte STRING
 );
 
+-- Special invariants reference table (to mark computation)
+CREATE TABLE IF NOT EXISTS ref_special_invariant(
+    function_name STRING PRIMARY KEY,  
+    computed TINYINT DEFAULT false
+);
+
+INSERT OR IGNORE INTO ref_special_invariant (function_name) VALUES 
+    ("special_cycle_basis"),
+    ("special_degree_sequence"),
+    ("special_polynomial_tutte");
+
 -- Invariant reference table for integers
 
 CREATE TABLE IF NOT EXISTS ref_invariant_integer(
@@ -17,7 +28,6 @@ CREATE TABLE IF NOT EXISTS ref_invariant_integer(
     computed TINYINY DEFAULT false,
     UNIQUE (function_name)
 );
-
 
 -- Invariant table for integers
 
@@ -78,4 +88,7 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("is_subgraph_free_C9"),
     ("is_subgraph_free_C10"),
 
-    ("is_integral");
+    ("is_integral"),
+
+    ("vertex_connectivity"),
+    ("edge_connectivity");

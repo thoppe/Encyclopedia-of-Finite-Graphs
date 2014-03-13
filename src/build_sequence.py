@@ -1,8 +1,8 @@
-import sqlite3, logging, argparse, os, collections, ast
+import sqlite3, logging, argparse, os, collections, ast, sys
 import subprocess, itertools
 import numpy as np
-import helper_functions
-import sys
+from helper_functions import load_graph_database, grab_vector
+
 '''
 select id1, id2, v1, v2, count(graph_id)
 from
@@ -30,7 +30,7 @@ cargs = vars(parser.parse_args())
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-# Connect to the database and add structure info
+# Connect to the sequence database
 f_database = "database/sequence.db"
 conn = sqlite3.connect(f_database, check_same_thread=False)
 
@@ -40,7 +40,7 @@ with open(f_database_template) as FIN:
 
 graph_conn = collections.OrderedDict()
 for n in range(1, cargs["max_n"]+1):
-    graph_conn[n] = helper_functions.load_graph_database(n)
+    graph_conn[n] = load_graph_database(n)
 
 # Assume that ref's are the same for all DB's
 cmd = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''
@@ -56,9 +56,6 @@ cmd_insert = '''
 INSERT or REPLACE INTO invariant_integer_unique (invariant_id, unique_value)
 VALUES (?,?) 
 '''
-
-def grab_vector(connection, cmd):
-    return [x[0] for x in connection.execute(cmd).fetchall()]
 
 cmd_check_unique = '''SELECT max_n FROM ref_invariant_integer_unique'''
 unique_max_n = max(grab_vector(conn, cmd_check_unique))
