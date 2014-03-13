@@ -5,6 +5,16 @@ OEIS        : [`[1, 2, 3, 6, 7, 22, 24]`](http://oeis.org/A064731)
 received    : `[1, 2, 3, 6, 7, 24, 32]`
 
 
+*passed*  : `n_vertex>0`
+OEIS      : [`[2, 6, 21, 112, 853, 11117, 261080]`](https://oeis.org/A001349)
+received  :  `[2, 6, 21, 112, 853, 11117, 261080]`
+
+
+*passed*  : `n_edge=10`
+OEIS      : [`[0, 0, 1, 14, 132, 486, 797]`](https://oeis.org/A054923)
+received  :  `[0, 0, 1, 14, 132, 486, 797]`
+
+
 *passed*  : `automorphism_group_n=1`
 OEIS      : [`[0, 0, 0, 8, 144, 3552, 131452]`](http://oeis.org/A124059)
 received  :  `[0, 0, 0, 8, 144, 3552, 131452]`
