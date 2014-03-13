@@ -1,9 +1,7 @@
 import sqlite3, logging, argparse, os, collections, ast
 import subprocess
 import numpy as np
-import helper_functions
-#from src.invariants import graph_tool_representation, convert_to_numpy
-import graph_tool
+from helper_functions import load_graph_database, grab_scalar
 
 desc   = "Remove an invariant calculation from the databases"
 parser = argparse.ArgumentParser(description=desc)
@@ -17,10 +15,7 @@ logging.root.setLevel(logging.INFO)
 
 graph_conn = collections.OrderedDict()
 for n in range(1, cargs["max_n"]+1):
-    graph_conn[n] = helper_functions.load_graph_database(n)
-
-def grab_scalar(connection, cmd):
-    return [x[0] for x in connection.execute(cmd).fetchall()][0]
+    graph_conn[n] = load_graph_database(n)
 
 cmd_find_id = '''
 SELECT invariant_id from ref_invariant_integer 

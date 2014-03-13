@@ -1,7 +1,7 @@
 import sqlite3, logging, argparse, os, collections, ast
 import subprocess, itertools
 import numpy as np
-import helper_functions
+from helper_functions from load_graph_database, grab_scalar
 
 desc   = "Verify the sequences produced are the correct ones"
 parser = argparse.ArgumentParser(description=desc)
@@ -20,18 +20,14 @@ conn = sqlite3.connect(f_database, check_same_thread=False)
 
 graph_conn = collections.OrderedDict()
 for n in range(1, cargs["max_n"]+1):
-    graph_conn[n] = helper_functions.load_graph_database(n)
+    graph_conn[n] = load_graph_database(n)
 
 # Assume that ref's are the same for all DB's
 cmd = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''
 invariant_list = graph_conn[1].execute(cmd).fetchall()
 invariant_dict = dict(invariant_list)
 
-def grab_vector(connection, cmd):
-    return [x[0] for x in connection.execute(cmd).fetchall()]
 
-def grab_scalar(connection, cmd):
-    return [x[0] for x in connection.execute(cmd).fetchall()][0]
 
 cmd_count = '''
 SELECT COUNT(*) FROM invariant_integer as a 
