@@ -11,12 +11,13 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 
 *Roadmap*:
 
-+ Write unit-tests for known sequences
-+ Signup and template OEIS response (bfile and submission)
-+ Submit new sequences to OEIS
++ Finish unit-tests for known sequences
++ Template OEIS response (bfile and submission)
++ Find the _new_ base sequences and submit those to OEIS
 + Document these submissions
-+ Add harder invariants and repeat!
++ Build new invariants from combinations of bases
 + Check set relations for _interesting_ queries
++ Add harder invariants and repeat!
 + Writeup project as an experimental math paper (Automatic integer sequence discovery from small graphs?)
 
 *Lower priority tasks*
@@ -47,6 +48,14 @@ Calculated Invariants
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)
 + [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html) (numpy,sympy)
 
+=======================
+
+*Unit tests*
+
+An auto-generated reported for various base queries can be found here in the [unit tests](verification/report.md).
+
+=======================
+
 Proposed Invariants
 
 + [`is_hamiltonian`](http://mathworld.wolfram.com/HamiltonianGraph.html), [`n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianCycle.html), [`n_hamiltonian_paths`](http://mathworld.wolfram.com/HamiltonianPath.html)
@@ -74,8 +83,3 @@ Other Invariants (trivial)
 + [`n_non_adjacent_vertex_pairs`](http://mathworld.wolfram.com/NonadjacentVertexPairs.html)
 + [`n_peripheral_points`](http://mathworld.wolfram.com/PeripheralPoint.html)
 
-====================================
-
-*Unit tests*
-
-An auto-generated reported for various base queries can be found here in the [unit tests](verification/report.md).
