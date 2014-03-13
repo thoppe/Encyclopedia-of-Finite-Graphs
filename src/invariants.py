@@ -35,14 +35,17 @@ def graph_tool_representation(adj, **args):
             g.add_edge(n0,n1)
     return g
 
+def networkx_representation(adj, **args):
+    A = convert_to_numpy(adj,**args)
+    return nx.from_numpy_matrix(A)
+
 ######################### Special invariant code #################
 
 def compress_input(val):
     return str(val).replace(' ','')
 
 def special_cycle_basis(adj,**args):
-    A = convert_to_numpy(adj,**args)
-    g = nx.from_numpy_matrix(A)
+    g = networkx_representation(adj,**args)
     val = nx.cycle_basis(g)
     return compress_input(val)
 
@@ -145,28 +148,22 @@ def is_strongly_regular(adj, **args):
             if V and common != V: return False
     return True
 
-
-
 def diameter(adj,**args):
     if args["N"]==1: return 0
-    A = convert_to_numpy(adj,**args)
-    g = nx.from_numpy_matrix(A)
+    g = networkx_representation(adj,**args)
     return nx.diameter(g)
 
 def radius(adj,**args):
     if args["N"]==1: return 0
-    A = convert_to_numpy(adj,**args)
-    g = nx.from_numpy_matrix(A)
+    g = networkx_representation(adj,**args)
     return nx.radius(g)
 
 def is_eulerian(adj,**args):
-    A = convert_to_numpy(adj,**args)
-    g = nx.from_numpy_matrix(A)
+    g = networkx_representation(adj,**args)
     return nx.is_eulerian(g)
 
 def is_distance_regular(adj,**args):
-    A = convert_to_numpy(adj,**args)
-    g = nx.from_numpy_matrix(A)
+    g = networkx_representation(adj,**args)
     return nx.is_distance_regular(g)
 
 def is_planar(adj,**args):
@@ -183,13 +180,11 @@ def n_articulation_points(adj,**args):
     return sum(art.a)
 
 def vertex_connectivity(adj,**args):
-    A = convert_to_numpy(adj,**args)
-    g = nx.from_numpy_matrix(A)
+    g = networkx_representation(adj,**args)
     return nx_extra.global_vertex_connectivity(g)
 
 def edge_connectivity(adj,**args):
-    A = convert_to_numpy(adj,**args)
-    g = nx.from_numpy_matrix(A)
+    g = networkx_representation(adj,**args)
     return nx_extra.global_edge_connectivity(g)
 
 import sympy
@@ -326,9 +321,9 @@ if __name__ == "__main__":
     args["special_polynomial_tutte"] = p
     print "Chromatic number: ", chromatic_number(adj, **args)
 
-    A  = convert_to_numpy(adj,**args)    
-    gx = nx.from_numpy_matrix(A)
-    g = graph_tool_representation(adj,**args)
+    A  = convert_to_numpy(adj,**args) 
+    gx = networkx_representation(adj,**args)
+    gt = graph_tool_representation(adj,**args)
 
     print "is_planar",is_planar(adj,**args), is_bipartite(adj,**args)
     print "n_articulation_points",n_articulation_points(adj,**args)
@@ -337,6 +332,6 @@ if __name__ == "__main__":
         pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
         graph_tool.draw.graph_draw(g,pos)
 
-    viz_graph(g)
+    viz_graph(gt)
     
 
