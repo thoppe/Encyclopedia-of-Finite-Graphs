@@ -31,7 +31,7 @@ f_known_sequence = "verification/known.txt"
 f_report = "verification/report.md"
 F_REPORT = open(f_report,'w')
 
-msg = "# Unit tests for N={min_n}, ..., {max_n}\n\n"
+msg = "## Unit tests for N={{3, ..., {max_n}}}\n\n"
 F_REPORT.write(msg.format(**cargs))
 
 
@@ -69,16 +69,20 @@ fail_msg = '''
 OEIS        : [`{check_seq}`]({comment})
 received    : `{database_seq}`\n'''.lstrip()
 
-pass_msg = '''*passed* [`{function_name}{conditional}{value}`]({comment})'''
+pass_msg = '''
+*passed*  : `{function_name}{conditional}{value}`
+OEIS      : [`{check_seq}`]({comment})
+received  : `{database_seq}`\n'''.lstrip()
 
 def report_seq(**args):
     if args["status"]:
         s = pass_msg.format(**args)
+        sp = "passed {function_name}{conditional}{value}".format(**args)
     else:
-        s= fail_msg.format(**args)
+        s = sp = fail_msg.format(**args)
 
-    F_REPORT.write(s+'\n')
-    print s
+    F_REPORT.write(s+'\n\n')
+    print sp
 
 def parse_known_sequence(line):
     info, seq = line.split('|')
