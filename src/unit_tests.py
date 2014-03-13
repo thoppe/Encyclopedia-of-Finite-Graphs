@@ -5,9 +5,9 @@ from helper_functions import load_graph_database, grab_scalar
 
 desc   = "Verify the sequences produced are the correct ones"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=9,
+parser.add_argument('--max_n',type=int,default=8,
                     help="Maximum graph size n to compute tests")
-parser.add_argument('--min_n',type=int,default=2,
+parser.add_argument('--min_n',type=int,default=3,
                     help="Minimum graph size n to match tests")
 cargs = vars(parser.parse_args())
 
@@ -31,9 +31,8 @@ f_known_sequence = "verification/known.txt"
 f_report = "verification/report.md"
 F_REPORT = open(f_report,'w')
 
-msg = "## Unit tests for N={{3, ..., {max_n}}}\n\n"
+msg = "## Unit tests for N={{{min_n}, ..., {max_n}}}\n\n"
 F_REPORT.write(msg.format(**cargs))
-
 
 cmd_count = '''
 SELECT COUNT(*) FROM invariant_integer as a 
@@ -53,6 +52,7 @@ def grab_sequence(**args):
 
 def test_seq(**args):
     n0,n1 = cargs["min_n"],cargs["max_n"]
+    n0 -= 1
     #args["check_seq"] = args['seq'][n0:n1]
     #args["database_seq"] = grab_sequence(**args)[::args["skip"]]
 
@@ -72,7 +72,7 @@ received    : `{database_seq}`\n'''.lstrip()
 pass_msg = '''
 *passed*  : `{function_name}{conditional}{value}`
 OEIS      : [`{check_seq}`]({comment})
-received  : `{database_seq}`\n'''.lstrip()
+received  :  `{database_seq}`\n'''.lstrip()
 
 def report_seq(**args):
     if args["status"]:
