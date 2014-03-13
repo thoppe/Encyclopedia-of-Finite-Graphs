@@ -111,7 +111,8 @@ for func in special_functions:
                                    callback=insert_invariants, 
                                    **cargs)
         if success:
-            insert_from_landing_table(f_landing)       
+            insert_from_landing_table(f_landing)
+            conn.execute(cmd_mark_success)
         else:
             err = "{column} calculation failed"
             logging.critical(err.format(**cargs))
