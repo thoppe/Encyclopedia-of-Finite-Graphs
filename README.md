@@ -27,7 +27,7 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 
 ====================================
 
-*Invariants*:
+**Invariants**
 
 Calculated Invariants
 
@@ -50,7 +50,7 @@ Calculated Invariants
 
 =======================
 
-*Unit tests*
+**Unit tests**
 
 An auto-generated reported for various base queries can be found here in the [unit tests](verification/report.md).
 
