@@ -5,6 +5,8 @@ import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
 
+import connectivity.connectivity as nx_extra
+
 ######################### Conversion code ######################### 
 
 def convert_to_numpy(adj,**args):
@@ -180,6 +182,16 @@ def n_articulation_points(adj,**args):
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
 
+def vertex_connectivity(adj,**args):
+    A = convert_to_numpy(adj,**args)
+    g = nx.from_numpy_matrix(A)
+    return nx_extra.global_vertex_connectivity(g)
+
+def edge_connectivity(adj,**args):
+    A = convert_to_numpy(adj,**args)
+    g = nx.from_numpy_matrix(A)
+    return nx_extra.global_edge_connectivity(g)
+
 import sympy
 def is_integral(adj, **args):
     # Check with http://oeis.org/A064731
@@ -302,6 +314,9 @@ if __name__ == "__main__":
     print "n_cycle_basis:",n_cycle_basis(adj,**args)
     print "Girth: ", girth(adj, **args)
     print "Circumference: ", circumference(adj, **args)
+
+    print "Vertex connectivity: ", vertex_connectivity(adj, **args)
+    print "Edge   connectivity: ", edge_connectivity(adj, **args)
 
     print "is_strongly_regular: ", is_strongly_regular(adj, **args)
     print "is_integral:", is_integral(adj, **args)

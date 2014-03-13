@@ -78,4 +78,7 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("is_subgraph_free_C9"),
     ("is_subgraph_free_C10"),
 
-    ("is_integral");
+    ("is_integral"),
+
+    ("vertex_connectivity"),
+    ("edge_connectivity");
