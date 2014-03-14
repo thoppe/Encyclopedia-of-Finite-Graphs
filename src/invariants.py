@@ -6,6 +6,7 @@ import graph_tool.topology
 import graph_tool.draw
 
 import connectivity.connectivity as nx_extra
+import sympy
 
 ######################### Conversion code ######################### 
 
@@ -191,7 +192,6 @@ def edge_connectivity(adj,**args):
     g = networkx_representation(adj,**args)
     return nx_extra.global_edge_connectivity(g)
 
-import sympy
 def is_integral(adj, **args):
     # Check with http://oeis.org/A064731
     # Symbolically determine the char poly and evaluate it on
@@ -202,13 +202,10 @@ def is_integral(adj, **args):
     N = args["N"]
     M = sympy.Matrix(A)
     p = M.charpoly()
-    s = np.linalg.eigvalsh(A)
-    s_round = set(np.round(s).astype(int))
 
-    for x in s_round:
-        if p(x) != 0:
-            return False
-    return True
+    # Integer roots
+    z_roots = sympy.polys.polyroots.roots(p, filter="Z", multiple=True)
+    return N == len(z_roots)
 
 ######################### Subgraph code ######################### 
 
@@ -320,6 +317,7 @@ if __name__ == "__main__":
     print "is_strongly_regular: ", is_strongly_regular(adj, **args)
     print "is_integral:", is_integral(adj, **args)
     print "AUT: ", automorphism_group_n(adj,**args)
+    print "is_integral: ", is_integral(adj, **args)
 
     p = special_polynomial_tutte(adj, **args)
     args["special_polynomial_tutte"] = p

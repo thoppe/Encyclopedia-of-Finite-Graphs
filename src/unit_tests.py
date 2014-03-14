@@ -2,6 +2,7 @@ import sqlite3, logging, argparse, os, collections, ast
 import subprocess, itertools
 import numpy as np
 from helper_functions import load_graph_database, grab_scalar
+import pyparsing as pypar
 
 desc   = "Verify the sequences produced are the correct ones"
 parser = argparse.ArgumentParser(description=desc)
@@ -38,16 +39,18 @@ cmd_count = '''
 SELECT COUNT(*) FROM invariant_integer as a 
 LEFT JOIN ref_invariant_integer as b
 ON  a.invariant_id  = b.invariant_id 
-WHERE b.function_name = "{function_name}"
-AND   a.value {conditional} {value}
+WHERE b.function_name = "{function_name}" 
+AND a.value {conditional} {value}
 '''
 
 def grab_sequence(**args):
     cmd = cmd_count.format(**args)
+
     vec = []
     for n in graph_conn:
         sol = grab_scalar(graph_conn[n], cmd)
         vec.append(sol)
+
     return vec
 
 def test_seq(**args):
@@ -82,19 +85,27 @@ def report_seq(**args):
     F_REPORT.write(s+'\n\n')
     print sp
 
+
+operators = [">", "<", "is not", ">=", "<=", "="]
+gmr_conditional = pypar.Or(map(pypar.Keyword, operators))("conditional")
+gmr_seqname  = pypar.Word(pypar.alphanums + "_")("function_name")
+gmr_value    = pypar.Word(pypar.nums)("value")
+gmr_phrase   = pypar.Group(gmr_seqname + gmr_conditional + gmr_value)
+#gmr_multi_op = pypar.Keyword("and").suppress()
+#gmr_multi    = gmr_phrase + pypar.ZeroOrMore(gmr_multi_op + gmr_phrase)
+gmr_seq_sep  = pypar.Keyword("|").suppress()
+gmr_seq      = pypar.Group(pypar.commaSeparatedList)
+gmr_full     = gmr_phrase("phrase") + gmr_seq_sep + gmr_seq("seq")
+
 def parse_known_sequence(line):
-    info, seq = line.split('|')
+   
+    sol  = gmr_full.parseString(line)
 
-    key_names = ["function_name","conditional","value"]
-    info = [key_names,info.strip().split(' ')]
-    args = dict(zip(*info))
+    args = {}
+    try:    args['seq']  = map(int, sol["seq"])
+    except: args['seq'] = []
 
-    seq = seq.strip()
-    if seq:
-        seq = map(int, seq.split(','))
-        args['seq'] = seq
-    else:
-        args['seq'] = []
+    args.update( sol["phrase"].asDict() )
 
     return args
 
