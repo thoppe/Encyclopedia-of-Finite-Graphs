@@ -32,8 +32,7 @@ Set of tools and data to compute all known invariants for small finite graphs [i
 Calculated Invariants
 
 + [`n_edges`](http://mathworld.wolfram.com/EdgeCount.html), [`n_vertex`](http://mathworld.wolfram.com/VertexCount.html) (trivial)
-+ [`diameter`](http://mathworld.wolfram.com/GraphDiameter.html) (networkx)
-+ [`radius`](http://mathworld.wolfram.com/GraphRadius.html) (networkx)
++ [`diameter`](http://mathworld.wolfram.com/GraphDiameter.html), [`radius`](http://mathworld.wolfram.com/GraphRadius.html) (networkx)
 + [`is_eulerian`](http://mathworld.wolfram.com/EulerianGraph.html) (networkx)
 + [`is_distance_regular`](http://mathworld.wolfram.com/Distance-RegularGraph.html) (networkx)
 + [`is_planar`](http://mathworld.wolfram.com/PlanarGraph.html) (graph_tool)
@@ -45,7 +44,7 @@ Calculated Invariants
 + [`is_subgraph_free_C4`](http://mathworld.wolfram.com/Square-FreeGraph.html), ..., `is_subgraph_free_C10` checks for cycles of length k (graph_tool)
 + [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html), [`is_strongly_regular`](http://mathworld.wolfram.com/StronglyRegularGraph.html)
 + [`tutte_polynomial`](http://mathworld.wolfram.com/TuttePolynomial.html) via the [`chromatic_polynomial`](http://mathworld.wolfram.com/ChromaticPolynomial.html) leads to the [`chromatic_number`](http://mathworld.wolfram.com/ChromaticNumber.html)
-+ [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)
++ [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (BLISS)
 + [`k_vertex_connectivity`](http://mathworld.wolfram.com/VertexConnectivity.html)[`k_edge_connectivity`](http://mathworld.wolfram.com/EdgeConnectivity.html) minimal number of nodes/edges that can be deleted to disconnect the graph.
 + [`is_chordal`](http://mathworld.wolfram.com/ChordalGraph.html) (networkx)
 + [`k_max_clique`](http://mathworld.wolfram.com/CliqueNumber.html) (networkx)
@@ -63,7 +62,6 @@ An auto-generated reported for various base queries can be found here in the [un
 Proposed Invariants
 
 + [`is_hamiltonian`](http://mathworld.wolfram.com/HamiltonianGraph.html), [`n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianCycle.html), [`n_hamiltonian_paths`](http://mathworld.wolfram.com/HamiltonianPath.html)
-+ [`maximum_clique`](http://mathworld.wolfram.com/MaximalClique.html) (graph_tool, networkx)
 + [`is_perfect`](http://mathworld.wolfram.com/PerfectGraph.html)
 + [`is_arc_transitive`](http://mathworld.wolfram.com/Arc-TransitiveGraph.html), [`is_vertex_transitive`](http://mathworld.wolfram.com/Vertex-TransitiveGraph.html)
 + [`characteristic_polynomial`](http://mathworld.wolfram.com/CharacteristicPolynomial.html)
