@@ -180,3 +180,33 @@ OEIS      : [`[0, 0, 0, 0, 0, 0, 1]`](http://oeis.org/A014378)
 received  :  `[0, 0, 0, 0, 0, 0, 1]`
 
 
+*passed*  : `k_max_clique=2`
+OEIS      : [`[1, 3, 6, 19, 59, 267, 1380]`](http://oeis.org/A024607)
+received  :  `[1, 3, 6, 19, 59, 267, 1380]`
+
+
+*passed*  : `k_max_clique=3`
+OEIS      : [`[1, 2, 11, 63, 477, 5339, 94535]`](http://oeis.org/A126745)
+received  :  `[1, 2, 11, 63, 477, 5339, 94535]`
+
+
+*passed*  : `k_max_clique=4`
+OEIS      : [`[0, 1, 3, 25, 266, 4646, 136935]`](http://oeis.org/A126746)
+received  :  `[0, 1, 3, 25, 266, 4646, 136935]`
+
+
+*passed*  : `k_max_clique=5`
+OEIS      : [`[0, 0, 1, 4, 45, 785, 26205]`](http://oeis.org/A126747)
+received  :  `[0, 0, 1, 4, 45, 785, 26205]`
+
+
+*passed*  : `k_max_clique=6`
+OEIS      : [`[0, 0, 0, 1, 5, 73, 1908]`](http://oeis.org/A126748)
+received  :  `[0, 0, 0, 1, 5, 73, 1908]`
+
+
+*passed*  : `k_max_clique=7`
+OEIS      : [`[0, 0, 0, 0, 1, 6, 109]`](http://oeis.org/A217987)
+received  :  `[0, 0, 0, 0, 1, 6, 109]`
+
+

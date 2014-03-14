@@ -96,4 +96,6 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("edge_connectivity"),
 
     ("is_tree"),
-    ("is_chordal");
+    ("is_chordal"),
+
+    ("k_max_clique");

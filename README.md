@@ -47,7 +47,8 @@ Calculated Invariants
 + [`tutte_polynomial`](http://mathworld.wolfram.com/TuttePolynomial.html) via the [`chromatic_polynomial`](http://mathworld.wolfram.com/ChromaticPolynomial.html) leads to the [`chromatic_number`](http://mathworld.wolfram.com/ChromaticNumber.html)
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (nauty)
 + [`k_vertex_connectivity`](http://mathworld.wolfram.com/VertexConnectivity.html)[`k_edge_connectivity`](http://mathworld.wolfram.com/EdgeConnectivity.html) minimal number of nodes/edges that can be deleted to disconnect the graph.
-+ [`is_chordal`](http://mathworld.wolfram.com/ChordalGraph.html) 
++ [`is_chordal`](http://mathworld.wolfram.com/ChordalGraph.html) (networkx)
++ [`k_max_clique`](http://mathworld.wolfram.com/CliqueNumber.html) (networkx)
 
 + [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html) (currently broken) (numpy,sympy)
 

@@ -163,6 +163,10 @@ def radius(adj,**args):
     g = networkx_representation(adj,**args)
     return nx.radius(g)
 
+def k_max_clique(adj, **args):
+    g = networkx_representation(adj,**args)
+    return nx.graph_clique_number(g)
+
 def is_chordal(adj,**args):
     g = networkx_representation(adj,**args)
     return nx.is_chordal(g)
@@ -197,6 +201,9 @@ def edge_connectivity(adj,**args):
     return nx_extra.global_edge_connectivity(g)
 
 def is_integral(adj, **args):
+    # This is broken
+    return 0
+
     # Check with http://oeis.org/A064731
     # Symbolically determine the char poly and evaluate it on
     # the rounded eigenvalues. A non-zero result is a non-intergral eigenvalue
@@ -314,6 +321,8 @@ if __name__ == "__main__":
     print "n_cycle_basis:",n_cycle_basis(adj,**args)
     print "Girth: ", girth(adj, **args)
     print "Circumference: ", circumference(adj, **args)
+
+    print "k_max_clique: ", k_max_clique(adj, **args)
 
     print "Vertex connectivity: ", vertex_connectivity(adj, **args)
     print "Edge   connectivity: ", edge_connectivity(adj, **args)
