@@ -20,6 +20,31 @@ OEIS      : [`[0, 0, 0, 8, 144, 3552, 131452]`](http://oeis.org/A124059)
 received  :  `[0, 0, 0, 8, 144, 3552, 131452]`
 
 
+*passed*  : `vertex_connectivity>=0`
+OEIS      : [`[2, 6, 21, 112, 853, 11117, 261080]`](https://oeis.org/A001349)
+received  :  `[2, 6, 21, 112, 853, 11117, 261080]`
+
+
+*passed*  : `vertex_connectivity>1`
+OEIS      : [`[1, 3, 10, 56, 468, 7123, 194066]`](http://oeis.org/A002218)
+received  :  `[1, 3, 10, 56, 468, 7123, 194066]`
+
+
+*passed*  : `vertex_connectivity>2`
+OEIS      : [`[0, 1, 3, 17, 136, 2388, 80890]`](http://oeis.org/A006290)
+received  :  `[0, 1, 3, 17, 136, 2388, 80890]`
+
+
+*passed*  : `vertex_connectivity>3`
+OEIS      : [`[0, 0, 1, 4, 25, 384, 14480]`](http://oeis.org/A086216)
+received  :  `[0, 0, 1, 4, 25, 384, 14480]`
+
+
+*passed*  : `vertex_connectivity>4`
+OEIS      : [`[0, 0, 0, 1, 4, 39, 1051]`](http://oeis.org/A086217)
+received  :  `[0, 0, 0, 1, 4, 39, 1051]`
+
+
 *passed*  : `is_subgraph_free_C4=1`
 OEIS      : [`[2, 3, 8, 19, 57, 186, 740]`](http://oeis.org/A077269)
 received  :  `[2, 3, 8, 19, 57, 186, 740]`
