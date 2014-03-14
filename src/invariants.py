@@ -163,6 +163,10 @@ def radius(adj,**args):
     g = networkx_representation(adj,**args)
     return nx.radius(g)
 
+def is_chordal(adj,**args):
+    g = networkx_representation(adj,**args)
+    return nx.is_chordal(g)
+
 def is_eulerian(adj,**args):
     g = networkx_representation(adj,**args)
     return nx.is_eulerian(g)

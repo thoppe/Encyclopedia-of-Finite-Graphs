@@ -95,4 +95,5 @@ INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES
     ("vertex_connectivity"),
     ("edge_connectivity"),
 
-    ("is_tree");
+    ("is_tree"),
+    ("is_chordal");
