@@ -29,7 +29,7 @@ sequence:
 	time python src/build_sequence.py --max_n $(test_N)
 
 test:
-	python src/unit_tests.py --max_n 8
+	python src/unit_tests.py --max_n 9
 
 package:
 	tar -cf bak_database.tar database/
