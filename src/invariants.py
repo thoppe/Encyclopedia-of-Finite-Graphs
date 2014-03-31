@@ -8,6 +8,8 @@ import graph_tool.draw
 import connectivity.connectivity as nx_extra
 import sympy
 
+__script_dir = os.path.dirname(os.path.realpath(__file__))
+
 ######################### Conversion code ######################### 
 
 def convert_to_numpy(adj,**args):
@@ -58,7 +60,7 @@ def special_degree_sequence(adj,**args):
 
 def special_polynomial_tutte(adj,**args):
     A = convert_to_numpy(adj,**args)
-    cmd = os.path.join('src','tutte','tutte_bhkk')
+    cmd = os.path.join(__script_dir,'tutte','tutte_bhkk')
     tutte_args = ' '.join(map(str, [args["N"],] + A.ravel().tolist()))
     cmd += ' ' + tutte_args
     proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
@@ -256,11 +258,20 @@ is_subgraph_free_K5 = _is_subgraph_free(_complete_graphs[5])
 
 is_subgraph_free_C4 = _is_subgraph_free(_cycle_graphs[4])
 is_subgraph_free_C5 = _is_subgraph_free(_cycle_graphs[5])
-is_subgraph_free_C6 = _is_subgraph_free(_cycle_graphs[6])
-is_subgraph_free_C7 = _is_subgraph_free(_cycle_graphs[7])
-is_subgraph_free_C8 = _is_subgraph_free(_cycle_graphs[8])
-is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
-is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
+
+# Skipping these for now
+zero_func = lambda x,**args:0
+is_subgraph_free_C6 = zero_func
+is_subgraph_free_C7 = zero_func
+is_subgraph_free_C8 = zero_func
+is_subgraph_free_C9 = zero_func
+is_subgraph_free_C10= zero_func
+
+#is_subgraph_free_C6 = _is_subgraph_free(_cycle_graphs[6])
+#is_subgraph_free_C7 = _is_subgraph_free(_cycle_graphs[7])
+#is_subgraph_free_C8 = _is_subgraph_free(_cycle_graphs[8])
+#is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
+#is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
 
 def chromatic_number(adj,**args):
     # Return 0 for the singleton graph (it's really infinity)
@@ -297,7 +308,9 @@ def automorphism_group_n(adj,**args):
         if i<=j:
             s.append("e {} {}".format(i+1,j+1))
     s_echo = '"%s"'%('\n'.join(s))
-    cmd = "echo %s | src/bliss/bliss" % s_echo
+    bliss_exec = os.path.join(__script_dir,'bliss','bliss')
+
+    cmd = "echo %s | %s" % (s_echo, bliss_exec)
     proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
     for line in proc.stdout:
         if "|Aut|" in line:
@@ -315,6 +328,10 @@ if __name__ == "__main__":
 
     N = 7
     adj = 14781504
+
+    #N = 10
+    #adj = 17996771828415962
+
     args= {"N":N}
 
     args["special_cycle_basis"] = special_cycle_basis(adj,**args)
