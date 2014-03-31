@@ -25,7 +25,8 @@ BLISSLIB = libbliss.a
 gmp:	LIB += -lgmp
 gmp:	CFLAGS += -DBLISS_USE_GMP
 
-normal:	bliss
+# Disable normal compile of bliss and only use bliss_gmp
+#normal:	bliss
 gmp:	bliss_gmp
 
 

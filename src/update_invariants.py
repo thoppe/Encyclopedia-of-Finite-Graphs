@@ -77,6 +77,8 @@ def insert_from_landing_table(f_landing_table):
     logging.info(msg.format(non_zero_terms,**cargs))  
     
     os.remove(f_landing_table)
+    gc.collect()
+
     #logging.info("Removing %s"%f_landing_table)
 
 #########################################################################
@@ -98,6 +100,7 @@ for invariant_id,func in compute_invariant_ids:
     # If computation exists from a previous run, add it in
     if os.path.exists(f_landing):
         insert_from_landing_table(f_landing)
+        
 
     cmd_count = '''
       SELECT COUNT(*) FROM graph as a

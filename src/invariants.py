@@ -311,10 +311,12 @@ def automorphism_group_n(adj,**args):
     bliss_exec = os.path.join(__script_dir,'bliss','bliss')
 
     cmd = "echo %s | %s" % (s_echo, bliss_exec)
+
     proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
     for line in proc.stdout:
         if "|Aut|" in line:
             return int(line.split()[-1])
+    
 
     err = "BLISS failed with adj: "+adj
     raise ValueError(err)
@@ -329,8 +331,8 @@ if __name__ == "__main__":
     N = 7
     adj = 14781504
 
-    #N = 10
-    #adj = 17996771828415962
+    N = 10
+    adj = 17996771828415962
 
     args= {"N":N}
 
