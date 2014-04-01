@@ -73,29 +73,64 @@ def parallel_compute(itr, func, callback=None, **cargs):
     Returns True/False if any exceptions have been called.
     '''
 
-    allocator = grouper(itr, cargs["chunksize"])
+    #allocator = grouper(itr, cargs["chunksize"])
 
-    if "CORES" in cargs:
-        P = multiprocessing.Pool(cargs["CORES"])
-    else:
-        P = multiprocessing.Pool()
+    max_size  = cargs["chunksize"]*2
+    dump_size = cargs["chunksize"]
 
-    map_args = {"chunksize":20}
-    if callback!=None:
-        map_args["callback"] = callback
+    processes = multiprocessing.cpu_count()
+    Q_IN  = multiprocessing.Queue(max_size)
+    Q_OUT = multiprocessing.Queue()
 
-    results = [P.map_async(func, gitr, **map_args) for
-               gitr in allocator]
+    def handle_CB(results):
+        if callback != None:
+            callback(results)
 
-    P.close()
-    P.join()
+    def worker(q_in, q_out):
+        
+        while True:
+            # Grab an item from the queue
+            k,args = q_in.get()
 
-    # Cycle through the results and see if any exceptions have been called
-    for x in results:
-        if not x.successful():
-            return False
+            # Break on final arg
+            if args == "COMPLETED": break
+            
+            # Process the item
+            val  = func(args)
+            
+            # Add to result list
+            q_out.put(val)
+
+    # Start the processes
+    P = []
+    for _ in range(processes):
+        proc = multiprocessing.Process(target=worker,
+                                       args=(Q_IN,Q_OUT))
+        proc.start()
+        P.append(proc)
+        
+    for k,g in enumerate(itr):
+        Q_IN.put((k,g))
+
+        while Q_OUT.qsize() >= dump_size:
+            results = [Q_OUT.get() for _ in xrange(dump_size)]
+            handle_CB(results)
+
+    # Signal the End
+    for proc in P:
+        Q_IN.put((None,"COMPLETED"))
+
+    for proc in P:  proc.join()
+    
+    Q_IN.close()
+    Q_IN.join_thread()
+    
+    final_results = []
+    while True:
+        val = Q_OUT.get()
+        final_results.append(val)
+        if Q_OUT.empty(): break
+
+    handle_CB(final_results)
 
     return True
-
-    
-

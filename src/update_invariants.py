@@ -89,6 +89,14 @@ SELECT invariant_id, function_name
 FROM ref_invariant_integer WHERE NOT computed'''
 compute_invariant_ids = conn.execute(cmd).fetchall()
 
+cmd_mark_success = '''
+UPDATE ref_invariant_integer SET computed=1 
+WHERE invariant_id={invariant_id}'''
+
+msg = "Remaining invariants to compute {}"
+print compute_invariant_ids
+logging.info(msg.format(zip(*compute_invariant_ids)[1]))
+
 for invariant_id,func in compute_invariant_ids:
     cargs["column"] = func
     cargs["invariant_id"] = invariant_id
@@ -100,14 +108,20 @@ for invariant_id,func in compute_invariant_ids:
     # If computation exists from a previous run, add it in
     if os.path.exists(f_landing):
         insert_from_landing_table(f_landing)
-        
 
-    cmd_count = '''
+    '''
+    cmd_count = ''
       SELECT COUNT(*) FROM graph as a
       LEFT JOIN invariant_integer as b
       ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id}
-      WHERE b.value IS NULL '''
+      WHERE b.value IS NULL ''
     counts = conn.execute(cmd_count.format(**cargs)).fetchone()[0]
+    '''
+
+    #if not counts:
+    #    msg = "Calculation previously completed for {column}"
+    #    logging.info(msg.format(**cargs))
+    #    conn.executescript(cmd_mark_success.format(**cargs))
 
     cmd_grab = '''
       SELECT a.* FROM graph as a
@@ -115,32 +129,24 @@ for invariant_id,func in compute_invariant_ids:
       ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id}
       WHERE b.value IS NULL '''.format(**cargs)
 
-    if not counts:
-        msg = "Calculation previously completed for {column}"
-        logging.info(msg.format(**cargs))
+    msg = "Starting calculation for {column}"
+    logging.info(msg.format(**cargs))  
 
+    itr = select_itr(conn, cmd_grab)    
+
+    success = parallel_compute(itr, compute_invariant, 
+                               callback=insert_invariants, 
+                               **cargs)
+
+    # Once changes have been completed, 
+    # mark the invariant as complete if successful
+
+    if success:
+        insert_from_landing_table(f_landing)    
+        conn.executescript(cmd_mark_success.format(**cargs))
     else:
-        msg = "Starting calculation for {column} ({})"
-        logging.info(msg.format(counts,**cargs))  
-
-        itr = select_itr(conn, cmd_grab)    
-
-        success = parallel_compute(itr, compute_invariant, 
-                                   callback=insert_invariants, 
-                                   **cargs)
-
-        # Once changes have been completed, 
-        # mark the invariant as complete if successful
-        cmd_mark_success = '''
-          UPDATE ref_invariant_integer SET computed=1 
-          WHERE invariant_id={invariant_id}'''
-
-        if success:
-            insert_from_landing_table(f_landing)    
-            conn.executescript(cmd_mark_success.format(**cargs))
-        else:
-            err = "{column} calculation failed"
-            logging.critical(err.format(**cargs))
+        err = "{column} calculation failed"
+        logging.critical(err.format(**cargs))
 
     conn.commit()    
     gc.collect()

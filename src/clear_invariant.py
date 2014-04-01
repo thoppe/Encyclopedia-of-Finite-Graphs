@@ -31,14 +31,24 @@ WHERE invariant_id = "{invariant_id}" '''
 
 for n in graph_conn:
     conn = graph_conn[n]
-    cargs["invariant_id"] = grab_scalar(conn, cmd_find_id)
+    
+    cargs["invariant_id"] = None
+    try:
+        cargs["invariant_id"] = grab_scalar(conn, cmd_find_id)
+    except:
+        pass
 
-    conn.execute(cmd_remove_from_ref.format(**cargs))
-    conn.execute(cmd_remove_from_invariants.format(**cargs))
-    conn.commit()
+    if cargs["invariant_id"] != None:
 
-    msg = "Remove {function_name} from graph database {}".format(n, **cargs)
-    logging.info(msg)
+        msg = "Starting removal {function_name} from graph database {}"
+        logging.info(msg.format(n, **cargs))
+
+        conn.execute(cmd_remove_from_ref.format(**cargs))
+        conn.execute(cmd_remove_from_invariants.format(**cargs))
+        conn.commit()
+
+        msg = "Removed {function_name} from graph database {}"
+        logging.info(msg.format(n, **cargs))
 
 
 

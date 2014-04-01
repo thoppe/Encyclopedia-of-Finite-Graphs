@@ -64,6 +64,7 @@ def nauty_simple_graph_itr(**args):
 __upper_matrix_index = np.triu_indices(cargs["N"])
 
 def convert_edge_to_adj(edges):
+
     # Map the edge list into an index list
     edges = map(int,edges.split())
     idx = zip((edges[::2], edges[1::2]))

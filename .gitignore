@@ -2,6 +2,9 @@
 database/*
 bak_database.tar*
 
+# Temp file
+dump_graphs.py
+
 # Tutte src files
 src/tutte/* 
 *tutte/tutte_bhkk
