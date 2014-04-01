@@ -37,8 +37,10 @@ with open(f_graph_template) as FIN:
     conn.commit()
 
 # Check if the database is populated, if so exit
-cmd_check = "SELECT COUNT(*) FROM graph LIMIT 1"
-is_populated = conn.execute(cmd_check).fetchone()[0] > 0 
+cmd_check = "SELECT * FROM graph LIMIT 1"
+
+is_populated = len(conn.execute(cmd_check).fetchall()) > 0 
+
 if is_populated:
     err = "Database {N} has been populated. Skipping nauty."
     logging.info(err.format(**cargs))
