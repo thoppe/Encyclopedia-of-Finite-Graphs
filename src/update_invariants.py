@@ -93,9 +93,9 @@ cmd_mark_success = '''
 UPDATE ref_invariant_integer SET computed=1 
 WHERE invariant_id={invariant_id}'''
 
-msg = "Remaining invariants to compute {}"
-print compute_invariant_ids
-logging.info(msg.format(zip(*compute_invariant_ids)[1]))
+if compute_invariant_ids:
+    msg = "Remaining invariants to compute {}"
+    logging.info(msg.format(zip(*compute_invariant_ids)[1]))
 
 for invariant_id,func in compute_invariant_ids:
     cargs["column"] = func
