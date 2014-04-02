@@ -123,7 +123,8 @@ SELECT query_id, count(graph_id)
 ;
 create index idx_tempcount on tempcount(query_id);
 
-UPDATE query_count SET query_count_6 =
+--replace _n with current db number
+UPDATE query_count SET query_count_n =
  (SELECT query_count_nbr from tempcount as a
  where a.query_id = query_count.query_id);
 ;
@@ -187,7 +188,8 @@ SELECT query_id, count(graph_id) as qc
 ;
 create index idx_tempcount on tempcount(query_id);
 
-UPDATE query_count SET query_count_6 =   (
+--replace n with the current db number
+UPDATE query_count SET query_count_n =   (
  select query_count_nbr from tempcount as a
  where a.query_id = query_count.query_id
  )
