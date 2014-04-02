@@ -203,8 +203,6 @@ def edge_connectivity(adj,**args):
     return nx_extra.global_edge_connectivity(g)
 
 def is_integral(adj, **args):
-    # This is broken
-    return 0
 
     # Check with http://oeis.org/A064731
     # Symbolically determine the char poly and evaluate it on
@@ -216,9 +214,21 @@ def is_integral(adj, **args):
     M = sympy.Matrix(A)
     p = M.charpoly()
 
-    # Integer roots
-    z_roots = sympy.polys.polyroots.roots(p, filter="Z", multiple=True)
-    return N == len(z_roots)
+    # Factor the char poly over the integers
+    pz = sympy.factor(p,domain="Z")
+
+    # Change expression like (a+b)**n -> (a+b)
+    def reduce_power(fp):
+        try:     return fp.base
+        except:  return fp
+
+    # Loop over the factors
+    for term in pz.as_ordered_factors():
+        term_poly = sympy.poly(reduce_power(term))
+        # Check if the base factors are not linear 
+        # indicates can't be factored over choosen domain
+        if term_poly.degree() > 1: return False
+    return True
 
 ######################### Subgraph code ######################### 
 
@@ -331,10 +341,12 @@ if __name__ == "__main__":
     N = 7
     adj = 14781504
 
-    N = 10
-    adj = 17996771828415962
+    #N = 10
+    #adj = 17996771828415962
 
     args= {"N":N}
+
+    print "is_integral:", is_integral(adj, **args)
 
     args["special_cycle_basis"] = special_cycle_basis(adj,**args)
     print "n_cycle_basis:",n_cycle_basis(adj,**args)
