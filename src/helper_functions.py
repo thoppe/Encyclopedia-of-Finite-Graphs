@@ -89,11 +89,16 @@ def parallel_compute(itr, func, callback=None, **cargs):
     def worker(q_in, q_out):
         
         while True:
+
             # Grab an item from the queue
-            k,args = q_in.get()
+            try:
+                k,args = q_in.get(1)
+            except Exception as ex:
+                print "FAIL?", ex
 
             # Break on final arg
-            if args == "COMPLETED": break
+            if args == "COMPLETED":
+                return False
             
             # Process the item
             val  = func(args)
@@ -117,19 +122,22 @@ def parallel_compute(itr, func, callback=None, **cargs):
             handle_CB(results)
 
     # Signal the End
-    for proc in P:
+    for _ in range(processes):
         Q_IN.put((None,"COMPLETED"))
 
-    for proc in P:  proc.join()
-    
     Q_IN.close()
     Q_IN.join_thread()
+
+    for proc in P:  proc.join(1)
     
     final_results = []
     while True:
         val = Q_OUT.get()
         final_results.append(val)
         if Q_OUT.empty(): break
+
+    Q_OUT.close()
+    Q_OUT.join_thread()
 
     handle_CB(final_results)
 
