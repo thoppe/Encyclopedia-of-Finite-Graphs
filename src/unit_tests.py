@@ -68,7 +68,7 @@ def test_seq(**args):
 fail_msg = '''
 **FAILED**  : `{function_name}{conditional}{value}`
 OEIS        : [`{check_seq}`]({comment})
-received    : `{database_seq}`\n'''.lstrip()
+received    :  `{database_seq}`\n'''.lstrip()
 
 pass_msg = '''
 *passed*  : `{function_name}{conditional}{value}`

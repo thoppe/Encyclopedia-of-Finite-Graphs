@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
 parser.add_argument('--chunksize',type=int,
                     help="Entries to compute before insert is called",
-                    default=1000)
+                    default=5000)
 cargs = vars(parser.parse_args())
 
 # Start the logger
