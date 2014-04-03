@@ -44,13 +44,6 @@ ON "invariant_integer" ("graph_id" ASC, "invariant_id" ASC);
 CREATE INDEX IF NOT EXISTS "idx_invariant_integer_values" 
 ON "invariant_integer" ("invariant_id" ASC, "value" ASC);
 
--- Unique values for the invariants, needed as separate table for combinations
-CREATE TABLE IF NOT EXISTS invariant_integer_unique(
-    invariant_id INTEGER,
-    unique_value INTEGER,
-    PRIMARY KEY (invariant_id, unique_value)
-);
-
 -- List of invariants
 
 INSERT OR IGNORE INTO ref_invariant_integer (function_name) VALUES 
