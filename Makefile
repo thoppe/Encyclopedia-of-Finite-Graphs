@@ -19,7 +19,7 @@ rebuild_database:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
 	make compute
 #	make sequence
-#	make package
+	make package
 
 compute:
 	$(foreach n,$(possible_N_values),python src/update_special.py $(n);)

@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, gc
 import itertools, os, logging, multiprocessing
 
 def generate_database_name(N):
@@ -120,6 +120,7 @@ def parallel_compute(itr, func, callback=None, **cargs):
         while Q_OUT.qsize() >= dump_size:
             results = [Q_OUT.get() for _ in xrange(dump_size)]
             handle_CB(results)
+            gc.collect()
 
     # Signal the End
     for _ in range(processes):

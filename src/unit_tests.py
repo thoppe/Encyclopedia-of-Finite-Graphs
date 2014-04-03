@@ -6,7 +6,7 @@ import pyparsing as pypar
 
 desc   = "Verify the sequences produced are the correct ones"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=9,
+parser.add_argument('--max_n',type=int,default=10,
                     help="Maximum graph size n to compute tests")
 parser.add_argument('--min_n',type=int,default=3,
                     help="Minimum graph size n to match tests")
@@ -34,6 +34,35 @@ F_REPORT = open(f_report,'w')
 
 msg = "## Unit tests for N={{{min_n}, ..., {max_n}}}\n\n"
 F_REPORT.write(msg.format(**cargs))
+
+
+# Make sure that all invariants have the proper number of terms
+cmd_count_terms = '''
+SELECT invariant_id,COUNT(*) FROM invariant_integer
+GROUP BY invariant_id'''
+
+# Taken from OEIS A001349, starting at n=0 to n=13
+expected_counts = [1, 1, 1, 2, 6, 21, 112, 853, 
+                   11117, 261080, 11716571, 1006700565, 
+                   164059830476, 50335907869219]
+
+msg_incomplete = '''
+**MISSING**     : `{function_name}` at n={n}
+expected/received : `{expected_counts}`, `{received_counts}`\n'''.lstrip()
+
+for n in graph_conn:
+    logging.info("Checking for complete terms n=%i"%n)
+    cursor = graph_conn[n].execute(cmd_count_terms)
+    ex = expected_counts[n]
+    for invariant_id,count in cursor.fetchall():
+        if ex!=count:
+            msg_args = {"function_name":invariant_dict[invariant_id]}
+            msg_args["n"] = n
+            msg_args["expected_counts"]=ex
+            msg_args["received_counts"]=count
+            msg = msg_incomplete.format(**msg_args)
+            F_REPORT.write(msg+'\n\n')
+            print msg
 
 cmd_count = '''
 SELECT COUNT(*) FROM invariant_integer as a 

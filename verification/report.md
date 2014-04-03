@@ -1,8 +1,12 @@
 ## Unit tests for N={3, ..., 10}
 
+**MISSING**     : `is_integral` at n=10
+expected/received : `11716571`, `3567000`
+
+
 **FAILED**  : `is_integral=1`
 OEIS        : [`[1, 2, 3, 6, 7, 22, 24, 83]`](http://oeis.org/A064731)
-received    :  `[1, 2, 3, 6, 7, 22, 24, 19]`
+received    :  `[1, 2, 3, 6, 7, 22, 24, 31]`
 
 
 *passed*  : `n_vertex>0`
