@@ -43,9 +43,21 @@ alter table invariant_integer rename to drop_invariant_integer;
 alter table invariant_integer_2 rename to invariant_integer;
 
 drop index idx_invariant_integer;
-create index idx_invariant_integer on invariant_integer(graph_id asc, invariant_val_id asc);
+create unique index idx_invariant_integer on invariant_integer(graph_id asc, invariant_val_id asc);
 
-
+create table exclude_invariant_val(
+invariant_val_id integer primary key
+);
+insert into exclude_invariant_val
+select invariant_val_id 
+from ref_invariant_val as a
+join (
+  select invariant_id
+  from ref_invariant_integer
+  where function_name in('n_vertex','n_edge')
+  )as b
+  on a.invariant_id = b.invariant_id
+;
 
 /*queries are defined recursively:
 for query_level = 1, (query_id,<null>,invariant_val_id) means all graphs with given invariant_val_id
@@ -61,10 +73,11 @@ invariant_val_id integer
 insert into ref_query(query_level, invariant_val_id)
 select 1, invariant_val_id
 from invariant_integer
+where invariant_val_id not in (select invariant_val_id from exclude_invariant_val)
 group by 2
 ;
 
-create index idx_ref_query on ref_query(prev_query_id, invariant_val_id);
+create unique index idx_ref_query on ref_query(prev_query_id, invariant_val_id);
 create index idx_query_level on ref_query(query_level);
 
 
@@ -90,7 +103,7 @@ select query_id
 from ref_query
 ;
 
-create index idx_query_count on query_count (query_id)
+create unique index idx_query_count on query_count (query_id)
 ;
 
 
@@ -121,13 +134,13 @@ SELECT query_id, count(graph_id)
  FROM temp
  group by 1
 ;
-create index idx_tempcount on tempcount(query_id);
+create unique index idx_tempcount on tempcount(query_id);
 
---replace _n with current db number
 UPDATE query_count SET query_count_n =
  (SELECT query_count_nbr from tempcount as a
  where a.query_id = query_count.query_id);
 ;
+drop table tempcount;
 
 
 --  begin loop over levels j = 2..4 (you'll have to replace the j's below with actual numbers)
@@ -146,6 +159,7 @@ from temp as a
 join invariant_integer as b
   on a.graph_id = b.graph_id
  and a.invariant_val_id < b.invariant_val_id
+where b.invariant_val_id not in (select invariant_val_id from exclude_invariant_val)
 ;
 create unique index idx_temp2 on temp2(prev_query_id, invariant_val_id, graph_id);
 
@@ -186,9 +200,8 @@ SELECT query_id, count(graph_id) as qc
  FROM temp2
  group by 1
 ;
-create index idx_tempcount on tempcount(query_id);
+create unique index idx_tempcount on tempcount(query_id);
 
---replace n with the current db number
 UPDATE query_count SET query_count_n =   (
  select query_count_nbr from tempcount as a
  where a.query_id = query_count.query_id
