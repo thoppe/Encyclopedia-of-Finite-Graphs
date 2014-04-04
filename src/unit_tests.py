@@ -2,6 +2,7 @@ import sqlite3, logging, argparse, os, collections, ast
 import subprocess, itertools
 import numpy as np
 from helper_functions import load_graph_database, grab_scalar
+from helper_functions import attach_ref_table
 import pyparsing as pypar
 
 desc   = "Verify the sequences produced are the correct ones"
@@ -22,6 +23,7 @@ conn = sqlite3.connect(f_database, check_same_thread=False)
 graph_conn = collections.OrderedDict()
 for n in range(1, cargs["max_n"]+1):
     graph_conn[n] = load_graph_database(n)
+    attach_ref_table(graph_conn[n])
 
 # Assume that ref's are the same for all DB's
 cmd = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''

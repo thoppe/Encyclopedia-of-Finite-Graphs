@@ -15,8 +15,29 @@ def load_graph_database(N, check_exist=True):
         err = "Database %s does not exist."%f_database
         logging.critical(err)
         exit()
-    
+
     return sqlite3.connect(f_database, check_same_thread=False)
+
+def attach_ref_table(conn):
+    ''' 
+    Attaches the master invariant reference table to the connection.
+    Additionally, builds/updates the table from the template '''
+    
+    f_ref = os.path.join("database","ref_invariant_integer.db")
+
+    f_ref_template = os.path.join("templates",
+                                  "ref_invariant_integer.sql")
+
+    with open(f_ref_template) as FIN, \
+            sqlite3.connect(f_ref) as ref_conn:
+            
+        script = FIN.read()
+        ref_conn.executescript(script)
+        ref_conn.commit()
+
+    cmd_attach = '''ATTACH database "{}" AS "ref_db"'''
+    conn.execute(cmd_attach.format(f_ref))
+
 
 # Helper functions to grab a vector of data
 def grab_vector(connection, cmd):
@@ -99,12 +120,19 @@ def parallel_compute(itr, func, callback=None, **cargs):
             # Break on final arg
             if args == "COMPLETED":
                 return False
-            
+
             # Process the item
-            val  = func(args)
-            
-            # Add to result list
-            q_out.put(val)
+            try:
+                val  = func(args)
+
+                # Add to result list
+                q_out.put(val)
+
+            except Exception as ex:
+                err = "Error on function %s"%ex
+                raise SyntaxError(err)
+                return False
+
 
     # Start the processes
     P = []
@@ -129,17 +157,17 @@ def parallel_compute(itr, func, callback=None, **cargs):
     Q_IN.close()
     Q_IN.join_thread()
 
-    for proc in P:  proc.join(1)
+    for proc in P:  proc.join(2)
     
     final_results = []
-    while True:
-        val = Q_OUT.get()
-        final_results.append(val)
-        if Q_OUT.empty(): break
+    while not Q_OUT.empty():
+        val = Q_OUT.get(1)
+        final_results.append(val)     
 
     Q_OUT.close()
     Q_OUT.join_thread()
 
     handle_CB(final_results)
 
+    # Need to properly check for errors
     return True

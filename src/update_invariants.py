@@ -1,7 +1,7 @@
 import numpy as np
 import logging, argparse, gc, inspect, os, csv
 from helper_functions import load_graph_database, parallel_compute, select_itr
-from helper_functions import grouper, landing_table_itr
+from helper_functions import grab_vector, landing_table_itr, attach_ref_table
 
 desc   = "Updates the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -16,6 +16,8 @@ logging.root.setLevel(logging.INFO)
 
 # Load the database
 conn = load_graph_database(cargs["N"])
+attach_ref_table(conn)
+
 logging.info("Starting invariant calculation for {N}".format(**cargs))
 
 # Create a mapping to all the known invariant functions
@@ -85,21 +87,25 @@ def insert_from_landing_table(f_landing_table):
 
 # Identify the invariants that have not been computed
 cmd = '''
-SELECT invariant_id, function_name 
-FROM ref_invariant_integer WHERE NOT computed'''
-compute_invariant_ids = conn.execute(cmd).fetchall()
+SELECT function_name FROM ref_invariant_integer 
+EXCEPT SELECT function_name FROM computed
+'''
+
+compute_invariant_functions = grab_vector(conn,cmd)
+
+cmd = "SELECT function_name,invariant_id FROM ref_invariant_integer"
+ref_invariant_lookup = dict(conn.execute(cmd).fetchall())
 
 cmd_mark_success = '''
-UPDATE ref_invariant_integer SET computed=1 
-WHERE invariant_id={invariant_id}'''
+INSERT OR IGNORE INTO computed (function_name) VALUES (?)'''
 
-if compute_invariant_ids:
+if compute_invariant_functions:
     msg = "Remaining invariants to compute {}"
-    logging.info(msg.format(zip(*compute_invariant_ids)[1]))
+    logging.info(msg.format(compute_invariant_functions))
 
-for invariant_id,func in compute_invariant_ids:
+for func in compute_invariant_functions:
     cargs["column"] = func
-    cargs["invariant_id"] = invariant_id
+    cargs["invariant_id"] = ref_invariant_lookup[func]
 
     f_landing = "landing_{N}_{column}.txt".format(**cargs)
     f_landing = os.path.join("database",f_landing)  
@@ -108,20 +114,6 @@ for invariant_id,func in compute_invariant_ids:
     # If computation exists from a previous run, add it in
     if os.path.exists(f_landing):
         insert_from_landing_table(f_landing)
-
-    '''
-    cmd_count = ''
-      SELECT COUNT(*) FROM graph as a
-      LEFT JOIN invariant_integer as b
-      ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id}
-      WHERE b.value IS NULL ''
-    counts = conn.execute(cmd_count.format(**cargs)).fetchone()[0]
-    '''
-
-    #if not counts:
-    #    msg = "Calculation previously completed for {column}"
-    #    logging.info(msg.format(**cargs))
-    #    conn.executescript(cmd_mark_success.format(**cargs))
 
     cmd_grab = '''
       SELECT a.* FROM graph as a
@@ -132,7 +124,7 @@ for invariant_id,func in compute_invariant_ids:
     msg = "Starting calculation for {column}"
     logging.info(msg.format(**cargs))  
 
-    itr = select_itr(conn, cmd_grab)    
+    itr = select_itr(conn, cmd_grab) 
 
     success = parallel_compute(itr, compute_invariant, 
                                callback=insert_invariants, 
@@ -143,12 +135,13 @@ for invariant_id,func in compute_invariant_ids:
 
     if success:
         insert_from_landing_table(f_landing)    
-        conn.executescript(cmd_mark_success.format(**cargs))
+        conn.execute(cmd_mark_success, (func,))
     else:
         err = "{column} calculation failed"
         logging.critical(err.format(**cargs))
 
     conn.commit()    
     gc.collect()
+
 
 conn.close()
