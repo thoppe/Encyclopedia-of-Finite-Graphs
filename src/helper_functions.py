@@ -94,12 +94,10 @@ def parallel_compute(itr, func, callback=None, **cargs):
     Returns True/False if any exceptions have been called.
     '''
 
-    #allocator = grouper(itr, cargs["chunksize"])
-
-    max_size  = cargs["chunksize"]*2
+    max_size = 100
     dump_size = cargs["chunksize"]
-
     processes = multiprocessing.cpu_count()
+    
     Q_IN  = multiprocessing.Queue(max_size)
     Q_OUT = multiprocessing.Queue()
 
@@ -113,13 +111,12 @@ def parallel_compute(itr, func, callback=None, **cargs):
 
             # Grab an item from the queue
             try:
-                k,args = q_in.get(1)
+                k,args = q_in.get()
             except Exception as ex:
                 print "FAIL?", ex
 
             # Break on final arg
-            if args == "COMPLETED":
-                return False
+            if args == "COMPLETED": break
 
             # Process the item
             try:
@@ -133,41 +130,43 @@ def parallel_compute(itr, func, callback=None, **cargs):
         
             q_out.put(val)
 
-
-
+        return True
+                         
     # Start the processes
     P = []
     for _ in range(processes):
         proc = multiprocessing.Process(target=worker,
                                        args=(Q_IN,Q_OUT))
+        proc.damon = True
         proc.start()
         P.append(proc)
+
+    # Keep track of what has been added
+    counter = 0
         
     for k,g in enumerate(itr):
         Q_IN.put((k,g))
+        counter += 1
 
         while Q_OUT.qsize() >= dump_size:
             results = [Q_OUT.get() for _ in xrange(dump_size)]
+            counter -= dump_size
             handle_CB(results)
             gc.collect()
 
     # Signal the End
-    for _ in range(2*processes):
+    for _ in range(processes):
         Q_IN.put((None,"COMPLETED"))
 
     Q_IN.close()
     Q_IN.join_thread()
 
-    for proc in P:  proc.join(2)
-    
-    final_results = []
-    while not Q_OUT.empty():
-        val = Q_OUT.get()
-        final_results.append(val)     
+    while counter > dump_size:
+        results = [Q_OUT.get() for _ in xrange(dump_size)]
+        counter -= dump_size
+        handle_CB(results)
 
-    Q_OUT.close()
-    Q_OUT.join_thread()
-
+    final_results = [Q_OUT.get() for _ in xrange(counter)]
     handle_CB(final_results)
 
     # Need to properly check for errors
