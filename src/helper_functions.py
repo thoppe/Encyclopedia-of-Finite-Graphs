@@ -124,14 +124,15 @@ def parallel_compute(itr, func, callback=None, **cargs):
             # Process the item
             try:
                 val  = func(args)
-
                 # Add to result list
-                q_out.put(val)
 
             except Exception as ex:
                 err = "Error on function %s"%ex
                 raise SyntaxError(err)
                 return False
+        
+            q_out.put(val)
+
 
 
     # Start the processes
@@ -151,7 +152,7 @@ def parallel_compute(itr, func, callback=None, **cargs):
             gc.collect()
 
     # Signal the End
-    for _ in range(processes):
+    for _ in range(2*processes):
         Q_IN.put((None,"COMPLETED"))
 
     Q_IN.close()
@@ -161,7 +162,7 @@ def parallel_compute(itr, func, callback=None, **cargs):
     
     final_results = []
     while not Q_OUT.empty():
-        val = Q_OUT.get(1)
+        val = Q_OUT.get()
         final_results.append(val)     
 
     Q_OUT.close()
