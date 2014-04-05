@@ -18,6 +18,13 @@ def load_graph_database(N, check_exist=True):
 
     return sqlite3.connect(f_database, check_same_thread=False)
 
+def load_sql_script(conn, f_script):
+
+    with open(f_script) as FIN:
+        script = FIN.read()
+        conn.executescript(script)
+        conn.commit()
+
 def attach_ref_table(conn):
     ''' 
     Attaches the master invariant reference table to the connection.
@@ -28,16 +35,16 @@ def attach_ref_table(conn):
     f_ref_template = os.path.join("templates",
                                   "ref_invariant_integer.sql")
 
-    with open(f_ref_template) as FIN, \
-            sqlite3.connect(f_ref) as ref_conn:
-            
-        script = FIN.read()
-        ref_conn.executescript(script)
-        ref_conn.commit()
+    ref_conn = sqlite3.connect(f_ref)         
+    load_sql_script(ref_conn, f_ref_template)
+    ref_conn.close()
 
     cmd_attach = '''ATTACH database "{}" AS "ref_db"'''
     conn.execute(cmd_attach.format(f_ref))
 
+# Helper function to grab all data
+def grab_all(connection, cmd):
+    return connection.execute(cmd).fetchall()
 
 # Helper functions to grab a vector of data
 def grab_vector(connection, cmd):
