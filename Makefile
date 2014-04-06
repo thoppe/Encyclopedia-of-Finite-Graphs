@@ -13,7 +13,7 @@ view:
 view_db:
 	sqlitebrowser database/sequence.db
 
-possible_N_values = 1 2 3 4 5 6 7 8 9 10
+possible_N_values = 1 2 3 4 5 6 7 8
 
 rebuild_database:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
@@ -26,10 +26,10 @@ compute:
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
-	time python src/build_sequence.py --max_n $(test_N)
+	python src/update_sequence.py 5
 
 test:
-	python src/unit_tests.py --max_n 10
+	python src/unit_tests.py --max_n 8
 
 package:
 	tar -cf bak_database.tar database/

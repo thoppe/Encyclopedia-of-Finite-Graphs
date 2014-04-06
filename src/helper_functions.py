@@ -25,6 +25,10 @@ def load_sql_script(conn, f_script):
         conn.executescript(script)
         conn.commit()
 
+def attach_table(conn, f_attach, as_name):
+    cmd_attach = '''ATTACH database "{}" AS "{}"'''
+    conn.execute(cmd_attach.format(f_attach,as_name))
+
 def attach_ref_table(conn):
     ''' 
     Attaches the master invariant reference table to the connection.
@@ -39,8 +43,7 @@ def attach_ref_table(conn):
     load_sql_script(ref_conn, f_ref_template)
     ref_conn.close()
 
-    cmd_attach = '''ATTACH database "{}" AS "ref_db"'''
-    conn.execute(cmd_attach.format(f_ref))
+    attach_table(conn, f_ref, "ref_db")
 
 # Helper function to grab all data
 def grab_all(connection, cmd):
