@@ -36,12 +36,13 @@ load_sql_script(seq_conn, f_sequence_template)
 #attach_table(seq_conn, f_db, "graph{n}".format(**cargs))
 
 # Load the invariant database files
-#graph_conn = collections.OrderedDict()
-#for n in range(1, cargs["n"]+1):
-#    graph_conn[n] = load_graph_database(n)
-#    attach_ref_table(graph_conn[n])
-graph_conn = load_graph_database(cargs["n"])
-attach_ref_table(graph_conn)
+graph_conn = collections.OrderedDict()
+for n in range(1, cargs["n"]+1):
+    graph_conn[n] = load_graph_database(n)
+    attach_ref_table(graph_conn[n])
+
+print graph_conn
+exit()
 
 
 # Find out what has been computed
