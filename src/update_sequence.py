@@ -106,6 +106,19 @@ SELECT unique_invariant_id FROM ref_sequence
 WHERE query_level = 1'''
 known_lvl1 = set(grab_vector(seq_conn,cmd_select_known_lvl1))
 
+# WORKING HERE
+# Get all level n>1 sequences that need to be computed
+cmd_select_nlvl_sequence = '''
+SELECT sequence_id FROM ref_sequence 
+WHERE query_level={} AND non_zero_terms>=4'''
+#n = 2
+#valid_previous = grab_all(seq_conn, cmd_select_nlvl_sequence.format(n-1))
+#for 
+#def get_n_level_sequence(n):
+#print known_lvl1
+#exit()
+
+
 cmd_select_lvl_1 = '''
 SELECT unique_invariant_id, invariant_val_id, value
 FROM unique_invariant_val
@@ -166,7 +179,7 @@ for unique_id, invariant_id, value in seq_lvl1:
 
     seq_conn.execute(cmd_insert_sequence.format(**args))
     
-    msg = "New sequence id({seq_id:d}){conditional}{value}, ({seq})"
+    msg = "New sequence id({seq_id:d}), {function_name}{conditional}{value}, ({seq})"
     logging.info(msg.format(**args))
 
     seq_conn.commit()
