@@ -1,7 +1,7 @@
 
 # Debugging/Testing commands
 
-test_N = 8
+test_N = 5
 all:
 #	rm -vf database/graph$(test_N).db
 	python src/generate_db.py $(test_N)
@@ -10,8 +10,11 @@ all:
 
 view:
 	sqlitebrowser database/graph$(test_N).db
-view_db:
+view_invariants:
+	sqlitebrowser database/ref_invariant_integer.db
+view_seq:
 	sqlitebrowser database/sequence.db
+
 
 possible_N_values = 1 2 3 4 5 6 7 8
 

@@ -8,6 +8,19 @@ CREATE TABLE IF NOT EXISTS ref_invariant_integer(
     UNIQUE (invariant_id)
 );
 
+-- Keeps tracks of all unique values for each invariant
+CREATE TABLE IF NOT EXISTS unique_invariant_val(
+  unique_invariant_id integer primary key autoincrement,
+  invariant_val_id integer,
+  value integer
+);
+
+--- Tracks if various sequence terms have been computed
+--- for now this only tracks the unique invariants
+CREATE TABLE IF NOT EXISTS ref_computed(
+  function_name STRING PRIMARY KEY,  
+  has_computed TINYINT DEFAULT false
+);
 
 -- List of invariants
 -- DO NOT CHANGE THE INDEXING, they are to be constant across versions
