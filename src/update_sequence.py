@@ -1,8 +1,8 @@
 import sqlite3, logging, argparse, os, collections, ast
 import subprocess, itertools
 import numpy as np
-from helper_functions import load_graph_database, grab_all
-from helper_functions import attach_ref_table, load_sql_script
+from helper_functions import load_graph_database, grab_all, grab_scalar
+from helper_functions import attach_ref_table, load_sql_script, grab_vector
 from helper_functions import attach_table, generate_database_name
 import pyparsing as pypar
 
@@ -41,15 +41,13 @@ for n in range(1, cargs["n"]+1):
     graph_conn[n] = load_graph_database(n)
     attach_ref_table(graph_conn[n])
 
-print graph_conn
-exit()
-
+cmd_invar = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''
+invariant_dict = dict(grab_all(graph_conn[1],cmd_invar))
 
 # Find out what has been computed
-cmd_select_compute = '''SELECT * FROM ref_computed'''
-compute_dict = dict(grab_all(graph_conn, cmd_select_compute))
+cmd_select_compute = '''SELECT * FROM computed'''
+compute_dict = dict(grab_all(seq_conn, cmd_select_compute))
 if cargs["force"]: compute_dict = {}
-
 
 # Find and update the unique invariant values
 
@@ -62,7 +60,7 @@ INSERT OR REPLACE INTO unique_invariant_val(invariant_val_id, value)
 VALUES (?,?)'''
 
 cmd_mark_unique_computed = '''
-INSERT OR REPLACE INTO ref_computed VALUES 
+INSERT OR REPLACE INTO computed VALUES 
 ("unique_invariant_val", "1")'''
 
 name = "unique_invariant_val"
@@ -70,20 +68,21 @@ name = "unique_invariant_val"
 if (name not in compute_dict or 
     not compute_dict[name]):
     
-    #for n in graph_conn:
-    msg = '''Updating {} for graph set {}'''
-    logging.info(msg.format(name,cargs["n"]))
-    items = grab_all(graph_conn, cmd_find_unique)
-    graph_conn.executemany(cmd_insert_unique, items)
-    graph_conn.execute(cmd_mark_unique_computed)
-    graph_conn.commit()
+    for n,gc in graph_conn.items():
+        msg = '''Updating {} for graph set {}'''
+        logging.info(msg.format(name,n))
+        items = grab_all(gc, cmd_find_unique)
+        seq_conn.executemany(cmd_insert_unique, items)
 
-# Clear the previous marked terms
+    seq_conn.execute(cmd_mark_unique_computed)
+    seq_conn.commit()
+
+# Clear the previous marked excluded terms
 seq_conn.execute("DELETE FROM exclude_invariant_val")
 
 # Attach the graph database to the sequence database
-f_db = generate_database_name(cargs["n"])
-attach_table(seq_conn, f_db, "graph")
+#f_db = generate_database_name(cargs["n"])
+#attach_table(seq_conn, f_db, "graph")
 
 # Mark the excluded terms
 cmd_exclude = '''
@@ -100,6 +99,83 @@ excluded_string = str(excluded_terms)[1:-1]
 logging.info("Ignoring invariants %s"%excluded_string)
 seq_conn.execute(cmd_exclude.format(excluded_string))
 seq_conn.commit()
+
+# Get known lvl 1 sequences
+cmd_select_known_lvl1 = '''
+SELECT unique_invariant_id FROM ref_sequence
+WHERE query_level = 1'''
+known_lvl1 = set(grab_vector(seq_conn,cmd_select_known_lvl1))
+
+cmd_select_lvl_1 = '''
+SELECT unique_invariant_id, invariant_val_id, value
+FROM unique_invariant_val
+WHERE 
+unique_invariant_id NOT IN
+(SELECT unique_invariant_id FROM exclude_invariant_val);'''
+
+seq_lvl1 = grab_all(seq_conn, cmd_select_lvl_1)
+seq_lvl1 = [x for x in seq_lvl1 if x[0] not in known_lvl1]
+
+msg = "Computing {} new level one sequences"
+logging.info(msg.format(len(seq_lvl1)))
+
+# Compute these sequences
+
+cmd_count = '''
+SELECT COUNT(*) FROM invariant_integer as a 
+LEFT JOIN ref_invariant_integer as b
+ON  a.invariant_id  = b.invariant_id 
+WHERE b.function_name = "{function_name}" 
+AND a.value {conditional} {value}
+'''
+
+def grab_sequence(**args):
+    cmd = cmd_count.format(**args)
+
+    vec = []
+    for n in graph_conn:
+        sol = grab_scalar(graph_conn[n], cmd)
+        vec.append(sol)
+
+    return vec
+
+insert_text = ','.join(["s%i"%n for n in graph_conn])
+cmd_insert_sequence = '''
+INSERT INTO sequence (sequence_id, %s) VALUES ({seq_id},{seq})'''%insert_text
+cmd_insert_ref_sequence = '''
+INSERT INTO ref_sequence 
+(query_level, unique_invariant_id, conditional, value, non_zero_terms) 
+VALUES (1, {unique_id}, "{conditional}", {value}, {non_zero})'''
+
+for unique_id, invariant_id, value in seq_lvl1:
+
+    args = {
+        "unique_id":unique_id,
+        "conditional":"=",
+        "function_name":invariant_dict[invariant_id],
+        "value":value}
+
+    seq = grab_sequence(**args)
+
+    args["non_zero"] = len([1 for x in seq if x])
+
+    cursor = seq_conn.execute(cmd_insert_ref_sequence.format(**args))
+
+    args["seq_id"] = cursor.lastrowid
+    args["seq"] = str(seq)[1:-1]
+
+    seq_conn.execute(cmd_insert_sequence.format(**args))
+    
+    msg = "New sequence id({seq_id:d}){conditional}{value}, ({seq})"
+    logging.info(msg.format(**args))
+
+seq_conn.commit()
+    
+exit()
+
+########################################################################
+
+exit()
 
 # Fill up ref_query
 cmd_push_into_ref_q = '''
