@@ -169,7 +169,8 @@ for unique_id, invariant_id, value in seq_lvl1:
     msg = "New sequence id({seq_id:d}){conditional}{value}, ({seq})"
     logging.info(msg.format(**args))
 
-seq_conn.commit()
+    seq_conn.commit()
+
     
 exit()
 
