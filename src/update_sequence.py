@@ -123,11 +123,14 @@ logging.info(msg.format(len(seq_lvl1)))
 # Compute these sequences
 
 cmd_count = '''
-SELECT graph_id FROM invariant_integer as a 
+SELECT adj FROM invariant_integer as a 
 LEFT JOIN ref_invariant_integer as b
 ON  a.invariant_id  = b.invariant_id 
+LEFT JOIN graph AS c
+ON  a.graph_id = c.graph_id
 WHERE b.function_name = "{function_name}" 
 AND a.value {conditional} {value}
+ORDER BY adj
 '''
 
 def grab_sequence(**args):
