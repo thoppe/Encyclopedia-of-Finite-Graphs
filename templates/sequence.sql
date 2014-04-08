@@ -40,7 +40,9 @@ CREATE TABLE IF NOT EXISTS sequence(
   s7  INTEGER,
   s8  INTEGER,
   s9  INTEGER,
-  s10 INTEGER
+  s10 INTEGER,
+
+  hash TEXT
 );
   
 

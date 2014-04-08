@@ -1,15 +1,16 @@
-import sqlite3, logging, argparse, os, collections, ast
-import subprocess, itertools
+import sqlite3, logging, argparse, os, collections
+import itertools, hashlib
 import numpy as np
 from helper_functions import load_graph_database, grab_all, grab_scalar
 from helper_functions import attach_ref_table, load_sql_script, grab_vector
 from helper_functions import attach_table, generate_database_name
-import pyparsing as pypar
 
 desc   = "Verify the sequences produced are the correct ones"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('n',type=int,default=5,
                     help="Maximum graph size n to compute sequences")
+parser.add_argument('--non_zero_terms',type=int,default=4,
+                    help="Min. number of terms needed to extend the seqeuence")
 parser.add_argument('-f','--force',default=False,action='store_true')
 cargs = vars(parser.parse_args())
 
@@ -106,19 +107,6 @@ SELECT unique_invariant_id FROM ref_sequence
 WHERE query_level = 1'''
 known_lvl1 = set(grab_vector(seq_conn,cmd_select_known_lvl1))
 
-# WORKING HERE
-# Get all level n>1 sequences that need to be computed
-cmd_select_nlvl_sequence = '''
-SELECT sequence_id FROM ref_sequence 
-WHERE query_level={} AND non_zero_terms>=4'''
-#n = 2
-#valid_previous = grab_all(seq_conn, cmd_select_nlvl_sequence.format(n-1))
-#for 
-#def get_n_level_sequence(n):
-#print known_lvl1
-#exit()
-
-
 cmd_select_lvl_1 = '''
 SELECT unique_invariant_id, invariant_val_id, value
 FROM unique_invariant_val
@@ -135,7 +123,7 @@ logging.info(msg.format(len(seq_lvl1)))
 # Compute these sequences
 
 cmd_count = '''
-SELECT COUNT(*) FROM invariant_integer as a 
+SELECT graph_id FROM invariant_integer as a 
 LEFT JOIN ref_invariant_integer as b
 ON  a.invariant_id  = b.invariant_id 
 WHERE b.function_name = "{function_name}" 
@@ -145,16 +133,31 @@ AND a.value {conditional} {value}
 def grab_sequence(**args):
     cmd = cmd_count.format(**args)
 
-    vec = []
-    for n in graph_conn:
-        sol = grab_scalar(graph_conn[n], cmd)
-        vec.append(sol)
+    C,H = [], []
+    h_final = hashlib.md5()
 
-    return vec
+    for n in graph_conn:
+        h = hashlib.md5()
+        count = 0
+        cursor = graph_conn[n].execute(cmd)
+        while True:
+            results = cursor.fetchmany(1000)
+            if not results:
+                break
+            for item in results:
+                count += 1
+                h.update(str(item[0]))
+
+        C.append(count)
+        h_final.update( h.hexdigest() )
+
+    return C, h_final.hexdigest()
 
 insert_text = ','.join(["s%i"%n for n in graph_conn])
 cmd_insert_sequence = '''
-INSERT INTO sequence (sequence_id, %s) VALUES ({seq_id},{seq})'''%insert_text
+INSERT INTO sequence (sequence_id, hash, %s) 
+VALUES ({seq_id}, "{total_hash}", {seq})'''%insert_text
+
 cmd_insert_ref_sequence = '''
 INSERT INTO ref_sequence 
 (query_level, unique_invariant_id, conditional, value, non_zero_terms) 
@@ -168,7 +171,7 @@ for unique_id, invariant_id, value in seq_lvl1:
         "function_name":invariant_dict[invariant_id],
         "value":value}
 
-    seq = grab_sequence(**args)
+    seq, args["total_hash"] = grab_sequence(**args)
 
     args["non_zero"] = len([1 for x in seq if x])
 
@@ -179,110 +182,57 @@ for unique_id, invariant_id, value in seq_lvl1:
 
     seq_conn.execute(cmd_insert_sequence.format(**args))
     
-    msg = "New sequence id({seq_id:d}), {function_name}{conditional}{value}, ({seq})"
+    msg  = "New sequence id({seq_id:d}), "
+    msg += "{function_name}{conditional}{value}, ({seq})"
     logging.info(msg.format(**args))
 
     seq_conn.commit()
 
-    
+
+# WORKING HERE
+
+# Filter based off hash
 exit()
 
-########################################################################
+# Build the unique_invariant_list, this won't change after level 1
+cmd_find_unique_mapping = '''
+SELECT unique_invariant_id, invariant_val_id 
+FROM unique_invariant_val
+GROUP BY 1,2;'''
+unique_mapping = dict(grab_all(seq_conn, cmd_find_unique_mapping))
+
+# Find all the valid terms to be up from
+cmd_select_base = '''
+SELECT unique_invariant_id, invariant_val_id, value
+FROM unique_invariant_val
+WHERE 
+unique_invariant_id NOT IN
+(SELECT unique_invariant_id FROM exclude_invariant_val);'''
+viable_base_terms = grab_all(seq_conn, cmd_select_base)
+
+# Get all level n>1 sequences that need to be computed
+cmd_select_nlvl_sequence = '''
+SELECT sequence_id FROM ref_sequence 
+WHERE query_level={} AND non_zero_terms>={}'''
+
+print cargs
+k = 2
+cmd = cmd_select_nlvl_sequence.format(k-1, cargs["non_zero_terms"])
+for v1_seq_id in grab_vector(seq_conn, cmd):
+
+    v1_val_id = unique_mapping[v1_seq_id]
+
+    print "***", v1_seq_id, v1_val_id
+    for term in viable_base_terms:
+        v2_seq_id, v2_val_id, v2_val = term
+        # New term must be strictly larger than the last one
+        if v2_val_id > v1_val_id:
+            print (v1_seq_id,v2_seq_id), (v1_val_id, v2_val_id), v2_val
+
+#select count(*),* from sequence group by s1,s2,s3,s4,s5,s6,s7,s8,s9,s10 order by count(*)
+
+#valid_invariant_id = [unique_mapping[x] for x in valid_previous]
+#print valid_previous
+#print valid_invariant_id
 
 exit()
-
-# Fill up ref_query
-cmd_push_into_ref_q = '''
-drop table if exists invariant_integer_x;
-
-create table invariant_integer_x(
-   graph_id integer not null,
-   invariant_val_id integer not null,
-   value integer not null
-);
-
-insert into invariant_integer_x
-select b.graph_id, a.invariant_val_id, b.value
-from unique_invariant_val  as a
-join invariant_integer as b
-on a.invariant_val_id = b.invariant_id
-and a.value  = b.value;
-
---alter table invariant_integer rename to drop_invariant_integer;
---alter table invariant_integer_2 rename to invariant_integer_x;
-
---drop index idx_invariant_integer;
-create unique index idx_invariant_integer_x on invariant_integer_x
-(graph_id asc, invariant_val_id asc);
-
-insert into ref_query(query_level, invariant_val_id)
-select 1, invariant_val_id
-from invariant_integer_x
-where invariant_val_id not in 
-(select unique_invariant_id from exclude_invariant_val)
-group by invariant_val_id;
-
-
-create unique index idx_ref_query on ref_query(prev_query_id, invariant_val_id);
-create index idx_query_level on ref_query(query_level);
-
---query_count and ref_query will have one row for every possible query
-create table query_count(
-query_id integer primary key,
-query_count_1 integer,
-query_count_2 integer,
-query_count_3 integer,
-query_count_4 integer,
-query_count_5 integer
-);
-
-
-insert into query_count(query_id) --starts off having just the level 1 queries
-select query_id
-from ref_query
-;
-
-create unique index idx_query_count on query_count (query_id)
-;
-
-
-create table temp (
-query_id integer,
-invariant_val_id integer,
-graph_id integer
-);
-
-insert into temp
-select query_id, a.invariant_val_id, graph_id
-from ref_query as a
-join invariant_integer_x as b
- on a.invariant_val_id = b.invariant_val_id
-;
-
-create index idx_temp_init on temp(graph_id asc, invariant_val_id asc)
-;
-
--- update the counts table
-create table tempcount(
-query_id integer primary key, 
-query_count_nbr integer
-);
-insert into tempcount
-SELECT query_id, count(graph_id)
- FROM temp
- group by 1
-;
-create unique index idx_tempcount on tempcount(query_id);
-
-UPDATE query_count SET query_count_1 =
- (SELECT query_count_nbr from tempcount as a
- where a.query_id = query_count.query_id);
-;
---drop table tempcount;
-
-
-'''
-seq_conn.executescript(cmd_push_into_ref_q)
-seq_conn.commit()
-
-
