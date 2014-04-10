@@ -45,6 +45,8 @@ for n in range(1, cargs["n"]+1):
 cmd_invar = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''
 invariant_dict = dict(grab_all(graph_conn[1],cmd_invar))
 
+### FIX - remove old invariant_ids!
+
 # Find out what has been computed
 cmd_select_compute = '''SELECT * FROM computed'''
 compute_dict = dict(grab_all(seq_conn, cmd_select_compute))
@@ -113,6 +115,8 @@ FROM unique_invariant_val
 WHERE 
 unique_invariant_id NOT IN
 (SELECT unique_invariant_id FROM exclude_invariant_val);'''
+
+# select invariant_val_id from unique_invariant_val group by unique_invariant_val
 
 seq_lvl1 = grab_all(seq_conn, cmd_select_lvl_1)
 seq_lvl1 = [x for x in seq_lvl1 if x[0] not in known_lvl1]
@@ -195,7 +199,8 @@ for unique_id, invariant_id, value in seq_lvl1:
 # WORKING HERE
 
 # Filter based off hash
-exit()
+#cmd_find_unique_hash = '''SELECT * FROM sequence GROUP BY HASH'''
+#print len(grab_all(seq_conn, cmd_find_unique_hash))
 
 # Build the unique_invariant_list, this won't change after level 1
 cmd_find_unique_mapping = '''
@@ -215,22 +220,41 @@ viable_base_terms = grab_all(seq_conn, cmd_select_base)
 
 # Get all level n>1 sequences that need to be computed
 cmd_select_nlvl_sequence = '''
-SELECT sequence_id FROM ref_sequence 
-WHERE query_level={} AND non_zero_terms>={}'''
+SELECT a.sequence_id FROM ref_sequence as a
+JOIN sequence as b ON a.sequence_id = b.sequence_id
+WHERE query_level={} AND non_zero_terms>={} GROUP BY hash'''
+
+cmd_create_tmp_table = '''
+DROP TABLE IF EXISTS tmp_invariants;
+CREATE TABLE tmp_invariants (
+    n INTEGER,
+    adj INTEGER
+);
+
+'''
 
 print cargs
 k = 2
 cmd = cmd_select_nlvl_sequence.format(k-1, cargs["non_zero_terms"])
+
 for v1_seq_id in grab_vector(seq_conn, cmd):
 
     v1_val_id = unique_mapping[v1_seq_id]
+    print v1_seq_id, v1_val_id
+    exit()
 
+    # At the start of each invariant, create a new tmp table
+    #seq_conn.executescript(cmd_create_tmp_table)
+    #print v1_val_id
+    #exit()
+    
     print "***", v1_seq_id, v1_val_id
     for term in viable_base_terms:
         v2_seq_id, v2_val_id, v2_val = term
         # New term must be strictly larger than the last one
         if v2_val_id > v1_val_id:
             print (v1_seq_id,v2_seq_id), (v1_val_id, v2_val_id), v2_val
+    exit()
 
 #select count(*),* from sequence group by s1,s2,s3,s4,s5,s6,s7,s8,s9,s10 order by count(*)
 
