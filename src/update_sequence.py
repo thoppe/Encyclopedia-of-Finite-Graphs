@@ -230,7 +230,16 @@ CREATE TABLE tmp_invariants (
     n INTEGER,
     adj INTEGER
 );
+'''
 
+cmd_insert_into_tmp_table = '''
+SELECT adj FROM invariant_integer as a 
+LEFT JOIN ref_invariant_integer as b
+ON  a.invariant_id  = b.invariant_id 
+LEFT JOIN graph AS c
+ON  a.graph_id = c.graph_id
+WHERE b.function_name = "{function_name}" 
+AND a.value {conditional} {value}
 '''
 
 print cargs
@@ -239,14 +248,15 @@ cmd = cmd_select_nlvl_sequence.format(k-1, cargs["non_zero_terms"])
 
 for v1_seq_id in grab_vector(seq_conn, cmd):
 
+    # At the start of each invariant, create a new tmp table
+    seq_conn.executescript(cmd_create_tmp_table)
+
+
     v1_val_id = unique_mapping[v1_seq_id]
     print v1_seq_id, v1_val_id
     exit()
 
-    # At the start of each invariant, create a new tmp table
-    #seq_conn.executescript(cmd_create_tmp_table)
-    #print v1_val_id
-    #exit()
+
     
     print "***", v1_seq_id, v1_val_id
     for term in viable_base_terms:
