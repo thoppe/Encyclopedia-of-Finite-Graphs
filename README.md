@@ -1,29 +1,37 @@
 Encyclopedia of Finite Graphs
 =============================
 
-Set of tools and data to compute all known invariants for small finite graphs [incomplete].
+Set of tools and data to compute all known invariants for small finite graphs [in progress].
+The project has three major aims, 
 
+1] To build an exhaustive reference database for all graphs of a given type. 
+2] To "mine" this database for sequences not present (or incomplete) in the [OEIS](https://oeis.org/). 
+3] To use these sequences to suggest new mathematical relations between graph invariants.
 
 *Authors*:
 
 + [Travis Hoppe](https://github.com/thoppe)
-+ [ampetr](https://github.com/ampetr) 
++ [Anna Petrone](https://github.com/ampetr) 
 
 *Roadmap*:
 
-+ Finish unit-tests for known sequences
-+ Template OEIS response (bfile and submission)
-+ Find the _new_ base sequences and submit those to OEIS
-+ Document these submissions
-+ Build new invariants from combinations of bases
++ Collect and submit level 1 sequences
++ Write search code for level 2+ sequences
 + Check set relations for _interesting_ queries
-+ Add harder invariants and repeat!
 + Writeup project as an experimental math paper (Automatic integer sequence discovery from small graphs?)
 
 *Lower priority tasks*
 
-+ Document database structure
++ Add harder invariants!
 + Write a better invariant "manager", right now just a loose collection
+
+=======================
+
+### [Unit Tests](verification/report.md).
+An auto-generated reported for various base queries and the link to the respective OEIS sequence.
+
+### [Sequence Extensions](verification/submission_ext.md)
+List of the sequences extended by the project.
 
 ====================================
 
@@ -48,14 +56,7 @@ Calculated Invariants
 + [`k_vertex_connectivity`](http://mathworld.wolfram.com/VertexConnectivity.html)[`k_edge_connectivity`](http://mathworld.wolfram.com/EdgeConnectivity.html) minimal number of nodes/edges that can be deleted to disconnect the graph.
 + [`is_chordal`](http://mathworld.wolfram.com/ChordalGraph.html) (networkx)
 + [`k_max_clique`](http://mathworld.wolfram.com/CliqueNumber.html) (networkx)
-
-+ [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html) (currently broken) (numpy,sympy)
-
-=======================
-
-**Unit tests**
-
-An auto-generated reported for various base queries can be found here in the [unit tests](verification/report.md).
++ [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html) (sympy)
 
 =======================
 
