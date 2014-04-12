@@ -4,9 +4,9 @@ Encyclopedia of Finite Graphs
 Set of tools and data to compute all known invariants for small finite graphs [in progress].
 The project has three major aims, 
 
-1] To build an exhaustive reference database for all graphs of a given type. 
-2] To "mine" this database for sequences not present (or incomplete) in the [OEIS](https://oeis.org/). 
-3] To use these sequences to suggest new mathematical relations between graph invariants.
+1. To build an exhaustive reference database for all graphs of a given type. 
+2. To "mine" this database for sequences not present (or incomplete) in the [OEIS](https://oeis.org/). 
+3. To use these sequences to suggest new mathematical relations between graph invariants.
 
 *Authors*:
 
@@ -27,11 +27,20 @@ The project has three major aims,
 
 =======================
 
-### [Unit Tests](verification/report.md).
+### [Unit Tests](verification/report.md)
 An auto-generated reported for various base queries and the link to the respective OEIS sequence.
 
 ### [Sequence Extensions](verification/submission_ext.md)
 List of the sequences extended by the project.
+
+### [New Sequences (level 1)](verification/submission_lvl1.md)
+List of the sequences discovered by the project [incomplete].
+
+### [New Sequences (level 2)](verification/submission_lvl2.md)
+List of the paired sequences discovered by the project [incomplete].
+
+### [New Sequences (level 3+)](verification/submission_lvl3.md)
+List of the triplet+ sequences discovered by the project [incomplete].
 
 ====================================
 
