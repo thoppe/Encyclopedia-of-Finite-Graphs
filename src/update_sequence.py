@@ -56,10 +56,10 @@ if cargs["force"]: compute_dict = {}
 
 cmd_find_unique = '''
 SELECT invariant_id, value FROM invariant_integer
-GROUP BY 1,2;'''
+GROUP BY 1,2'''
 
 cmd_insert_unique = '''
-INSERT OR REPLACE INTO unique_invariant_val(invariant_val_id, value)
+INSERT INTO unique_invariant_val(invariant_val_id, value)
 VALUES (?,?)'''
 
 cmd_mark_unique_computed = '''
@@ -70,13 +70,24 @@ name = "unique_invariant_val"
 
 if (name not in compute_dict or 
     not compute_dict[name]):
-    
+
+    all_items = []
+
     for n,gc in graph_conn.items():
         msg = '''Updating {} for graph set {}'''
         logging.info(msg.format(name,n))
         items = grab_all(gc, cmd_find_unique)
-        seq_conn.executemany(cmd_insert_unique, items)
+        all_items.append(items)
 
+    # Flatten the list
+    flat_items = []
+    map(flat_items.extend, all_items)
+    # Remove duplicates
+    flat_items = list(set(flat_items))
+    # Sort for human readibility
+    flat_items.sort()
+    
+    seq_conn.executemany(cmd_insert_unique, flat_items)
     seq_conn.execute(cmd_mark_unique_computed)
     seq_conn.commit()
 
@@ -114,7 +125,8 @@ SELECT unique_invariant_id, invariant_val_id, value
 FROM unique_invariant_val
 WHERE 
 unique_invariant_id NOT IN
-(SELECT unique_invariant_id FROM exclude_invariant_val);'''
+(SELECT unique_invariant_id FROM exclude_invariant_val)
+ORDER BY invariant_val_id, value'''
 
 # select invariant_val_id from unique_invariant_val group by unique_invariant_val
 

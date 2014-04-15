@@ -1,6 +1,7 @@
 # Graph database (don't auto store)
 database/*
 bak_database.tar*
+search_index/
 
 # Temp file
 dump_graphs.py
