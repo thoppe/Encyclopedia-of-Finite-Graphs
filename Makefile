@@ -18,7 +18,7 @@ view_ref:
 	sqlitebrowser database/ref_invariant_integer.db
 
 report_lvl1:
-	python verification/lvl1_report.py > verification/raw_lvl1.txt
+	python verification/lvl1_report.py > verification/raw_lvl1.md
 
 
 possible_N_values = 1 2 3 4 5 6 7 8 9 10

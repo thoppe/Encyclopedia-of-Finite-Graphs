@@ -18,25 +18,13 @@ f_seq_database = "database/sequence.db"
 seq_conn = sqlite3.connect(f_seq_database, check_same_thread=False)
 attach_ref_table(seq_conn)
 
-
+# Load the entire stripped file as raw text
 logging.info("Loading stripped OEIS")
 f_strip_OEIS = os.path.join("database","stripped_OEIS.txt")
-'''
-OEIS = {}
-with open(f_strip_OEIS) as FIN:
-    for line in FIN:
-        name, seq = None, []
-        line = line.split()
-        name = line[0]
-        seq = line[1][1:-1].split(',')
-        if len(seq)>2:
-            seq  = map(int,seq)
-            # Only keep positive seqeuences
-            if len([x for x in seq if x>=0]) == len(seq):
-                OEIS[name] = seq
-'''        
 with open(f_strip_OEIS) as FIN:
     OEIS = FIN.read()
+
+# Build an indexer
 
 from acora import AcoraBuilder
 
@@ -56,20 +44,6 @@ def match_lines(s, *keywords):
              matches = True
      if matches:
          yield s[line_start:]
-
-#kwds = ['A015273', '136586400868021924']
-#for x in match_lines(OEIS, 'A015273'):
-#    print x
-#exit()
-
-
-# Build the mapping for unique_invariant_val
-unique_dict = dict(grab_all(seq_conn, '''
-SELECT unique_invariant_id, invariant_val_id from unique_invariant_val'''))
-
-# Build the mapping for ref_invariants
-ref_invariant_dict = dict(grab_all(seq_conn, '''
-SELECT invariant_id, function_name from ref_invariant_integer'''))
 
 cmd_find_all = '''
 SELECT hash, function_name, conditional, C.value, * FROM sequence as A
@@ -113,6 +87,7 @@ for key in SEQ:
 logging.info("Checking level 1 sequences against OEIS")
 
 url = "https://oeis.org/{}"
+output_str = "[{seq_name}]({url}) {seq_text}"
 
 def subfinder(mylist, pattern):
     pattern = set(pattern)
@@ -123,15 +98,24 @@ for key in sorted(SEQ_TEXT.keys()):
     seq_nums = SEQ_TEXT[key]
     seq_str = ','.join(str(seq_nums)[1:-1].replace(',','').split())
 
-    print "******************************"
-    print key, seq_str
+    print "---------------------------"
+    s = "**`{}`**, `{}`".format(key,seq_str)
+    print s
+    logging.info(s)
+
     z = str(seq_nums[-5:]).replace(' ','')[1:-1]
     for line in match_lines(OEIS,z):
         name, seq = None, []
         line = line.split()
         name = line[0]
         seq = line[1][1:-1].split(',')
-        print url.format(name), ','.join(seq[:15])
+        url_text = url.format(name)
+
+        s = output_str.format(seq_name = name, 
+                              seq_text = ','.join(seq[:15]),
+                              url = url_text)
+        print s
+        logging.info(s)
 
     
 
