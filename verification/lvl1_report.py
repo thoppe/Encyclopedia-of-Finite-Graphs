@@ -87,7 +87,7 @@ for key in SEQ:
 logging.info("Checking level 1 sequences against OEIS")
 
 url = "https://oeis.org/{}"
-output_str = "[{seq_name}]({url}) {seq_text}"
+output_str = "+ [`{seq_name}`]({url}) `{seq_text}`"
 
 def subfinder(mylist, pattern):
     pattern = set(pattern)
@@ -98,8 +98,7 @@ for key in sorted(SEQ_TEXT.keys()):
     seq_nums = SEQ_TEXT[key]
     seq_str = ','.join(str(seq_nums)[1:-1].replace(',','').split())
 
-    print "---------------------------"
-    s = "**`{}`**, `{}`".format(key,seq_str)
+    s = "*`{}`*, `{}`".format(key,seq_str)
     print s
     logging.info(s)
 
@@ -117,7 +116,7 @@ for key in sorted(SEQ_TEXT.keys()):
         print s
         logging.info(s)
 
-    
+    print
 
 
 
