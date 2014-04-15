@@ -14,9 +14,14 @@ view_invariants:
 	sqlitebrowser database/ref_invariant_integer.db
 view_seq:
 	sqlitebrowser database/sequence.db
+view_ref:
+	sqlitebrowser database/ref_invariant_integer.db
+
+report_lvl1:
+	python verification/lvl1_report.py > verification/raw_lvl1.md
 
 
-possible_N_values = 1 2 3 4 5 6 7 8
+possible_N_values = 1 2 3 4 5 6 7 8 9 10
 
 rebuild_database:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
@@ -29,7 +34,7 @@ compute:
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
-	python src/update_sequence.py 5
+	python src/update_sequence.py 10
 
 test:
 	python src/unit_tests.py --max_n 8
