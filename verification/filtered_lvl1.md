@@ -46,7 +46,7 @@
 *`[chromatic_number=6]`*, `0,0,0,0,0,1,5,74,1940,113272`
 + [`A126740`](https://oeis.org/A126740) `0,0,0,0,0,1,5,74,1940,113272,14545025`
 
-This are just simple connected trees,
+These are just simple connected trees,
 
 *`[circumference=0,girth=0,is_tree=1,n_cycle_basis=0]`*, `1,1,1,2,3,6,11,23,47,106`
 + [`A000055`](https://oeis.org/A000055) `1,1,1,1,2,3,6,11,23,47,106,235,551,1301,3159`
@@ -69,6 +69,10 @@ This are just simple connected trees,
 *`[is_k_regular=6]`*, `0,0,0,0,0,0,1,1,4,21`
 + [`A006822`](https://oeis.org/A006822) `1,0,0,0,0,0,0,1,1,4,21,266,7849,367860,21609300`
 
+The lower numbers need to be fixed first! a(1), a(2)
++ *`[is_strongly_regular=1]`*, `0,0,1,2,2,3,1,3,3,5`
++ [`A088741`](https://oeis.org/A088741) `1,1,1,2,2,3,1,3,3,5`
+
 -----
 
 ## New sequences
@@ -89,12 +93,12 @@ Close, but not the same [`A075095`](https://oeis.org/A075095), [`A124059`](https
 + *`[automorphism_group_n=48]`*, `0,0,0,0,0,4,14,65,504,5215`
 + *`[automorphism_group_n=72]`*, `0,0,0,0,0,1,2,16,124,1070`
 + *`[automorphism_group_n=120]`*, `0,0,0,0,1,1,1,5,21,211`
-+ *`[automorphism_group_n=144]`*, `0,0,0,0,0,0,3,12,51,477
++ *`[automorphism_group_n=144]`*, `0,0,0,0,0,0,3,12,51,477`
 + *`[automorphism_group_n=240]`*, `0,0,0,0,0,0,3,8,51,336`
 + *`[automorphism_group_n=720]`*, `0,0,0,0,0,1,1,4,13,60`
-+ *`[automorphism_group_n=5040]`*, `0,0,0,0,0,0,1,1,1,5``
++ *`[automorphism_group_n=5040]`*, `0,0,0,0,0,0,1,1,1,5`
 
-In sequence from + [`A126740`](https://oeis.org/A126740) `0,0,0,0,0,1,5,74,1940,113272,14545025`
+Connect to sequence [`A126740`](https://oeis.org/A126740)
 + *`[chromatic_number=7]`*, `0,0,0,0,0,0,1,6,110,4125`
 
 The non-version of this [`A048192`](https://oeis.org/A048192) 
@@ -104,14 +108,10 @@ The non-version of this [`A064731`](https://oeis.org/A064731)
 + *`[is_integral=0]`*, `0,0,1,4,18,106,846,11095,261056,11716488`
 
 This count the number of non-regular graphs, this looks to be new!
-+ * `[is_k_regular=0]`*, `1,0,1,4,19,107,849,11100,261058,11716404`
++ *`[is_k_regular=0]`*, `1,0,1,4,19,107,849,11100,261058,11716404`
 
-This is the non version of [`A088741`](https://oeis.org/A088741)
-*`[is_strongly_regular=0]`*, `1,1,1,4,19,109,852,11114,261077,11716566`
-
-The lower numbers need to be fixed first! a(1), a(2)
-*`[is_strongly_regular=1]`*, `0,0,1,2,2,3,1,3,3,5`
-+ [`A088741`](https://oeis.org/A088741) `1,1,1,2,2,3,1,3,3,5`
+This is the non version of [`A088741`](https://oeis.org/A088741), but a(1),a(2)=0, FIX
++ *`[is_strongly_regular=0]`*, `1,1,1,4,19,109,852,11114,261077,11716566`
 
 Non version [`A077269`](https://oeis.org/A077269)
 + *`[is_subgraph_free_C4=0]`*, `0,0,0,3,13,93,796,10931,260340,11713182`
@@ -121,7 +121,6 @@ Non version [`A079574`](https://oeis.org/A079574)
 
 Non version [`A024607`](https://oeis.org/A024607)
 + *`[is_subgraph_free_K3=0]`*, `0,0,1,3,15,93,794,10850,259700,11706739`
-
 + *`[is_subgraph_free_K5=0]`*, `0,0,0,0,1,5,51,865,28230,1810796`
 + *`[is_subgraph_free_K5=1]`*, `1,1,2,6,20,107,802,10252,232850,9905775`
 + *`[is_subgraph_free_C5=0]`*, `0,0,0,0,8,68,709,10540,258623,11704072`
@@ -138,6 +137,8 @@ I _think_ this one is a match, but I'm not sure...
 
 *`[circumference=3]`*, `0,0,1,1,3,7,18,44,117,299`
 + [`A000226`](https://oeis.org/A000226) `1,1,3,7,18,44,117,299,793,2095,5607,15047,40708,110499,301541`
+
+Depending on status, these may be new...
 
 + *`[circumference=4]`*, `0,0,0,3,4,14,34,100,259,724`
 + *`[circumference=5]`*, `0,0,0,0,11,24,88,254,787,2270`
