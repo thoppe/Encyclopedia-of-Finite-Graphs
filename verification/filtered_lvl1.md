@@ -2,6 +2,176 @@
 
 -----
 
+## Possible extensions?
+
+I think that these are matches, though the first terms are different. Note that almost all graphs are 2-connected `T. Walsh and E. Wright. The k-connectedness of unlabelled graphs. Journal of the London Mathematical Society, 2(3):397, 1978.`
+
+[A052442](https://oeis.org/A052442)
+*`[vertex_connectivity=1]`*, `0,1,1,3,11,56,385,3994,67014,1973029`
+
+[A052443](https://oeis.org/A052443)
+*`[vertex_connectivity=2]`*, `0,0,1,2,7,39,332,4735,113176,4629463`
+
+[A052444](https://oeis.org/A052444)
+*`[vertex_connectivity=3]`*, `0,0,0,1,2,13,111,2004,66410,3902344`
+
+[A052445](https://oeis.org/A052445)
+*`[vertex_connectivity=4]`*, `0,0,0,0,1,3,21,345,13429,1109105`
+
+These two look to be be new, though I need to figure out the low n cases.
+
++ *`[vertex_connectivity=5]`*, `0,0,0,0,0,1,3,34,992,99419`
++ *`[vertex_connectivity=6]`*, `0,0,0,0,0,0,1,4,54,3124`
+
+
+## New sequences
+
+Close, but not the same [`A075095`](https://oeis.org/A075095), [`A124059`](https://oeis.org/A124059)
+
++ *`[automorphism_group_n=4]`*, `0,0,0,1,3,28,198,1971,29047,672516`
++ *`[automorphism_group_n=6]`*, `0,0,1,1,1,7,31,221,3025,68033`
++ *`[automorphism_group_n=8]`*, `0,0,0,1,2,9,55,499,6017,107312`
++ *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
++ *`[automorphism_group_n=10]`*, `0,0,0,0,1,1,1,3,13,123`
++ *`[automorphism_group_n=12]`*, `0,0,0,0,3,10,51,356,3395,49862`
++ *`[automorphism_group_n=14]`*, `0,0,0,0,0,0,2,2,2,6`
++ *`[automorphism_group_n=16]`*, `0,0,0,0,0,3,10,123,992,14026`
++ *`[automorphism_group_n=20]`*, `0,0,0,0,0,0,2,6,29,199`
++ *`[automorphism_group_n=24]`*, `0,0,0,1,1,1,14,118,1247,17191`
++ *`[automorphism_group_n=36]`*, `0,0,0,0,0,1,3,16,132,1341`
++ *`[automorphism_group_n=48]`*, `0,0,0,0,0,4,14,65,504,5215`
++ *`[automorphism_group_n=72]`*, `0,0,0,0,0,1,2,16,124,1070`
++ *`[automorphism_group_n=120]`*, `0,0,0,0,1,1,1,5,21,211`
++ *`[automorphism_group_n=144]`*, `0,0,0,0,0,0,3,12,51,477`
++ *`[automorphism_group_n=240]`*, `0,0,0,0,0,0,3,8,51,336`
++ *`[automorphism_group_n=720]`*, `0,0,0,0,0,1,1,4,13,60`
++ *`[automorphism_group_n=5040]`*, `0,0,0,0,0,0,1,1,1,5`
+
+Connect to sequence [`A126740`](https://oeis.org/A126740)
++ *`[chromatic_number=7]`*, `0,0,0,0,0,0,1,6,110,4125`
+
+Crossref [A013922](https://oeis.org/A013922) and [`A002218`](https://oeis.org/A002218), these are also called "cutpoints" instead of articulation points.
+
++ *`[n_articulation_points=1]`*, `0,0,1,2,7,33,244,2792,52448,1690206`
++ *`[n_articulation_points=2]`*, `0,0,0,1,3,17,101,890,11468,239728`
++ *`[n_articulation_points=3]`*, `0,0,0,0,1,5,32,242,2461,35839`
++ *`[n_articulation_points=4]`*, `0,0,0,0,0,1,7,60,527,6056`
++ *`[n_articulation_points=5]`*, `0,0,0,0,0,0,1,9,97,1029`
+
+Next in sequence to [`A126748`](https://oeis.org/A126748)
++ *`[k_max_clique=7]`*, `0,0,0,0,0,0,1,6,109,4085`
+
+The non-version of this [`A048192`](https://oeis.org/A048192) 
++ *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
+
+The non-version of this [`A064731`](https://oeis.org/A064731)
++ *`[is_integral=0]`*, `0,0,1,4,18,106,846,11095,261056,11716488`
+
+This count the number of non-regular graphs, this looks to be new!
++ *`[is_k_regular=0]`*, `1,0,1,4,19,107,849,11100,261058,11716404`
+
+This is the non version of [`A088741`](https://oeis.org/A088741), but a(1),a(2)=0, FIX
++ *`[is_strongly_regular=0]`*, `1,1,1,4,19,109,852,11114,261077,11716566`
+
+Non version [`A077269`](https://oeis.org/A077269)
++ *`[is_subgraph_free_C4=0]`*, `0,0,0,3,13,93,796,10931,260340,11713182`
+
+Non version [`A079574`](https://oeis.org/A079574)
++ *`[is_subgraph_free_K4=0]`*, `0,0,0,1,4,30,317,5511,165165,8932499`
+
+Non version [`A024607`](https://oeis.org/A024607)
++ *`[is_subgraph_free_K3=0]`*, `0,0,1,3,15,93,794,10850,259700,11706739`
++ *`[is_subgraph_free_K5=0]`*, `0,0,0,0,1,5,51,865,28230,1810796`
++ *`[is_subgraph_free_K5=1]`*, `1,1,2,6,20,107,802,10252,232850,9905775`
++ *`[is_subgraph_free_C5=0]`*, `0,0,0,0,8,68,709,10540,258623,11704072`
++ *`[is_subgraph_free_C5=1]`*, `1,1,2,6,13,44,144,577,2457,12499`
+
+Non version of [`A000055`](https://oeis.org/A000055)
++ *`[is_tree=0]`*, `0,0,1,4,18,106,842,11094,261033,11716465`
+
+------
+
+## Unchecked
+
+I _think_ this one is a match, but I'm not sure...
+
+*`[circumference=3]`*, `0,0,1,1,3,7,18,44,117,299`
++ [`A000226`](https://oeis.org/A000226) `1,1,3,7,18,44,117,299,793,2095,5607,15047,40708,110499,301541`
+
+Depending on status, these may be new...
+
++ *`[circumference=4]`*, `0,0,0,3,4,14,34,100,259,724`
++ *`[circumference=5]`*, `0,0,0,0,11,24,88,254,787,2270`
++ *`[circumference=6]`*, `0,0,0,0,0,61,196,816,2735,9234`
++ *`[circumference=7]`*, `0,0,0,0,0,0,506,2443,11281,43447`
+
+are There no unit tests on diameter
+
++ *`[diameter=2]`*, `0,0,1,4,14,59,373,4154,91518,4116896`
++ *`[diameter=3]`*, `0,0,0,1,5,43,387,5797,148229,6959721`
++ *`[diameter=4]`*, `0,0,0,0,1,8,82,1027,19320,598913`
++ *`[diameter=5]`*, `0,0,0,0,0,1,9,125,1818,37856`
++ *`[diameter=6]`*, `0,0,0,0,0,0,1,12,180,2928`
+
+There are no unit tests on edge connectivity
+
++ *`[edge_connectivity=1]`*, `0,1,1,3,10,52,351,3714,63638,1912203`
++ *`[edge_connectivity=2]`*, `0,0,1,2,8,41,352,4820,113256,4602039`
++ *`[edge_connectivity=3]`*, `0,0,0,1,2,15,121,2159,68715,3952378`
++ *`[edge_connectivity=4]`*, `0,0,0,0,1,3,25,378,14306,1141575`
++ *`[edge_connectivity=5]`*, `0,0,0,0,0,1,3,41,1095,104829`
++ *`[edge_connectivity=6]`*, `0,0,0,0,0,0,1,4,65,3441`
+
+There are no unit tests on girth
+
++ *`[girth=3]`*, `0,0,1,3,15,93,792,10833,259420,11704309`
++ *`[girth=4]`*, `0,0,0,1,2,11,43,234,1498,11451`
++ *`[girth=5]`*, `0,0,0,0,1,1,5,18,82,539`
++ *`[girth=6]`*, `0,0,0,0,0,1,1,7,25,137`
++ *`[girth=7]`*, `0,0,0,0,0,0,1,1,6,20`
+
+There are no unit tests for these
+
++ *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
++ *`[is_distance_regular=1]`*, `1,1,1,2,2,4,2,5,4,7`
+
+These are unusual, there first one matches up, but the =2, =3 cases match to something unexpected.
+
+*`[n_cycle_basis=1]`*, `0,0,1,2,5,13,33,89,240,657`
++ [`A001429`](https://oeis.org/A001429) `1,2,5,13,33,89,240,657,1806,5026,13999,39260,110381,311465,880840`
+
+*`[n_cycle_basis=2]`*, `0,0,0,1,5,19,67,236,797,2678`
++ [`A001435`](https://oeis.org/A001435) `0,0,0,1,5,19,67,236,797,2678,8833,28908,93569,300748,959374`
+
+*`[n_cycle_basis=3]`*, `0,0,0,1,4,22,107,486,2075,8548`
++ [`A001436`](https://oeis.org/A001436) `0,0,0,1,4,22,107,486,2075,8548,33851,130365,489387,1799700,6499706`
+
++ *`[n_cycle_basis=4]`*, `0,0,0,0,2,20,132,814,4495,22950`
++ *`[n_cycle_basis=5]`*, `0,0,0,0,1,14,138,1169,8404,53863`
++ *`[n_cycle_basis=6]`*, `0,0,0,0,1,9,126,1454,13855,112618`
++ *`[n_cycle_basis=7]`*, `0,0,0,0,0,5,95,1579,20303,211866`
++ *`[n_cycle_basis=8]`*, `0,0,0,0,0,2,64,1515,26631,361342`
++ *`[n_cycle_basis=9]`*, `0,0,0,0,0,1,40,1290,31400,561106`
++ *`[n_cycle_basis=10]`*, `0,0,0,0,0,1,21,970,33366,795630`
++ *`[n_cycle_basis=11]`*, `0,0,0,0,0,0,10,658,31996,1032754`
++ *`[n_cycle_basis=12]`*, `0,0,0,0,0,0,5,400,27764,1229228`
++ *`[n_cycle_basis=13]`*, `0,0,0,0,0,0,2,220,21817,1343120`
++ *`[n_cycle_basis=14]`*, `0,0,0,0,0,0,1,114,15558,1348674`
++ *`[n_cycle_basis=15]`*, `0,0,0,0,0,0,1,56,10096,1245369`
+
+
+Not sure about these, why does radius=1 match with `A000088` this list for _unconnected_ graphs. Is this important? 
+
+*`[radius=1]`*, `0,1,2,4,11,34,156,1044,12346,274668`
++ [`A000088`](https://oeis.org/A000088) `1,1,2,4,11,34,156,1044,12346,274668,12005168,1018997864,165091172592,50502031367952,29054155657235488`
++ [`A076321`](https://oeis.org/A076321) `1,2,4,11,34,156,1044,12346,274668`
++ [`A126149`](https://oeis.org/A126149) `1,2,4,11,34,156,1044,12346,274668,2411453,123544541`
+
++ *`[radius=2]`*, `0,0,0,2,10,76,682,9864,245518,11366961`
++ *`[radius=3]`*, `0,0,0,0,0,2,15,207,3197,74614`
+
+---------
+
 ## Already in database
 
 *`[is_subgraph_free_C4=1]`*, `1,1,2,3,8,19,57,186,740,3389`
@@ -88,175 +258,9 @@ The lower numbers need to be fixed first! a(1), a(2)
 *`[k_max_clique=6]`*, `0,0,0,0,0,1,5,73,1908,110140`
 + [`A126748`](https://oeis.org/A126748) `0,0,0,0,0,1,5,73,1908,110140,13779220`
 
------
-
-## New sequences
-
-Close, but not the same [`A075095`](https://oeis.org/A075095), [`A124059`](https://oeis.org/A124059)
-
-+ *`[automorphism_group_n=4]`*, `0,0,0,1,3,28,198,1971,29047,672516`
-+ *`[automorphism_group_n=6]`*, `0,0,1,1,1,7,31,221,3025,68033`
-+ *`[automorphism_group_n=8]`*, `0,0,0,1,2,9,55,499,6017,107312`
-+ *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
-+ *`[automorphism_group_n=10]`*, `0,0,0,0,1,1,1,3,13,123`
-+ *`[automorphism_group_n=12]`*, `0,0,0,0,3,10,51,356,3395,49862`
-+ *`[automorphism_group_n=14]`*, `0,0,0,0,0,0,2,2,2,6`
-+ *`[automorphism_group_n=16]`*, `0,0,0,0,0,3,10,123,992,14026`
-+ *`[automorphism_group_n=20]`*, `0,0,0,0,0,0,2,6,29,199`
-+ *`[automorphism_group_n=24]`*, `0,0,0,1,1,1,14,118,1247,17191`
-+ *`[automorphism_group_n=36]`*, `0,0,0,0,0,1,3,16,132,1341`
-+ *`[automorphism_group_n=48]`*, `0,0,0,0,0,4,14,65,504,5215`
-+ *`[automorphism_group_n=72]`*, `0,0,0,0,0,1,2,16,124,1070`
-+ *`[automorphism_group_n=120]`*, `0,0,0,0,1,1,1,5,21,211`
-+ *`[automorphism_group_n=144]`*, `0,0,0,0,0,0,3,12,51,477`
-+ *`[automorphism_group_n=240]`*, `0,0,0,0,0,0,3,8,51,336`
-+ *`[automorphism_group_n=720]`*, `0,0,0,0,0,1,1,4,13,60`
-+ *`[automorphism_group_n=5040]`*, `0,0,0,0,0,0,1,1,1,5`
-
-Connect to sequence [`A126740`](https://oeis.org/A126740)
-+ *`[chromatic_number=7]`*, `0,0,0,0,0,0,1,6,110,4125`
-
-Next in sequence to [`A126748`](https://oeis.org/A126748)
-+ *`[k_max_clique=7]`*, `0,0,0,0,0,0,1,6,109,4085`
-
-The non-version of this [`A048192`](https://oeis.org/A048192) 
-+ *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
-
-The non-version of this [`A064731`](https://oeis.org/A064731)
-+ *`[is_integral=0]`*, `0,0,1,4,18,106,846,11095,261056,11716488`
-
-This count the number of non-regular graphs, this looks to be new!
-+ *`[is_k_regular=0]`*, `1,0,1,4,19,107,849,11100,261058,11716404`
-
-This is the non version of [`A088741`](https://oeis.org/A088741), but a(1),a(2)=0, FIX
-+ *`[is_strongly_regular=0]`*, `1,1,1,4,19,109,852,11114,261077,11716566`
-
-Non version [`A077269`](https://oeis.org/A077269)
-+ *`[is_subgraph_free_C4=0]`*, `0,0,0,3,13,93,796,10931,260340,11713182`
-
-Non version [`A079574`](https://oeis.org/A079574)
-+ *`[is_subgraph_free_K4=0]`*, `0,0,0,1,4,30,317,5511,165165,8932499`
-
-Non version [`A024607`](https://oeis.org/A024607)
-+ *`[is_subgraph_free_K3=0]`*, `0,0,1,3,15,93,794,10850,259700,11706739`
-+ *`[is_subgraph_free_K5=0]`*, `0,0,0,0,1,5,51,865,28230,1810796`
-+ *`[is_subgraph_free_K5=1]`*, `1,1,2,6,20,107,802,10252,232850,9905775`
-+ *`[is_subgraph_free_C5=0]`*, `0,0,0,0,8,68,709,10540,258623,11704072`
-+ *`[is_subgraph_free_C5=1]`*, `1,1,2,6,13,44,144,577,2457,12499`
-
-Non version of [`A000055`](https://oeis.org/A000055)
-+ *`[is_tree=0]`*, `0,0,1,4,18,106,842,11094,261033,11716465`
-
-------
-
-## Unchecked
-
-I _think_ this one is a match, but I'm not sure...
-
-*`[circumference=3]`*, `0,0,1,1,3,7,18,44,117,299`
-+ [`A000226`](https://oeis.org/A000226) `1,1,3,7,18,44,117,299,793,2095,5607,15047,40708,110499,301541`
-
-Depending on status, these may be new...
-
-+ *`[circumference=4]`*, `0,0,0,3,4,14,34,100,259,724`
-+ *`[circumference=5]`*, `0,0,0,0,11,24,88,254,787,2270`
-+ *`[circumference=6]`*, `0,0,0,0,0,61,196,816,2735,9234`
-+ *`[circumference=7]`*, `0,0,0,0,0,0,506,2443,11281,43447`
-
-There are no unit tests on diameter
-
-+ *`[diameter=2]`*, `0,0,1,4,14,59,373,4154,91518,4116896`
-+ *`[diameter=3]`*, `0,0,0,1,5,43,387,5797,148229,6959721`
-+ *`[diameter=4]`*, `0,0,0,0,1,8,82,1027,19320,598913`
-+ *`[diameter=5]`*, `0,0,0,0,0,1,9,125,1818,37856`
-+ *`[diameter=6]`*, `0,0,0,0,0,0,1,12,180,2928`
-
-There are no unit tests on edge connectivity
-
-+ *`[edge_connectivity=1]`*, `0,1,1,3,10,52,351,3714,63638,1912203`
-+ *`[edge_connectivity=2]`*, `0,0,1,2,8,41,352,4820,113256,4602039`
-+ *`[edge_connectivity=3]`*, `0,0,0,1,2,15,121,2159,68715,3952378`
-+ *`[edge_connectivity=4]`*, `0,0,0,0,1,3,25,378,14306,1141575`
-+ *`[edge_connectivity=5]`*, `0,0,0,0,0,1,3,41,1095,104829`
-+ *`[edge_connectivity=6]`*, `0,0,0,0,0,0,1,4,65,3441`
-
-There are no unit tests on girth
-
-+ *`[girth=3]`*, `0,0,1,3,15,93,792,10833,259420,11704309`
-+ *`[girth=4]`*, `0,0,0,1,2,11,43,234,1498,11451`
-+ *`[girth=5]`*, `0,0,0,0,1,1,5,18,82,539`
-+ *`[girth=6]`*, `0,0,0,0,0,1,1,7,25,137`
-+ *`[girth=7]`*, `0,0,0,0,0,0,1,1,6,20`
-
-There are no unit tests for these
-
-+ *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
-+ *`[is_distance_regular=1]`*, `1,1,1,2,2,4,2,5,4,7`
-
 *`[n_articulation_points=0]`*, `1,1,1,3,10,56,468,7123,194066,9743542`
 + [`A002218`](https://oeis.org/A002218) `0,1,1,3,10,56,468,7123,194066,9743542,900969091`
 
-+ *`[n_articulation_points=1]`*, `0,0,1,2,7,33,244,2792,52448,1690206`
-+ *`[n_articulation_points=2]`*, `0,0,0,1,3,17,101,890,11468,239728`
-+ *`[n_articulation_points=3]`*, `0,0,0,0,1,5,32,242,2461,35839`
-+ *`[n_articulation_points=4]`*, `0,0,0,0,0,1,7,60,527,6056`
-+ *`[n_articulation_points=5]`*, `0,0,0,0,0,0,1,9,97,1029`
-
-
-These are unusual, there first one matches up, but the =2, =3 cases match to something unexpected.
-
-*`[n_cycle_basis=1]`*, `0,0,1,2,5,13,33,89,240,657`
-+ [`A001429`](https://oeis.org/A001429) `1,2,5,13,33,89,240,657,1806,5026,13999,39260,110381,311465,880840`
-
-*`[n_cycle_basis=2]`*, `0,0,0,1,5,19,67,236,797,2678`
-+ [`A001435`](https://oeis.org/A001435) `0,0,0,1,5,19,67,236,797,2678,8833,28908,93569,300748,959374`
-
-*`[n_cycle_basis=3]`*, `0,0,0,1,4,22,107,486,2075,8548`
-+ [`A001436`](https://oeis.org/A001436) `0,0,0,1,4,22,107,486,2075,8548,33851,130365,489387,1799700,6499706`
-
-+ *`[n_cycle_basis=4]`*, `0,0,0,0,2,20,132,814,4495,22950`
-+ *`[n_cycle_basis=5]`*, `0,0,0,0,1,14,138,1169,8404,53863`
-+ *`[n_cycle_basis=6]`*, `0,0,0,0,1,9,126,1454,13855,112618`
-+ *`[n_cycle_basis=7]`*, `0,0,0,0,0,5,95,1579,20303,211866`
-+ *`[n_cycle_basis=8]`*, `0,0,0,0,0,2,64,1515,26631,361342`
-+ *`[n_cycle_basis=9]`*, `0,0,0,0,0,1,40,1290,31400,561106`
-+ *`[n_cycle_basis=10]`*, `0,0,0,0,0,1,21,970,33366,795630`
-+ *`[n_cycle_basis=11]`*, `0,0,0,0,0,0,10,658,31996,1032754`
-+ *`[n_cycle_basis=12]`*, `0,0,0,0,0,0,5,400,27764,1229228`
-+ *`[n_cycle_basis=13]`*, `0,0,0,0,0,0,2,220,21817,1343120`
-+ *`[n_cycle_basis=14]`*, `0,0,0,0,0,0,1,114,15558,1348674`
-+ *`[n_cycle_basis=15]`*, `0,0,0,0,0,0,1,56,10096,1245369`
-
-
-Not sure about these, why does radius=1 match with `A000088` this list for _unconnected_ graphs. Is this important?
-
-*`[radius=1]`*, `0,1,2,4,11,34,156,1044,12346,274668`
-+ [`A000088`](https://oeis.org/A000088) `1,1,2,4,11,34,156,1044,12346,274668,12005168,1018997864,165091172592,50502031367952,29054155657235488`
-+ [`A076321`](https://oeis.org/A076321) `1,2,4,11,34,156,1044,12346,274668`
-+ [`A126149`](https://oeis.org/A126149) `1,2,4,11,34,156,1044,12346,274668,2411453,123544541`
-
-+ *`[radius=2]`*, `0,0,0,2,10,76,682,9864,245518,11366961`
-+ *`[radius=3]`*, `0,0,0,0,0,2,15,207,3197,74614`
-
 -----
 
-## Possible extensions?
-
-I think that these are matches, though the first terms are wrong.
-[A052442](https://oeis.org/A052442)
-+ *`[vertex_connectivity=1]`*, `0,1,1,3,11,56,385,3994,67014,1973029`
-
-[A052443](https://oeis.org/A052443)
-*`[vertex_connectivity=2]`*, `0,0,1,2,7,39,332,4735,113176,4629463`
-
-[A052444](https://oeis.org/A052444)
-*`[vertex_connectivity=3]`*, `0,0,0,1,2,13,111,2004,66410,3902344`
-
-[A052445](https://oeis.org/A052445)
-*`[vertex_connectivity=4]`*, `0,0,0,0,1,3,21,345,13429,1109105`
-
-These two look to be be new, though I need to figure out the low n cases.
-
-+ *`[vertex_connectivity=5]`*, `0,0,0,0,0,1,3,34,992,99419`
-+ *`[vertex_connectivity=6]`*, `0,0,0,0,0,0,1,4,54,3124`
 
