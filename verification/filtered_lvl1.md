@@ -2,28 +2,6 @@
 
 -----
 
-## Possible extensions?
-
-I think that these are matches, though the first terms are different. Note that almost all graphs are 2-connected `T. Walsh and E. Wright. The k-connectedness of unlabelled graphs. Journal of the London Mathematical Society, 2(3):397, 1978.`
-
-[A052442](https://oeis.org/A052442)
-*`[vertex_connectivity=1]`*, `0,1,1,3,11,56,385,3994,67014,1973029`
-
-[A052443](https://oeis.org/A052443)
-*`[vertex_connectivity=2]`*, `0,0,1,2,7,39,332,4735,113176,4629463`
-
-[A052444](https://oeis.org/A052444)
-*`[vertex_connectivity=3]`*, `0,0,0,1,2,13,111,2004,66410,3902344`
-
-[A052445](https://oeis.org/A052445)
-*`[vertex_connectivity=4]`*, `0,0,0,0,1,3,21,345,13429,1109105`
-
-These two look to be be new, though I need to figure out the low n cases.
-
-+ *`[vertex_connectivity=5]`*, `0,0,0,0,0,1,3,34,992,99419`
-+ *`[vertex_connectivity=6]`*, `0,0,0,0,0,0,1,4,54,3124`
-
-
 ## New sequences
 
 Close, but not the same [`A075095`](https://oeis.org/A075095), [`A124059`](https://oeis.org/A124059)
@@ -57,6 +35,10 @@ Crossref [A013922](https://oeis.org/A013922) and [`A002218`](https://oeis.org/A0
 + *`[n_articulation_points=3]`*, `0,0,0,0,1,5,32,242,2461,35839`
 + *`[n_articulation_points=4]`*, `0,0,0,0,0,1,7,60,527,6056`
 + *`[n_articulation_points=5]`*, `0,0,0,0,0,0,1,9,97,1029`
+
+Next in sequence to [`A086217`](https://oeis.org/A086217), this query is called k-connectivity
+
++ *`[vertex_connectivity>5]`*, `0,0,0,0,0,0,1,5,59,3211`
 
 Next in sequence to [`A126748`](https://oeis.org/A126748)
 + *`[k_max_clique=7]`*, `0,0,0,0,0,0,1,6,109,4085`
@@ -260,6 +242,23 @@ The lower numbers need to be fixed first! a(1), a(2)
 
 *`[n_articulation_points=0]`*, `1,1,1,3,10,56,468,7123,194066,9743542`
 + [`A002218`](https://oeis.org/A002218) `0,1,1,3,10,56,468,7123,194066,9743542,900969091`
+
+
+
+*`[vertex_connectivity>0]`*, `0,1,2,6,21,112,853,11117,261080,11716571`
++ [`A001349`](https://oeis.org/A001349) `1,1,1,2,6,21,112,853,11117,261080,11716571,1006700565`
+
+*`[vertex_connectivity>1]`*, `0,0,1,3,10,56,468,7123,194066,9743542`
++ [`A002218`](https://oeis.org/A002218) `0,1,1,3,10,56,468,7123,194066,9743542`
+
+*`[vertex_connectivity>2]`*, `0,0,0,1,3,17,136,2388,80890,5114079`
++ [`A006290`](https://oeis.org/A006290) `1,3,17,136,2388,80890,5114079,573273505`
+*`[vertex_connectivity>3]`*, `0,0,0,0,1,4,25,384,14480,1211735`
++ [`A086216`](https://oeis.org/A086216) `1,4,25,384,14480,1211735`
+
+*`[vertex_connectivity>4]`*, `0,0,0,0,0,1,4,39,1051,102630`
++ [`A086217`](https://oeis.org/A086217) `1,4,39,1051,102630`
+
 
 -----
 

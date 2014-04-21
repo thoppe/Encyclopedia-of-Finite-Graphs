@@ -19,6 +19,8 @@ excluded_terms = ["n_vertex","n_edge","n_endpoints",
                   "is_subgraph_free_C8","is_subgraph_free_C9",
                   "is_subgraph_free_C10",]
 
+special_conditionals = {"vertex_connectivity":">"}
+
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
@@ -184,9 +186,16 @@ VALUES (1, {unique_id}, "{conditional}", {value}, {non_zero})'''
 
 for unique_id, invariant_id, value in seq_lvl1:
 
+    name = invariant_dict[invariant_id]
+
+    if name in special_conditionals:
+        conditional = special_conditionals[name]
+    else:
+        conditional = "="
+
     args = {
         "unique_id":unique_id,
-        "conditional":"=",
+        "conditional":conditional,
         "function_name":invariant_dict[invariant_id],
         "value":value}
 
