@@ -202,20 +202,10 @@ def edge_connectivity(adj,**args):
     g = networkx_representation(adj,**args)
     return nx_extra.global_edge_connectivity(g)
 
-def is_integral(adj, **args):
 
-    # Check with http://oeis.org/A064731
-    # Symbolically determine the char poly and evaluate it on
-    # the rounded eigenvalues. A non-zero result is a non-intergral eigenvalue
-    # this avoids the "all_close" condition
-
-    A = convert_to_numpy(adj,**args)
-    N = args["N"]
-    M = sympy.Matrix(A)
-    p = M.charpoly()
-
+def _poly_factorable_over_field(p,domain):
     # Factor the char poly over the integers
-    pz = sympy.factor(p,domain="Z")
+    pz = sympy.factor(p,domain=domain)
 
     # Change expression like (a+b)**n -> (a+b)
     def reduce_power(fp):
@@ -229,6 +219,40 @@ def is_integral(adj, **args):
         # indicates can't be factored over choosen domain
         if term_poly.degree() > 1: return False
     return True
+
+def is_integral(adj, **args):
+
+    # Check with http://oeis.org/A064731
+    # Symbolically determine the char poly and evaluate it on
+    # the rounded eigenvalues. A non-zero result is a non-intergral eigenvalue
+    # this avoids the "all_close" condition
+
+    A = convert_to_numpy(adj,**args)
+    N = args["N"]
+    M = sympy.Matrix(A)
+    p = M.charpoly()
+    return _poly_factorable_over_field(p, "ZZ")
+
+def is_rational_spectrum(adj, **args):
+
+    # Like is_integral, checks if the char. poly factors over Q instead of Z
+
+    A = convert_to_numpy(adj,**args)
+    N = args["N"]
+    M = sympy.Matrix(A)
+    p = M.charpoly()
+    return _poly_factorable_over_field(p, "QQ")
+
+def is_real_spectrum(adj, **args):
+
+    # Like is_integral, checks if the char. poly factors over R instead of Z
+
+    A = convert_to_numpy(adj,**args)
+    N = args["N"]
+    M = sympy.Matrix(A)
+    p = M.charpoly()
+    
+    return p.rep.count_real_roots() == N
 
 ######################### Subgraph code ######################### 
 
@@ -347,6 +371,9 @@ if __name__ == "__main__":
     args= {"N":N}
 
     print "is_integral:", is_integral(adj, **args)
+    print "is_rational_spectrum:", is_rational_spectrum(adj, **args)
+    print "is_real_spectrum:", is_real_spectrum(adj, **args)
+    exit()
 
     args["special_cycle_basis"] = special_cycle_basis(adj,**args)
     print "n_cycle_basis:",n_cycle_basis(adj,**args)

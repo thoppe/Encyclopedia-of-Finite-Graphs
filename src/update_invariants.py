@@ -75,7 +75,7 @@ def insert_from_landing_table(f_landing_table):
     msg = "Saved {} to values to {column}"
     logging.info(msg.format(count,**cargs))  
 
-    msg = "Count of {column} nonzero terms {}"
+    msg = "Count of {column} nonzero terms ({})"
     logging.info(msg.format(non_zero_terms,**cargs))  
     
     os.remove(f_landing_table)

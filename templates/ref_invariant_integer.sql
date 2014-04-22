@@ -57,4 +57,9 @@ INSERT OR IGNORE INTO ref_invariant_integer
   ("is_tree",31),
   ("is_chordal",32),
 
-  ("k_max_clique",33);
+  ("k_max_clique",33),
+
+  ("is_rational_spectrum",34),
+  ("is_real_spectrum",35)
+
+;
