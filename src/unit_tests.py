@@ -122,13 +122,32 @@ def report_seq(**args):
     print sp
 
 
+# Extra tests (for now done by hand)
+# oeis.org/A002851
+cmd_special = '''
+SELECT * FROM invariant_integer as X WHERE X.graph_id IN 
+(
+SELECT graph_id FROM invariant_integer as a 
+LEFT JOIN ref_invariant_integer as b
+ON  a.invariant_id  = b.invariant_id 
+WHERE b.function_name = "is_k_regular" 
+AND a.value=3
+) AND X.invariant_id=7
+'''
+#for n in graph_conn:
+#    logging.info("Checking special")
+#    cursor = graph_conn[n].execute(cmd_special)
+#    for adj in cursor.fetchall():
+#        print adj
+#exit()    
+
+
 operators = [">", "<", "is not", ">=", "<=", "="]
 gmr_conditional = pypar.Or(map(pypar.Keyword, operators))("conditional")
 gmr_seqname  = pypar.Word(pypar.alphanums + "_")("function_name")
 gmr_value    = pypar.Word(pypar.nums)("value")
 gmr_phrase   = pypar.Group(gmr_seqname + gmr_conditional + gmr_value)
-#gmr_multi_op = pypar.Keyword("and").suppress()
-#gmr_multi    = gmr_phrase + pypar.ZeroOrMore(gmr_multi_op + gmr_phrase)
+
 gmr_seq_sep  = pypar.Keyword("|").suppress()
 gmr_seq      = pypar.Group(pypar.commaSeparatedList)
 gmr_full     = gmr_phrase("phrase") + gmr_seq_sep + gmr_seq("seq")
@@ -170,4 +189,3 @@ with open(f_known_sequence) as FIN:
 F_REPORT.close()
 
 
-# Extra tests (for now done by hand)
