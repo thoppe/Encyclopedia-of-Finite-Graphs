@@ -15,6 +15,11 @@ The following sequences have been extended with this project:
 + [`is_subgraph_free_K4=1`](http://oeis.org/A079574)
 + [`is_strongly_regular=1`](http://oeis.org/A088741)
 
-Sample OEIS extension text:
+OEIS extension text:
 
-> a(10) from the Encyclopedia of Finite Graphs (_Travis Hoppe_ and _Anna Petrone_).
+    a(10) from the Encyclopedia of Finite Graphs (_Travis Hoppe_ and _Anna Petrone_).`
+
+
+OEIS link text:
+
+    Travis Hoppe and Anna Petrone, <a href="https://github.com/thoppe/Encyclopedia-of-Finite-Graphs">Encyclopedia of Finite Graphs</a>

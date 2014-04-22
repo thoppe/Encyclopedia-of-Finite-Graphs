@@ -34,13 +34,13 @@ An auto-generated reported for various base queries and the link to the respecti
 List of the sequences extended by the project.
 
 ### [New Sequences (level 1)](verification/submission_lvl1.md)
-List of the sequences discovered by the project [incomplete].
+[IN PROGRESS] List of the sequences discovered by the project.
 
-### [New Sequences (level 2)](verification/submission_lvl2.md)
-List of the paired sequences discovered by the project [incomplete].
+##### New Sequences (level 2) [incomplete]
+List of the paired sequences discovered by the project.
 
-### [New Sequences (level 3+)](verification/submission_lvl3.md)
-List of the triplet+ sequences discovered by the project [incomplete].
+##### New Sequences (level 3+) [incomplete]
+List of the triplet+ sequences discovered by the project.
 
 ====================================
 
