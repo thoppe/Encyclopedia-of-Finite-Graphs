@@ -41,13 +41,11 @@ Close, but not the same [`A075095`](https://oeis.org/A075095), [`A124059`](https
 + *`[automorphism_group_n=240]`*, `0,0,0,0,0,0,3,8,51,336`
 + *`[automorphism_group_n=720]`*, `0,0,0,0,0,1,1,4,13,60`
 + *`[automorphism_group_n=5040]`*, `0,0,0,0,0,0,1,1,1,5`
-
 + *`[girth=3]`*, `0,0,1,3,15,93,792,10833,259420,11704309`
 + *`[girth=4]`*, `0,0,0,1,2,11,43,234,1498,11451`
 + *`[girth=5]`*, `0,0,0,0,1,1,5,18,82,539`
 + *`[girth=6]`*, `0,0,0,0,0,1,1,7,25,137`
 + *`[girth=7]`*, `0,0,0,0,0,0,1,1,6,20`
-
 + *`[diameter=2]`*, `0,0,1,4,14,59,373,4154,91518,4116896`
 + *`[diameter=3]`*, `0,0,0,1,5,43,387,5797,148229,6959721`
 + *`[diameter=4]`*, `0,0,0,0,1,8,82,1027,19320,598913`
@@ -79,6 +77,11 @@ Next in sequence to [`A086217`](https://oeis.org/A086217), this query is called 
 Next in sequence to [`A126748`](https://oeis.org/A126748)
 + *`[k_max_clique=7]`*, `0,0,0,0,0,0,1,6,109,4085`
 
+There are no unit tests for these, the sequence seems to be unique
+
++ *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
++ *`[is_distance_regular=1]`*, `1,1,1,2,2,4,2,5,4,7`
+
 The non-version of this [`A048192`](https://oeis.org/A048192) 
 + *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
 
@@ -106,11 +109,6 @@ Non version [`A024607`](https://oeis.org/A024607)
 
 Non version of [`A000055`](https://oeis.org/A000055)
 + *`[is_tree=0]`*, `0,0,1,4,18,106,842,11094,261033,11716465`
-
-There are no unit tests for these, the sequence seems to be unique
-
-+ *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
-+ *`[is_distance_regular=1]`*, `1,1,1,2,2,4,2,5,4,7`
 
 ------
 
@@ -211,6 +209,7 @@ The lower numbers need to be fixed first! a(1), a(2)
 
 *`[vertex_connectivity>2]`*, `0,0,0,1,3,17,136,2388,80890,5114079`
 + [`A006290`](https://oeis.org/A006290) `1,3,17,136,2388,80890,5114079,573273505`
+
 *`[vertex_connectivity>3]`*, `0,0,0,0,1,4,25,384,14480,1211735`
 + [`A086216`](https://oeis.org/A086216) `1,4,25,384,14480,1211735`
 
