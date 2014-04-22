@@ -17,7 +17,7 @@ cargs = vars(parser.parse_args())
 excluded_terms = ["n_vertex","n_edge","n_endpoints",
                   "is_subgraph_free_C6","is_subgraph_free_C7",
                   "is_subgraph_free_C8","is_subgraph_free_C9",
-                  "is_subgraph_free_C10",]
+                  "is_subgraph_free_C10","n_cycle_basis"]
 
 special_conditionals = {"vertex_connectivity":">"}
 

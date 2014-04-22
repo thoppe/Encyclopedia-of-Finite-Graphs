@@ -11,6 +11,9 @@ parser.add_argument('--max_n',type=int,default=10,
                     help="Maximum graph size n to compute tests")
 parser.add_argument('--min_n',type=int,default=3,
                     help="Minimum graph size n to match tests")
+parser.add_argument('--skip_check_complete',default=False,
+                    action="store_true",
+                    help="Skip the check on completeness")
 cargs = vars(parser.parse_args())
 
 # Start the logger
@@ -52,19 +55,21 @@ msg_incomplete = '''
 **MISSING**     : `{function_name}` at n={n}
 expected/received : `{expected_counts}`, `{received_counts}`\n'''.lstrip()
 
-for n in graph_conn:
-    logging.info("Checking for complete terms n=%i"%n)
-    cursor = graph_conn[n].execute(cmd_count_terms)
-    ex = expected_counts[n]
-    for invariant_id,count in cursor.fetchall():
-        if ex!=count:
-            msg_args = {"function_name":invariant_dict[invariant_id]}
-            msg_args["n"] = n
-            msg_args["expected_counts"]=ex
-            msg_args["received_counts"]=count
-            msg = msg_incomplete.format(**msg_args)
-            F_REPORT.write(msg+'\n\n')
-            print msg
+if not cargs["skip_check_complete"]:
+
+    for n in graph_conn:
+        logging.info("Checking for complete terms n=%i"%n)
+        cursor = graph_conn[n].execute(cmd_count_terms)
+        ex = expected_counts[n]
+        for invariant_id,count in cursor.fetchall():
+            if ex!=count:
+                msg_args = {"function_name":invariant_dict[invariant_id]}
+                msg_args["n"] = n
+                msg_args["expected_counts"]=ex
+                msg_args["received_counts"]=count
+                msg = msg_incomplete.format(**msg_args)
+                F_REPORT.write(msg+'\n\n')
+                print msg
 
 cmd_count = '''
 SELECT COUNT(*) FROM invariant_integer as a 
@@ -142,7 +147,8 @@ def parse_known_sequence(line):
 
 previous_comment = ''
 
-with open(f_known_sequence) as FIN:
+with open(f_known_sequence) as FIN:  
+
     for line in FIN:
         line = line.strip()
 
@@ -162,3 +168,6 @@ with open(f_known_sequence) as FIN:
             report_seq(**seq_args)
 
 F_REPORT.close()
+
+
+# Extra tests (for now done by hand)
