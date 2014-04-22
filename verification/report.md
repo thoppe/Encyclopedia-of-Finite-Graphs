@@ -45,14 +45,14 @@ OEIS      : [`[0, 1, 3, 17, 136, 2388, 80890, 5114079]`](http://oeis.org/A006290
 received  :  `[0, 1, 3, 17, 136, 2388, 80890, 5114079]`
 
 
-**FAILED**  : `vertex_connectivity>3`
-OEIS        : [`[0, 0, 1, 4, 25, 384, 14480]`](http://oeis.org/A086216)
-received    :  `[0, 0, 1, 4, 25, 384, 14480, 1211735]`
+*passed*  : `vertex_connectivity>3`
+OEIS      : [`[0, 0, 1, 4, 25, 384, 14480, 1211735]`](http://oeis.org/A086216)
+received  :  `[0, 0, 1, 4, 25, 384, 14480, 1211735]`
 
 
-**FAILED**  : `vertex_connectivity>4`
-OEIS        : [`[0, 0, 0, 1, 4, 39, 1051]`](http://oeis.org/A086217)
-received    :  `[0, 0, 0, 1, 4, 39, 1051, 102630]`
+*passed*  : `vertex_connectivity>4`
+OEIS      : [`[0, 0, 0, 1, 4, 39, 1051, 102630]`](http://oeis.org/A086217)
+received  :  `[0, 0, 0, 1, 4, 39, 1051, 102630]`
 
 
 *passed*  : `is_subgraph_free_C4=1`
@@ -65,9 +65,9 @@ OEIS      : [`[1, 3, 6, 19, 59, 267, 1380, 9832]`](http://oeis.org/A024607)
 received  :  `[1, 3, 6, 19, 59, 267, 1380, 9832]`
 
 
-**FAILED**  : `is_subgraph_free_K4=1`
-OEIS        : [`[2, 5, 17, 82, 536, 5606, 95915]`](http://oeis.org/A079574)
-received    :  `[2, 5, 17, 82, 536, 5606, 95915, 2784072]`
+*passed*  : `is_subgraph_free_K4=1`
+OEIS      : [`[2, 5, 17, 82, 536, 5606, 95915, 2784072]`](http://oeis.org/A079574)
+received  :  `[2, 5, 17, 82, 536, 5606, 95915, 2784072]`
 
 
 *passed*  : `is_bipartite=1`
@@ -135,9 +135,9 @@ OEIS      : [`[0, 0, 0, 1, 5, 74, 1940, 113272]`](http://oeis.org/A126740)
 received  :  `[0, 0, 0, 1, 5, 74, 1940, 113272]`
 
 
-**FAILED**  : `is_strongly_regular=1`
-OEIS        : [`[1, 2, 2, 3, 1, 3, 3]`](http://oeis.org/A088741)
-received    :  `[1, 2, 2, 3, 1, 3, 3, 5]`
+*passed*  : `is_strongly_regular=1`
+OEIS      : [`[1, 2, 2, 3, 1, 3, 3, 5]`](http://oeis.org/A088741)
+received  :  `[1, 2, 2, 3, 1, 3, 3, 5]`
 
 
 *passed*  : `is_tree=1`
