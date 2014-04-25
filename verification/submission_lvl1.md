@@ -1,36 +1,70 @@
 ## Pending:
 
+OEIS [`A241458`](https://oeis.org/A241458)
++ *`[automorphism_group_n=10]`*, `0,0,0,0,1,1,1,3,13,123`
+
+OEIS [`A241459`](https://oeis.org/A241459)
++ *`[automorphism_group_n=12]`*, `0,0,0,0,3,10,51,356,3395,49862`
+
+OEIS [`A241460`](https://oeis.org/A241460)
++ *`[automorphism_group_n=14]`*, `0,0,0,0,0,0,2,2,2,6`
+
+OEIS [`A241461`](https://oeis.org/A241461)
++ *`[automorphism_group_n=16]`*, `0,0,0,0,0,3,10,123,992,14026`
+
+OEIS [`A241462`](https://oeis.org/A241462)
++ *`[automorphism_group_n=20]`*, `0,0,0,0,0,0,2,6,29,199`
+
+OEIS [`A241463`](https://oeis.org/A241463)
++ *`[automorphism_group_n=24]`*, `0,0,0,1,1,1,14,118,1247,17191`
+
+OEIS [`A241464`](https://oeis.org/A241464)
++ *`[automorphism_group_n=36]`*, `0,0,0,0,0,1,3,16,132,1341`
+
+OEIS [`A241465`](https://oeis.org/A241465)
++ *`[automorphism_group_n=48]`*, `0,0,0,0,0,4,14,65,504,5215`
+
+OEIS [`A241466`](https://oeis.org/A241466)
++ *`[automorphism_group_n=72]`*, `0,0,0,0,0,1,2,16,124,1070`
+
+OEIS [`A241467`](https://oeis.org/A241467)
++ *`[automorphism_group_n=120]`*, `0,0,0,0,1,1,1,5,21,211`
+
+OEIS [`A241468`](https://oeis.org/A241468)
++ *`[automorphism_group_n=144]`*, `0,0,0,0,0,0,3,12,51,477`
+
+OEIS [`A241469`](https://oeis.org/A241469)
++ *`[automorphism_group_n=240]`*, `0,0,0,0,0,0,3,8,51,336`
+
+OEIS [`A241470`](https://oeis.org/A241470)
++ *`[automorphism_group_n=720]`*, `0,0,0,0,0,1,1,4,13,60`
+
+OEIS [`A241471`](https://oeis.org/A241471)
++ *`[automorphism_group_n=5040]`*, `0,0,0,0,0,0,1,1,1,5`
+
 ## Completed:
+
+OEIS [`A241454`](https://oeis.org/A241454)
++ *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
+
+OEIS [`A241455`](https://oeis.org/A241455)
++ *`[automorphism_group_n=4]`*, `0,0,0,1,3,28,198,1971,29047,672516`
+
+OEIS [`A241456`](https://oeis.org/A241456)
++ *`[automorphism_group_n=6]`*, `0,0,1,1,1,7,31,221,3025,68033`
+
+OEIS [`A241457`](https://oeis.org/A241457)
++ *`[automorphism_group_n=8]`*, `0,0,0,1,2,9,55,499,6017,107312`
 
 ## Unsubmitted:
 
-The following sequences have not been submitted. Note are left for the submission process. 
+The following sequences have not been submitted. Notes are left for the submission process. 
 
 Crossref [`A052448`](https://oeis.org/A052448)
 + *`[edge_connectivity=4]`*, `0,0,0,0,1,3,25,378,14306,1141575`
 + *`[edge_connectivity=5]`*, `0,0,0,0,0,1,3,41,1095,104829`
 + *`[edge_connectivity=6]`*, `0,0,0,0,0,0,1,4,65,3441`
 
-Close, but not the same [`A075095`](https://oeis.org/A075095), [`A124059`](https://oeis.org/A124059)
-
-+ *`[automorphism_group_n=4]`*, `0,0,0,1,3,28,198,1971,29047,672516`
-+ *`[automorphism_group_n=6]`*, `0,0,1,1,1,7,31,221,3025,68033`
-+ *`[automorphism_group_n=8]`*, `0,0,0,1,2,9,55,499,6017,107312`
-+ *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
-+ *`[automorphism_group_n=10]`*, `0,0,0,0,1,1,1,3,13,123`
-+ *`[automorphism_group_n=12]`*, `0,0,0,0,3,10,51,356,3395,49862`
-+ *`[automorphism_group_n=14]`*, `0,0,0,0,0,0,2,2,2,6`
-+ *`[automorphism_group_n=16]`*, `0,0,0,0,0,3,10,123,992,14026`
-+ *`[automorphism_group_n=20]`*, `0,0,0,0,0,0,2,6,29,199`
-+ *`[automorphism_group_n=24]`*, `0,0,0,1,1,1,14,118,1247,17191`
-+ *`[automorphism_group_n=36]`*, `0,0,0,0,0,1,3,16,132,1341`
-+ *`[automorphism_group_n=48]`*, `0,0,0,0,0,4,14,65,504,5215`
-+ *`[automorphism_group_n=72]`*, `0,0,0,0,0,1,2,16,124,1070`
-+ *`[automorphism_group_n=120]`*, `0,0,0,0,1,1,1,5,21,211`
-+ *`[automorphism_group_n=144]`*, `0,0,0,0,0,0,3,12,51,477`
-+ *`[automorphism_group_n=240]`*, `0,0,0,0,0,0,3,8,51,336`
-+ *`[automorphism_group_n=720]`*, `0,0,0,0,0,1,1,4,13,60`
-+ *`[automorphism_group_n=5040]`*, `0,0,0,0,0,0,1,1,1,5`
 + *`[girth=3]`*, `0,0,1,3,15,93,792,10833,259420,11704309`
 + *`[girth=4]`*, `0,0,0,1,2,11,43,234,1498,11451`
 + *`[girth=5]`*, `0,0,0,0,1,1,5,18,82,539`
@@ -99,3 +133,20 @@ Non version [`A024607`](https://oeis.org/A024607)
 
 Non version of [`A000055`](https://oeis.org/A000055)
 + *`[is_tree=0]`*, `0,0,1,4,18,106,842,11094,261033,11716465`
+
+## Notes:
+
+Example submission notes:
+
+Title:
+
+    Number of simple connected graphs g on n nodes with |Aut(g)| = 2
+
+Link:
+
+    Travis Hoppe and Anna Petrone, <a href="https://github.com/thoppe/Encyclopedia-of-Finite-Graphs">Encyclopedia of Finite Graphs</a>
+    Eric Weisstein's World of Mathematics, <a href="http://mathworld.wolfram.com/GraphAutomorphism.html">Graph Automorphism</a>
+
+Authors:
+
+    _Travis Hoppe_ and _Anna Petrone_, Apr 23 2014
