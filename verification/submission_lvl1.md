@@ -1,13 +1,5 @@
 ## Pending:
 
-+ [`A241465`](https://oeis.org/A241465) *`[automorphism_group_n=48]`*, `0,0,0,0,0,4,14,65,504,5215`
-+ [`A241466`](https://oeis.org/A241466) *`[automorphism_group_n=72]`*, `0,0,0,0,0,1,2,16,124,1070`
-+ [`A241467`](https://oeis.org/A241467) *`[automorphism_group_n=120]`*, `0,0,0,0,1,1,1,5,21,211`
-+ [`A241468`](https://oeis.org/A241468) *`[automorphism_group_n=144]`*, `0,0,0,0,0,0,3,12,51,477`
-+ [`A241469`](https://oeis.org/A241469) *`[automorphism_group_n=240]`*, `0,0,0,0,0,0,3,8,51,336`
-+ [`A241470`](https://oeis.org/A241470) *`[automorphism_group_n=720]`*, `0,0,0,0,0,1,1,4,13,60`
-+ [`A241471`](https://oeis.org/A241471) *`[automorphism_group_n=5040]`*, `0,0,0,0,0,0,1,1,1,5`
-
 ## Completed:
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
@@ -21,6 +13,13 @@
 + [`A241462`](https://oeis.org/A241462) *`[automorphism_group_n=20]`*, `0,0,0,0,0,0,2,6,29,199`
 + [`A241463`](https://oeis.org/A241463) *`[automorphism_group_n=24]`*, `0,0,0,1,1,1,14,118,1247,17191`
 + [`A241464`](https://oeis.org/A241464) *`[automorphism_group_n=36]`*, `0,0,0,0,0,1,3,16,132,1341`
++ [`A241465`](https://oeis.org/A241465) *`[automorphism_group_n=48]`*, `0,0,0,0,0,4,14,65,504,5215`
++ [`A241466`](https://oeis.org/A241466) *`[automorphism_group_n=72]`*, `0,0,0,0,0,1,2,16,124,1070`
++ [`A241467`](https://oeis.org/A241467) *`[automorphism_group_n=120]`*, `0,0,0,0,1,1,1,5,21,211`
++ [`A241468`](https://oeis.org/A241468) *`[automorphism_group_n=144]`*, `0,0,0,0,0,0,3,12,51,477`
++ [`A241469`](https://oeis.org/A241469) *`[automorphism_group_n=240]`*, `0,0,0,0,0,0,3,8,51,336`
++ [`A241470`](https://oeis.org/A241470) *`[automorphism_group_n=720]`*, `0,0,0,0,0,1,1,4,13,60`
++ [`A241471`](https://oeis.org/A241471) *`[automorphism_group_n=5040]`*, `0,0,0,0,0,0,1,1,1,5`
 
 ## Unsubmitted:
 
