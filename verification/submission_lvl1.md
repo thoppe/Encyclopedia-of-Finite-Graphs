@@ -1,5 +1,21 @@
 ## Pending:
 
++ [`A241702`](https://oeis.org/A241702) *`[chromatic_number=7]`*, `0,0,0,0,0,0,1,6,110,4125`
++ [`A241703`](https://oeis.org/A241703) *`[edge_connectivity=4]`*, `0,0,0,0,1,3,25,378,14306,1141575`
++ [`A241704`](https://oeis.org/A241704) *`[edge_connectivity=5]`*, `0,0,0,0,0,1,3,41,1095,104829`
++ [`A241705`](https://oeis.org/A241705) *`[edge_connectivity=6]`*, `0,0,0,0,0,0,1,4,65,3441`
++ [`A241706`](https://oeis.org/A241706) *`[diameter=2]`*, `0,0,1,4,14,59,373,4154,91518,4116896`
++ [`A241707`](https://oeis.org/A241707) *`[diameter=3]`*, `0,0,0,1,5,43,387,5797,148229,6959721`
++ [`A241708`](https://oeis.org/A241708) *`[diameter=4]`*, `0,0,0,0,1,8,82,1027,19320,598913`
++ [`A241709`](https://oeis.org/A241709) *`[diameter=5]`*, `0,0,0,0,0,1,9,125,1818,37856`
++ [`A241710`](https://oeis.org/A241710) *`[diameter=6]`*, `0,0,0,0,0,0,1,12,180,2928`
++ [`A241711`](https://oeis.org/A241711) *`[girth=3]`*, `0,0,1,3,15,93,792,10833,259420,11704309`
++ [`A241712`](https://oeis.org/A241712) *`[girth=4]`*, `0,0,0,1,2,11,43,234,1498,11451`
++ [`A241713`](https://oeis.org/A241713) *`[girth=5]`*, `0,0,0,0,1,1,5,18,82,539`
++ [`A241714`](https://oeis.org/A241714) *`[girth=6]`*, `0,0,0,0,0,1,1,7,25,137`
++ [`A241715`](https://oeis.org/A241715) *`[girth=7]`*, `0,0,0,0,0,0,1,1,6,20`
+
+
 ## Completed:
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
@@ -25,32 +41,12 @@
 
 The following sequences have not been submitted. Notes are left for the submission process.
 
-
-Crossref [`A052448`](https://oeis.org/A052448)
-+ *`[edge_connectivity=4]`*, `0,0,0,0,1,3,25,378,14306,1141575`
-+ *`[edge_connectivity=5]`*, `0,0,0,0,0,1,3,41,1095,104829`
-+ *`[edge_connectivity=6]`*, `0,0,0,0,0,0,1,4,65,3441`
-
-+ *`[girth=3]`*, `0,0,1,3,15,93,792,10833,259420,11704309`
-+ *`[girth=4]`*, `0,0,0,1,2,11,43,234,1498,11451`
-+ *`[girth=5]`*, `0,0,0,0,1,1,5,18,82,539`
-+ *`[girth=6]`*, `0,0,0,0,0,1,1,7,25,137`
-+ *`[girth=7]`*, `0,0,0,0,0,0,1,1,6,20`
-+ *`[diameter=2]`*, `0,0,1,4,14,59,373,4154,91518,4116896`
-+ *`[diameter=3]`*, `0,0,0,1,5,43,387,5797,148229,6959721`
-+ *`[diameter=4]`*, `0,0,0,0,1,8,82,1027,19320,598913`
-+ *`[diameter=5]`*, `0,0,0,0,0,1,9,125,1818,37856`
-+ *`[diameter=6]`*, `0,0,0,0,0,0,1,12,180,2928`
-
 Crossref to [`A000226`](https://oeis.org/A000226)
 
 + *`[circumference=4]`*, `0,0,0,3,4,14,34,100,259,724`
 + *`[circumference=5]`*, `0,0,0,0,11,24,88,254,787,2270`
 + *`[circumference=6]`*, `0,0,0,0,0,61,196,816,2735,9234`
 + *`[circumference=7]`*, `0,0,0,0,0,0,506,2443,11281,43447`
-
-Connect to sequence [`A126740`](https://oeis.org/A126740)
-+ *`[chromatic_number=7]`*, `0,0,0,0,0,0,1,6,110,4125`
 
 Crossref [A013922](https://oeis.org/A013922) and [`A002218`](https://oeis.org/A002218), these are also called "cutpoints" instead of articulation points.
 
@@ -112,6 +108,10 @@ Link:
 
     Travis Hoppe and Anna Petrone, <a href="https://github.com/thoppe/Encyclopedia-of-Finite-Graphs">Encyclopedia of Finite Graphs</a>
     Eric Weisstein's World of Mathematics, <a href="http://mathworld.wolfram.com/GraphAutomorphism.html">Graph Automorphism</a>
+
+Crossref:
+
+    Cf. other k-edge-connected unlabeled graph sequences A052446, A052447, A052448, A241703, A241704, A241705
 
 Authors:
 
