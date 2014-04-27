@@ -74,9 +74,6 @@ Next in sequence to [`A086217`](https://oeis.org/A086217), this query is called 
 
 + *`[vertex_connectivity>5]`*, `0,0,0,0,0,0,1,5,59,3211`
 
-Next in sequence to [`A126748`](https://oeis.org/A126748)
-+ *`[k_max_clique=7]`*, `0,0,0,0,0,0,1,6,109,4085`
-
 There are no unit tests for these, the sequence seems to be unique
 
 + *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
@@ -198,6 +195,9 @@ The lower numbers need to be fixed first! a(1), a(2)
 *`[k_max_clique=6]`*, `0,0,0,0,0,1,5,73,1908,110140`
 + [`A126748`](https://oeis.org/A126748) `0,0,0,0,0,1,5,73,1908,110140,13779220`
 
+*`[k_max_clique=7]`*, `0,0,0,0,0,0,1,6,109,4085`
++ [`A217987`](https://oeis.org/A217987) `0,0,0,0,0,1,5,73,1908,110140`
+
 *`[n_articulation_points=0]`*, `1,1,1,3,10,56,468,7123,194066,9743542`
 + [`A002218`](https://oeis.org/A002218) `0,1,1,3,10,56,468,7123,194066,9743542,900969091`
 
@@ -216,6 +216,8 @@ The lower numbers need to be fixed first! a(1), a(2)
 *`[vertex_connectivity>4]`*, `0,0,0,0,0,1,4,39,1051,102630`
 + [`A086217`](https://oeis.org/A086217) `1,4,39,1051,102630`
 
+*`[vertex_connectivity>5]`*, `0,0,0,0,0,0,1,5,59,3211`
++ [`A086217`](https://oeis.org/A086217) `1,4,39,1051,102630`
 
 This has an offset of 3
 

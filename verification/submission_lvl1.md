@@ -56,13 +56,6 @@ Crossref [A013922](https://oeis.org/A013922) and [`A002218`](https://oeis.org/A0
 + *`[n_articulation_points=4]`*, `0,0,0,0,0,1,7,60,527,6056`
 + *`[n_articulation_points=5]`*, `0,0,0,0,0,0,1,9,97,1029`
 
-Next in sequence to [`A086217`](https://oeis.org/A086217), this query is called k-connectivity
-
-+ *`[vertex_connectivity>5]`*, `0,0,0,0,0,0,1,5,59,3211`
-
-Next in sequence to [`A126748`](https://oeis.org/A126748)
-+ *`[k_max_clique=7]`*, `0,0,0,0,0,0,1,6,109,4085`
-
 There are no unit tests for these, the sequence seems to be unique
 
 + *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
