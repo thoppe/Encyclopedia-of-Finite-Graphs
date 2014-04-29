@@ -1,12 +1,6 @@
 ## Pending:
 
-+ [`A241767`](https://oeis.org/A241767) *`[n_articulation_points=1]`*, `0,0,1,2,7,33,244,2792,52448,1690206`
-+ [`A241768`](https://oeis.org/A241768) *`[n_articulation_points=2]`*, `0,0,0,1,3,17,101,890,11468,239728`
-+ [`A241769`](https://oeis.org/A241769) *`[n_articulation_points=3]`*, `0,0,0,0,1,5,32,242,2461,35839`
-+ [`A241770`](https://oeis.org/A241770) *`[n_articulation_points=4]`*, `0,0,0,0,0,1,7,60,527,6056`
-+ [`A241771`](https://oeis.org/A241771) *`[n_articulation_points=5]`*, `0,0,0,0,0,0,1,9,97,1029`
-+ [`A241782`](https://oeis.org/A241782) *`[is_subgraph_free_K5=1]`*, `1,1,2,6,20,107,802,10252,232850,9905775`
-+ [`A241784`](https://oeis.org/A241784) *`[is_subgraph_free_C5=1]`*, `1,1,2,6,13,44,144,577,2457,12499`
++ [`A241814`](https://oeis.org/A241814) *`[is_distance_regular=1]`*, `1,1,1,2,2,4,2,5,4,7`
 
 ## Completed:
 
@@ -42,7 +36,13 @@
 + [`A241713`](https://oeis.org/A241713) *`[girth=5]`*, `0,0,0,0,1,1,5,18,82,539`
 + [`A241714`](https://oeis.org/A241714) *`[girth=6]`*, `0,0,0,0,0,1,1,7,25,137`
 + [`A241715`](https://oeis.org/A241715) *`[girth=7]`*, `0,0,0,0,0,0,1,1,6,20`
-
++ [`A241767`](https://oeis.org/A241767) *`[n_articulation_points=1]`*, `0,0,1,2,7,33,244,2792,52448,1690206`
++ [`A241768`](https://oeis.org/A241768) *`[n_articulation_points=2]`*, `0,0,0,1,3,17,101,890,11468,239728`
++ [`A241769`](https://oeis.org/A241769) *`[n_articulation_points=3]`*, `0,0,0,0,1,5,32,242,2461,35839`
++ [`A241770`](https://oeis.org/A241770) *`[n_articulation_points=4]`*, `0,0,0,0,0,1,7,60,527,6056`
++ [`A241771`](https://oeis.org/A241771) *`[n_articulation_points=5]`*, `0,0,0,0,0,0,1,9,97,1029`
++ [`A241782`](https://oeis.org/A241782) *`[is_subgraph_free_K5=1]`*, `1,1,2,6,20,107,802,10252,232850,9905775`
++ [`A241784`](https://oeis.org/A241784) *`[is_subgraph_free_C5=1]`*, `1,1,2,6,13,44,144,577,2457,12499`
 
 ## Unsubmitted:
 
@@ -55,13 +55,10 @@ Crossref to [`A000226`](https://oeis.org/A000226)
 + *`[circumference=6]`*, `0,0,0,0,0,61,196,816,2735,9234`
 + *`[circumference=7]`*, `0,0,0,0,0,0,506,2443,11281,43447`
 
-There are no unit tests for these, the sequence seems to be unique
-+ *`[is_distance_regular=1]`*, `1,1,1,2,2,4,2,5,4,7`
-
-This count the number of non-regular graphs, this looks to be new!
-+ *`[is_k_regular=0]`*, `1,0,1,4,19,107,849,11100,261058,11716404`
-
 **Non-versions**:
+
+This count the number of non-regular graphs
++ *`[is_k_regular=0]`*, `1,0,1,4,19,107,849,11100,261058,11716404`
 
 The non-version of this [`A048192`](https://oeis.org/A048192) 
 + *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
@@ -86,7 +83,7 @@ Non version [`A024607`](https://oeis.org/A024607)
 Non version of [`A000055`](https://oeis.org/A000055)
 + *`[is_tree=0]`*, `0,0,1,4,18,106,842,11094,261033,11716465`
 
-The positive sequence has not been submitted yet
+Non version of [`A241814`](https://oeis.org/A241814)
 + *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
 
 ## Already in database
