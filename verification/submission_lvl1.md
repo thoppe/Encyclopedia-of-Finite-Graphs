@@ -1,6 +1,11 @@
 ## Pending:
 
 + [`A241814`](https://oeis.org/A241814) *`[is_distance_regular=1]`*, `1,1,1,2,2,4,2,5,4,7`
++ [`A241839`](https://oeis.org/A241839) *`[is_k_regular=0]`*, `1,0,1,4,19,107,849,11100,261058,11716404`
++ [`A241840`](https://oeis.org/A241840) *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
++ [`A241841`](https://oeis.org/A241841) *`[is_tree=0]`*, `0,0,1,4,18,106,842,11094,261033,11716465`
++ [`A241842`](https://oeis.org/A241842) *`[is_integral=0]`*, `0,0,1,4,18,106,846,11095,261056,11716488`
++ [`A241843`](https://oeis.org/A241843) *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
 
 ## Completed:
 
@@ -60,14 +65,6 @@ Crossref to [`A000226`](https://oeis.org/A000226)
 
 **Non-versions**:
 
-This count the number of non-regular graphs
-+ *`[is_k_regular=0]`*, `1,0,1,4,19,107,849,11100,261058,11716404`
-
-The non-version of this [`A048192`](https://oeis.org/A048192) 
-+ *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
-
-The non-version of this [`A064731`](https://oeis.org/A064731)
-+ *`[is_integral=0]`*, `0,0,1,4,18,106,846,11095,261056,11716488`
 
 This is the non version of [`A088741`](https://oeis.org/A088741), but a(1),a(2)=0, FIX
 + *`[is_strongly_regular=0]`*, `1,1,1,4,19,109,852,11114,261077,11716566`
@@ -83,11 +80,6 @@ Non version [`A024607`](https://oeis.org/A024607)
 + *`[is_subgraph_free_K5=0]`*, `0,0,0,0,1,5,51,865,28230,1810796`
 + *`[is_subgraph_free_C5=0]`*, `0,0,0,0,8,68,709,10540,258623,11704072`
 
-Non version of [`A000055`](https://oeis.org/A000055)
-+ *`[is_tree=0]`*, `0,0,1,4,18,106,842,11094,261033,11716465`
-
-Non version of [`A241814`](https://oeis.org/A241814)
-+ *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
 
 ## Already in database
 

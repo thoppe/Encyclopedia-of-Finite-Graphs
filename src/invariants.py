@@ -119,7 +119,8 @@ def n_endpoints(adj,**args):
 
 # Cubic graphs are related to http://oeis.org/A002851
 def is_k_regular(adj, **args):
-   # Returns the value of k if it is k regular, otherwise 0
+    # Returns the value of k if it is k regular, otherwise 0
+    # Note that the singular graph is 0_regular
     deg = ast.literal_eval(args["special_degree_sequence"])
 
     if len(set(deg)) == 1:
