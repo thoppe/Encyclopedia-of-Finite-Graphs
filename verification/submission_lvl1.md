@@ -48,6 +48,9 @@
 
 The following sequences have not been submitted. Notes are left for the submission process.
 
++ *`[is_real_spectrum=0]`*, `0,0,1,3,10,58,314,3798,51609,1716267`
++ *`[is_real_spectrum=1]`*, `1,1,1,3,11,54,539,7319,209471,10000304`
+
 Crossref to [`A000226`](https://oeis.org/A000226)
 
 + *`[circumference=4]`*, `0,0,0,3,4,14,34,100,259,724`

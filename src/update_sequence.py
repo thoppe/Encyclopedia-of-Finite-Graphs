@@ -130,13 +130,16 @@ unique_invariant_id NOT IN
 (SELECT unique_invariant_id FROM exclude_invariant_val)
 ORDER BY invariant_val_id, value'''
 
-# select invariant_val_id from unique_invariant_val group by unique_invariant_val
+# select invariant_val_id from unique_invariant_val 
+# group by unique_invariant_val
 
 seq_lvl1 = grab_all(seq_conn, cmd_select_lvl_1)
 seq_lvl1 = [x for x in seq_lvl1 if x[0] not in known_lvl1]
 
 msg = "Computing {} new level one sequences"
 logging.info(msg.format(len(seq_lvl1)))
+
+#exit()
 
 # Compute these sequences
 
@@ -275,9 +278,6 @@ for v1_seq_id in grab_vector(seq_conn, cmd):
 
     v1_val_id = unique_mapping[v1_seq_id]
     print v1_seq_id, v1_val_id
-    exit()
-
-
     
     print "***", v1_seq_id, v1_val_id
     for term in viable_base_terms:
@@ -285,7 +285,6 @@ for v1_seq_id in grab_vector(seq_conn, cmd):
         # New term must be strictly larger than the last one
         if v2_val_id > v1_val_id:
             print (v1_seq_id,v2_seq_id), (v1_val_id, v2_val_id), v2_val
-    exit()
 
 #select count(*),* from sequence group by s1,s2,s3,s4,s5,s6,s7,s8,s9,s10 order by count(*)
 

@@ -301,6 +301,25 @@ is_subgraph_free_C8 = zero_func
 is_subgraph_free_C9 = zero_func
 is_subgraph_free_C10= zero_func
 
+_bull_graph = _cycle_graphs[3].copy()
+_bull_graph_v1 = _bull_graph.add_vertex()
+_bull_graph_v2 = _bull_graph.add_vertex()
+_bull_graph.add_edge(_bull_graph_v1, _bull_graph.vertex(0))
+_bull_graph.add_edge(_bull_graph_v2, _bull_graph.vertex(0))
+is_subgraph_free_bull = _is_subgraph_free(_bull_graph)
+
+_bowtie_graph = _cycle_graphs[3].copy()
+_bowtie_graph_v1 = _bowtie_graph.add_vertex()
+_bowtie_graph_v2 = _bowtie_graph.add_vertex()
+_bowtie_graph.add_edge(_bowtie_graph_v1, _bowtie_graph.vertex(0))
+_bowtie_graph.add_edge(_bowtie_graph_v2, _bowtie_graph.vertex(0))
+_bowtie_graph.add_edge(_bowtie_graph_v2, _bowtie_graph_v1)
+is_subgraph_free_bowtie = _is_subgraph_free(_bowtie_graph)
+
+_diamond_graph = _cycle_graphs[4].copy()
+_diamond_graph.add_edge(_diamond_graph.vertex(0), _diamond_graph.vertex(2))
+is_subgraph_free_diamond = _is_subgraph_free(_diamond_graph)
+
 #is_subgraph_free_C6 = _is_subgraph_free(_cycle_graphs[6])
 #is_subgraph_free_C7 = _is_subgraph_free(_cycle_graphs[7])
 #is_subgraph_free_C8 = _is_subgraph_free(_cycle_graphs[8])
@@ -360,6 +379,12 @@ def automorphism_group_n(adj,**args):
     
 if __name__ == "__main__":
 
+    def viz_graph(g):
+        pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
+        graph_tool.draw.graph_draw(g,pos)
+
+    viz_graph(_diamond_graph)
+
     # Function testing here
 
     N = 7
@@ -400,11 +425,8 @@ if __name__ == "__main__":
 
     print "is_planar",is_planar(adj,**args), is_bipartite(adj,**args)
     print "n_articulation_points",n_articulation_points(adj,**args)
-
-    def viz_graph(g):
-        pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
-        graph_tool.draw.graph_draw(g,pos)
-
+  
     viz_graph(gt)
-    
+
+
 

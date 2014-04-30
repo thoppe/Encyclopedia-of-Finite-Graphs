@@ -60,6 +60,10 @@ INSERT OR IGNORE INTO ref_invariant_integer
   ("k_max_clique",33),
 
   ("is_rational_spectrum",34),
-  ("is_real_spectrum",35)
+  ("is_real_spectrum",35),
+
+  ("is_subgraph_free_bull",36),
+  ("is_subgraph_free_bowtie",37),
+  ("is_subgraph_free_diamond",38)
 
 ;
