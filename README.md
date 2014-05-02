@@ -72,10 +72,11 @@ Calculated Invariants
 Proposed Invariants
 
 + [`is_hamiltonian`](http://mathworld.wolfram.com/HamiltonianGraph.html), [`n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianCycle.html), [`n_hamiltonian_paths`](http://mathworld.wolfram.com/HamiltonianPath.html)
-+ [`is_perfect`](http://mathworld.wolfram.com/PerfectGraph.html)
++ [`is_perfect`](http://mathworld.wolfram.com/PerfectGraph.html) (SAGE)
 + [`is_arc_transitive`](http://mathworld.wolfram.com/Arc-TransitiveGraph.html), [`is_vertex_transitive`](http://mathworld.wolfram.com/Vertex-TransitiveGraph.html)
 + [`characteristic_polynomial`](http://mathworld.wolfram.com/CharacteristicPolynomial.html)
 + [`spectrum`](http://mathworld.wolfram.com/GraphSpectrum.html)
++ [`is_cartesian_product`](mathworld.wolfram.com/GraphCartesianProduct.html) (SAGE)
 
 Other Invariants (hard)
 

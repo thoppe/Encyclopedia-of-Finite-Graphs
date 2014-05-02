@@ -64,6 +64,8 @@ INSERT OR IGNORE INTO ref_invariant_integer
 
   ("is_subgraph_free_bull",36),
   ("is_subgraph_free_bowtie",37),
-  ("is_subgraph_free_diamond",38)
+  ("is_subgraph_free_diamond",38),
 
+  ("is_subgraph_free_paw",39),
+  ("is_subgraph_free_banner",40),
 ;

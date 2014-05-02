@@ -106,7 +106,6 @@ def circumference(adj,**args):
     
     return len(combine_cycle(cycle_b))
 
-
 def n_edge(adj,**args):
     # Defined this way for loopless simple graphs
     deg = ast.literal_eval(args["special_degree_sequence"])
@@ -294,13 +293,12 @@ is_subgraph_free_K5 = _is_subgraph_free(_complete_graphs[5])
 is_subgraph_free_C4 = _is_subgraph_free(_cycle_graphs[4])
 is_subgraph_free_C5 = _is_subgraph_free(_cycle_graphs[5])
 
-# Skipping these for now
-zero_func = lambda x,**args:0
-is_subgraph_free_C6 = zero_func
-is_subgraph_free_C7 = zero_func
-is_subgraph_free_C8 = zero_func
-is_subgraph_free_C9 = zero_func
-is_subgraph_free_C10= zero_func
+# zero_func = lambda x,**args:0
+is_subgraph_free_C6 = _is_subgraph_free(_cycle_graphs[6])
+is_subgraph_free_C7 = _is_subgraph_free(_cycle_graphs[7])
+is_subgraph_free_C8 = _is_subgraph_free(_cycle_graphs[8])
+is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
+is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
 
 _bull_graph = _cycle_graphs[3].copy()
 _bull_graph_v1 = _bull_graph.add_vertex()
@@ -320,6 +318,16 @@ is_subgraph_free_bowtie = _is_subgraph_free(_bowtie_graph)
 _diamond_graph = _cycle_graphs[4].copy()
 _diamond_graph.add_edge(_diamond_graph.vertex(0), _diamond_graph.vertex(2))
 is_subgraph_free_diamond = _is_subgraph_free(_diamond_graph)
+
+_paw_graph = _cycle_graphs[3].copy()
+_paw_graph_v1 = _paw_graph.add_vertex()
+_paw_graph.add_edge(_paw_graph_v1, _paw_graph.vertex(0))
+is_subgraph_free_paw = _is_subgraph_free(_paw_graph)
+
+_banner_graph = _cycle_graphs[3].copy()
+_banner_graph_v1 = _banner_graph.add_vertex()
+_banner_graph.add_edge(_banner_graph_v1, _banner_graph.vertex(0))
+is_subgraph_free_banner = _is_subgraph_free(_banner_graph)
 
 #is_subgraph_free_C6 = _is_subgraph_free(_cycle_graphs[6])
 #is_subgraph_free_C7 = _is_subgraph_free(_cycle_graphs[7])
@@ -384,7 +392,8 @@ if __name__ == "__main__":
         pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
         graph_tool.draw.graph_draw(g,pos)
 
-    viz_graph(_diamond_graph)
+    #viz_graph(_banner_graph)
+    #exit()
 
     # Function testing here
 
