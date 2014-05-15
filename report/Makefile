@@ -9,6 +9,9 @@ all: $(TARGETS)
 view:
 	evince $(PROJECT_NAME).pdf
 
+edit:
+	emacs $(PROJECT_NAME).tex &
+
 clean:
 	rm -vf *.aux *.pdf *.log *~
 

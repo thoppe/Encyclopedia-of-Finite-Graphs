@@ -1,6 +1,10 @@
 \documentclass[12pt]{article}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{hyperref}
+
+\newcommand{\OEIS}[1]
+{\href{https://oeis.org/#1}{OEIS \texttt{#1}}}
 
 
 \begin{document}
@@ -20,7 +24,38 @@ The work can be extended by considering other graph classes like trees or regula
 \end{abstract}
 
 \section{Introduction}
+
+An invariant is a property of a graph that is preserved under isomorphism. 
+Invariants can be simple binary properties (is the graph a tree?), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching).
+In this paper, we restrict our scope to invariant integers.
+
+We are primarily concerned with the sequences produced by graph invariants, the combinatorial problem of how many graphs of a given class satisfy a given criteria.
+Let a graph be defined as the pair $G = (V,E)$, where $V$ is a set of vertices and $E$ is a set of edges with. 
+Define a class of graphs $\mathcal{C}$ as a set of isomorphically distinct graphs that satisfy a given criteria.
+Group the graphs into subsets such that
+\begin{equation}
+\mathcal{C} = \mathcal{C}_1 \cup \mathcal{C}_2 \cup \mathcal{C}_3 \cup \ldots
+\end{equation}
+and the set $\mathcal{C}_n$ contains only graphs of order $n$.
+Define an \textit{invariant graph sequence} as the sequence defined by the pair $S = (f, \mathcal{C})$ and 
+\begin{align}
+S(f, \mathcal{C}) 
+&= |f(\mathcal{C}_1)|, |f(\mathcal{C}_2)|, |f(\mathcal{C}_3)|, \ldots  \\
+&= s_1, s_2, s_3, \ldots
+\end{align}
+%
+Here, $f$ is an invariant equality that further subdivides each set $\mathcal{C}_n$. 
+For example, if $f_\text{tree}$ is the indicator function that determines if the graph is a tree of not and $\mathcal{C}_\text{simple}$ contains all simple connected graphs then the sequence generated is \OEIS{A000055},
+\begin{align}
+S(f_\text{tree}, \mathcal{C}_\text{simple}) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
+\end{align}
+
+In this paper, we restrict the classes examined to $\mathcal{C}_\text{simple}$.
+Provided one had a means of enumeration, extension to other classes would be straightforward.
+
 \section{Methods}
+Using the \texttt{geng} from \texttt{nauty}, we first enumerated all connected simple graphs of order $N \le 10$.
+
 \section{Discussion}
 \section{References}
 
