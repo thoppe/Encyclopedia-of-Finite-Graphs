@@ -390,11 +390,27 @@ def automorphism_group_n(adj,**args):
     raise ValueError(err)
 
 ######################### PuLP code (Integer programming) ###
+
+def _is_connected_edge_list(prob, N):
+    # Checks if an edge_solution from PuLP is connected
+    edge_solution = [e for e in prob.variables() if e.varValue]
+
+    g_sol = graph_tool.Graph(directed=False)
+    g_sol.add_vertex(N)
+    for edge in edge_solution:
+        _,e0,e1 = edge.name.split('_')
+        e0 = int(e0[1:-1])
+        e1 = int(e1[:-1])
+        g_sol.add_edge(e0,e1)
+
+    conn = graph_tool.topology.label_largest_component(g_sol)
+    return conn.a.all() 
+
  
 def is_hamiltonian(adj,**args):
-    
-    return 0
-
+    N = args["N"]
+    if N==1: return True
+   
     A = convert_to_numpy(adj,**args)
     edges = zip(*np.where(A))
     edges = set([edge for edge in edges if edge[0]>=edge[1]])
@@ -416,7 +432,6 @@ def is_hamiltonian(adj,**args):
     for e0,e1 in edges:
         verts.add(e0)
         verts.add(e1)
-    N = len(verts)
 
     # For each vertex, add the constraint that is must appear exactly twice
     # e.g. each vertex in a Ham. cycle has an inbound and outbound edge
@@ -432,41 +447,34 @@ def is_hamiltonian(adj,**args):
     # Add the constaint the exactly n edges must be selected
     prob += pulp.lpSum([e_vars[x] for x in e_vars]) == N, "total_edges"
 
-    # Create the dummy u-vars
-    u_vars = pulp.LpVariable.dicts("u", (verts,), cat=pulp.LpInteger)
-
-    for e in e_vars:
-        ui = u_vars[e[1]]
-        uj = u_vars[e[0]]
-        eij = e_vars[e]
-        #print e[0],type(e[1])
-
-        #if e[0]!=e[1] and e[0]>0 and e[1]>0:
-        if e[0]>0 and e[1]>0:
-            prob += ui-uj+N*eij <= N-1, ""
-
-        #print ui,type(uj), type(eij)
-
-    #prob += u_vars[0] - u_vars[1] + N*edge
-    #print u_vars
-    #exit()
-
     sol = prob.solve()
 
     # PuLP returns -1 if solution is infeasible
+    if sol== -1 or sol== -3: return False
     is_hamiltonian_match = False
-    if sol == 1   : is_hamiltonian_match = True
-    elif sol==-1  : is_hamiltonian_match = False
-    else:
-        print "PuLP failed with", sol, pulp.LpStatus[prob.status]
-        print prob.writeLP("save.lp")
-        print
 
-    #return is_hamiltonian_match
-    
-    # For reference, return the edge solution
+    if sol != 1:
+        print "PuLP failed with", sol, pulp.LpStatus[prob.status]
+        print prob.writeLP("debug_save.lp")
+
+    # If there is cycle, make sure it is connected
+    while not _is_connected_edge_list(prob,N):
+        edge_solution = [e for e in prob.variables() if e.varValue]
+        prob += pulp.lpSum(edge_solution) <= N-1,""
+        sol = prob.solve()
+        
+        # No solution possible
+        if sol == -1 or sol==-3: return False
+
+    if sol != 1:
+        print "PuLP failed with", sol, pulp.LpStatus[prob.status]
+        print prob.writeLP("debug_save.lp")
+
+    return True
+
+    '''
+    # Old drawing code
     if is_hamiltonian_match:
-    #if True:
         edge_solution = [e for e in prob.variables() if e.varValue]
 
         gt = graph_tool_representation(adj,**args)
@@ -490,13 +498,9 @@ def is_hamiltonian(adj,**args):
                     if str(ex)==es or str(ex)==es2:
                         w[ex] = 6.0
 
-        #if count!=6:
         print s_file, edge_solution, len(edge_solution), sol
-
-        #exit()
         graph_tool.draw.graphviz_draw(gt,pos,penwidth=w,output=s_file )
-    #exit()
-    return is_hamiltonian_match
+    '''
 
 
     
