@@ -14,6 +14,10 @@ __script_dir = os.path.dirname(os.path.realpath(__file__))
 
 ######################### Conversion code ######################### 
 
+def viz_graph(g):
+    pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
+    graph_tool.draw.graph_draw(g,pos)
+
 def convert_to_numpy(adj,**args):
     N = args["N"]
 
@@ -388,22 +392,24 @@ def automorphism_group_n(adj,**args):
 ######################### PuLP code (Integer programming) ###
  
 def is_hamiltonian(adj,**args):
+    
+    return 0
 
     A = convert_to_numpy(adj,**args)
     edges = zip(*np.where(A))
+    edges = set([edge for edge in edges if edge[0]>=edge[1]])
 
     prob = pulp.LpProblem("hamiltonian_cycle", 
                           pulp.LpMinimize)
     
-    # Arbitrary objective function (since we are trying to uniquely find sol)
-    prob += 0, "Arbitrary objective"
-
     # For each edge, create a binary variable. 
     # If it is part of the path/cycle then it will be 1
     edge_strings = [(e0,e1) for e0,e1 in edges]
-
     e_vars = pulp.LpVariable.dicts("edge", (edge_strings,), 
                                    0, 1, pulp.LpInteger)
+
+    # Arbitrary objective function (since we are trying to uniquely find sol)
+    prob += pulp.lpSum(e_vars), "TSP objective"
     
     # Find unique vertices
     verts = set()
@@ -426,19 +432,72 @@ def is_hamiltonian(adj,**args):
     # Add the constaint the exactly n edges must be selected
     prob += pulp.lpSum([e_vars[x] for x in e_vars]) == N, "total_edges"
 
+    # Create the dummy u-vars
+    u_vars = pulp.LpVariable.dicts("u", (verts,), cat=pulp.LpInteger)
+
+    for e in e_vars:
+        ui = u_vars[e[1]]
+        uj = u_vars[e[0]]
+        eij = e_vars[e]
+        #print e[0],type(e[1])
+
+        #if e[0]!=e[1] and e[0]>0 and e[1]>0:
+        if e[0]>0 and e[1]>0:
+            prob += ui-uj+N*eij <= N-1, ""
+
+        #print ui,type(uj), type(eij)
+
+    #prob += u_vars[0] - u_vars[1] + N*edge
+    #print u_vars
+    #exit()
+
     sol = prob.solve()
 
     # PuLP returns -1 if solution is infeasible
-    if sol == 1   : is_hamiltonian = True
-    elif sol==-1  : is_hamiltonian = False
+    is_hamiltonian_match = False
+    if sol == 1   : is_hamiltonian_match = True
+    elif sol==-1  : is_hamiltonian_match = False
     else:
-        print "Unknown solution?", sol
-    
+        print "PuLP failed with", sol, pulp.LpStatus[prob.status]
+        print prob.writeLP("save.lp")
+        print
 
-    return is_hamiltonian
+    #return is_hamiltonian_match
     
     # For reference, return the edge solution
-    edge_solution = [e for e in prob.variables() if e.varValue]
+    if is_hamiltonian_match:
+    #if True:
+        edge_solution = [e for e in prob.variables() if e.varValue]
+
+        gt = graph_tool_representation(adj,**args)
+        pos = graph_tool.draw.sfdp_layout(gt, cooling_step=0.99)
+        import random
+        s_file = "graph_%i.png"%random.randint(0,10000)
+
+        w = gt.new_edge_property("double")
+        for ex in gt.edges(): w[ex] = 1.0
+
+        for edge in edge_solution:
+
+            if "edge" in edge.name:
+                _,e0,e1 = edge.name.split('_')
+                e0 = int(e0[1:-1])
+                e1 = int(e1[:-1])
+                es = "(%i, %i)"%(e0,e1)
+                es2 = "(%i, %i)"%(e1,e0)
+          
+                for ex in gt.edges():
+                    if str(ex)==es or str(ex)==es2:
+                        w[ex] = 6.0
+
+        #if count!=6:
+        print s_file, edge_solution, len(edge_solution), sol
+
+        #exit()
+        graph_tool.draw.graphviz_draw(gt,pos,penwidth=w,output=s_file )
+    #exit()
+    return is_hamiltonian_match
+
 
     
 ######################### Test code ######################### 
