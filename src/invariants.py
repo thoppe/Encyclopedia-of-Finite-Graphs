@@ -459,6 +459,8 @@ def is_hamiltonian(adj,**args):
 
     # If there is cycle, make sure it is connected
     while not _is_connected_edge_list(prob,N):
+
+        # A disjoint solution was found, add it to the list of constaints
         edge_solution = [e for e in prob.variables() if e.varValue]
         prob += pulp.lpSum(edge_solution) <= N-1,""
         sol = prob.solve()
