@@ -8,6 +8,8 @@ import graph_tool.draw
 import connectivity.connectivity as nx_extra
 import sympy
 
+import pulp
+
 __script_dir = os.path.dirname(os.path.realpath(__file__))
 
 ######################### Conversion code ######################### 
@@ -383,7 +385,62 @@ def automorphism_group_n(adj,**args):
     err = "BLISS failed with adj: "+adj
     raise ValueError(err)
 
+######################### PuLP code (Integer programming) ###
+ 
+def is_hamiltonian(adj,**args):
 
+    A = convert_to_numpy(adj,**args)
+    edges = zip(*np.where(A))
+
+    prob = pulp.LpProblem("hamiltonian_cycle", 
+                          pulp.LpMinimize)
+    
+    # Arbitrary objective function (since we are trying to uniquely find sol)
+    prob += 0, "Arbitrary objective"
+
+    # For each edge, create a binary variable. 
+    # If it is part of the path/cycle then it will be 1
+    edge_strings = [(e0,e1) for e0,e1 in edges]
+
+    e_vars = pulp.LpVariable.dicts("edge", (edge_strings,), 
+                                   0, 1, pulp.LpInteger)
+    
+    # Find unique vertices
+    verts = set()
+    for e0,e1 in edges:
+        verts.add(e0)
+        verts.add(e1)
+    N = len(verts)
+
+    # For each vertex, add the constraint that is must appear exactly twice
+    # e.g. each vertex in a Ham. cycle has an inbound and outbound edge
+
+    for v in verts:
+        # Find all edges that contain this vert
+        edge_match = []
+        for e in e_vars:
+            if v in e: edge_match.append(e)
+
+        prob += pulp.lpSum([e_vars[x] for x in edge_match]) == 2, ""
+    
+    # Add the constaint the exactly n edges must be selected
+    prob += pulp.lpSum([e_vars[x] for x in e_vars]) == N, "total_edges"
+
+    sol = prob.solve()
+
+    # PuLP returns -1 if solution is infeasible
+    if sol == 1   : is_hamiltonian = True
+    elif sol==-1  : is_hamiltonian = False
+    else:
+        print "Unknown solution?", sol
+    
+
+    return is_hamiltonian
+    
+    # For reference, return the edge solution
+    edge_solution = [e for e in prob.variables() if e.varValue]
+
+    
 ######################### Test code ######################### 
     
 if __name__ == "__main__":
@@ -405,10 +462,11 @@ if __name__ == "__main__":
 
     args= {"N":N}
 
+    print "is_hamiltonian:", is_hamiltonian(adj, **args)
+
     print "is_integral:", is_integral(adj, **args)
     print "is_rational_spectrum:", is_rational_spectrum(adj, **args)
     print "is_real_spectrum:", is_real_spectrum(adj, **args)
-    exit()
 
     args["special_cycle_basis"] = special_cycle_basis(adj,**args)
     print "n_cycle_basis:",n_cycle_basis(adj,**args)
