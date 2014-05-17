@@ -25,39 +25,48 @@ The work can be extended by considering other graph classes like trees or regula
 
 \section{Introduction}
 
+Talk about OEIS (ref).
+
 An invariant is a property of a graph that is preserved under isomorphism. 
 Invariants can be simple binary properties (is the graph a tree?), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching).
-In this paper, we restrict our scope to invariant integers.
 
-We are primarily concerned with the sequences produced by graph invariants, the combinatorial problem of how many graphs of a given class satisfy a given criteria.
+We are primarily concerned with the sequences produced by graph invariants, ie.\ the combinatorial problem of how many graphs of a given class satisfy a particular criteria.
 Let a graph be defined as the pair $G = (V,E)$, where $V$ is a set of vertices and $E$ is a set of edges. 
-Define $\mathcal{C}$ as a class of graphs which form a isomorphically distinct set of graphs that satisfy a given criteria.
+Define $\mathcal{C}$ as a class of graphs which form an isomorphically distinct set of graphs that satisfy a given criteria.
 Group the graphs into subsets such that
 \begin{equation}
 \mathcal{C} = \mathcal{C}_1 \cup \mathcal{C}_2 \cup \mathcal{C}_3 \cup \ldots
 \end{equation}
 where $\mathcal{C}_n$ contains only graphs of order $n$.
-From here, we define an \textit{invariant graph sequence} as the sequence defined by 
+From here, we define a sequence of subsets of the graph class
+%
 \begin{align}
-S(f, \mathcal{C}) 
-&= |f(\mathcal{C}_1)|, |f(\mathcal{C}_2)|, |f(\mathcal{C}_3)|, \ldots  \\
-&= s_1, s_2, s_3, \ldots
+\mathcal{S}(f, \mathcal{C}) 
+&= f(\mathcal{C}_1), f(\mathcal{C}_2), f(\mathcal{C}_3), \ldots 
 \end{align}
 %
-where $f$ is an invariant equality that further subdivides each set $\mathcal{C}_n$. 
-For example, if $f_\text{tree}$ is the indicator function that determines if the graph is a tree or not and $\mathcal{C}_\text{simple}$ contains all simple connected graphs then
+where $f$ is some invariant equality that further subdivides each set $\mathcal{C}_n$. 
+Let 
+$S(f, \mathcal{C}) = |f(\mathcal{C}_1)|, |f(\mathcal{C}_2)|, |f(\mathcal{C}_3)|, \ldots$
+be the sequence of integers defined by $\mathcal{S}(f, \mathcal{C})$.
+For example, if $f_\text{tree}$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\mathcal{C}_\text{simple}$ is the set of all simple unlabeled connected graphs
+%
 \begin{align}
 S(f_\text{tree}, \mathcal{C}_\text{simple}) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
+%
 this sequence is \OEIS{A000055}.
 
 In this paper, we restrict the classes examined to $\mathcal{C}_\text{simple}$.
 Provided one had a means of enumeration, an extension to other classes would be straightforward.
 
 \section{Methods}
-Using the \texttt{geng -c} from \texttt{nauty}, we were able to enumerate for order $N \le 10$ the class  $\mathcal{C}_\text{simple}$, the simple connected graphs.
+Using the \texttt{geng -c} from \texttt{nauty} (ref), we enumerated the class of $\mathcal{C}_\text{simple}$ up to order $N \le 10$.
+
 
 \section{Discussion}
+
+
 \section{References}
 
 \end{document}
