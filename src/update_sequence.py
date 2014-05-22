@@ -5,7 +5,7 @@ from helper_functions import load_graph_database, grab_all, grab_scalar
 from helper_functions import attach_ref_table, load_sql_script, grab_vector
 from helper_functions import attach_table, generate_database_name
 
-desc   = "Verify the sequences produced are the correct ones"
+desc   = "Build the level one sequences"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('n',type=int,default=5,
                     help="Maximum graph size n to compute sequences")
@@ -132,7 +132,12 @@ ORDER BY invariant_val_id, value'''
 # group by unique_invariant_val
 
 seq_lvl1 = grab_all(seq_conn, cmd_select_lvl_1)
+#print len(seq_lvl1)
 seq_lvl1 = [x for x in seq_lvl1 if x[0] not in known_lvl1]
+#print len(seq_lvl1)
+#print known_lvl1
+#print seq_lvl1
+#exit()
 
 msg = "Computing {} new level one sequences"
 logging.info(msg.format(len(seq_lvl1)))
@@ -186,6 +191,8 @@ INSERT INTO ref_sequence
 VALUES (1, {unique_id}, "{conditional}", {value}, {non_zero})'''
 
 for unique_id, invariant_id, value in seq_lvl1:
+
+    print "Starting ", unique_id, invariant_id, value
 
     name = invariant_dict[invariant_id]
 
