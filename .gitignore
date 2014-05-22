@@ -49,3 +49,11 @@ nosetests.xml
 # Emacs junk
 *~
 \#*
+
+# Report temps
+report/*.aux
+report/*.log
+report/*.out
+report/*.pdf
+report/*.bak
+report/auto
