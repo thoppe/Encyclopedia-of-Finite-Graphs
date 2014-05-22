@@ -68,6 +68,16 @@ The following sequences have not been submitted. Notes are left for the submissi
 + *`[is_subgraph_free_diamond=0]`*, `0,0,0,2,10,73,688,10150,253396,11629559`
 + *`[is_subgraph_free_diamond=1]`*, `1,1,2,4,11,39,165,967,7684,87012`
 
++ *`[is_subgraph_free_C6=0]`*, `0,0,0,0,0,48,604,10105,256522,11695245`
++ *`[is_subgraph_free_C6=1]`*, `1,1,2,6,21,64,249,1012,4558,21326`
++ *`[is_subgraph_free_C7=0]`*, `0,0,0,0,0,0,383,8824,249840,11656989`
++ *`[is_subgraph_free_C7=1]`*, `1,1,2,6,21,112,470,2293,11240,59582`
++ *`[is_subgraph_free_C8=1]`*, `1,1,2,6,21,112,853,4921,28623,162510`
++ *`[is_subgraph_free_C9=1]`*, `1,1,2,6,21,112,853,11117,83997,574581`
+
+Double check this one
++ *`[is_subgraph_free_C10=1]`*, `1,1,2,6,21,112,853,11117,261080,2411453`
+
 Crossref to [`A000226`](https://oeis.org/A000226)
 
 + *`[circumference=4]`*, `0,0,0,3,4,14,34,100,259,724`
@@ -88,7 +98,10 @@ Non version [`A079574`](https://oeis.org/A079574)
 
 Non version [`A024607`](https://oeis.org/A024607)
 + *`[is_subgraph_free_K3=0]`*, `0,0,1,3,15,93,794,10850,259700,11706739`
+
 + *`[is_subgraph_free_K5=0]`*, `0,0,0,0,1,5,51,865,28230,1810796`
+
+Non version [`A241782`](https://oeis.org/A241782)
 + *`[is_subgraph_free_C5=0]`*, `0,0,0,0,8,68,709,10540,258623,11704072`
 
 Non version [`A003216`](https://oeis.org/A003216)
