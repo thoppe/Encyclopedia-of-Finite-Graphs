@@ -1,5 +1,9 @@
 ## Pending:
 
++ [`A242790`](https://oeis.org/A242790) *`[is_subgraph_free_diamond=1]`*, `1,1,2,4,11,39,165,967,7684,87012`
++ [`A242791`](https://oeis.org/A242791) *`[is_subgraph_free_bull=1]`*, `1,1,2,6,11,34,98,408,1957,12740`
++ [`A242792`](https://oeis.org/A242792) *`[is_subgraph_free_bowtie=1]`*, `1,1,2,6,15,60,273,1769,14836,174111`
+
 ## Completed:
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
@@ -56,11 +60,9 @@ The following sequences have not been submitted. Notes are left for the submissi
 + *`[is_real_spectrum=1]`*, `1,1,1,3,11,54,539,7319,209471,10000304`
 
 + *`[is_subgraph_free_bowtie=0]`*, `0,0,0,0,6,52,580,9348,246244,11542460`
-+ *`[is_subgraph_free_bowtie=1]`*, `1,1,2,6,15,60,273,1769,14836,174111`
 + *`[is_subgraph_free_bull=0]`*, `0,0,0,0,10,78,755,10709,259123,11703831`
-+ *`[is_subgraph_free_bull=1]`*, `1,1,2,6,11,34,98,408,1957,12740`
 + *`[is_subgraph_free_diamond=0]`*, `0,0,0,2,10,73,688,10150,253396,11629559`
-+ *`[is_subgraph_free_diamond=1]`*, `1,1,2,4,11,39,165,967,7684,87012`
+
 
 + *`[is_subgraph_free_C6=0]`*, `0,0,0,0,0,48,604,10105,256522,11695245`
 + *`[is_subgraph_free_C6=1]`*, `1,1,2,6,21,64,249,1012,4558,21326`
@@ -226,7 +228,7 @@ This has an offset of 3
 + [`A003216`](https://oeis.org/A003216) `1,0,1,3,8,48,383,6196,177083,9305118,883156024`
 
 *`[is_subgraph_free_banner=1]`*, `1,1,2,6,8,19,57,186,740,3389`
-[`A077269`](https://oeis.org/A077269)
++ [`A077269`](https://oeis.org/A077269)
 
 *`[is_subgraph_free_paw=1]`*, `1,1,2,3,6,19,59,267,1380,9832`
 + [`A024607`](https://oeis.org/A024607)
