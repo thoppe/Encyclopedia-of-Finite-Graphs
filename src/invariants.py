@@ -137,9 +137,9 @@ def is_strongly_regular(adj, **args):
     # Check with http://oeis.org/A088741
     # Returns the value of k if it is k strongly regular, otherwise 0
     # Strongly regular graphs satisfy AJ = kJ, where J is a ones matrix
-    # Assume that N=1,2 is NOT strongly regular
+    # Assume that N=1,2 is are strongly regular to match with OEIS
     N = args["N"]
-    if N<=2: return 0
+    if N<=2: return 1
     
     A = convert_to_numpy(adj,**args)
     connections = zip(*np.triu_indices(N,1))

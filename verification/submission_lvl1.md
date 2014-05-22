@@ -42,17 +42,11 @@
 + [`A241782`](https://oeis.org/A241782) *`[is_subgraph_free_K5=1]`*, `1,1,2,6,20,107,802,10252,232850,9905775`
 + [`A241784`](https://oeis.org/A241784) *`[is_subgraph_free_C5=1]`*, `1,1,2,6,13,44,144,577,2457,12499`
 + [`A241814`](https://oeis.org/A241814) *`[is_distance_regular=1]`*, `1,1,1,2,2,4,2,5,4,7`
-
 + [`A241839`](https://oeis.org/A241839) *`[is_k_regular=0]`*, `1,0,1,4,19,107,849,11100,261058,11716404`
 + [`A241840`](https://oeis.org/A241840) *`[is_distance_regular=0]`*, `0,0,1,4,19,108,851,11112,261076,11716564`
 + [`A241841`](https://oeis.org/A241841) *`[is_tree=0]`*, `0,0,1,4,18,106,842,11094,261033,11716465`
 + [`A241842`](https://oeis.org/A241842) *`[is_integral=0]`*, `0,0,1,4,18,106,846,11095,261056,11716488`
 + [`A241843`](https://oeis.org/A241843) *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
-
-## Running
-
-+ *`is_subgraph_free_paw`
-+ *`is_subgraph_free_banner`
 
 ## Unsubmitted:
 
@@ -75,7 +69,7 @@ The following sequences have not been submitted. Notes are left for the submissi
 + *`[is_subgraph_free_C8=1]`*, `1,1,2,6,21,112,853,4921,28623,162510`
 + *`[is_subgraph_free_C9=1]`*, `1,1,2,6,21,112,853,11117,83997,574581`
 
-Double check this one
+Double check this one, where is `is_subgraph_free_C10=0`?
 + *`[is_subgraph_free_C10=1]`*, `1,1,2,6,21,112,853,11117,261080,2411453`
 
 Crossref to [`A000226`](https://oeis.org/A000226)
@@ -87,8 +81,8 @@ Crossref to [`A000226`](https://oeis.org/A000226)
 
 **Non-versions**:
 
-Non version of [`A088741`](https://oeis.org/A088741), but a(1),a(2)=0, FIX
-+ *`[is_strongly_regular=0]`*, `1,1,1,4,19,109,852,11114,261077,11716566`
+Non version of [`A088741`](https://oeis.org/A088741)
++ *`[is_strongly_regular=0]`*, `0,0,1,4,19,109,852,11114,261077,11716566`
 
 Non version [`A241782`](https://oeis.org/A241782)
 + *`[is_subgraph_free_K5=0]`*, `0,0,0,0,1,5,51,865,28230,1810796`
@@ -181,8 +175,7 @@ These are just simple connected trees,
 *`[is_k_regular=6]`*, `0,0,0,0,0,0,1,1,4,21`
 + [`A006822`](https://oeis.org/A006822) `1,0,0,0,0,0,0,1,1,4,21,266,7849,367860,21609300`
 
-The lower numbers need to be fixed first! a(1), a(2)
-+ *`[is_strongly_regular=1]`*, `0,0,1,2,2,3,1,3,3,5`
++ *`[is_strongly_regular=1]`*, `1,1,1,2,2,3,1,3,3,5`
 + [`A088741`](https://oeis.org/A088741) `1,1,1,2,2,3,1,3,3,5`
 
 *`[k_max_clique=2]`*, `0,1,1,3,6,19,59,267,1380,9832`
