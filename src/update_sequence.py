@@ -15,9 +15,7 @@ parser.add_argument('-f','--force',default=False,action='store_true')
 cargs = vars(parser.parse_args())
 
 excluded_terms = ["n_vertex","n_edge","n_endpoints",
-                  "is_subgraph_free_C6","is_subgraph_free_C7",
-                  "is_subgraph_free_C8","is_subgraph_free_C9",
-                  "is_subgraph_free_C10","n_cycle_basis","radius"]
+                  "n_cycle_basis","radius"]
 
 special_conditionals = {"vertex_connectivity":">"}
 
@@ -265,6 +263,7 @@ ON  a.graph_id = c.graph_id
 WHERE b.function_name = "{function_name}" 
 AND a.value {conditional} {value}
 '''
+exit()
 
 print cargs
 k = 2

@@ -288,7 +288,7 @@ def _is_subgraph_free(subg):
         # Early breakout if input graph is too small
         if args["N"] < subg_n: return 1
         g = graph_tool_representation(adj,**args)
-        return len(_has_subgraph(subg,g)[0])==0
+        return len(_has_subgraph(subg,g,max_n=1)[0])==0
     return f
 
 # is_subgraph_free_K3=1, OEIS:A024607
@@ -330,7 +330,7 @@ _paw_graph_v1 = _paw_graph.add_vertex()
 _paw_graph.add_edge(_paw_graph_v1, _paw_graph.vertex(0))
 is_subgraph_free_paw = _is_subgraph_free(_paw_graph)
 
-_banner_graph = _cycle_graphs[3].copy()
+_banner_graph = _cycle_graphs[4].copy()
 _banner_graph_v1 = _banner_graph.add_vertex()
 _banner_graph.add_edge(_banner_graph_v1, _banner_graph.vertex(0))
 is_subgraph_free_banner = _is_subgraph_free(_banner_graph)

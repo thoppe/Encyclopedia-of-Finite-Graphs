@@ -6,6 +6,8 @@
 \newcommand{\OEIS}[1]
 {\href{https://oeis.org/#1}{OEIS \texttt{#1}}}
 
+\newcommand{\ie}[0]{i.e.\ }
+
 
 \begin{document}
 
@@ -30,7 +32,7 @@ Talk about OEIS (ref).
 An invariant is a property of a graph that is preserved under isomorphism. 
 Invariants can be simple binary properties (is the graph a tree?), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching).
 
-We are primarily concerned with the sequences produced by graph invariants, ie.\ the combinatorial problem of how many graphs of a given class satisfy a particular criteria.
+We are primarily concerned with the sequences produced by graph invariants, \ie the combinatorial problem of how many graphs of a given class satisfy a particular criteria.
 Let a graph be defined as the pair $G = (V,E)$, where $V$ is a set of vertices and $E$ is a set of edges. 
 Define $\mathcal{C}$ as a class of graphs which form an isomorphically distinct set of graphs that satisfy a given criteria.
 Group the graphs into subsets such that
@@ -73,6 +75,7 @@ In $\mathcal{C}_\text{simple}$ all distances are finite.
 The \textit{radius}/\textit{diameter} is the minimum/maximum value of $D$.
 
 The adjacency matrix $A$ has the value at $A_{ij}$ equal to the number of edges joining vertices $i$ and $j$.
+For $\mathcal{C}_\text{simple}$, this is a $\{0,1\}$ matrix with zeros down the diagonal.
 The \textit{spectrum}, $\lambda_1, \lambda_2, \ldots$ of a graph are the eigenvalues of $A$.
 A graph is $integral$ if all the values of the graph spectrum are integral $\lambda_k \in \mathbb{N}$.
 A graph is $real$ if $\lambda_k \in \mathbb{R}$.
