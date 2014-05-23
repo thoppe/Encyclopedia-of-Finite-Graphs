@@ -1,10 +1,25 @@
 import sqlite3, logging, argparse, os, collections, ast, sys
 import subprocess, itertools
 import numpy as np
-import helper_functions
+from helper_functions import load_graph_database, grab_vector
+
+'''
+select id1, id2, v1, v2, count(graph_id)
+from
+(
+SELECT a.graph_id, a.invariant_id as id1, b.invariant_id as id2,  a.value as v1, b.value as v2
+from invariant_integer as a
+join invariant_integer as b
+on  a.graph_id = b.graph_id
+and a.invariant_id <> b.invariant_id
+) as A
+
+group by 1,2,3,4
+order by 1,2,3
+'''
 
 # These variants will not be used in the powerset construction
-#__ignored_invariants = ["n_vertex", "n_edge"]
+__ignored_invariants = ["n_vertex", "n_edge"]
 
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
@@ -23,20 +38,9 @@ f_database_template = "templates/sequence.sql"
 with open(f_database_template) as FIN:
     conn.executescript(FIN.read())
 
-# Load the search database
-search_conn = collections.OrderedDict()
+graph_conn = collections.OrderedDict()
 for n in range(1, cargs["max_n"]+1):
-    f_database = helper_functions.generate_database_name(n)
-    f_search_database = f_database.replace('.db','_search.db')
-    search_conn[n] = sqlite3.connect(f_search_database, check_same_thread=False)
-    helper_functions.attach_ref_table(search_conn[n])
-
-# Build the lookup table
-cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer'''
-ref_lookup = dict( helper_functions.grab_all(search_conn[1],cmd) )
-
-print ref_lookup
-exit()
+    graph_conn[n] = load_graph_database(n)
 
 # Assume that ref's are the same for all DB's
 cmd = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''

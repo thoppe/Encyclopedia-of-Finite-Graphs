@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS unique_invariant_val(
   invariant_val_id integer,
   value integer
 );
-/*
+
 --- Tracks if various sequence terms have been computed
 --- for now this only tracks the unique invariants
 CREATE TABLE IF NOT EXISTS computed(
@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS sequence(
   s10 INTEGER,
 
   hash TEXT
-);  
-*/
+);
+  
+
 
