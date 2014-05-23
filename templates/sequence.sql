@@ -4,6 +4,14 @@ CREATE TABLE IF NOT EXISTS unique_invariant_val(
   invariant_val_id integer,
   value integer
 );
+
+--- Tracks if various items have been computed
+CREATE TABLE IF NOT EXISTS computed(
+  function_name STRING,
+  compute_type  STRING, 
+  has_computed TINYINT DEFAULT false
+);
+
 /*
 --- Tracks if various sequence terms have been computed
 --- for now this only tracks the unique invariants

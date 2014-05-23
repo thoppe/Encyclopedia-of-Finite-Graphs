@@ -2,13 +2,14 @@ import sqlite3, logging, argparse, os, collections, ast, sys
 import subprocess, itertools
 import numpy as np
 import helper_functions
+from helper_functions import grab_vector
 
 # These variants will not be used in the powerset construction
 #__ignored_invariants = ["n_vertex", "n_edge"]
 
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=7,
+parser.add_argument('--max_n',type=int,default=8,
                     help="Maximum graph size n to compute sequence over")
 cargs = vars(parser.parse_args())
 
@@ -17,11 +18,11 @@ logging.root.setLevel(logging.INFO)
 
 # Connect to the sequence database
 f_database = "database/sequence.db"
-conn = sqlite3.connect(f_database, check_same_thread=False)
+seq_conn = sqlite3.connect(f_database, check_same_thread=False)
 
 f_database_template = "templates/sequence.sql"
 with open(f_database_template) as FIN:
-    conn.executescript(FIN.read())
+    seq_conn.executescript(FIN.read())
 
 # Load the search database
 search_conn = collections.OrderedDict()
@@ -34,9 +35,55 @@ for n in range(1, cargs["max_n"]+1):
 # Build the lookup table
 cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer'''
 ref_lookup = dict( helper_functions.grab_all(search_conn[1],cmd) )
+func_names = ref_lookup.keys()
 
-print ref_lookup
+# Find all the computed unique values
+cmd = '''SELECT function_name FROM computed 
+WHERE has_computed=1 
+AND compute_type="unique"
+'''
+unique_computed_functions = set(grab_vector(seq_conn, cmd))
+
+# Find all the unique values for each invariant, 
+# skipping those that have been computed already
+cmd_find = '''SELECT DISTINCT {} FROM graph_search'''
+cmd_save = '''INSERT INTO unique_invariant_val(invariant_val_id, value) VALUES (?,?)'''
+cmd_mark_computed = '''INSERT OR REPLACE INTO 
+computed(function_name,compute_type,has_computed) VALUES ("{}","unique",1)'''
+
+for f in set(func_names).difference(unique_computed_functions):
+    logging.info("Computing unique values for {}".format(f))
+
+    unique_vals = set()
+    for n in search_conn:
+        vals = grab_vector(search_conn[n],cmd_find.format(f))
+        unique_vals.update(vals)
+
+    invar_id = ref_lookup[f]
+        
+    for x in unique_vals:
+        seq_conn.execute(cmd_save, (invar_id, x))
+
+    seq_conn.execute(cmd_mark_computed.format(f))
+    seq_conn.commit()
+
+
+# Build a list of all level 1 sequences
+# Build a list of all level 2 sequences
+# Build a list of all level 3 sequences
+# ...
+
+# Compute all level 1 sequences
+# Compute all level 2 sequences
+# Compute all level 2 sequences
+# ...
+
+
+
 exit()
+
+# OLD CODE BELOW
+
 
 # Assume that ref's are the same for all DB's
 cmd = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''
