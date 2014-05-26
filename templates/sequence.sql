@@ -12,6 +12,36 @@ CREATE TABLE IF NOT EXISTS computed(
   has_computed TINYINT DEFAULT false
 );
 
+CREATE TABLE IF NOT EXISTS ref_sequence_level1( 
+  sequence_id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  unique_invariant_id INTEGER,
+
+  conditional STRING NOT NULL,
+  invariant_val_id NOT NULL,
+  value INTEGER NOT NULL,
+
+  non_zero_terms INTEGER,
+
+  UNIQUE (invariant_val_id, value, conditional)
+);
+
+-- This needs to be as long as max N
+CREATE TABLE IF NOT EXISTS sequence(
+  sequence_id INTEGER PRIMARY KEY,
+  s1  INTEGER,
+  s2  INTEGER,
+  s3  INTEGER,
+  s4  INTEGER,
+  s5  INTEGER,
+  s6  INTEGER,
+  s7  INTEGER,
+  s8  INTEGER,
+  s9  INTEGER,
+  s10 INTEGER
+);  
+
+
 /*
 --- Tracks if various sequence terms have been computed
 --- for now this only tracks the unique invariants
@@ -36,21 +66,5 @@ CREATE TABLE IF NOT EXISTS ref_sequence(
   non_zero_terms INTEGER
 );
 
--- This needs to be as long as max N
-CREATE TABLE IF NOT EXISTS sequence(
-  sequence_id INTEGER PRIMARY KEY,
-  s1  INTEGER,
-  s2  INTEGER,
-  s3  INTEGER,
-  s4  INTEGER,
-  s5  INTEGER,
-  s6  INTEGER,
-  s7  INTEGER,
-  s8  INTEGER,
-  s9  INTEGER,
-  s10 INTEGER,
-
-  hash TEXT
-);  
 */
 

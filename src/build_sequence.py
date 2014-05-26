@@ -2,10 +2,13 @@ import sqlite3, logging, argparse, os, collections, ast, sys
 import subprocess, itertools
 import numpy as np
 import helper_functions
-from helper_functions import grab_vector
+from helper_functions import grab_vector, grab_all, grab_scalar
 
 # These variants will not be used in the powerset construction
-#__ignored_invariants = ["n_vertex", "n_edge"]
+excluded_terms = ["n_vertex","n_edge","n_endpoints",
+                  "n_cycle_basis","radius"]
+# These will use a different operator
+special_conditionals = {"vertex_connectivity":">"}
 
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
@@ -33,8 +36,10 @@ for n in range(1, cargs["max_n"]+1):
     helper_functions.attach_ref_table(search_conn[n])
 
 # Build the lookup table
-cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer'''
+cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
+ORDER BY invariant_id'''
 ref_lookup = dict( helper_functions.grab_all(search_conn[1],cmd) )
+ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
 func_names = ref_lookup.keys()
 
 # Find all the computed unique values
@@ -67,13 +72,69 @@ for f in set(func_names).difference(unique_computed_functions):
     seq_conn.execute(cmd_mark_computed.format(f))
     seq_conn.commit()
 
-
 # Build a list of all level 1 sequences
+cmd_find = '''
+SELECT unique_invariant_id, invariant_val_id, value FROM
+unique_invariant_val'''
+cmd_add = '''
+INSERT OR IGNORE INTO ref_sequence_level1 
+(unique_invariant_id, invariant_val_id, conditional, value)
+VALUES (?,?,?,?)'''
+
+for uid, invar_id, value in helper_functions.grab_all(seq_conn, cmd_find):
+    func_name = ref_lookup_inv[invar_id]
+
+    if func_name in special_conditionals:
+        conditional = special_conditionals[func_name]
+    else: conditional = "="
+
+    # If the function is not in the list of excluded terms
+    # add it to the ref level 1
+    if func_name not in excluded_terms:
+        items = (uid, invar_id, conditional, value)
+        seq_conn.execute(cmd_add, items)
+seq_conn.commit()
+
+# Compute all level 1 sequences
+cmd_find_remaining = '''
+SELECT 
+sequence_id,conditional,invariant_val_id,value 
+FROM ref_sequence_level1 WHERE sequence_id NOT IN 
+(SELECT sequence_id FROM sequence)'''
+
+remaining_seq_info = grab_all(seq_conn,cmd_find_remaining)
+if remaining_seq_info:
+    msg = "Starting {} level 1 sequences".format(len(remaining_seq_info))
+    logging.info(msg)
+
+cmd_sequence = '''
+SELECT COUNT(*) FROM graph_search WHERE {} {} {}'''
+
+cmd_save = '''INSERT INTO sequence({}) VALUES ({})'''
+s_string = ["sequence_id"] + ["s%i"%i for i in search_conn]
+q_string = ["?"]*len(s_string)
+cmd_save = cmd_save.format(','.join(s_string),
+                           ','.join(q_string))
+
+for s_id,conditional,invar_id,value in remaining_seq_info:
+    func_name = ref_lookup_inv[invar_id]
+    cmd = cmd_sequence.format(func_name, conditional,value)
+    seq = [grab_scalar(search_conn[n],cmd) for n in search_conn]
+
+    items = [s_id,] + seq
+    seq_conn.execute(cmd_save, items)
+
+    msg = "Level 1 seq: {} {} {}".format(func_name, value,seq)
+    logging.info(msg)
+
+    seq_conn.commit()
+
+
+
 # Build a list of all level 2 sequences
 # Build a list of all level 3 sequences
 # ...
 
-# Compute all level 1 sequences
 # Compute all level 2 sequences
 # Compute all level 2 sequences
 # ...
