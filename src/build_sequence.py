@@ -6,7 +6,10 @@ from helper_functions import grab_vector, grab_all, grab_scalar
 
 # These variants will not be used in the powerset construction
 excluded_terms = ["n_vertex","n_edge","n_endpoints",
-                  "n_cycle_basis","radius"]
+                  "n_cycle_basis","radius","circumference","radius",
+                  "is_subgraph_free_C6","is_subgraph_free_C7",
+                  "is_subgraph_free_C8","is_subgraph_free_C9",
+                  "is_subgraph_free_C10","is_rational_spectrum",]
 # These will use a different operator
 special_conditionals = {"vertex_connectivity":">"}
 
