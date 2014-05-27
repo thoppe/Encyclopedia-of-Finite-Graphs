@@ -12,7 +12,7 @@ special_conditionals = {"vertex_connectivity":">"}
 
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=8,
+parser.add_argument('--max_n',type=int,default=10,
                     help="Maximum graph size n to compute sequence over")
 cargs = vars(parser.parse_args())
 
@@ -129,7 +129,23 @@ for s_id,conditional,invar_id,value in remaining_seq_info:
 
     seq_conn.commit()
 
+# Function to compute the number of non-zero terms in a seq and record it
 
+def compute_non_zero_terms(table):
+    cmd_find_missing = '''
+    SELECT sequence_id FROM {} WHERE non_zero_terms IS NULL'''
+    missing_seq = grab_vector(seq_conn,cmd_find_missing.format(table))
+    cmd_grab = '''SELECT * FROM sequence WHERE sequence_id={}'''
+    cmd_mark = '''UPDATE {} SET non_zero_terms = {} WHERE sequence_id = {}'''
+    for sid in missing_seq:
+        vals = grab_all(seq_conn,cmd_grab.format(sid))
+        seq  = vals[0][1:]
+        non_zero_n = sum([1 for x in seq if x>0])
+        seq_conn.execute( cmd_mark.format(table,non_zero_n, sid) )
+    
+compute_non_zero_terms("ref_sequence_level1")
+seq_conn.commit()
+    
 
 # Build a list of all level 2 sequences
 # Build a list of all level 3 sequences
