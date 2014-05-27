@@ -1,5 +1,8 @@
 ## Pending:
 
++ [`A242952`](https://oeis.org/A242952) *`[is_real_spectrum=1]`*, `1,1,1,3,11,54,539,7319,209471,10000304`
++ [`A242953`](https://oeis.org/A242953) *`[is_real_spectrum=0]`*, `0,0,1,3,10,58,314,3798,51609,1716267`
+
 ## Completed:
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
@@ -47,7 +50,6 @@
 + [`A241841`](https://oeis.org/A241841) *`[is_tree=0]`*, `0,0,1,4,18,106,842,11094,261033,11716465`
 + [`A241842`](https://oeis.org/A241842) *`[is_integral=0]`*, `0,0,1,4,18,106,846,11095,261056,11716488`
 + [`A241843`](https://oeis.org/A241843) *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
-
 + [`A242790`](https://oeis.org/A242790) *`[is_subgraph_free_diamond=1]`*, `1,1,2,4,11,39,165,967,7684,87012`
 + [`A242791`](https://oeis.org/A242791) *`[is_subgraph_free_bull=1]`*, `1,1,2,6,11,34,98,408,1957,12740`
 + [`A242792`](https://oeis.org/A242792) *`[is_subgraph_free_bowtie=1]`*, `1,1,2,6,15,60,273,1769,14836,174111`
@@ -55,9 +57,6 @@
 ## Unsubmitted:
 
 The following sequences have not been submitted. Notes are left for the submission process.
-
-+ *`[is_real_spectrum=0]`*, `0,0,1,3,10,58,314,3798,51609,1716267`
-+ *`[is_real_spectrum=1]`*, `1,1,1,3,11,54,539,7319,209471,10000304`
 
 + *`[is_subgraph_free_C6=0]`*, `0,0,0,0,0,48,604,10105,256522,11695245`
 + *`[is_subgraph_free_C6=1]`*, `1,1,2,6,21,64,249,1012,4558,21326`
