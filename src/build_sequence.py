@@ -52,7 +52,8 @@ unique_computed_functions = set(grab_vector(seq_conn, cmd))
 # Find all the unique values for each invariant, 
 # skipping those that have been computed already
 cmd_find = '''SELECT DISTINCT {} FROM graph_search'''
-cmd_save = '''INSERT INTO unique_invariant_val(invariant_val_id, value) VALUES (?,?)'''
+cmd_save = '''INSERT INTO unique_invariant_val(invariant_val_id, value) 
+VALUES (?,?)'''
 cmd_mark_computed = '''INSERT OR REPLACE INTO 
 computed(function_name,compute_type,has_computed) VALUES ("{}","unique",1)'''
 
@@ -75,9 +76,9 @@ for f in set(func_names).difference(unique_computed_functions):
 # Build a list of all level 1 sequences
 cmd_find = '''
 SELECT unique_invariant_id, invariant_val_id, value FROM
-unique_invariant_val'''
+unique_invariant_val ORDER BY invariant_val_id,value'''
 cmd_add = '''
-INSERT OR IGNORE INTO ref_sequence_level1 
+INSERT OR IGNORE INTO ref_sequence_level1
 (unique_invariant_id, invariant_val_id, conditional, value)
 VALUES (?,?,?,?)'''
 
@@ -93,6 +94,7 @@ for uid, invar_id, value in helper_functions.grab_all(seq_conn, cmd_find):
     if func_name not in excluded_terms:
         items = (uid, invar_id, conditional, value)
         seq_conn.execute(cmd_add, items)
+
 seq_conn.commit()
 
 # Compute all level 1 sequences
@@ -100,7 +102,7 @@ cmd_find_remaining = '''
 SELECT 
 sequence_id,conditional,invariant_val_id,value 
 FROM ref_sequence_level1 WHERE sequence_id NOT IN 
-(SELECT sequence_id FROM sequence)'''
+(SELECT sequence_id FROM sequence WHERE query_level=1)'''
 
 remaining_seq_info = grab_all(seq_conn,cmd_find_remaining)
 if remaining_seq_info:
@@ -111,7 +113,7 @@ cmd_sequence = '''
 SELECT COUNT(*) FROM graph_search WHERE {} {} {}'''
 
 cmd_save = '''INSERT INTO sequence({}) VALUES ({})'''
-s_string = ["sequence_id"] + ["s%i"%i for i in search_conn]
+s_string = ["sequence_id","query_level"] + ["s%i"%i for i in search_conn]
 q_string = ["?"]*len(s_string)
 cmd_save = cmd_save.format(','.join(s_string),
                            ','.join(q_string))
@@ -121,7 +123,7 @@ for s_id,conditional,invar_id,value in remaining_seq_info:
     cmd = cmd_sequence.format(func_name, conditional,value)
     seq = [grab_scalar(search_conn[n],cmd) for n in search_conn]
 
-    items = [s_id,] + seq
+    items = [s_id,1] + seq
     seq_conn.execute(cmd_save, items)
 
     msg = "Level 1 seq: {} {} {}".format(func_name, value,seq)
@@ -131,26 +133,104 @@ for s_id,conditional,invar_id,value in remaining_seq_info:
 
 # Function to compute the number of non-zero terms in a seq and record it
 
-def compute_non_zero_terms(table):
+def compute_non_zero_terms(level):
     cmd_find_missing = '''
-    SELECT sequence_id FROM {} WHERE non_zero_terms IS NULL'''
-    missing_seq = grab_vector(seq_conn,cmd_find_missing.format(table))
-    cmd_grab = '''SELECT * FROM sequence WHERE sequence_id={}'''
-    cmd_mark = '''UPDATE {} SET non_zero_terms = {} WHERE sequence_id = {}'''
-    for sid in missing_seq:
-        vals = grab_all(seq_conn,cmd_grab.format(sid))
-        seq  = vals[0][1:]
-        non_zero_n = sum([1 for x in seq if x>0])
-        seq_conn.execute( cmd_mark.format(table,non_zero_n, sid) )
-    
-compute_non_zero_terms("ref_sequence_level1")
-seq_conn.commit()
-    
+    SELECT sequence_id FROM sequence
+    WHERE query_level = {level} AND
+    sequence_id NOT IN 
+     (SELECT sequence_id FROM stat_sequence WHERE query_level = {level})'''
 
+    missing_seq = grab_vector(seq_conn,cmd_find_missing.format(level=level))
+
+    cmd_grab = '''SELECT * FROM sequence 
+                  WHERE sequence_id={} AND query_level={}'''
+    cmd_mark = '''INSERT OR IGNORE INTO stat_sequence 
+                  (non_zero_terms, sequence_id, query_level) VALUES
+                  (?,?,?)'''
+    for sid in missing_seq:
+        vals = grab_all(seq_conn,cmd_grab.format(sid,level))
+        seq  = vals[0][2:]
+        non_zero_n = sum([1 for x in seq if x>0])
+        seq_conn.execute(cmd_mark, (non_zero_n, sid, level))
+            
+    
+compute_non_zero_terms(1)
+seq_conn.commit()
+   
 # Build a list of all level 2 sequences
+# They must have at least 4 non-zero terms in them
+
+logging.info("Starting level 2 sequences")
+
+cmd_select_valid = '''
+SELECT sequence_id FROM stat_sequence 
+WHERE non_zero_terms >= 4'''
+
+valid_seqs = grab_vector(seq_conn, cmd_select_valid)
+
+# Filter for those not valid
+cmd_select = '''
+SELECT sequence_id, invariant_val_id, conditional, value
+FROM ref_sequence_level1'''
+
+base_seq = [x for x in grab_all(seq_conn,cmd_select) if x[0] in valid_seqs]
+pair_terms = itertools.combinations(base_seq, 2)
+
+cmd_add = '''
+INSERT OR IGNORE INTO ref_sequence_level2
+(unique_invariant_id1, invariant_val_id1, conditional1, value1,
+ unique_invariant_id2, invariant_val_id2, conditional2, value2)
+VALUES (?,?,?,?, ?,?,?,?)'''
+
+# Remove those that share an invariant_val_id
+filtered_pair_terms = (s1+s2 for s1,s2 in pair_terms if s1[1]!=s2[1])
+
+seq_conn.executemany(cmd_add, filtered_pair_terms)
+seq_conn.commit()
+
+# Compute all level 2 sequences
+cmd_find_remaining = '''
+SELECT 
+ sequence_id,
+ invariant_val_id1, conditional1, value1,
+ invariant_val_id2, conditional2, value2
+ FROM ref_sequence_level2 WHERE sequence_id NOT IN 
+ (SELECT sequence_id FROM sequence WHERE query_level=2)'''
+
+remaining_seq_info = grab_all(seq_conn,cmd_find_remaining)
+if remaining_seq_info:
+    msg = "Starting {} level 2 sequences".format(len(remaining_seq_info))
+    logging.info(msg)
+
+# Compute level 2 sequences
+
+cmd_sequence = '''
+SELECT COUNT(*) FROM graph_search WHERE {} {} {} AND {} {} {}'''
+
+#cmd_save = '''INSERT INTO sequence({}) VALUES ({})'''
+#s_string = ["sequence_id","query_level"] + ["s%i"%i for i in search_conn]
+#q_string = ["?"]*len(s_string)
+#cmd_save = cmd_save.format(','.join(s_string),
+#                           ','.join(q_string))
+
+for s_id,id1,c1,v1,id2,c2,v2 in remaining_seq_info:
+    func_name1 = ref_lookup_inv[id1]
+    func_name2 = ref_lookup_inv[id2]
+
+    cmd = cmd_sequence.format(func_name1,c1,v1, func_name2, c2, v2)
+    seq = [grab_scalar(search_conn[n],cmd) for n in search_conn]
+
+    items = [s_id,2] + seq
+    seq_conn.execute(cmd_save, items)
+    
+    msg = "Level 2 seq: {} {} {} AND {} {} {}\n{}".format(func_name1,c1,v1, 
+                                                           func_name2, c2, v2, 
+                                                           seq)
+    logging.info(msg)
+    seq_conn.commit()
+
 # Build a list of all level 3 sequences
 # ...
 
-# Compute all level 2 sequences
-# Compute all level 2 sequences
+# Compute all level 3 sequences
 # ...
