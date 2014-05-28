@@ -37,7 +37,7 @@ compute:
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
-	python src/update_sequence.py 10
+	python src/build_sequence.py --max_n 10
 
 test:
 	python src/unit_tests.py --max_n 8

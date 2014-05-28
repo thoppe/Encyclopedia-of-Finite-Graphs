@@ -26,33 +26,6 @@ ref_lookup = dict( grab_all(seq_conn,cmd) )
 ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
 func_names = ref_lookup.keys()
 
-# Load the entire stripped file as raw text
-logging.info("Loading stripped OEIS")
-f_strip_OEIS = os.path.join("database","stripped_OEIS.txt")
-with open(f_strip_OEIS) as FIN:
-    OEIS = FIN.read()
-
-# Build an indexer
-from acora import AcoraBuilder
-
-def match_lines(s, *keywords):
-     builder = AcoraBuilder('\r', '\n', *keywords)
-     ac = builder.build()
-
-     line_start = 0
-     matches = False
-     for kw, pos in ac.finditer(s):
-         if kw in '\r\n':
-             if matches:
-                  yield s[line_start:pos]
-                  matches = False
-             line_start = pos + 1
-         else:
-             matches = True
-     if matches:
-         yield s[line_start:]
-
-
 logging.info("Loading level 1 sequences")
 
 cmd_select_interesting = '''
@@ -84,7 +57,35 @@ for items in grab_all(seq_conn, cmd_grab_all):
         function_name = ref_lookup_inv[invar_val]
         key = "{}{}{}".format(function_name,conditional,value)
         SEQS[key] = seq
+        print key, seq
+exit()
 
+
+# Load the entire stripped file as raw text
+logging.info("Loading stripped OEIS")
+f_strip_OEIS = os.path.join("database","stripped_OEIS.txt")
+with open(f_strip_OEIS) as FIN:
+    OEIS = FIN.read()
+
+# Build an indexer
+from acora import AcoraBuilder
+
+def match_lines(s, *keywords):
+     builder = AcoraBuilder('\r', '\n', *keywords)
+     ac = builder.build()
+
+     line_start = 0
+     matches = False
+     for kw, pos in ac.finditer(s):
+         if kw in '\r\n':
+             if matches:
+                  yield s[line_start:pos]
+                  matches = False
+             line_start = pos + 1
+         else:
+             matches = True
+     if matches:
+         yield s[line_start:]
         
 logging.info("Checking level 1 sequences against OEIS")
 

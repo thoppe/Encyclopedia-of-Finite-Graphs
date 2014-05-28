@@ -310,8 +310,17 @@ _bull_graph = _cycle_graphs[3].copy()
 _bull_graph_v1 = _bull_graph.add_vertex()
 _bull_graph_v2 = _bull_graph.add_vertex()
 _bull_graph.add_edge(_bull_graph_v1, _bull_graph.vertex(0))
-_bull_graph.add_edge(_bull_graph_v2, _bull_graph.vertex(0))
+_bull_graph.add_edge(_bull_graph_v2, _bull_graph.vertex(1))
 is_subgraph_free_bull = _is_subgraph_free(_bull_graph)
+
+_open_bowtie_graph = _cycle_graphs[3].copy()
+_open_bowtie_graph_v1 = _open_bowtie_graph.add_vertex()
+_open_bowtie_graph_v2 = _open_bowtie_graph.add_vertex()
+_open_bowtie_graph.add_edge(_open_bowtie_graph_v1, 
+                            _open_bowtie_graph.vertex(0))
+_open_bowtie_graph.add_edge(_open_bowtie_graph_v2, 
+                            _open_bowtie_graph.vertex(0))
+is_subgraph_free_open_bowtie = _is_subgraph_free(_open_bowtie_graph)
 
 _bowtie_graph = _cycle_graphs[3].copy()
 _bowtie_graph_v1 = _bowtie_graph.add_vertex()
@@ -334,12 +343,6 @@ _banner_graph = _cycle_graphs[4].copy()
 _banner_graph_v1 = _banner_graph.add_vertex()
 _banner_graph.add_edge(_banner_graph_v1, _banner_graph.vertex(0))
 is_subgraph_free_banner = _is_subgraph_free(_banner_graph)
-
-#is_subgraph_free_C6 = _is_subgraph_free(_cycle_graphs[6])
-#is_subgraph_free_C7 = _is_subgraph_free(_cycle_graphs[7])
-#is_subgraph_free_C8 = _is_subgraph_free(_cycle_graphs[8])
-#is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
-#is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
 
 def chromatic_number(adj,**args):
     # Return 0 for the singleton graph (it's really infinity)
@@ -485,7 +488,7 @@ def is_hamiltonian(adj,**args):
         s_file = "graph_%i.png"%random.randint(0,10000)
 
         w = gt.new_edge_property("double")
-        for ex in gt.edges(): w[ex] = 1.0
+        for ex in gt.edges(): w[ex] = 10.
 
         for edge in edge_solution:
 
@@ -505,6 +508,45 @@ def is_hamiltonian(adj,**args):
     '''
 
 
+######################### Independent set iterator########### 
+
+def enumerate_independent_sets(gt):
+    # Ignores the empty set
+    N = len(list(gt.vertices()))
+    w = gt.new_vertex_property("int")
+    c = gt.new_vertex_property("double")
+
+    pos = graph_tool.draw.sfdp_layout(gt, cooling_step=0.99)
+
+    for k in range(1,N+1)[::-1]:
+        print "CHECKING k",k
+        for subset in itertools.combinations(gt.vertices(),k):
+            subset_func = lambda x: x in subset
+            g_sub = graph_tool.GraphView(gt,vfilt=subset_func).copy()
+            conn  = graph_tool.topology.label_largest_component(g_sub)
+
+
+            if sum(conn.a)==1:
+                yield g_sub
+            '''
+                # Debugging visualization code here
+                w.a = 1
+                c.a = 1
+
+                val = np.ones(N)
+
+                sub_mask = np.array([int(x) for x in subset])
+                w.a[sub_mask] = 0
+                c.a[sub_mask] = 0
+            
+                graph_tool.draw.graph_draw(gt,pos,
+                                           vertex_shape=w, 
+                                           vertex_fill_color=c)
+            '''
+            
+
+    
+
     
 ######################### Test code ######################### 
     
@@ -515,7 +557,6 @@ if __name__ == "__main__":
         graph_tool.draw.graph_draw(g,pos)
 
     #viz_graph(_banner_graph)
-    #exit()
 
     # Function testing here
 
@@ -526,6 +567,12 @@ if __name__ == "__main__":
     #adj = 17996771828415962
 
     args= {"N":N}
+
+    A  = convert_to_numpy(adj,**args) 
+    gx = networkx_representation(adj,**args)
+    gt = graph_tool_representation(adj,**args)
+
+    #for x in enumerate_independent_sets(gt):pass
 
     print "is_hamiltonian:", is_hamiltonian(adj, **args)
 
@@ -551,10 +598,6 @@ if __name__ == "__main__":
     p = special_polynomial_tutte(adj, **args)
     args["special_polynomial_tutte"] = p
     print "Chromatic number: ", chromatic_number(adj, **args)
-
-    A  = convert_to_numpy(adj,**args) 
-    gx = networkx_representation(adj,**args)
-    gt = graph_tool_representation(adj,**args)
 
     print "is_planar",is_planar(adj,**args), is_bipartite(adj,**args)
     print "n_articulation_points",n_articulation_points(adj,**args)
