@@ -3,6 +3,10 @@
 + [`A242952`](https://oeis.org/A242952) *`[is_real_spectrum=1]`*, `1,1,1,3,11,54,539,7319,209471,10000304`
 + [`A242953`](https://oeis.org/A242953) *`[is_real_spectrum=0]`*, `0,0,1,3,10,58,314,3798,51609,1716267`
 
+## Correction Pending
++ [`A242791`](https://oeis.org/A242791) *`[is_subgraph_free_open_bowtie=1]`*, `1, 1, 2, 6, 11, 34, 98, 408, 1957, 12797`
++ [`A079575`](https://oeis.org/A079575) *`[is_subgraph_free_bull=1]`*, `1, 1, 2, 6, 9, 26, 80, 340, 1690, 11432`
+
 ## Completed:
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
@@ -51,7 +55,7 @@
 + [`A241842`](https://oeis.org/A241842) *`[is_integral=0]`*, `0,0,1,4,18,106,846,11095,261056,11716488`
 + [`A241843`](https://oeis.org/A241843) *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
 + [`A242790`](https://oeis.org/A242790) *`[is_subgraph_free_diamond=1]`*, `1,1,2,4,11,39,165,967,7684,87012`
-+ [`A242791`](https://oeis.org/A242791) *`[is_subgraph_free_bull=1]`*, `1,1,2,6,11,34,98,408,1957,12740`
+
 + [`A242792`](https://oeis.org/A242792) *`[is_subgraph_free_bowtie=1]`*, `1,1,2,6,15,60,273,1769,14836,174111`
 
 ## Unsubmitted:
@@ -97,11 +101,14 @@ Non version [`A024607`](https://oeis.org/A024607)
 Non version [`A242792`](https://oeis.org/A242792)
 + *`[is_subgraph_free_bowtie=0]`*, `0,0,0,0,6,52,580,9348,246244,11542460`
 
-Non version [`A242791`](https://oeis.org/A242791)
-+ *`[is_subgraph_free_bull=0]`*, `0,0,0,0,10,78,755,10709,259123,11703831`
-
 Non version [`A242790`](https://oeis.org/A242790)
 + *`[is_subgraph_free_diamond=0]`*, `0,0,0,2,10,73,688,10150,253396,11629559`
+
+Non version [`A079575`](https://oeis.org/A079575)
++ *`[is_subgraph_free_bull=0]`*, `0, 0, 0, 0, 12, 86, 773, 10777, 259390, 11705139`
+
+Non version [`A242791`](https://oeis.org/A242791)
++ *`[is_subgraph_open_bowtie=0]`*, `0, 0, 0, 0, 10, 78, 755, 10709, 259123, 11703774`
 
 
 ## Already in database
