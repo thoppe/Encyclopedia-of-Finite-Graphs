@@ -71,5 +71,7 @@ INSERT OR IGNORE INTO ref_invariant_integer
 
   ("is_hamiltonian",41),
 
-  ("is_subgraph_free_open_bowtie",42)
+  ("is_subgraph_free_open_bowtie",42),
+
+  ("has_fractional_duality_gap_vertex_chromatic", 43)
 ;
