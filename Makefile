@@ -29,12 +29,15 @@ rebuild_database:
 #	make sequence
 #	make package
 
+finalize_database:
+	$(foreach n,$(possible_N_values),python src/build_finalized_version.py $(n);)
+
 compute:
 	$(foreach n,$(possible_N_values),python src/update_special.py $(n);)
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
-	python src/update_sequence.py 10
+	python src/build_sequence.py --max_n 10
 
 test:
 	python src/unit_tests.py --max_n 8
