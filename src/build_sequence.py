@@ -9,7 +9,8 @@ excluded_terms = ["n_vertex","n_edge","n_endpoints",
                   "n_cycle_basis","radius","circumference","radius",
                   "is_subgraph_free_C6","is_subgraph_free_C7",
                   "is_subgraph_free_C8","is_subgraph_free_C9",
-                  "is_subgraph_free_C10","is_rational_spectrum",]
+                  "is_subgraph_free_C10","is_rational_spectrum",
+                  "has_fractional_duality_gap_vertex_chromatic"]
 # These will use a different operator
 special_conditionals = {"vertex_connectivity":">"}
 

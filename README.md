@@ -56,18 +56,30 @@ Calculated Invariants
 + [`is_bipartite`](http://mathworld.wolfram.com/BipartiteGraph.html) (graph_tool)
 + [`n_articulation_points`](http://mathworld.wolfram.com/ArticulationVertex.html) (graph_tool)
 + [`n_cycle_basis`](http://en.wikipedia.org/wiki/Cycle_space) of which the n=0 case [`is_tree`](http://mathworld.wolfram.com/Tree.html) (networkx), [`circumference`](http://mathworld.wolfram.com/GraphCircumference.html), [`girth`](http://mathworld.wolfram.com/Girth.html)
-+ [`is_subgraph_free_K3`](http://mathworld.wolfram.com/Triangle-FreeGraph.html) of which the n=0 case is a triangle-free graph. (graph_tool)
-+ `is_subgraph_free_K4`, `is_subgraph_free_K5` (graph_tool)
-+ [`is_subgraph_free_C4`](http://mathworld.wolfram.com/Square-FreeGraph.html), ..., `is_subgraph_free_C10` checks for cycles of length k (graph_tool)
 + [`degree_sequence`](http://mathworld.wolfram.com/DegreeSequence.html), [`n_endpoints`](http://mathworld.wolfram.com/Endpoint.html) (trivial), [`is_k_regular`](http://mathworld.wolfram.com/RegularGraph.html), [`is_strongly_regular`](http://mathworld.wolfram.com/StronglyRegularGraph.html)
 + [`tutte_polynomial`](http://mathworld.wolfram.com/TuttePolynomial.html) via the [`chromatic_polynomial`](http://mathworld.wolfram.com/ChromaticPolynomial.html) leads to the [`chromatic_number`](http://mathworld.wolfram.com/ChromaticNumber.html)
 + [`automorphism_group_order`](http://mathworld.wolfram.com/GraphAutomorphism.html) (BLISS)
 + [`k_vertex_connectivity`](http://mathworld.wolfram.com/VertexConnectivity.html)[`k_edge_connectivity`](http://mathworld.wolfram.com/EdgeConnectivity.html) minimal number of nodes/edges that can be deleted to disconnect the graph.
 + [`is_chordal`](http://mathworld.wolfram.com/ChordalGraph.html) (networkx)
 + [`k_max_clique`](http://mathworld.wolfram.com/CliqueNumber.html) (networkx)
-+ [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html), `is_real` (sympy)
 + [`is_hamiltonian`](http://mathworld.wolfram.com/HamiltonianGraph.html)
+
+Spectrum invariants
+
++ [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html), (sympy)
++ `is_rational_spectrum`, `is_real_spectrum`
+
+Subgraph invariants
+
++ [`is_subgraph_free_K3`](http://mathworld.wolfram.com/Triangle-FreeGraph.html) of which the n=0 case is a triangle-free graph. (graph_tool)
++ `is_subgraph_free_K4`, `is_subgraph_free_K5` (graph_tool)
++ [`is_subgraph_free_C4`](http://mathworld.wolfram.com/Square-FreeGraph.html), ..., `is_subgraph_free_C10` checks for cycles of length k (graph_tool)
++ `is_subgraph_free_bull`, `is_subgraph_free_bowtie`, `is_subgraph_free_diamond`, `is_subgraph_free_paw`, `is_subgraph_free_banner`, `is_subgraph_free_open_bowtie`
+
+Fractional invariants
+
 + [`has_fractional_duality_gap_vertex_chromatic`](http://en.wikipedia.org/wiki/Fractional_coloring)
+
 
 =======================
 
