@@ -508,10 +508,11 @@ def is_hamiltonian(adj,**args):
     '''
 
 
-######################### Independent set iterator########### 
+########## Independent set iterator/Fractional programs #################
 
 def enumerate_independent_sets(gt):
-    # Ignores the empty set
+    # Ignores the empty set, usually won't matter
+
     N = len(list(gt.vertices()))
     w = gt.new_vertex_property("int")
     c = gt.new_vertex_property("double")
@@ -617,7 +618,6 @@ if __name__ == "__main__":
         has_fractional_duality_gap_vertex_chromatic(adj,**args)
 
     print "is_hamiltonian:", is_hamiltonian(adj, **args)
-
     print "is_integral:", is_integral(adj, **args)
     print "is_rational_spectrum:", is_rational_spectrum(adj, **args)
     print "is_real_spectrum:", is_real_spectrum(adj, **args)
