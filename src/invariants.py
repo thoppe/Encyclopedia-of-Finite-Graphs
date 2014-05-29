@@ -508,10 +508,11 @@ def is_hamiltonian(adj,**args):
     '''
 
 
-######################### Independent set iterator########### 
+########## Independent set iterator/Fractional programs #################
 
 def enumerate_independent_sets(gt):
-    # Ignores the empty set
+    # Ignores the empty set, usually won't matter
+
     N = len(list(gt.vertices()))
     w = gt.new_vertex_property("int")
     c = gt.new_vertex_property("double")
@@ -519,7 +520,7 @@ def enumerate_independent_sets(gt):
     pos = graph_tool.draw.sfdp_layout(gt, cooling_step=0.99)
 
     for k in range(1,N+1)[::-1]:
-        print "CHECKING k",k
+
         for subset in itertools.combinations(gt.vertices(),k):
             subset_func = lambda x: x in subset
             g_sub = graph_tool.GraphView(gt,vfilt=subset_func).copy()
@@ -543,10 +544,46 @@ def enumerate_independent_sets(gt):
                                            vertex_shape=w, 
                                            vertex_fill_color=c)
             '''
-            
+
+def fractional_chromatic_number(adj,**args):
+    g = graph_tool_representation(adj,**args)
+    # As a check, the cycle graph should return 2.5 = 5/2
+
+    prob = pulp.LpProblem("fractional_chrom", 
+                          pulp.LpMinimize)
+
+    independent_sets = [gx for gx in enumerate_independent_sets(g)]
+    K = len(independent_sets)
+
+    iset_strings = [k for k in xrange(K)]
+    iset_vars = pulp.LpVariable.dicts("iset", range(K), 
+                                     lowBound=0)
 
     
+    prob += pulp.lpSum(iset_vars), "Objective"
 
+    for v in g.vertices():
+        isets_with_vertex = [iset_vars[k] for k in xrange(K)
+                             if v in independent_sets[k].vertices()]
+        prob += pulp.lpSum(isets_with_vertex) >= 1
+
+    status = prob.solve()
+    
+    if status == 1:
+        sol = [x.value() for x in prob.variables()]
+        val = sum(sol)
+        return val
+        # This should work without rounding
+        # return fractions.Fraction(val).limit_denominator()
+    
+    else: 
+        print "ERROR IN FRACTIONAL CHROMATIC!", adj
+        return -1
+
+def has_fractional_duality_gap_vertex_chromatic(adj,**args):
+    cf = fractional_chromatic_number(adj,**args)
+    c  = chromatic_number(adj,**args)
+    return not np.isclose(c,cf)
     
 ######################### Test code ######################### 
     
@@ -572,10 +609,15 @@ if __name__ == "__main__":
     gx = networkx_representation(adj,**args)
     gt = graph_tool_representation(adj,**args)
 
-    #for x in enumerate_independent_sets(gt):pass
+    p = special_polynomial_tutte(adj, **args)
+    args["special_polynomial_tutte"] = p
+    print "Chromatic number: ", chromatic_number(adj, **args)
+    print "Fractional chromatic number: ", \
+        fractional_chromatic_number(adj,**args)
+    print "has_fractional_duality_gap_vertex_chromatic: ", \
+        has_fractional_duality_gap_vertex_chromatic(adj,**args)
 
     print "is_hamiltonian:", is_hamiltonian(adj, **args)
-
     print "is_integral:", is_integral(adj, **args)
     print "is_rational_spectrum:", is_rational_spectrum(adj, **args)
     print "is_real_spectrum:", is_real_spectrum(adj, **args)
@@ -594,10 +636,6 @@ if __name__ == "__main__":
     print "is_integral:", is_integral(adj, **args)
     print "AUT: ", automorphism_group_n(adj,**args)
     print "is_integral: ", is_integral(adj, **args)
-
-    p = special_polynomial_tutte(adj, **args)
-    args["special_polynomial_tutte"] = p
-    print "Chromatic number: ", chromatic_number(adj, **args)
 
     print "is_planar",is_planar(adj,**args), is_bipartite(adj,**args)
     print "n_articulation_points",n_articulation_points(adj,**args)
