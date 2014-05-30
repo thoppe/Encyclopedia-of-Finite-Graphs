@@ -20,6 +20,10 @@ parser.add_argument('--max_n',type=int,default=10,
                     help="Maximum graph size n to compute sequence over")
 cargs = vars(parser.parse_args())
 
+# List of terms that we should ignore for the moment
+# for example, terms that haven't finished computing...
+ignored_terms = ["has_fractional_duality_gap_vertex_chromatic",]
+
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
@@ -52,6 +56,9 @@ WHERE has_computed=1
 AND compute_type="unique"
 '''
 unique_computed_functions = set(grab_vector(seq_conn, cmd))
+
+# Filter for the ignored terms
+func_names = [x for x in func_names if x not in ignored_terms]
 
 # Find all the unique values for each invariant, 
 # skipping those that have been computed already
@@ -232,6 +239,10 @@ for s_id,id1,c1,v1,id2,c2,v2 in remaining_seq_info:
                                                            seq)
     logging.info(msg)
     seq_conn.commit()
+
+
+compute_non_zero_terms(2)
+seq_conn.commit()
 
 # Build a list of all level 3 sequences
 # ...
