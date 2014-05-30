@@ -31,9 +31,9 @@ The project has three major aims,
 List of the sequences extended by the project.
 
 ### [New Sequences (level 1)](verification/submission_lvl1.md)
-[IN PROGRESS] List of the sequences discovered by the project.
+List of the sequences discovered by the project.
 
-### [Unit Tests](verification/report.md)
+### [Unit Tests](verification/unit_tests.md)
 An auto-generated reported for various base queries and the link to the respective OEIS sequence.
 
 ##### New Sequences (level 2) [incomplete]

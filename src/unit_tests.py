@@ -33,8 +33,8 @@ cmd = '''SELECT invariant_id,function_name FROM ref_invariant_integer'''
 invariant_list = graph_conn[1].execute(cmd).fetchall()
 invariant_dict = dict(invariant_list)
 
-f_known_sequence = "verification/known.txt"
-f_report = "verification/report.md"
+f_known_sequence = "verification/unit_test_known.txt"
+f_report = "verification/unit_tests.md"
 F_REPORT = open(f_report,'w')
 
 msg = "## Unit tests for N={{{min_n}, ..., {max_n}}}\n\n"
