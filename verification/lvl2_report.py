@@ -183,8 +183,8 @@ for key in SEQS:
                               seq_text = ','.join(seqx[:12]),
                               url = url_text)
         print s
-        print
-        if counter>10:break
+        if counter>25:break
+    print 
 
     #logging.info(s_base + " " + str(counter))
 
