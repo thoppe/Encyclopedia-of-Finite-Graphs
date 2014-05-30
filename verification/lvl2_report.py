@@ -159,7 +159,9 @@ FOUT    = open(f_output,'w')
 url = "https://oeis.org/{}"
 output_str = "+ [`{seq_name}`]({url}) `{seq_text}`"
 
-for key in SEQS:
+KEYS = sorted(SEQS.keys())
+
+for key in KEYS:
 
     seq_nums = SEQS[key]
     z = str(seq_nums[-5:]).replace(' ','')[1:-1]
@@ -173,17 +175,24 @@ for key in SEQS:
 
     counter = 0
     for line in matches:
-        counter += 1
+
         name, seq = None, []
         line = line.split()
         name = line[0]
         seqx = line[1][1:-1].split(',')
         url_text = url.format(name)
-        s = output_str.format(seq_name = name, 
-                              seq_text = ','.join(seqx[:12]),
-                              url = url_text)
-        print s
+
+        sx = ','.join(seqx[:15])
+
+        if z in sx:
+            s = output_str.format(seq_name = name, 
+                                  seq_text = ','.join(seqx[:12]),
+                                  url = url_text)
+            print s
+            counter += 1
+      
         if counter>25:break
+
     print 
 
     #logging.info(s_base + " " + str(counter))
