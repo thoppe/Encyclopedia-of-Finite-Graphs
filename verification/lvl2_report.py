@@ -11,6 +11,17 @@ parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('-f','--force',default=False,action='store_true')
 cargs = vars(parser.parse_args())
 
+# Consider only these invariants
+consider_only = ["is_planar", 
+                 "is_bipartite",
+                 "is_tree",
+                 "is_distance_regular",
+                 "is_eulerian",
+                 "is_integral",
+                 "is_hamiltonian",
+                 "is_subgraph_free_K3",
+                 "is_subgraph_free_K4",]
+
 # These invariants must be > 1 to show up in the reporting
 positivity_invariants = [
   "is_k_regular",
@@ -97,8 +108,22 @@ for items in grab_all(seq_conn, cmd_grab_all):
         key2 = "{}{}{}".format(f2,c2,v2)
         key = ' AND '.join([key1,key2])
 
-        if check_positivity([f1,f2],[v1,v2]):
+        if check_positivity([f1,f2],[v1,v2]) and (
+                f1 in consider_only and f2 in consider_only):
             SEQS[key] = seq
+
+for key in SEQS:
+
+    seq_nums = SEQS[key]
+    z = str(seq_nums[-3:]).replace(' ','')[1:-1]
+    #matches = match_lines(OEIS,z)
+    #print seq_nums, len(list(matches))
+    seq_str = ','.join(str(seq_nums).replace(',','').split())[1:-1]
+    s_base = "+ *`{}`*, `{}`".format(key,seq_str)
+
+    #print s_base
+
+       
 
 # Load the entire stripped file as raw text
 logging.info("Loading stripped OEIS")
@@ -126,21 +151,6 @@ def match_lines(s, *keywords):
      if matches:
          yield s[line_start:]
 
-
-for key in SEQS:
-
-    seq_nums = SEQS[key]
-    z = str(seq_nums[-3:]).replace(' ','')[1:-1]
-    matches = match_lines(OEIS,z)
-    #print seq_nums, len(list(matches))
-    seq_str = ','.join(str(seq_nums).replace(',','').split())[1:-1]
-    s_base = "+ *`{}`*, `{}`".format(key,seq_str)
-
-    print s_base
-
-
-
-'''        
 logging.info("Checking level 2 sequences against OEIS")
 
 f_output = "verification/raw_lvl1.md"
@@ -152,13 +162,14 @@ output_str = "+ [`{seq_name}`]({url}) `{seq_text}`"
 for key in SEQS:
 
     seq_nums = SEQS[key]
-    z = str(seq_nums[-3:]).replace(' ','')[1:-1]
+    z = str(seq_nums[-5:]).replace(' ','')[1:-1]
+
     matches = match_lines(OEIS,z)
     #print seq_nums, len(list(matches))
     seq_str = ','.join(str(seq_nums).replace(',','').split())[1:-1]
     s_base = "*`{}`*, `{}`".format(key,seq_str)
 
-    FOUT.write(s_base+'\n')
+    print s_base
 
     counter = 0
     for line in matches:
@@ -171,9 +182,8 @@ for key in SEQS:
         s = output_str.format(seq_name = name, 
                               seq_text = ','.join(seqx[:12]),
                               url = url_text)
-        FOUT.write(s+'\n')
+        print s
         if counter>10:break
 
-    FOUT.write('\n')
-    logging.info(s_base + " " + str(counter))
-'''
+    #logging.info(s_base + " " + str(counter))
+
