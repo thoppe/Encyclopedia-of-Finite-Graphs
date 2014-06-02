@@ -1,12 +1,12 @@
 ## Pending:
 
 + [`A243270`](https://oeis.org/A243270) *`is_hamiltonian=1 AND is_bipartite=1`*, `1,0,0,1,0,4,0,24,0,473`
-+ [`A243270`](https://oeis.org/A243271) *`is_hamiltonian=1 AND is_distance_regular=1`*, `1,0,1,2,2,4,2,5,4,6`
-+ [`A243270`](https://oeis.org/A243272) *`is_hamiltonian=1 AND is_eulerian=1`*, `1,0,1,1,2,5,21,120,1312,26525`
-+ [`A243270`](https://oeis.org/A243273) *`is_hamiltonian=1 AND is_integral=0`*, `0,0,0,1,7,43,379,6185,177071,9305068`
-+ [`A243270`](https://oeis.org/A243274) *`is_hamiltonian=1 AND is_integral=1`*, `1,0,1,2,1,5,4,11,12,50`
-+ [`A243270`](https://oeis.org/A243275) *`is_hamiltonian=1 AND is_subgraph_free_K3=1`*, `1,0,0,1,1,4,5,35,130,1293`
-+ [`A243270`](https://oeis.org/A243276) *`is_hamiltonian=1 AND is_subgraph_free_K4=1`*, `1,0,1,2,5,29,188,2481,52499,1857651`
++ [`A243271`](https://oeis.org/A243271) *`is_hamiltonian=1 AND is_distance_regular=1`*, `1,0,1,2,2,4,2,5,4,6`
++ [`A243272`](https://oeis.org/A243272) *`is_hamiltonian=1 AND is_eulerian=1`*, `1,0,1,1,2,5,21,120,1312,26525`
++ [`A243273`](https://oeis.org/A243273) *`is_hamiltonian=1 AND is_integral=0`*, `0,0,0,1,7,43,379,6185,177071,9305068`
++ [`A243274`](https://oeis.org/A243274) *`is_hamiltonian=1 AND is_integral=1`*, `1,0,1,2,1,5,4,11,12,50`
++ [`A243275`](https://oeis.org/A243275) *`is_hamiltonian=1 AND is_subgraph_free_K3=1`*, `1,0,0,1,1,4,5,35,130,1293`
++ [`A243276`](https://oeis.org/A243276) *`is_hamiltonian=1 AND is_subgraph_free_K4=1`*, `1,0,1,2,5,29,188,2481,52499,1857651`
 
 ## Completed:
 
