@@ -15,15 +15,9 @@ The project has three major aims,
 
 *Roadmap*:
 
-+ Collect and submit level 1 sequences
-+ Write search code for level 2+ sequences
-+ Check set relations for _interesting_ queries
-+ Writeup project as an experimental math paper (Automatic integer sequence discovery from small graphs?)
-
-*Lower priority tasks*
-
-+ Add harder invariants!
-+ Write a better invariant "manager", right now just a loose collection
++ Submit level 2+ sequences
++ Write code to determine set relations between invariants
++ Writeup project as an experimental math [`paper`](report/report.tex)
 
 =======================
 
@@ -38,9 +32,6 @@ List of the paired sequences discovered by the project.
 
 ### [Unit Tests](verification/unit_tests.md)
 An auto-generated reported for various base queries and the link to the respective OEIS sequence.
-
-##### New Sequences (level 3+) [incomplete]
-List of the triplet+ sequences discovered by the project.
 
 ====================================
 
