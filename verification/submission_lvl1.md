@@ -1,16 +1,3 @@
-## Pending:
-
-+ [`A243241`](https://oeis.org/A243241) *`[is_strongly_regular=0]`*, `0,0,1,4,19,109,852,11114,261077,11716566`
-+ [`A243242`](https://oeis.org/A243242) *`[is_subgraph_free_K5=0]`*, `0,0,0,0,1,5,51,865,28230,1810796`
-+ [`A243243`](https://oeis.org/A243243) *`[is_subgraph_free_C4=0]`*, `0,0,0,3,13,93,796,10931,260340,11713182`
-+ [`A243244`](https://oeis.org/A243244) *`[is_subgraph_free_K4=0]`*, `0,0,0,1,4,30,317,5511,165165,8932499`
-+ [`A243245`](https://oeis.org/A243245) *`[is_subgraph_free_K3=0]`*, `0,0,1,3,15,93,794,10850,259700,11706739`
-+ [`A243246`](https://oeis.org/A243246) *`[is_subgraph_free_C5=0]`*, `0,0,0,0,8,68,709,10540,258623,11704072`
-+ [`A243247`](https://oeis.org/A243247) *`[is_subgraph_open_bowtie=0]`*, `0, 0, 0, 0, 10, 78, 755, 10709, 259123, 11703774`
-+ [`A243248`](https://oeis.org/A243248) *`[is_subgraph_free_bull=0]`*, `0, 0, 0, 0, 12, 86, 773, 10777, 259390, 11705139`
-+ [`A243249`](https://oeis.org/A243249) *`[is_subgraph_free_bowtie=0]`*, `0,0,0,0,6,52,580,9348,246244,11542460`
-+ [`A243250`](https://oeis.org/A243250) *`[is_subgraph_free_diamond=0]`*, `0,0,0,2,10,73,688,10150,253396,11629559`
-
 ## Completed:
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
@@ -63,10 +50,18 @@
 + [`A242791`](https://oeis.org/A242791) *`[is_subgraph_free_open_bowtie=1]`*, `1, 1, 2, 6, 11, 34, 98, 408, 1957, 12797`
 + [`A242952`](https://oeis.org/A242952) *`[is_real_spectrum=1]`*, `1,1,1,3,11,54,539,7319,209471,10000304`
 + [`A242953`](https://oeis.org/A242953) *`[is_real_spectrum=0]`*, `0,0,1,3,10,58,314,3798,51609,1716267`
++ [`A243241`](https://oeis.org/A243241) *`[is_strongly_regular=0]`*, `0,0,1,4,19,109,852,11114,261077,11716566`
++ [`A243242`](https://oeis.org/A243242) *`[is_subgraph_free_K5=0]`*, `0,0,0,0,1,5,51,865,28230,1810796`
++ [`A243243`](https://oeis.org/A243243) *`[is_subgraph_free_C4=0]`*, `0,0,0,3,13,93,796,10931,260340,11713182`
++ [`A243244`](https://oeis.org/A243244) *`[is_subgraph_free_K4=0]`*, `0,0,0,1,4,30,317,5511,165165,8932499`
++ [`A243245`](https://oeis.org/A243245) *`[is_subgraph_free_K3=0]`*, `0,0,1,3,15,93,794,10850,259700,11706739`
++ [`A243246`](https://oeis.org/A243246) *`[is_subgraph_free_C5=0]`*, `0,0,0,0,8,68,709,10540,258623,11704072`
++ [`A243247`](https://oeis.org/A243247) *`[is_subgraph_open_bowtie=0]`*, `0, 0, 0, 0, 10, 78, 755, 10709, 259123, 11703774`
++ [`A243248`](https://oeis.org/A243248) *`[is_subgraph_free_bull=0]`*, `0, 0, 0, 0, 12, 86, 773, 10777, 259390, 11705139`
++ [`A243249`](https://oeis.org/A243249) *`[is_subgraph_free_bowtie=0]`*, `0,0,0,0,6,52,580,9348,246244,11542460`
++ [`A243250`](https://oeis.org/A243250) *`[is_subgraph_free_diamond=0]`*, `0,0,0,2,10,73,688,10150,253396,11629559`
 
 ## Unsubmitted:
-
-The following sequences have not been submitted. Notes are left for the submission process.
 
 ## Already in database
 

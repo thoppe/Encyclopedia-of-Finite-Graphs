@@ -1,33 +1,21 @@
 ## Pending:
 
++ [`A243270`](https://oeis.org/A243270) *`is_hamiltonian=1 AND is_bipartite=1`*, `1,0,0,1,0,4,0,24,0,473`
++ [`A243270`](https://oeis.org/A243271) *`is_hamiltonian=1 AND is_distance_regular=1`*, `1,0,1,2,2,4,2,5,4,6`
++ [`A243270`](https://oeis.org/A243272) *`is_hamiltonian=1 AND is_eulerian=1`*, `1,0,1,1,2,5,21,120,1312,26525`
++ [`A243270`](https://oeis.org/A243273) *`is_hamiltonian=1 AND is_integral=0`*, `0,0,0,1,7,43,379,6185,177071,9305068`
++ [`A243270`](https://oeis.org/A243274) *`is_hamiltonian=1 AND is_integral=1`*, `1,0,1,2,1,5,4,11,12,50`
++ [`A243270`](https://oeis.org/A243275) *`is_hamiltonian=1 AND is_subgraph_free_K3=1`*, `1,0,0,1,1,4,5,35,130,1293`
++ [`A243270`](https://oeis.org/A243276) *`is_hamiltonian=1 AND is_subgraph_free_K4=1`*, `1,0,1,2,5,29,188,2481,52499,1857651`
+
 ## Completed:
 
-## Potential:
-
-*`is_hamiltonian=1 AND is_bipartite=1`*, `1,0,0,1,0,4,0,24,0,473`
-
-*`is_hamiltonian=1 AND is_distance_regular=1`*, `1,0,1,2,2,4,2,5,4,6`
-+ [`A007380`](https://oeis.org/A007380) `1,2,1,3,1,4,2,5,4,6,7,7`
-+ [`A008808`](https://oeis.org/A008808) `1,0,2,0,3,0,4,2,5,4,6,6`
-+ [`A008820`](https://oeis.org/A008820) `1,0,2,0,3,0,4,2,5,4,6,6`
-+ [`A078975`](https://oeis.org/A078975) `1,4,1,7,7,4,2,5,4,6,1,8`
-+ [`A121895`](https://oeis.org/A121895) `0,0,0,1,1,2,2,4,2,5,4,6`
-+ [`A124896`](https://oeis.org/A124896) `1,1,2,1,4,2,5,4,6,4,9,3`
-+ [`A139555`](https://oeis.org/A139555) `1,1,2,2,4,2,5,4,6,4,8,4`
-+ [`A232245`](https://oeis.org/A232245) `0,2,2,4,2,5,4,6,2,5,5,8`
-
-*`is_hamiltonian=1 AND is_eulerian=1`*, `1,0,1,1,2,5,21,120,1312,26525`
-
-*`is_hamiltonian=1 AND is_integral=0`*, `0,0,0,1,7,43,379,6185,177071,9305068`
-
-*`is_hamiltonian=1 AND is_integral=1`*, `1,0,1,2,1,5,4,11,12,50`
+## Already in database
 
 *`is_hamiltonian=1 AND is_planar=1`*, `1,0,1,3,7,36,221,2184,26985,395877`
 + [`A049366`](https://oeis.org/A049366) `0,0,1,3,7,36,221,2184,26985,395877,6362861`
 
-*`is_hamiltonian=1 AND is_subgraph_free_K3=1`*, `1,0,0,1,1,4,5,35,130,1293`
-
-*`is_hamiltonian=1 AND is_subgraph_free_K4=1`*, `1,0,1,2,5,29,188,2481,52499,1857651`
+## Potential:
 
 *`is_bipartite=1 AND is_distance_regular=1`*, `1,1,0,1,0,2,0,3,0,3`
 + [`A025805`](https://oeis.org/A025805) `1,0,1,0,2,0,2,0,3,0,3,1`
