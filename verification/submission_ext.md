@@ -1,4 +1,9 @@
-## Completed:
+## Pending:
+
+A fix has been submitted for 
++ [`is_hamiltonian=0`](https://oeis.org/A126149)
+
+## Extended:
 
 The following sequences have been extended with this project:
 
@@ -9,6 +14,12 @@ The following sequences have been extended with this project:
 + [`edge_connectivity=1`](https://oeis.org/A052446)
 + [`edge_connectivity=2`](https://oeis.org/A052447)
 + [`edge_connectivity=3`](https://oeis.org/A052448)
+
+## Corrected:
+
+The following sequences were incorrect and fixed with this project:
+
++ [`is_subgraph_free_bull=1`](https://oeis.org/A079575) 
 
 OEIS extension text:
 
