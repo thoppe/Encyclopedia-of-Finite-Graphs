@@ -1,6 +1,7 @@
 import sqlite3, logging, argparse, os, collections, ast
 import subprocess, itertools
 import numpy as np
+import helper_functions
 from helper_functions import load_graph_database
 from helper_functions import attach_ref_table, load_sql_script
 from helper_functions import attach_table, generate_database_name
@@ -17,6 +18,14 @@ cargs = vars(parser.parse_args())
 
 # Start the logger
 logging.root.setLevel(logging.INFO)
+
+# Load the search database
+search_conn = collections.OrderedDict()
+for n in range(1, cargs["max_n"]+1):
+    f_database = helper_functions.generate_database_name(n)
+    f_search_database = f_database.replace('.db','_search.db')
+    search_conn[n] = sqlite3.connect(f_search_database, check_same_thread=False)
+    helper_functions.attach_ref_table(search_conn[n])
 
 # Connect to the database and add structure info
 f_seq_database = "database/sequence.db"
@@ -58,6 +67,21 @@ SEQ = {}
 for item in grab_all(conn,cmd):
     SEQ[item[0]] = np.array(item[1:], dtype=int)
 
+# Grab the ref_sequence_level1 data
+cmd = '''
+SELECT sequence_id,invariant_val_id,conditional,value 
+FROM ref_sequence_level1'''
+SEQ_QUERY = {}
+for item in grab_all(conn,cmd):
+    SEQ_QUERY[item[0]] = item[1:]
+
+# Build the lookup table
+cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
+ORDER BY invariant_id'''
+ref_lookup = dict( helper_functions.grab_all(search_conn[1],cmd) )
+ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
+func_names = ref_lookup.keys()
+
 # Find the relations where we don't know the subset
 cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE subset IS NULL'''
 missing_subset = grab_all(conn,cmd)
@@ -79,11 +103,42 @@ for ridx, s1,s2 in missing_subset:
 cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE subset IS NULL'''
 missing_subset = grab_all(conn,cmd)
 
-msg = "There are {} unknown subset relations remaining after easy pass"
+msg = "After cardinality pass {} unknown subset relations remaining"
 logging.info(msg.format(len(missing_subset)))
 conn.commit()
 
-#for ridx, s1,s2 in missing_subset:
-#    print s1,s2
+
+cmd_find = '''SELECT graph_id FROM graph_search WHERE {} {} {}'''
+
+def check_subset(s1,s2):
+
+    invar_val_id1, c1, v1 = SEQ_QUERY[s1]
+    invar_val_id2, c2, v2 = SEQ_QUERY[s2]
+
+    func_name1 = ref_lookup_inv[invar_val_id1]
+    func_name2 = ref_lookup_inv[invar_val_id2]
+
+    cmd1 = cmd_find.format(func_name1, c1, v1)
+    cmd2 = cmd_find.format(func_name2, c2, v2)
+
+    msg = "Checking {}{}{} subset of {}{}{}"
+    logging.info(msg.format(func_name1, c1,v1, func_name2, c2, v2))
+
+    for n in range(cargs["min_n"],cargs["max_n"]+1):
+        GID1 = set( grab_vector(search_conn[n],cmd1) )
+        GID2 = set( grab_vector(search_conn[n],cmd2) )
+        if not GID1.issubset(GID2):
+            return False
+
+        return True
+
+for ridx, s1,s2 in missing_subset:
+
+    valid_subset = int(check_subset(s1,s2))
+
+    # SAVE THE RESULTS
+    cmd = '''UPDATE relations SET subset={} WHERE relation_id={}'''
+    conn.execute(cmd.format(valid_subset,ridx))
+    conn.commit()
 
 
