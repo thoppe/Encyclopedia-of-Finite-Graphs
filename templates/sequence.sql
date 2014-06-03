@@ -66,7 +66,20 @@ CREATE TABLE IF NOT EXISTS ref_sequence_level2(
 CREATE TABLE IF NOT EXISTS stat_sequence( 
   sequence_id INTEGER PRIMARY KEY,
   query_level INTEGER NOT NULL,
-  non_zero_terms INTEGER,
-  
+  non_zero_terms INTEGER, 
   UNIQUE (sequence_id, query_level)
 );
+
+--DROP TABLE IF EXISTS relations;
+
+CREATE TABLE IF NOT EXISTS relations( 
+  relation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  s1_id INTEGER NOT NULL,
+  s2_id INTEGER NOT NULL,
+  suggestive TINYINT,
+  exclusive  TINYINT,
+  equal      TINYINT,
+  UNIQUE (s1_id, s2_id)
+);
+
+
