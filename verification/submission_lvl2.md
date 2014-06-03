@@ -1,5 +1,27 @@
 ## Pending:
 
++ [`A243319`](https://oeis.org/A243319) *`is_bipartite=1 AND is_distance_regular=1`*, `1,1,0,1,0,2,0,3,0,3`
++ [`A243320`](https://oeis.org/A243320) *`is_bipartite=1 AND is_eulerian=1`*, `1,0,0,1,0,2,1,6,7,29`
++ [`A243321`](https://oeis.org/A243321) *`is_bipartite=1 AND is_planar=1`*, `1,1,1,3,5,16,41,158,582,2749`
++ [`A243322`](https://oeis.org/A243322) *`is_distance_regular=1 AND is_eulerian=1`*, `1,0,1,1,2,2,2,3,4,4`
++ [`A243323`](https://oeis.org/A243323) *`is_integral=0 AND is_bipartite=1`*, `0,0,1,2,4,14,43,179,730,4019`
++ [`A243324`](https://oeis.org/A243324) *`is_integral=0 AND is_eulerian=1`*, `0,0,0,0,2,6,33,180,1773,31006`
++ [`A243325`](https://oeis.org/A243325) *`is_integral=0 AND is_planar=1`*, `0,0,1,4,18,95,642,5962,71876,1052786`
++ [`A243326`](https://oeis.org/A243326) *`is_integral=0 AND is_subgraph_free_K3=1`*, `0,0,1,2,5,16,58,264,1380,9818`
++ [`A243327`](https://oeis.org/A243327) *`is_integral=0 AND is_subgraph_free_K4=1`*, `0,0,1,4,15,77,531,5597,95900,2784034`
++ [`A243328`](https://oeis.org/A243328) *`is_integral=1 AND is_bipartite=1`*, `1,1,0,1,1,3,1,3,0,13`
++ [`A243329`](https://oeis.org/A243329) *`is_integral=1 AND is_distance_regular=1`*, `1,1,1,2,1,4,1,4,3,6`
++ [`A243330`](https://oeis.org/A243330) *`is_integral=1 AND is_eulerian=1`*, `1,0,1,1,2,2,4,4,9,20`
++ [`A243331`](https://oeis.org/A243331) *`is_integral=1 AND is_planar=1`*, `1,1,1,2,2,4,4,12,9,19`
++ [`A243332`](https://oeis.org/A243332) *`is_integral=1 AND is_subgraph_free_K3=1`*, `1,1,0,1,1,3,1,3,0,14`
++ [`A243333`](https://oeis.org/A243333) *`is_integral=1 AND is_subgraph_free_K4=1`*, `1,1,1,1,2,5,5,9,15,38`
++ [`A243334`](https://oeis.org/A243334) *`is_subgraph_free_K3=1 AND is_distance_regular=1`*, `1,1,0,1,1,2,1,3,1,4`
++ [`A243335`](https://oeis.org/A243335) *`is_subgraph_free_K3=1 AND is_eulerian=1`*, `1,0,0,1,1,2,3,8,19,62`
++ [`A243336`](https://oeis.org/A243336) *`is_subgraph_free_K4=1 AND is_eulerian=1`*, `1,0,1,1,3,6,22,93,656,7484`
++ [`A243337`](https://oeis.org/A243337) *`is_subgraph_free_K4=1 AND is_planar=1`*, `1,1,2,5,17,79,478,4123,46666,648758`
++ [`A243338`](https://oeis.org/A243338) *`is_tree=1 AND is_integral=0`*, `0,0,1,2,2,5,10,23,47,105`
++ [`A243339`](https://oeis.org/A243339) *`is_subgraph_free_K4=1 AND is_distance_regular=1`*, `1,1,1,1,1,3,1,3,3,4`
+
 ## Completed:
 
 + [`A243270`](https://oeis.org/A243270) *`is_hamiltonian=1 AND is_bipartite=1`*, `1,0,0,1,0,4,0,24,0,473`
@@ -40,28 +62,6 @@ All trees are bipartite and planar and free of K_n>3
 
 
 ## Potential:
-
-+ *`is_bipartite=1 AND is_distance_regular=1`*, `1,1,0,1,0,2,0,3,0,3`
-+ *`is_bipartite=1 AND is_eulerian=1`*, `1,0,0,1,0,2,1,6,7,29`
-+ *`is_bipartite=1 AND is_planar=1`*, `1,1,1,3,5,16,41,158,582,2749`
-+ *`is_distance_regular=1 AND is_eulerian=1`*, `1,0,1,1,2,2,2,3,4,4`
-+ *`is_integral=0 AND is_bipartite=1`*, `0,0,1,2,4,14,43,179,730,4019`
-+ *`is_integral=0 AND is_eulerian=1`*, `0,0,0,0,2,6,33,180,1773,31006`
-+ *`is_integral=0 AND is_planar=1`*, `0,0,1,4,18,95,642,5962,71876,1052786`
-+ *`is_integral=0 AND is_subgraph_free_K3=1`*, `0,0,1,2,5,16,58,264,1380,9818`
-+ *`is_integral=0 AND is_subgraph_free_K4=1`*, `0,0,1,4,15,77,531,5597,95900,2784034`
-+ *`is_integral=1 AND is_bipartite=1`*, `1,1,0,1,1,3,1,3,0,13`
-+ *`is_integral=1 AND is_distance_regular=1`*, `1,1,1,2,1,4,1,4,3,6`
-+ *`is_integral=1 AND is_eulerian=1`*, `1,0,1,1,2,2,4,4,9,20`
-+ *`is_integral=1 AND is_planar=1`*, `1,1,1,2,2,4,4,12,9,19`
-+ *`is_integral=1 AND is_subgraph_free_K3=1`*, `1,1,0,1,1,3,1,3,0,14`
-+ *`is_integral=1 AND is_subgraph_free_K4=1`*, `1,1,1,1,2,5,5,9,15,38`
-+ *`is_subgraph_free_K3=1 AND is_distance_regular=1`*, `1,1,0,1,1,2,1,3,1,4`
-+ *`is_subgraph_free_K3=1 AND is_eulerian=1`*, `1,0,0,1,1,2,3,8,19,62`
-+ *`is_subgraph_free_K4=1 AND is_eulerian=1`*, `1,0,1,1,3,6,22,93,656,7484`
-+ *`is_subgraph_free_K4=1 AND is_planar=1`*, `1,1,2,5,17,79,478,4123,46666,648758`
-+ *`is_tree=1 AND is_integral=0`*, `0,0,1,2,2,5,10,23,47,105`
-+ *`is_subgraph_free_K4=1 AND is_distance_regular=1`*, `1,1,1,1,1,3,1,3,3,4`
 
 ## Unfiltered:
 
@@ -1365,3 +1365,19 @@ All trees are bipartite and planar and free of K_n>3
 + *`vertex_connectivity>4 AND is_integral=1`*, `0,0,0,0,0,1,1,2,3,11`
 + *`vertex_connectivity>4 AND is_strongly_regular=1`*, `0,0,0,0,0,1,1,2,2,4`
 + *`vertex_connectivity>4 AND n_articulation_points=0`*, `0,0,0,0,0,1,4,39,1051,102630`
+
+## Notes:
+
+Cross-ref notes:
+
+Cf.
+A003216 (bipartite graphs)
+A241814 (distance regular graphs)
+A003049 (Eulerian graphs)
+A003094 (planar graphs)
+A064731 (integral graphs)
+A241842 (non integral graphs)
+A024607 (triangle free graphs)
+A079574 (K_4 free graphs)
+A000055 (tree graphs)
+A003216 (Hamiltonian graphs)
