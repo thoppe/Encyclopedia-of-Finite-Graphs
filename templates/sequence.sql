@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS relations(
   relation_id INTEGER PRIMARY KEY AUTOINCREMENT,
   s1_id INTEGER NOT NULL,
   s2_id INTEGER NOT NULL,
-  suggestive TINYINT,
+  subset     TINYINT,
   exclusive  TINYINT,
   equal      TINYINT,
   UNIQUE (s1_id, s2_id)

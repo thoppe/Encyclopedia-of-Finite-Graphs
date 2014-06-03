@@ -9,6 +9,10 @@ from helper_functions import grab_vector, grab_all, grab_scalar
 desc   = "Determine the relations between the invariant sequences"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('-f','--force',default=False,action='store_true')
+parser.add_argument('--min_n',type=int,default=3,
+                    help="Only compare graph of this order and larger")
+parser.add_argument('--max_n',type=int,default=10,
+                    help="Only compare graph of this order and smaller")
 cargs = vars(parser.parse_args())
 
 # Start the logger
@@ -36,7 +40,7 @@ SELECT sequence_id, invariant_val_id FROM ref_sequence_level1'''
 choices = grab_all(conn,cmd)
 
 possible_pairs = []
-for p1,p2 in itertools.combinations(choices,2):
+for p1,p2 in itertools.product(choices,repeat=2):
     if p1[1] != p2[1] and p1[1] in full_seq and p2[1] in full_seq:
         possible_pairs.append([p1[0], p2[0]])
 
@@ -45,5 +49,41 @@ cmd_add = '''
 INSERT OR IGNORE INTO relations (s1_id,s2_id) VALUES (?,?)'''
 conn.executemany(cmd_add, possible_pairs)
 conn.commit()
+
+# Grab all the sequence data as a dictionary
+cmd = '''SELECT sequence_id,{} FROM sequence WHERE query_level=1'''
+s_list = ["s%i"%k for k in xrange(cargs["min_n"],cargs["max_n"]+1)]
+cmd = cmd.format(','.join(s_list))
+SEQ = {}
+for item in grab_all(conn,cmd):
+    SEQ[item[0]] = np.array(item[1:], dtype=int)
+
+# Find the relations where we don't know the subset
+cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE subset IS NULL'''
+missing_subset = grab_all(conn,cmd)
+
+msg = "There are {} unknown subset relations"
+logging.info(msg.format(len(missing_subset)))
+
+# Identify the sequence which CAN'T be subset 
+# (e.g. one is strictly larger than the other)
+cmd = '''UPDATE relations SET subset=0 WHERE relation_id={}'''
+
+RIDX_not_possible = []
+for ridx, s1,s2 in missing_subset:
+    condition = SEQ[s1] >= SEQ[s2]
+    if not condition.all():
+        conn.execute(cmd.format(ridx))
+
+# Find the relations where we don't know the subset (again)
+cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE subset IS NULL'''
+missing_subset = grab_all(conn,cmd)
+
+msg = "There are {} unknown subset relations remaining after easy pass"
+logging.info(msg.format(len(missing_subset)))
+conn.commit()
+
+#for ridx, s1,s2 in missing_subset:
+#    print s1,s2
 
 
