@@ -67,7 +67,7 @@ Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \sub
 Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
 
 Similar to the \textit{House of Graphs} project (ref), we say that a relation between two invariants is \textit{suggestive} $\SEQ_a \subseteq_k \SEQ_b$ if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le k$.
-Two invariant equalites are \textit{exclusive} if $\SEQ_a \cup_k \SEQ_b$ if $f(\CLASS_i) \cup g(\CLASS_i) = \emptyset$ for $0 \le i \le k$.
+Two invariant equalities are \textit{exclusive} if $\SEQ_a \cap_k \SEQ_b$ if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le k$.
 In addition to contributing to the OEIS, a secondary goal is to identify all \textit{suggestive} and \textit{exclusive} relations between the invariants studied for $k=10$.
 
 In this paper, we restrict the classes examined to $\SIMPLECLASS$.
@@ -77,7 +77,8 @@ Provided one had a means of enumeration, an extension to other classes would be 
 
 \section{Methods}
 Using the \texttt{geng -c} from \texttt{nauty} (ref), we enumerated the class of $\SIMPLECLASS$ up to order $N \le 10$.
-For each graph we computed a series of invariants, which for completeness, are described below.
+For each graph we computed a series of invariants.
+For completeness these invariants are described below.
 
 \subsection{Invariants}
 
