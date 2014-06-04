@@ -56,8 +56,9 @@ for p1,p2 in itertools.product(choices,repeat=2):
 # Add these pairs into the relation database
 cmd_add = '''
 INSERT OR IGNORE INTO relations (s1_id,s2_id) VALUES (?,?)'''
-conn.executemany(cmd_add, possible_pairs)
-conn.commit()
+if possible_pairs:
+    conn.executemany(cmd_add, possible_pairs)
+    conn.commit()
 
 # Grab all the sequence data as a dictionary
 cmd = '''SELECT sequence_id,{} FROM sequence WHERE query_level=1'''
@@ -93,7 +94,6 @@ logging.info(msg.format(len(missing_subset)))
 # (e.g. one is strictly larger than the other)
 cmd = '''UPDATE relations SET subset=0 WHERE relation_id={}'''
 
-RIDX_not_possible = []
 for ridx, s1,s2 in missing_subset:
     condition = SEQ[s1] >= SEQ[s2]
     if not condition.all():
@@ -105,12 +105,10 @@ missing_subset = grab_all(conn,cmd)
 
 msg = "After cardinality pass {} unknown subset relations remaining"
 logging.info(msg.format(len(missing_subset)))
-conn.commit()
-
-
-cmd_find = '''SELECT graph_id FROM graph_search WHERE {} {} {}'''
+if missing_subset: conn.commit()
 
 def check_subset(s1,s2):
+    cmd_find = '''SELECT graph_id FROM graph_search WHERE {} {} {}'''
 
     invar_val_id1, c1, v1 = SEQ_QUERY[s1]
     invar_val_id2, c2, v2 = SEQ_QUERY[s2]
@@ -121,24 +119,95 @@ def check_subset(s1,s2):
     cmd1 = cmd_find.format(func_name1, c1, v1)
     cmd2 = cmd_find.format(func_name2, c2, v2)
 
-    msg = "Checking {}{}{} subset of {}{}{}"
-    logging.info(msg.format(func_name1, c1,v1, func_name2, c2, v2))
+    #msg = "Checking {}{}{} subset of {}{}{}"
+    #logging.info(msg.format(func_name1, c1,v1, func_name2, c2, v2))
 
     for n in range(cargs["min_n"],cargs["max_n"]+1):
+
         GID1 = set( grab_vector(search_conn[n],cmd1) )
         GID2 = set( grab_vector(search_conn[n],cmd2) )
-        if not GID1.issubset(GID2):
+
+        if not GID2.issubset(GID1):
             return False
 
         return True
 
 for ridx, s1,s2 in missing_subset:
-
     valid_subset = int(check_subset(s1,s2))
-
-    # SAVE THE RESULTS
     cmd = '''UPDATE relations SET subset={} WHERE relation_id={}'''
     conn.execute(cmd.format(valid_subset,ridx))
-    conn.commit()
+if missing_subset: conn.commit()
 
+# Find the relations where we don't know equality
+cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE equal IS NULL'''
+missing_eq = grab_all(conn,cmd)
+msg = "There are {} unknown equality relations remaining"
+logging.info(msg.format(len(missing_eq)))
+
+# Grab the known relations bewteen the subsets (now complete)
+cmd = '''SELECT s1_id,s2_id FROM relations WHERE subset=1'''
+known_subsets = set(grab_all(conn,cmd))
+for item in missing_eq:
+    ridx,p1,p2 = item
+    equality_value = (p1,p2) in known_subsets and (p2,p1) in known_subsets
+    cmd = '''UPDATE relations SET equal={} WHERE relation_id={}'''
+    conn.execute(cmd.format(int(equality_value),ridx))
+
+if missing_eq: conn.commit()
+
+# Find the relations where we don't know the exclusive relation
+cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE exclusive IS NULL'''
+missing_ex = grab_all(conn,cmd)
+msg = "There are {} unknown exclusive relations remaining"
+logging.info(msg.format(len(missing_ex)))
+
+max_cardinality = np.array([1, 1, 1, 2, 6, 21, 112, 853, 11117, 261080, 11716571])
+max_cardinality = max_cardinality[cargs["min_n"]:cargs["max_n"]+1]
+
+# Check for exclusive relations that are not possible, i.e. those pairs
+# that whose union exceeds the total number of graphs
+cmd_mark = '''UPDATE relations SET exclusive=0 WHERE relation_id={}'''
+for ridx, s1,s2 in missing_ex:
+    condition = (SEQ[s1] + SEQ[s2]) <= max_cardinality
+    if not condition.all():
+        conn.execute(cmd_mark.format(ridx))
+conn.commit()
+
+# Find the relations where we don't know the exclusive relation (again)
+cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE exclusive IS NULL'''
+missing_ex = grab_all(conn,cmd)
+msg = "There are {} unknown exclusive relations remaining after cardinality tests"
+logging.info(msg.format(len(missing_ex)))
+
+
+
+def check_exclusive(s1,s2):
+    cmd_find = '''SELECT graph_id FROM graph_search WHERE {} {} {}'''
+
+    invar_val_id1, c1, v1 = SEQ_QUERY[s1]
+    invar_val_id2, c2, v2 = SEQ_QUERY[s2]
+
+    func_name1 = ref_lookup_inv[invar_val_id1]
+    func_name2 = ref_lookup_inv[invar_val_id2]
+
+    cmd1 = cmd_find.format(func_name1, c1, v1)
+    cmd2 = cmd_find.format(func_name2, c2, v2)
+
+    msg = "Checking {}{}{} exclusive of {}{}{}"
+    logging.info(msg.format(func_name1, c1,v1, func_name2, c2, v2))
+
+    for n in range(cargs["min_n"],cargs["max_n"]+1):
+        GID1 = set( grab_vector(search_conn[n],cmd1) )
+        GID2 = set( grab_vector(search_conn[n],cmd2) )
+        if GID1.intersection(GID2):
+            return False
+
+    return True
+
+for ridx, s1,s2 in missing_ex:
+    valid_exclusive = int(check_exclusive(s1,s2))
+
+    cmd = '''UPDATE relations SET exclusive={} WHERE relation_id={}'''
+    conn.execute(cmd.format(valid_exclusive,ridx))
+    conn.commit()
 
