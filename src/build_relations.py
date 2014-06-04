@@ -43,6 +43,13 @@ SELECT sequence_id FROM stat_sequence
 WHERE query_level=1 AND non_zero_terms >= 4'''
 full_seq = set(grab_vector(conn, cmd))
 
+# Build the lookup table
+cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
+ORDER BY invariant_id'''
+ref_lookup = dict( helper_functions.grab_all(search_conn[1],cmd) )
+ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
+func_names = ref_lookup.keys()
+
 # Iterate over the pairs that have different invariant_val_ids
 cmd = '''
 SELECT sequence_id, invariant_val_id FROM ref_sequence_level1'''
@@ -50,7 +57,9 @@ choices = grab_all(conn,cmd)
 
 possible_pairs = []
 for p1,p2 in itertools.product(choices,repeat=2):
-    if p1[1] != p2[1] and p1[1] in full_seq and p2[1] in full_seq:
+    #print p1,p2, p1[1]!=p2[1], p1[0] in full_seq, p2[0] in full_seq
+
+    if p1[1] != p2[1] and p1[0] in full_seq and p2[0] in full_seq:
         possible_pairs.append([p1[0], p2[0]])
 
 # Add these pairs into the relation database
@@ -75,13 +84,6 @@ FROM ref_sequence_level1'''
 SEQ_QUERY = {}
 for item in grab_all(conn,cmd):
     SEQ_QUERY[item[0]] = item[1:]
-
-# Build the lookup table
-cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
-ORDER BY invariant_id'''
-ref_lookup = dict( helper_functions.grab_all(search_conn[1],cmd) )
-ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
-func_names = ref_lookup.keys()
 
 # Find the relations where we don't know the subset
 cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE subset IS NULL'''
