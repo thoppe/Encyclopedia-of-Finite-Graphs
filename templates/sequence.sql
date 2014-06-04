@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS stat_sequence(
   UNIQUE (sequence_id, query_level)
 );
 
-DROP TABLE IF EXISTS relations;
+--DROP TABLE IF EXISTS relations;
 
 CREATE TABLE IF NOT EXISTS relations( 
   relation_id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -57,7 +57,6 @@ choices = grab_all(conn,cmd)
 
 possible_pairs = []
 for p1,p2 in itertools.product(choices,repeat=2):
-    #print p1,p2, p1[1]!=p2[1], p1[0] in full_seq, p2[0] in full_seq
 
     if p1[1] != p2[1] and p1[0] in full_seq and p2[0] in full_seq:
         possible_pairs.append([p1[0], p2[0]])
