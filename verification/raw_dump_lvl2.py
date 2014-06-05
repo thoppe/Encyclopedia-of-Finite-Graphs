@@ -22,6 +22,13 @@ consider_only = ["is_planar",
                  "is_subgraph_free_K3",
                  "is_subgraph_free_K4",]
 
+must_include = ["is_subgraph_free_bull",
+                "is_subgraph_free_diamond",
+                "is_subgraph_free_bowtie"]
+
+consider_only += must_include
+
+
 # These invariants must be > 1 to show up in the reporting
 positivity_invariants = [
   "is_k_regular",
@@ -108,8 +115,10 @@ for items in grab_all(seq_conn, cmd_grab_all):
         key2 = "{}{}{}".format(f2,c2,v2)
         key = ' AND '.join([key1,key2])
 
-        if check_positivity([f1,f2],[v1,v2]) and (
-                f1 in consider_only and f2 in consider_only):
+        is_considered = (f1 in consider_only and f2 in consider_only)
+        is_included   = (f1 in must_include or f2 in must_include)
+
+        if check_positivity([f1,f2],[v1,v2]) and is_considered and is_included:
             SEQS[key] = seq
 
 for key in SEQS:

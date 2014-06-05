@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
 
 \newcommand{\OEIS}[1]
 {\href{https://oeis.org/#1}{OEIS \texttt{#1}}}
@@ -12,6 +13,10 @@
 
 \newcommand{\ie}[0]{i.e.\ }
 
+\newcommand{\bowtiegraph}{\href{http://mathworld.wolfram.com/ButterflyGraph.html}{bowtie graph}}
+\newcommand{\diamondgraph}{\href{http://mathworld.wolfram.com/DiamondGraph.html}{diamond graph}}
+\newcommand{\pawgraph}{\href{http://mathworld.wolfram.com/PawGraph.html}{paw graph}}
+\newcommand{\bannergraph}{\href{http://mathworld.wolfram.com/BannerGraph.html}{banner graph}}
 
 \begin{document}
 
@@ -82,21 +87,55 @@ For completeness these invariants are described below.
 
 \subsection{Invariants}
 
-The \textit{automorphism number} is the cardinality of the automorphism group of the graph, where each member is a mapping of the vertices onto themselves which preserve isomorphism. We use BLISS (ref) to compute this.
+\begin{itemize}
+\item The \textit{automorphism number} is the cardinality of the automorphism group of the graph, where each member is a mapping of the vertices onto themselves which preserve isomorphism. We use BLISS (ref) to compute this.
 
-Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
+\item Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
 In $\SIMPLECLASS$ all distances are finite.
 The \textit{eccentricity} of a vertex $k$, $\epsilon(k)$ is the max value of $D_{k j}$.
 The \textit{radius}/\textit{diameter} is the minimum/maximum value of eccentricity for all vertices.
 
-The adjacency matrix $A$ has the value at $A_{ij}$ equal to the number of edges joining vertices $i$ and $j$.
+\item The adjacency matrix $A$ has the value at $A_{ij}$ equal to the number of edges joining vertices $i$ and $j$.
 For $\SIMPLECLASS$, this is a $\{0,1\}$ matrix with zeros down the diagonal.
 The \textit{spectrum}, $\lambda_1, \lambda_2, \ldots$ of a graph are the eigenvalues of $A$.
 A graph is $integral$ if all the values of the graph spectrum are integral, $\lambda_k \in \mathbb{N}$.
 A graph is $real$ if $\lambda_k \in \mathbb{R}$.
 
-A graph is \textit{Hamiltonian}/\textit{Eulerian} if there is a circuit that visits each vertex/edge exactly once time.
+\item A graph is \textit{Hamiltonian}/\textit{Eulerian} if there is a circuit that visits each vertex/edge exactly once time.
 
+
+%\item The eccentricity of a node is the maximum distance from that node to any other. The minimum eccentricity over all nodes of the graph is the \textit{graph radius} and the maximum is the \textit{graph diameter}.
+
+\item A node of a graph is an \textit{articulation point} if its removal disconnects the graph. A graph invariant is the number of such nodes. 
+
+\item The \textit{node/edge connectivity} of a graph is the minimum number of nodes/edges that can disconnect the graph with their removal. 
+
+\item A graph's \textit{cycle space} is the set of all of its Eulerian subgraphs, where every member can be constructed as the symmetric difference of members of the \textit{cycle basis}. A graph invariant is the number of cycle bases, which is zero for a \textit{tree}, an acyclic connected graph.
+
+\item The length of the shortest/longest cycle in a graph is its \textit{girth}/\textit{circumference}.
+ 
+\item \textit{distance regular} ???
+
+\item The \textit{degree sequence} of a graph is the sequence formed by listing the node degrees in non-increasing order.  
+
+\item A \textit{$k$-regular graph} is one in which every node has degree $k$. A regular graph is \textit{strongly regular} if in addition there exist $\lambda$ and $\mu$ such that any two adjacent vertices have $\lambda$ neighbors in common and any two non-adjacent vertices have $\mu$ neighbors in common. 
+
+\item The \textit{Tutte polynomial} for a graph is a bivariate polynomial which contains rich information about the graph's connectedness. It requires knowledge of the number of connected components of the graph and the number of connected components of every graph formed by the removal of edges. 
+
+\item The \textit{chromatic polynomial} and can in fact be formed from the Tutte polynomial by taking the second variable to be zero. The chromatic polynomial $P(G,k)$ gives the number of $k$-colorings on graph $G$. The \textit{chromatic number} is the (integer) value of $k$ for which $P(G,k)$ attains its smallest positive value. 
+
+\item The chromatic number is motivated by the graph coloring problem, which is to assign a color to each node so that no two adjacent nodes have the same color. The chromatic (coloring) number is the minimum number of colors required to do so. An extension is the fractional coloring problem, in which a set of $b$ colors must be assigned to each node, out of a set $a$ of available colors. The \textit{fractional coloring number} $\chi_b(G)$, for a given $b$, is the smallest value of $a$ such that an $a:b$ fractional coloring exists. 
+%For $b=1$ this is the chromatic number, but in general $\chi_b$ 
+
+\item A graph's \textit{automorphism group} is the group composed of all automorphisms (isomorphisms of the graph onto itself) of the graph. A graph invariant is the cardinality of this group. 
+
+\item A \textit{chord} of a cycle is an edge with one vertex belonging to the cycle and one edge outside of the cycle. In a \textit{chordal graph}, all cycles of order at least four have a cycle chord.   
+
+\item A \textit{triangle-free} graph does not have a triangle as a subgraph. Similarly a $Kn$-free graph does not contain the complete graph of order $n$. We check if graphs are $Kn$-free for $n=3\dots 5$. In addition we check if they contain cycles of length $\ell = 1.. 10$, and if they contain any of the following as subgraphs: the \bowtiegraph, the \diamondgraph, the \pawgraph, the \bannergraph, and the open bowtie graph.  
+
+
+
+\end{itemize}
 \section{Discussion}
 
 
