@@ -91,6 +91,7 @@ missing_subset = grab_all(conn,cmd)
 msg = "There are {} unknown subset relations"
 logging.info(msg.format(len(missing_subset)))
 
+
 # Identify the sequence which CAN'T be subset 
 # (e.g. one is strictly larger than the other)
 cmd = '''UPDATE relations SET subset=0 WHERE relation_id={}'''
@@ -99,6 +100,7 @@ for ridx, s1,s2 in missing_subset:
     condition = SEQ[s1] >= SEQ[s2]
     if not condition.all():
         conn.execute(cmd.format(ridx))
+
 
 # Find the relations where we don't know the subset (again)
 cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE subset IS NULL'''
@@ -120,8 +122,6 @@ def check_subset(s1,s2):
     cmd1 = cmd_find.format(func_name1, c1, v1)
     cmd2 = cmd_find.format(func_name2, c2, v2)
 
-    #msg = "Checking {}{}{} subset of {}{}{}"
-    #logging.info(msg.format(func_name1, c1,v1, func_name2, c2, v2))
 
     for n in range(cargs["min_n"],cargs["max_n"]+1):
 
@@ -131,13 +131,20 @@ def check_subset(s1,s2):
         if not GID2.issubset(GID1):
             return False
 
-        return True
+    msg = "Subset found {}{}{} -> {}{}{}"
+    logging.info(msg.format(func_name2, c2,v2, func_name1, c1, v1))
+    
+    return True
 
 for ridx, s1,s2 in missing_subset:
     valid_subset = int(check_subset(s1,s2))
     cmd = '''UPDATE relations SET subset={} WHERE relation_id={}'''
     conn.execute(cmd.format(valid_subset,ridx))
+
+
 if missing_subset: conn.commit()
+
+exit()
 
 # Find the relations where we don't know equality
 cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE equal IS NULL'''
