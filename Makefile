@@ -41,6 +41,7 @@ sequence:
 
 relations:
 	python src/build_relations.py
+	python verification/raw_dump_relations.py
 
 test:
 	python src/unit_tests.py --max_n 8

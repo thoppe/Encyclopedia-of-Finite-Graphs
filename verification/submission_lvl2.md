@@ -1425,13 +1425,19 @@ K3 is already a subgraph of these graphs: bowtie, bull, diamond
 Cross-ref notes:
 
 Cf.
+
 A003216 (bipartite graphs)
 A241814 (distance regular graphs)
 A003049 (Eulerian graphs)
 A003094 (planar graphs)
 A064731 (integral graphs)
 A241842 (non integral graphs)
-A024607 (triangle free graphs)
-A079574 (K_4 free graphs)
 A000055 (tree graphs)
 A003216 (Hamiltonian graphs)
+
+A024607 (triangle free graphs)
+A079574 (K_4 free graphs)
+A242792 (bowtie free graphs)
+A242790 (diamond free graphs)
+A079575 (bull free graphs)
+A242791 (open-bowtie free graphs)

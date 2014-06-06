@@ -11,10 +11,14 @@ parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('-f','--force',default=False,action='store_true')
 cargs = vars(parser.parse_args())
 
-ignored_functions = set([
-    "automorphism_group_n",
-    "chromatic_number",
-])
+# Start the logger
+logging.root.setLevel(logging.INFO)
+
+#ignored_functions = set([
+#    "automorphism_group_n",
+#    "chromatic_number",
+#])
+ignored_functions = []
 
 # Connect to the database and add structure info
 f_seq_database = "database/sequence.db"
@@ -44,6 +48,8 @@ def info(seq_id):
 f_output = "verification/relations.md"
 FOUT = open(f_output,'w')
 
+logging.info("Saving relation information to {}".format(f_output))
+
 #######################################################################
 
 # Find the relations with equality
@@ -52,7 +58,7 @@ SELECT relation_id, s1_id,s2_id FROM relations
 WHERE equal=1'''
 relations_eq = grab_all(conn,cmd)
 
-line = "# Equality relations (converse is true)\n"
+line = "# Equality relations (converse holds)\n"
 msg = "`+ {}{}{}` <-> `{}{}{}`\n"
 
 FOUT.write(line)
@@ -62,26 +68,6 @@ for ridx, s1, s2 in relations_eq:
     EQ_SET.add((s1,s2))
     EQ_SET.add((s2,s1))
 
-    f1, c1, v1 = info(s1)
-    f2, c2, v2 = info(s2)
-
-    vals = (f1, c1,v1, f2, c2, v2)
-    if f1 not in ignored_functions and f2 not in ignored_functions:
-        FOUT.write( msg.format(*vals) )
-
-#######################################################################
-
-# Find the relations that are exclusive
-cmd = '''
-SELECT relation_id, s1_id,s2_id FROM relations 
-WHERE exclusive=1'''
-relations_ex = grab_all(conn,cmd)
-
-line = "\n# Exclusive relations\n"
-msg = "+ `{}{}{}` intersect `{}{}{}` = 0\n"
-FOUT.write(line)
-
-for ridx, s1, s2 in relations_ex:
     f1, c1, v1 = info(s1)
     f2, c2, v2 = info(s2)
 
@@ -113,6 +99,24 @@ for ridx, s1, s2 in relations_subset:
         if (s1,s2) not in EQ_SET:
             FOUT.write( msg.format(*vals) )
 
-   
+#######################################################################
+
+# Find the relations that are exclusive
+cmd = '''
+SELECT relation_id, s1_id,s2_id FROM relations 
+WHERE exclusive=1'''
+relations_ex = grab_all(conn,cmd)
+
+line = "\n# Exclusive relations\n"
+msg = "+ `{}{}{}` intersect `{}{}{}` = 0\n"
+FOUT.write(line)
+
+for ridx, s1, s2 in relations_ex:
+    f1, c1, v1 = info(s1)
+    f2, c2, v2 = info(s2)
+
+    vals = (f1, c1,v1, f2, c2, v2)
+    if f1 not in ignored_functions and f2 not in ignored_functions:
+        FOUT.write( msg.format(*vals) )   
 
 

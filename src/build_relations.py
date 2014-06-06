@@ -140,11 +140,8 @@ for ridx, s1,s2 in missing_subset:
     valid_subset = int(check_subset(s1,s2))
     cmd = '''UPDATE relations SET subset={} WHERE relation_id={}'''
     conn.execute(cmd.format(valid_subset,ridx))
-
-
 if missing_subset: conn.commit()
 
-exit()
 
 # Find the relations where we don't know equality
 cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE equal IS NULL'''
