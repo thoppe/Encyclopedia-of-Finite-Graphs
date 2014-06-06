@@ -1,58 +1,29 @@
 ## Pending:
 
-## Potential:
-
-*`is_hamiltonian=1 AND is_subgraph_free_bowtie=1`*, `1,0,1,3,3,14,50,390,3627,52858`
-
-*`is_subgraph_free_bowtie=1 AND is_distance_regular=1`*, `1,1,1,2,1,2,1,3,1,4`
-
-*`is_subgraph_free_bowtie=1 AND is_eulerian=1`*, `1,0,1,1,2,4,8,35,115,629`
-
-*`is_subgraph_free_bowtie=1 AND is_integral=0`*, `0,0,1,4,13,56,272,1761,14835,174092`
-
-*`is_subgraph_free_bowtie=1 AND is_integral=1`*, `1,1,1,2,2,4,1,8,1,19`
-
-*`is_subgraph_free_bowtie=1 AND is_planar=1`*, `1,1,2,6,15,58,255,1510,10766,94109`
-
-*`is_subgraph_free_bowtie=1 AND is_subgraph_free_K4=1`*, `1,1,2,5,14,56,256,1656,13952,163878`
-
-*`is_subgraph_free_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,8,25,77,333,1668,11355`
-
-----------------
-
-*`is_hamiltonian=1 AND is_subgraph_free_bull=1`*, `1,0,1,3,1,4,5,35,130,1293`
-
-*`is_subgraph_free_bull=1 AND is_distance_regular=1`*, `1,1,1,2,1,2,1,3,1,4`
-
-*`is_subgraph_free_bull=1 AND is_eulerian=1`*, `1,0,1,1,2,3,5,14,30,95`
-
-*`is_subgraph_free_bull=1 AND is_integral=0`*, `0,0,1,4,8,23,78,337,1690,11418`
-
-*`is_subgraph_free_bull=1 AND is_integral=1`*, `1,1,1,2,1,3,2,3,0,14`
-
-*`is_subgraph_free_bull=1 AND is_planar=1`*, `1,1,2,6,9,25,76,302,1360,7606`
-
-*`is_subgraph_free_bull=1 AND is_subgraph_free_K4=1`*, `1,1,2,5,9,26,80,340,1690,11432`
-
-----------
-
-*`is_hamiltonian=1 AND is_subgraph_free_diamond=1`*, `1,0,1,1,2,9,27,190,1750,25658`
-
-*`is_subgraph_free_diamond=1 AND is_distance_regular=1`*, `1,1,1,1,1,2,1,3,2,4`
-
-*`is_subgraph_free_diamond=1 AND is_eulerian=1`*, `1,0,1,1,2,3,8,21,79,334`
-
-*`is_subgraph_free_diamond=1 AND is_integral=0`*, `0,0,1,3,10,35,162,964,7682,86994`
-
-*`is_subgraph_free_diamond=1 AND is_integral=1`*, `1,1,1,1,1,4,3,3,2,18`
-
-*`is_subgraph_free_diamond=1 AND is_planar=1`*, `1,1,2,4,11,38,159,882,6242,55316`
-
-*`is_subgraph_free_diamond=1 AND is_subgraph_free_K4=1`*, `1,1,2,4,11,39,165,967,7684,87012`
-
-*`is_subgraph_free_diamond=1 AND is_subgraph_free_bowtie=1`*, `1,1,2,4,10,36,141,784,5626,56249`
-
-*`is_subgraph_free_diamond=1 AND is_subgraph_free_bull=1`*, `1,1,2,4,9,26,80,340,1690,11432`
++ [`A243545`](https://oeis.org/A243545) *`is_hamiltonian=1 AND is_subgraph_free_bowtie=1`*, `1,0,1,3,3,14,50,390,3627,52858`
++ [`A243546`](https://oeis.org/A243546) *`is_subgraph_free_bowtie=1 AND is_distance_regular=1`*, `1,1,1,2,1,2,1,3,1,4`
++ [`A243547`](https://oeis.org/A243547) *`is_subgraph_free_bowtie=1 AND is_eulerian=1`*, `1,0,1,1,2,4,8,35,115,629`
++ [`A243548`](https://oeis.org/A243548) *`is_subgraph_free_bowtie=1 AND is_integral=1`*, `1,1,1,2,2,4,1,8,1,19`
++ [`A243549`](https://oeis.org/A243549) *`is_subgraph_free_bowtie=1 AND is_integral=0`*, `0,0,1,4,13,56,272,1761,14835,174092`
++ [`A243550`](https://oeis.org/A243550) *`is_subgraph_free_bowtie=1 AND is_planar=1`*, `1,1,2,6,15,58,255,1510,10766,94109`
++ [`A243551`](https://oeis.org/A243551) *`is_subgraph_free_bowtie=1 AND is_subgraph_free_K4=1`*, `1,1,2,5,14,56,256,1656,13952,163878`
++ [`A243552`](https://oeis.org/A243552) *`is_subgraph_free_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,8,25,77,333,1668,11355`
++ [`A243553`](https://oeis.org/A243553) *`is_hamiltonian=1 AND is_subgraph_free_bull=1`*, `1,0,1,3,1,4,5,35,130,1293`
++ [`A243554`](https://oeis.org/A243554) *`is_subgraph_free_bull=1 AND is_distance_regular=1`*, `1,1,1,2,1,2,1,3,1,4`
++ [`A243555`](https://oeis.org/A243555) *`is_subgraph_free_bull=1 AND is_eulerian=1`*, `1,0,1,1,2,3,5,14,30,95`
++ [`A243556`](https://oeis.org/A243556) *`is_subgraph_free_bull=1 AND is_integral=1`*, `1,1,1,2,1,3,2,3,0,14`
++ [`A243557`](https://oeis.org/A243557) *`is_subgraph_free_bull=1 AND is_integral=0`*, `0,0,1,4,8,23,78,337,1690,11418`
++ [`A243558`](https://oeis.org/A243558) *`is_subgraph_free_bull=1 AND is_planar=1`*, `1,1,2,6,9,25,76,302,1360,7606`
++ [`A243559`](https://oeis.org/A243559) *`is_subgraph_free_bull=1 AND is_subgraph_free_K4=1`*, `1,1,2,5,9,26,80,340,1690,11432`
++ [`A243560`](https://oeis.org/A243560) *`is_hamiltonian=1 AND is_subgraph_free_diamond=1`*, `1,0,1,1,2,9,27,190,1750,25658`
++ [`A243561`](https://oeis.org/A243561) *`is_subgraph_free_diamond=1 AND is_distance_regular=1`*, `1,1,1,1,1,2,1,3,2,4`
++ [`A243562`](https://oeis.org/A243562) *`is_subgraph_free_diamond=1 AND is_eulerian=1`*, `1,0,1,1,2,3,8,21,79,334`
++ [`A243563`](https://oeis.org/A243563) *`is_subgraph_free_diamond=1 AND is_integral=0`*, `0,0,1,3,10,35,162,964,7682,86994`
++ [`A243564`](https://oeis.org/A243564) *`is_subgraph_free_diamond=1 AND is_integral=1`*, `1,1,1,1,1,4,3,3,2,18`
++ [`A243565`](https://oeis.org/A243565) *`is_subgraph_free_diamond=1 AND is_planar=1`*, `1,1,2,4,11,38,159,882,6242,55316`
++ [`A243566`](https://oeis.org/A243566) *`is_subgraph_free_diamond=1 AND is_subgraph_free_K4=1`*, `1,1,2,4,11,39,165,967,7684,87012`
++ [`A243567`](https://oeis.org/A243567) *`is_subgraph_free_diamond=1 AND is_subgraph_free_bowtie=1`*, `1,1,2,4,10,36,141,784,5626,56249`
++ [`A243568`](https://oeis.org/A243568) *`is_subgraph_free_diamond=1 AND is_subgraph_free_bull=1`*, `1,1,2,4,9,26,80,340,1690,11432`
 
 ## Completed:
 
