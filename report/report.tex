@@ -20,6 +20,8 @@
 
 \begin{document}
 
+\setlength{\parindent}{0cm}
+
 \title{Integer sequence discovery from small graphs}
 \author{Travis Hoppe and Anna Petrone}
 \date{\today}
@@ -36,19 +38,17 @@ The work can be extended by considering other graph classes like trees or regula
 
 \section{Introduction}
 
-Talk about OEIS (ref).
+The Online Encyclopedia of Integer Sequences (\url{OEIS}{https://oeis.org/}), sometimes referred to just as Sloane's, was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems. The motivation for collecting and storing integer sequences in one place is to allow a researcher, who perhaps comes across the first few vlues of a sequence, to be able to quickly look up the subsequent values. The OEIS not only contains the values, but also links to references made to the sequence, cross references to related sequences, the sequence's history, graphical represenation, etc. For a given sequence, the OEIS may contain any number of terms, ranging from just a few up to  in some cases 500,000. The database currently contains roughly 200,000 sequences and is highly cited, with over 3,000 citations as of June 2013. Typically the sequences are in the fields of number theory, combinatorics, and graph theory, and there are many that relate to computer science as well. While originally constructed and maintained solely by Sloane, today the database is under control of the ``OEIS Foundation" which receives contributions from its users. Through our exahustive enumeration of all small graphs, we were able to generate [\ ] new sequences to the OEIS and extend [\ ] sequences. \\
 
-An invariant is a property of a graph that is preserved under isomorphism. 
-Invariants can be simple binary properties (is the graph a tree?), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching).
 
-We are primarily concerned with the sequences produced by graph invariants, \ie the combinatorial problem of how many graphs of a given class satisfy a particular criteria.
-Let a graph be defined as the pair $G = (V,E)$, where $V$ is a set of vertices and $E$ a set of edges. 
-Define $\CLASS$ as a class of graphs which form an isomorphically distinct set of graphs that satisfy a given criteria.
-Group the graphs into subsets such that
+An invariant is a property of a graph that is preserved under isomorphism. Invariants can be simple binary properties (is the graph a tree?), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching). We are primarily concerned with the sequences produced by graph invariants, \ie the combinatorial problem of how many graphs of a given class satisfy a particular criteria. \\
+
+Let a graph be defined as the pair $G = (V,E)$, where $V$ is a set of vertices and $E$ a set of edges. Define $\CLASS$ as a class of graphs which form an isomorphically distinct set of graphs that satisfy a given criteria. Group the graphs into subsets such that
 \begin{equation}
 \CLASS = \CLASS_1 \cup \CLASS_2 \cup \CLASS_3 \cup \ldots
 \end{equation}
-where $\CLASS_n$ contains only graphs of order $n$.
+where $\CLASS_n$ contains only graphs of order $n$. \\
+
 From here, define a sequence of subsets of the graph class
 %
 \begin{align}
@@ -56,50 +56,37 @@ From here, define a sequence of subsets of the graph class
 &= f(\CLASS_1), f(\CLASS_2), f(\CLASS_3), \ldots 
 \end{align}
 %
-where $f$ is some invariant equality that further subdivides each set $\CLASS_n$. 
+where $f$ is some invariant equality that further subdivides each set $\CLASS_n$. \\
+
 Let 
 $S(f, \CLASS) = |f(\CLASS_1)|, |f(\CLASS_2)|, |f(\CLASS_3)|, \ldots$
-be the sequence of integers defined by $\SEQ(f, \CLASS)$.
-For example, if $f_\text{tree}$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\SIMPLECLASS$ is the set of all simple unlabeled connected graphs
+be the sequence of integers defined by $\SEQ(f, \CLASS)$. For example, if $f_\text{tree}$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\SIMPLECLASS$ is the set of all simple unlabeled connected graphs
 %
 \begin{align}
 S(f_\text{tree}, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
 %
-this sequence is \OEIS{A000055}.
+this sequence is \OEIS{A000055}. \\
 
-Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$.
-Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
+Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$.  \\
 
-Similar to the \textit{House of Graphs} project (ref), we say that a relation between two invariants is \textit{suggestive} $\SEQ_a \subseteq_k \SEQ_b$ if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le k$.
-Two invariant equalities are \textit{exclusive} if $\SEQ_a \cap_k \SEQ_b$ if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le k$.
-In addition to contributing to the OEIS, a secondary goal is to identify all \textit{suggestive} and \textit{exclusive} relations between the invariants studied for $k=10$.
+Similar to the \textit{House of Graphs} project (ref), we say that a relation between two invariants is \textit{suggestive} $\SEQ_a \subseteq_k \SEQ_b$ if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le k$. Two invariant equalities are \textit{exclusive} if $\SEQ_a \cap_k \SEQ_b$ if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le k$. \\
 
-In this paper, we restrict the classes examined to $\SIMPLECLASS$.
-Since it is implied that all sequences in this paper refer to simple graphs, we let $S(f,\SIMPLECLASS)=S(f)$ for convenience.
-Provided one had a means of enumeration, an extension to other classes would be straightforward.
+In addition to contributing to the OEIS, a secondary goal is to identify all \textit{suggestive} and \textit{exclusive} relations between the invariants studied for $k=10$. In this paper, we restrict the classes examined to $\SIMPLECLASS$. Since it is implied that all sequences in this paper refer to simple graphs, we let $S(f,\SIMPLECLASS)=S(f)$ for convenience. Provided one had a means of enumeration, an extension to other classes would be straightforward.
 
 
 \section{Methods}
 Using the \texttt{geng -c} from \texttt{nauty} (ref), we enumerated the class of $\SIMPLECLASS$ up to order $N \le 10$.
-For each graph we computed a series of invariants.
-For completeness these invariants are described below.
+For each graph we computed a series of invariants. For completeness these invariants are described below.
 
 \subsection{Invariants}
 
 \begin{itemize}
 \item The \textit{automorphism number} is the cardinality of the automorphism group of the graph, where each member is a mapping of the vertices onto themselves which preserve isomorphism. We use BLISS (ref) to compute this.
 
-\item Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
-In $\SIMPLECLASS$ all distances are finite.
-The \textit{eccentricity} of a vertex $k$, $\epsilon(k)$ is the max value of $D_{k j}$.
-The \textit{radius}/\textit{diameter} is the minimum/maximum value of eccentricity for all vertices.
+\item Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$. In $\SIMPLECLASS$ all distances are finite. The \textit{eccentricity} of a vertex $k$, $\epsilon(k)$ is the max value of $D_{k j}$. The \textit{radius}/\textit{diameter} is the minimum/maximum value of eccentricity for all vertices.
 
-\item The adjacency matrix $A$ has the value at $A_{ij}$ equal to the number of edges joining vertices $i$ and $j$.
-For $\SIMPLECLASS$, this is a $\{0,1\}$ matrix with zeros down the diagonal.
-The \textit{spectrum}, $\lambda_1, \lambda_2, \ldots$ of a graph are the eigenvalues of $A$.
-A graph is $integral$ if all the values of the graph spectrum are integral, $\lambda_k \in \mathbb{N}$.
-A graph is $real$ if $\lambda_k \in \mathbb{R}$.
+\item The adjacency matrix $A$ has the value at $A_{ij}$ equal to the number of edges joining vertices $i$ and $j$. For $\SIMPLECLASS$, this is a $\{0,1\}$ matrix with zeros down the diagonal. The \textit{spectrum}, $\lambda_1, \lambda_2, \ldots$ of a graph are the eigenvalues of $A$. A graph is $integral$ if all the values of the graph spectrum are integral, $\lambda_k \in \mathbb{N}$. A graph is $real$ if $\lambda_k \in \mathbb{R}$.
 
 \item A graph is \textit{Hamiltonian}/\textit{Eulerian} if there is a circuit that visits each vertex/edge exactly once time.
 
