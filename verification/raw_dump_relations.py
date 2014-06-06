@@ -59,7 +59,7 @@ WHERE equal=1'''
 relations_eq = grab_all(conn,cmd)
 
 line = "# Equality relations (converse holds)\n"
-msg = "`+ {}{}{}` <-> `{}{}{}`\n"
+msg = "+ `{}{}{}` <-> `{}{}{}`\n"
 
 FOUT.write(line)
 EQ_SET = set()
@@ -86,7 +86,7 @@ relations_subset = grab_all(conn,cmd)
 line = "\n# Subset relations (converse is not true)\n"
 FOUT.write(line)
 
-msg = "`+ {}{}{}` -> `{}{}{}`\n"
+msg = "+ `{}{}{}` -> `{}{}{}`\n"
 for ridx, s1, s2 in relations_subset:
 
     # FLIP THE ORDER FOR SUBSETS
