@@ -22,32 +22,6 @@ logging.root.setLevel(logging.INFO)
 # These terms are not considered
 ignored_terms = ["has_fractional_duality_gap_vertex_chromatic",]
 
-
-# Build the "special" searches
-
-
-def compute_distinct_special_seq(func):
-    cmd_search = '''SELECT DISTINCT {} FROM graph'''
-    seq = []
-    for n in range(cargs["min_n"],cargs["max_n"]+1):
-        conn = load_graph_database(n)
-        cmd   = cmd_search.format(func)
-        items = grab_vector(conn, cmd)
-        seq.append(len(items))
-    return seq
-
-special_names = ("special_cycle_basis", 
-                 "special_degree_sequence",
-                 "special_polynomial_tutte")
-print "# Special searches:"
-for func in special_names:
-    if func not in ignored_terms:
-        seq = compute_distinct_special_seq(func)
-        check_seq = np.array(seq,dtype=int)
-        if (check_seq>2).any():
-            print func, seq
-print
-
 ##########################################################################
 
 # Load the standard search database
@@ -76,11 +50,38 @@ def compute_distinct_seq(func):
         seq.append(len(items))
     return seq
 
-print "# Interesting distinct sequences (e.g. non-binary):"
+print "## Interesting distinct sequences (e.g. non-binary):"
+output_msg = "+ `{}` `{}`"
 for func in func_names:
     if func not in ignored_terms:
         seq = compute_distinct_seq(func)
         check_seq = np.array(seq,dtype=int)
         if (check_seq>2).any():
-            print func, seq
+            print output_msg.format(func, seq)
+print
+
+###########################################################################
+
+# Build the "special" searches
+
+def compute_distinct_special_seq(func):
+    cmd_search = '''SELECT DISTINCT {} FROM graph'''
+    seq = []
+    for n in range(cargs["min_n"],cargs["max_n"]+1):
+        conn = load_graph_database(n)
+        cmd   = cmd_search.format(func)
+        items = grab_vector(conn, cmd)
+        seq.append(len(items))
+    return seq
+
+special_names = ("special_cycle_basis", 
+                 "special_degree_sequence",
+                 "special_polynomial_tutte")
+print "# Special searches:"
+for func in special_names:
+    if func not in ignored_terms:
+        seq = compute_distinct_special_seq(func)
+        check_seq = np.array(seq,dtype=int)
+        if (check_seq>2).any():
+            print output_msg.format(func, seq)
 
