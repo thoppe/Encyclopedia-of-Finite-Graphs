@@ -30,6 +30,9 @@ List of the sequences discovered by the project.
 ### [New Sequences (level 2)](verification/submission_lvl2.md)
 List of the paired sequences discovered by the project.
 
+### [Relations](verification/relations.md)
+List of all the interesting (equality, subset and exclusive) relations between the sequences found.
+
 ### [Unit Tests](verification/unit_tests.md)
 An auto-generated reported for various base queries and the link to the respective OEIS sequence.
 

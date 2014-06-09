@@ -11,10 +11,14 @@ parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('-f','--force',default=False,action='store_true')
 cargs = vars(parser.parse_args())
 
-ignored_functions = set([
-    "automorphism_group_n",
-    "chromatic_number",
-])
+# Start the logger
+logging.root.setLevel(logging.INFO)
+
+#ignored_functions = set([
+#    "automorphism_group_n",
+#    "chromatic_number",
+#])
+ignored_functions = []
 
 # Connect to the database and add structure info
 f_seq_database = "database/sequence.db"
@@ -44,6 +48,8 @@ def info(seq_id):
 f_output = "verification/relations.md"
 FOUT = open(f_output,'w')
 
+logging.info("Saving relation information to {}".format(f_output))
+
 #######################################################################
 
 # Find the relations with equality
@@ -52,8 +58,8 @@ SELECT relation_id, s1_id,s2_id FROM relations
 WHERE equal=1'''
 relations_eq = grab_all(conn,cmd)
 
-line = "# Equality relations (converse is true)\n"
-msg = "`+ {}{}{}` <-> `{}{}{}`\n"
+line = "# Equality relations (converse holds)\n"
+msg = "+ `{}{}{}` <-> `{}{}{}`\n"
 
 FOUT.write(line)
 EQ_SET = set()
@@ -68,6 +74,30 @@ for ridx, s1, s2 in relations_eq:
     vals = (f1, c1,v1, f2, c2, v2)
     if f1 not in ignored_functions and f2 not in ignored_functions:
         FOUT.write( msg.format(*vals) )
+
+#######################################################################
+
+# Find the relations that are subsets (and not equalities)
+cmd = '''
+SELECT relation_id, s1_id,s2_id FROM relations 
+WHERE subset=1'''
+relations_subset = grab_all(conn,cmd)
+
+line = "\n# Subset relations (converse is not true)\n"
+FOUT.write(line)
+
+msg = "+ `{}{}{}` -> `{}{}{}`\n"
+for ridx, s1, s2 in relations_subset:
+
+    # FLIP THE ORDER FOR SUBSETS
+    f1, c1, v1 = info(s2)
+    f2, c2, v2 = info(s1)
+
+    vals = (f1, c1,v1, f2, c2, v2)
+    if f1 not in ignored_functions and f2 not in ignored_functions:
+
+        if (s1,s2) not in EQ_SET:
+            FOUT.write( msg.format(*vals) )
 
 #######################################################################
 
@@ -87,32 +117,6 @@ for ridx, s1, s2 in relations_ex:
 
     vals = (f1, c1,v1, f2, c2, v2)
     if f1 not in ignored_functions and f2 not in ignored_functions:
-        FOUT.write( msg.format(*vals) )
-
-#######################################################################
-
-# Find the relations that are subsets (and not equalities)
-cmd = '''
-SELECT relation_id, s1_id,s2_id FROM relations 
-WHERE subset=1'''
-relations_subset = grab_all(conn,cmd)
-
-line = "\n# Subset relations (converse is not true)\n"
-FOUT.write(line)
-
-msg = "`+ {}{}{}` -> `{}{}{}`\n"
-for ridx, s1, s2 in relations_subset:
-
-    # FLIP THE ORDER FOR SUBSETS
-    f1, c1, v1 = info(s2)
-    f2, c2, v2 = info(s1)
-
-    vals = (f1, c1,v1, f2, c2, v2)
-    if f1 not in ignored_functions and f2 not in ignored_functions:
-
-        if (s1,s2) not in EQ_SET:
-            FOUT.write( msg.format(*vals) )
-
-   
+        FOUT.write( msg.format(*vals) )   
 
 

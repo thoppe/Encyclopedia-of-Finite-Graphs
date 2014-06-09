@@ -28,10 +28,11 @@
 \maketitle
 
 \begin{abstract}
-We exhaustively enumerate all simple, connected graphs and compute a selection of invariants. 
-Invariants sequences were checked against OEIS and updated/added if the database is incomplete.
-We combined sequences to make new sequences and use this suggest relationships among the invariants.
-We showed that we can readily visualize any sequence of graphs with a given criteria.
+We exhaustively enumerate all simple, connected graphs of a finite order and compute a selection of invariants over this set.
+Invariants sequences were constructed and checked against the Online Encyclopedia of Integer Sequences (OEIS).
+XXX sequences were appended or corrected and XXX new sequences were added.
+From the graph database we are able to suggest relationships among the invariants.
+We show that we can readily visualize any sequence of graphs with a given criteria.
 We released the code in a fully open-sourced manner allowing others to build off this work.
 The work can be extended by considering other graph classes like trees or regular graphs.
 \end{abstract}
@@ -40,20 +41,21 @@ The work can be extended by considering other graph classes like trees or regula
 
 The Online Encyclopedia of Integer Sequences (\href{https://oeis.org/}{OEIS}), sometimes referred to just as Sloane's, was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems. The motivation for collecting and storing integer sequences in one place is to allow a researcher, who perhaps comes across the first few values of a sequence, to be able to quickly look up the subsequent values. The OEIS not only contains the values, but also links to references made to the sequence, cross references to related sequences, the sequence's history, graphical representaion, etc. For a given sequence, the OEIS may contain any number of terms, ranging from just a few up to 500,000 in some cases. The database currently contains roughly 200,000 sequences and is highly cited, with over 3,000 citations as of June 2013. Typically the sequences are in the fields of number theory, combinatorics, and graph theory, and there are many that relate to computer science as well. While originally constructed and maintained solely by Sloane, today the database is under control of the ``OEIS Foundation" which receives contributions from its users. Through our exhaustive enumeration of all small graphs, we were able to submit [\ ] new sequences to the OEIS and extend [\ ] existing sequences. \\
 
-
-An invariant is a property of a graph that is preserved under isomorphism. Invariants can be simple binary properties (is the graph a tree?), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching). We are primarily concerned with the sequences produced by graph invariants, \ie the combinatorial problem of how many graphs of a given class satisfy a particular criteria. \\
-
-Let a graph be defined as the pair $G = (V,E)$, where $V$ is a set of vertices and $E$ a set of edges. Define $\CLASS$ as a class of graphs which form an isomorphically distinct set of graphs that satisfy a given criteria. Group the graphs into subsets such that
+An invariant is a property of a graph that is preserved under isomorphism. 
+Invariants can be simple binary properties (is the graph a tree?), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching).
+We are primarily concerned with the sequences produced by graph invariants, \ie the combinatorial problem of how many graphs of a given class satisfy a particular criteria.
+Let a graph be defined as the pair $G = (V,E)$, where $V$ is a set of vertices and $E$ a set of edges. 
+Define $\CLASS$ as a class which forms an isomorphically distinct set of graphs that satisfy a specified criteria.
+Group the graphs into non-overlapping subsets such that
 \begin{equation}
 \CLASS = \CLASS_1 \cup \CLASS_2 \cup \CLASS_3 \cup \ldots
 \end{equation}
-where $\CLASS_n$ contains only graphs of order $n$. \\
-
-From here, define a sequence of subsets of the graph class
+where $\CLASS_n$ contains only graphs of order $n$.
+From here, define an ordered sequence of subsets of the graph class
 %
 \begin{align}
 \SEQ(f, \CLASS) 
-&= f(\CLASS_1), f(\CLASS_2), f(\CLASS_3), \ldots 
+&= f(\CLASS_1), f(\CLASS_2), f(\CLASS_3), \ldots
 \end{align}
 %
 where $f$ is some invariant equality that further subdivides each set $\CLASS_n$. \\
@@ -70,32 +72,42 @@ this sequence is \OEIS{A000055}. \\
 
 Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$.  \\
 
-Similar to the \textit{House of Graphs} project (ref), we say that a relation between two invariants is \textit{suggestive} $\SEQ_a \subseteq_k \SEQ_b$ if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le k$. Two invariant equalities are \textit{exclusive} if $\SEQ_a \cap_k \SEQ_b$ if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le k$. \\
+Similar to the \textit{House of Graphs} project (ref), we say that a relation between two invariants is \textit{suggestive to order $n$} $\SEQ_a \subseteq_n \SEQ_b$ if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
+Two invariant equalities are \textit{exclusive to order $n$} if $\SEQ_a \cap_n \SEQ_b$ if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
+In addition to contributing to the OEIS, a secondary goal is to identify all \textit{suggestive} and \textit{exclusive} relations between the invariants studied for $n=10$.
 
 In addition to contributing to the OEIS, a secondary goal is to identify all \textit{suggestive} and \textit{exclusive} relations between the invariants studied for $k=10$. In this paper, we restrict the classes examined to $\SIMPLECLASS$. Since it is implied that all sequences in this paper refer to simple graphs, we let $S(f,\SIMPLECLASS)=S(f)$ for convenience. Provided one had a means of enumeration, an extension to other classes would be straightforward.
 
 
 \section{Methods}
-Using the \texttt{geng -c} from \texttt{nauty} (ref), we enumerated the class of $\SIMPLECLASS$ up to order $N \le 10$.
-For each graph we computed a series of invariants. For completeness these invariants are described below.
+Using the \texttt{geng -c} command from \texttt{nauty} (ref), we enumerated the class of $\SIMPLECLASS$ up to order $N \le 10$.
+For each graph we computed a series of invariants.
+For completeness these invariants are described below.
 
 \subsection{Invariants}
 
 \begin{itemize}
-\item The \textit{automorphism number} is the cardinality of the automorphism group of the graph, where each member is a mapping of the vertices onto themselves which preserve isomorphism. We use BLISS (ref) to compute this.
 
-\item Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$. In $\SIMPLECLASS$ all distances are finite. The \textit{eccentricity} of a vertex $k$, $\epsilon(k)$ is the max value of $D_{k j}$. The \textit{radius}/\textit{diameter} is the minimum/maximum value of eccentricity for all vertices.
+\item The \textit{automorphism group} is the group where each member is a mapping of the vertices onto themselves which preserve isomorphism. The cardinality of this group is the \textit{automorphism number}.
+We use BLISS (ref) to compute this.
+
+\item Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
+A graph is \textit{connected} if there is a path between all pairs vertices, if there is no path between vertices $i$ and $j$, $D_{ij}=\infty$.
+By construction all distances in $\SIMPLECLASS$ are finite.
+The \textit{eccentricity} of a vertex $k$ is the maximum value of $D_{k j}$ for all $j$.
+The \textit{radius}/\textit{diameter} is the minimum/maximum value of eccentricity for all vertices.
 
 \item The adjacency matrix $A$ has the value at $A_{ij}$ equal to the number of edges joining vertices $i$ and $j$. For $\SIMPLECLASS$, this is a $\{0,1\}$ matrix with zeros down the diagonal. The \textit{spectrum}, $\lambda_1, \lambda_2, \ldots$ of a graph are the eigenvalues of $A$. A graph is $integral$ if all the values of the graph spectrum are integral, $\lambda_k \in \mathbb{N}$. A graph is $real$ if $\lambda_k \in \mathbb{R}$.
 
-\item A graph is \textit{Hamiltonian}/\textit{Eulerian} if there is a circuit that visits each vertex/edge exactly once time.
+\item The \textit{degree} of vertex $i$ is the number of edges incident to the vertex, e.\ g. $\sum_j A_{ij}$. 
+The \textit{degree sequence} is formed by listing the vertex degrees in descending order.  
+A \textit{$k$-regular graph} is one in which every vertex has degree $k$. 
+A regular graph is \textit{strongly regular} if in addition there exist $\lambda$ and $\mu$ such that any two adjacent vertices have $\lambda$ neighbors in common and any two non-adjacent vertices have $\mu$ neighbors in common. 
 
+\item A graph is \textit{Hamiltonian}/\textit{Eulerian} if there is a circuit that visits each vertex/edge exactly once.
 
-%\item The eccentricity of a node is the maximum distance from that node to any other. The minimum eccentricity over all nodes of the graph is the \textit{graph radius} and the maximum is the \textit{graph diameter}.
-
-\item A node of a graph is an \textit{articulation point} if its removal disconnects the graph. A graph invariant is the number of such nodes. 
-
-\item The \textit{node/edge connectivity} of a graph is the minimum number of nodes/edges that can disconnect the graph with their removal. 
+\item A vertex of a graph is an \textit{articulation point} if its removal disconnects the graph. 
+The \textit{vertex/edge connectivity} of a graph is the minimum number of vertices/edges needed to disconnect the graph with their removal. 
 
 \item A \textit{clique} is a subgraph of a graph that is complete. The \textit{maximum clique number} of graph $G$ is the cardinality of the largest clique in $G$. 
 
@@ -103,32 +115,34 @@ For each graph we computed a series of invariants. For completeness these invari
 
 \item A graph is called \textit{planar} if it can be drawn in the plane without an edges intersecting. Equivalently, a planar graph is one with \textit{crossing number} (minimum possible number of edge crossings in a drawing of the graph) equal to 0. [Note: we don't compute corssing number (just yet?)]
 
-\item A graph's \textit{cycle space} is the set of all of its Eulerian subgraphs, where every member can be constructed as the symmetric difference of members of the \textit{cycle basis}. A graph invariant is the number of cycle bases, which is zero for a \textit{tree}, an acyclic connected graph.
-
-\item The length of the shortest/longest cycle in a graph is its \textit{girth}/\textit{circumference}.
+\item A graph's \textit{cycle space} is the set of all of its Eulerian subgraphs, where every member can be constructed as the symmetric difference of members of the \textit{cycle basis}. 
+The cycle basis is empty of the graph is a \textit{tree}, an acyclic connected graph.
+The length of the shortest/longest cycle in a graph is its \textit{girth}/\textit{circumference}.
+A \textit{chord} of a cycle is an edge with one vertex belonging to the cycle and one edge outside of the cycle.
+In a \textit{chordal graph}, all cycles of order four or more have a cycle chord.   
  
+\item The \textit{Tutte polynomial} for a graph is a bivariate polynomial which encodes information about the graph's connectedness. 
+It requires knowledge of the number of connected components of the graph and the number of connected components of every graph formed by the removal of edges. 
+
+\item The \textit{chromatic polynomial} is a specialization of the Tutte polynomial formed by taking the second variable to be zero. 
+(ADD: What is a proper coloring?)
+The chromatic polynomial $P(G,k)$ gives the number of $k$-colorings on graph $G$. 
+The \textit{chromatic number} is the (integer) value of $k$ for which $P(G,k)$ attains its smallest positive value. 
+
+\item A \textit{vertex-induced subgraph} is a subset of vertices and all the edges common to all members of this subset. 
+With $K_n$ as the complete graph over $n$ vertices, a graph is \textit{triangle free}/\textit{square free} if it does not contain $K_3$/$K_4$ as an induced subgraph.
+Additionally we check for the induced subgraphs $K_5$, the cycle graphs $C_4, C_5, C_6$ and the \bowtiegraph, the \diamondgraph, the \pawgraph, the \bannergraph, and the open bowtie graph. 
+
+\item The \textit{fractional coloring number} is motivated by the chromatic number, an assignment of a color to each vertex so that no two adjacent vertices have the same color. 
+An extension is the fractional coloring problem, in which a set of $b$ colors must be assigned to each vertex, out of a set $a$ of available colors. 
+$\chi_b(G)$, for a given $b$, is the smallest value of $a$ such that an $a:b$ fractional coloring exists. 
+One can formulate the chromatic number as in integer programming problem and the fractional coloring number as the linear relaxation of this problem. (CITE GRAPH BOOK).
+
 \item \textit{distance regular} ???
 
-\item The \textit{degree sequence} of a graph is the sequence formed by listing the node degrees in non-increasing order.  
-
-\item A \textit{$k$-regular graph} is one in which every node has degree $k$. A regular graph is \textit{strongly regular} if in addition there exist $\lambda$ and $\mu$ such that any two adjacent vertices have $\lambda$ neighbors in common and any two non-adjacent vertices have $\mu$ neighbors in common. 
-
-\item The \textit{Tutte polynomial} for a graph is a bivariate polynomial which contains rich information about the graph's connectedness. It requires knowledge of the number of connected components of the graph and the number of connected components of every graph formed by the removal of edges. 
-
-\item The \textit{chromatic polynomial} and can in fact be formed from the Tutte polynomial by taking the second variable to be zero. The chromatic polynomial $P(G,k)$ gives the number of $k$-colorings on graph $G$. The \textit{chromatic number} is the (integer) value of $k$ for which $P(G,k)$ attains its smallest positive value. 
-
-\item The chromatic number is motivated by the graph coloring problem, which is to assign a color to each node so that no two adjacent nodes have the same color. The chromatic (coloring) number is the minimum number of colors required to do so. An extension is the fractional coloring problem, in which a set of $b$ colors must be assigned to each node, out of a set $a$ of available colors. The \textit{fractional coloring number} $\chi_b(G)$, for a given $b$, is the smallest value of $a$ such that an $a:b$ fractional coloring exists. 
-%For $b=1$ this is the chromatic number, but in general $\chi_b$ 
-
-\item A graph's \textit{automorphism group} is the group composed of all automorphisms (isomorphisms of the graph onto itself) of the graph. A graph invariant is the cardinality of this group. 
-
-\item A \textit{chord} of a cycle is an edge with one vertex belonging to the cycle and one edge outside of the cycle. In a \textit{chordal graph}, all cycles of order at least four have a cycle chord.   
-
-\item A \textit{triangle-free} graph does not have a triangle as a subgraph. Similarly a $Kn$-free graph does not contain the complete graph of order $n$. We check if graphs are $Kn$-free for $n=3\dots 5$. In addition we check if they contain cycles of length $\ell = 1.. 10$, and if they contain any of the following as subgraphs: the \bowtiegraph, the \diamondgraph, the \pawgraph, the \bannergraph, and the open bowtie graph.  
-
-
-
 \end{itemize}
+
+
 \section{Discussion}
 
 
