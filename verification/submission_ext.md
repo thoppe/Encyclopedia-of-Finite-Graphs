@@ -1,4 +1,4 @@
-## Extended:
+## Extended (7):
 
 The following sequences have been extended with this project:
 
@@ -10,7 +10,7 @@ The following sequences have been extended with this project:
 + [`edge_connectivity=2`](https://oeis.org/A052447)
 + [`edge_connectivity=3`](https://oeis.org/A052448)
 
-## Corrected:
+## Corrected (2):
 
 The following sequences were incorrect and fixed with this project:
 

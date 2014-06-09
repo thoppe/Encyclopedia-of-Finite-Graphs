@@ -1,4 +1,4 @@
-## Completed:
+## Completed (60):
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
 + [`A241455`](https://oeis.org/A241455) *`[automorphism_group_n=4]`*, `0,0,0,1,3,28,198,1971,29047,672516`
