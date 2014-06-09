@@ -39,7 +39,14 @@ The work can be extended by considering other graph classes like trees or regula
 
 \section{Introduction}
 
-The Online Encyclopedia of Integer Sequences (\href{https://oeis.org/}{OEIS}), sometimes referred to just as Sloane's, was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems. The motivation for collecting and storing integer sequences in one place is to allow a researcher, who perhaps comes across the first few values of a sequence, to be able to quickly look up the subsequent values. The OEIS not only contains the values, but also links to references made to the sequence, cross references to related sequences, the sequence's history, graphical representaion, etc. For a given sequence, the OEIS may contain any number of terms, ranging from just a few up to 500,000 in some cases. The database currently contains roughly 200,000 sequences and is highly cited, with over 3,000 citations as of June 2013. Typically the sequences are in the fields of number theory, combinatorics, and graph theory, and there are many that relate to computer science as well. While originally constructed and maintained solely by Sloane, today the database is under control of the ``OEIS Foundation" which receives contributions from its users. Through our exhaustive enumeration of all small graphs, we were able to submit [\ ] new sequences to the OEIS and extend [\ ] existing sequences. \\
+The Online Encyclopedia of Integer Sequences (\OEIS{}), sometimes referred to just as Sloane's, was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems. 
+The motivation for collecting and storing integer sequences in one place is to allow a researcher, who perhaps comes across the first few values of a sequence, to be able to quickly look up the subsequent values. 
+The OEIS not only contains the values, but also links to references made to the sequence, cross references to related sequences, the sequence's history, graphical representation, etc. 
+For a given sequence, the OEIS may contain any number of terms, ranging from just a few up to 500,000 in some cases. 
+The database currently contains roughly 200,000 sequences and is highly cited, with over 3,000 citations as of June 2013. 
+Typically the sequences are in the fields of number theory, combinatorics, and graph theory, and there are many that relate to computer science as well. 
+While originally constructed and maintained solely by Sloane, today the database is under control of the ``OEIS Foundation" which receives contributions from its users. 
+Through our exhaustive enumeration of all small graphs, we were able to submit XXX new sequences to the OEIS and extend XXX existing sequences.
 
 An invariant is a property of a graph that is preserved under isomorphism. 
 Invariants can be simple binary properties (is the graph a tree?), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching).
@@ -58,7 +65,7 @@ From here, define an ordered sequence of subsets of the graph class
 &= f(\CLASS_1), f(\CLASS_2), f(\CLASS_3), \ldots
 \end{align}
 %
-where $f$ is some invariant equality that further subdivides each set $\CLASS_n$. \\
+where $f$ is some invariant equality that further subdivides each set $\CLASS_n$.
 
 Let 
 $S(f, \CLASS) = |f(\CLASS_1)|, |f(\CLASS_2)|, |f(\CLASS_3)|, \ldots$
@@ -68,9 +75,9 @@ be the sequence of integers defined by $\SEQ(f, \CLASS)$. For example, if $f_\te
 S(f_\text{tree}, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
 %
-this sequence is \OEIS{A000055}. \\
+this sequence is \OEIS{A000055}.
 
-Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$.  \\
+Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
 
 Similar to the \textit{House of Graphs} project (ref), we say that a relation between two invariants is \textit{suggestive to order $n$} $\SEQ_a \subseteq_n \SEQ_b$ if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
 Two invariant equalities are \textit{exclusive to order $n$} if $\SEQ_a \cap_n \SEQ_b$ if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
@@ -113,7 +120,7 @@ The \textit{vertex/edge connectivity} of a graph is the minimum number of vertic
 
 \item A graph is \textit{bipartite} if there exists $V_1$ and $V_2$ two disjoint subsets of the nodes, with $V_1 \cup V_2 = V$, and for every edge $(i,j) \in E$,  $i$ is in $V_1$ and $j$ is in $V_2$ or vice versa.
 
-\item A graph is called \textit{planar} if it can be drawn in the plane without an edges intersecting. Equivalently, a planar graph is one with \textit{crossing number} (minimum possible number of edge crossings in a drawing of the graph) equal to 0. [Note: we don't compute corssing number (just yet?)]
+\item A graph is called \textit{planar} if it can be drawn in the plane without an edges intersecting. Equivalently, a planar graph is one with \textit{crossing number} (minimum possible number of edge crossings in a drawing of the graph) equal to 0. [Note: we don't compute crossing number (just yet?)]
 
 \item A graph's \textit{cycle space} is the set of all of its Eulerian subgraphs, where every member can be constructed as the symmetric difference of members of the \textit{cycle basis}. 
 The cycle basis is empty of the graph is a \textit{tree}, an acyclic connected graph.
@@ -130,7 +137,7 @@ The chromatic polynomial $P(G,k)$ gives the number of $k$-colorings on graph $G$
 The \textit{chromatic number} is the (integer) value of $k$ for which $P(G,k)$ attains its smallest positive value. 
 
 \item A \textit{vertex-induced subgraph} is a subset of vertices and all the edges common to all members of this subset. 
-With $K_n$ as the complete graph over $n$ vertices, a graph is \textit{triangle free}/\textit{square free} if it does not contain $K_3$/$K_4$ as an induced subgraph.
+With $K_n$ as the complete graph over $n$ vertices, a graph is \textit{triangle free} (\textit{square free}) if it does not contain $K_3$ ($K_4$) as an induced subgraph.
 Additionally we check for the induced subgraphs $K_5$, the cycle graphs $C_4, C_5, C_6$ and the \bowtiegraph, the \diamondgraph, the \pawgraph, the \bannergraph, and the open bowtie graph. 
 
 \item The \textit{fractional coloring number} is motivated by the chromatic number, an assignment of a color to each vertex so that no two adjacent vertices have the same color. 
