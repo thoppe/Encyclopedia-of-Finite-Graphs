@@ -10,10 +10,10 @@
 + *`is_hamiltonian=1 AND is_chordal=1`*, `1,0,1,2,4,15,58,360,2793,28761`
 + *`is_subgraph_free_bowtie=1 AND is_chordal=1`*, `1,1,2,5,10,27,70,206,613,1942`
 + *`is_subgraph_free_bull=1 AND is_chordal=1`*, `1,1,2,5,6,12,25,55,126,304`
-+ *`is_subgraph_free_open_bowtie=1 AND is_chordal=1`*, `1,1,2,5,6,13,25,58,130,344`
++ *`is_subgraph_free_open_bowtie=1 AND is_chordal=1`*, `1,1,2,5,6,13,25,58,130,316`
 
+### 243781
 + *`is_hamiltonian=1 AND is_subgraph_free_banner=1`*, `1,0,1,3,1,2,4,11,31,176`
-+ *`is_hamiltonian=1 AND is_subgraph_free_paw=1`*, `1,0,1,1,1,4,5,35,130,1293`
 + *`is_subgraph_free_banner=1 AND is_bipartite=1`*, `1,1,1,3,3,7,12,30,64,177`
 + *`is_subgraph_free_banner=1 AND is_eulerian=1`*, `1,0,1,1,2,1,4,2,14,16`
 + *`is_subgraph_free_banner=1 AND is_integral=0`*, `0,0,1,4,7,17,55,186,740,3385`
@@ -22,17 +22,18 @@
 + *`is_subgraph_free_banner=1 AND is_subgraph_free_bowtie=1`*, `1,1,2,6,7,17,47,150,561,2427`
 + *`is_subgraph_free_banner=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,14,33,84,245,799`
 
-+ *`is_subgraph_free_open_bowtie=1 AND is_eulerian=1`*, `1,0,1,1,1,2,3,8,19,68`
+### 243789
++ *`is_subgraph_free_open_bowtie=1 AND is_eulerian=1`*, `1,0,1,1,1,2,3,8,19,62`
 + *`is_subgraph_free_open_bowtie=1 AND is_hamiltonian=1`*, `1,0,1,3,3,9,13,59,203,1651`
-+ *`is_subgraph_free_open_bowtie=1 AND is_integral=0`*, `0,0,1,4,10,30,97,405,1957,12782`
++ *`is_subgraph_free_open_bowtie=1 AND is_integral=0`*, `0,0,1,4,10,30,97,405,1957,12725`
 + *`is_subgraph_free_open_bowtie=1 AND is_integral=1`*, `1,1,1,2,1,4,1,3,0,15`
-+ *`is_subgraph_free_open_bowtie=1 AND is_planar=1`*, `1,1,2,6,11,33,94,370,1627,8934`
-+ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_K4=1`*, `1,1,2,5,11,34,98,408,1957,12797`
-+ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_banner=1`*, `1,1,2,6,6,14,34,95,291,1031`
-+ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bowtie=1`*, `1,1,2,6,11,34,98,408,1957,12782`
-+ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,22,65,285,1442,10426`
-+ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_diamond=1`*, `1,1,2,4,9,30,89,379,1864,12457`
++ *`is_subgraph_free_open_bowtie=1 AND is_planar=1`*, `1,1,2,6,11,33,94,370,1627,8895`
++ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_banner=1`*, `1,1,2,6,6,14,34,95,291,1012`
++ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,22,65,285,1442,10106`
++ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_diamond=1`*, `1,1,2,4,9,30,89,379,1864,12365`
 
+### 243797
++ *`is_hamiltonian=1 AND is_subgraph_free_paw=1`*, `1,0,1,1,1,4,5,35,130,1293`
 + *`is_subgraph_free_paw=1 AND is_eulerian=1`*, `1,0,1,1,1,2,3,8,19,62`
 + *`is_subgraph_free_paw=1 AND is_integral=0`*, `0,0,1,2,5,16,58,264,1380,9818`
 + *`is_subgraph_free_paw=1 AND is_integral=1`*, `1,1,1,1,1,3,1,3,0,14`
@@ -145,7 +146,7 @@ K3 is already a subgraph of these graphs: bowtie, bull, diamond, banner
 
 These graphs are mutally exclusive after a finite n
 
-*`is_subgraph_free_banner=1 AND is_subgraph_free_K4=1`*, *`is_subgraph_free_banner=1 AND is_subgraph_free_diamond=1`*, *`is_subgraph_free_banner=1 AND is_subgraph_free_paw=1`*, *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_paw=1`*, *`is_subgraph_free_paw=1 AND is_subgraph_free_K4=1`*, *`is_subgraph_free_paw=1 AND is_subgraph_free_bowtie=1`*, *`is_subgraph_free_paw=1 AND is_subgraph_free_bull=1`*, *`is_subgraph_free_paw=1 AND is_subgraph_free_diamond=1`*
+*`is_subgraph_free_banner=1 AND is_subgraph_free_K4=1`*, *`is_subgraph_free_banner=1 AND is_subgraph_free_diamond=1`*, *`is_subgraph_free_banner=1 AND is_subgraph_free_paw=1`*, *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_paw=1`*, *`is_subgraph_free_paw=1 AND is_subgraph_free_K4=1`*, *`is_subgraph_free_paw=1 AND is_subgraph_free_bowtie=1`*, *`is_subgraph_free_paw=1 AND is_subgraph_free_bull=1`*, *`is_subgraph_free_paw=1 AND is_subgraph_free_diamond=1`*, *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bowtie=1`*, *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_K4=1`*
 
 Chordal graphs are trees if they have no K3 (e.g. no cycles), are a tree (trivial) or bipartite (non-trivial)
 

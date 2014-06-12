@@ -99,6 +99,10 @@ ref_invariant_lookup = dict(conn.execute(cmd).fetchall())
 cmd_mark_success = '''
 INSERT OR IGNORE INTO computed (function_name) VALUES (?)'''
 
+ignored = ["has_fractional_duality_gap_vertex_chromatic"]
+compute_invariant_functions = [x for x in compute_invariant_functions 
+                               if x not in ignored]
+
 if compute_invariant_functions:
     msg = "Remaining invariants to compute {}"
     logging.info(msg.format(compute_invariant_functions))
