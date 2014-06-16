@@ -1,5 +1,13 @@
 ## Pending:
 
++ [`A243789`](https://oeis.org/A243789) *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_diamond=1`*, `1,1,2,4,9,30,89,379,1864,12365`
++ [`A243790`](https://oeis.org/A243790) *`is_subgraph_free_open_bowtie=1 AND is_hamiltonian=1`*, `1,0,1,3,3,9,13,59,203,1651`
++ [`A243791`](https://oeis.org/A243791) *`is_subgraph_free_open_bowtie=1 AND is_eulerian=1`*, `1,0,1,1,1,2,3,8,19,62`
++ [`A243792`](https://oeis.org/A243792) *`is_subgraph_free_open_bowtie=1 AND is_integral=1`*, `1,1,1,2,1,4,1,3,0,15`
++ [`A243783`](https://oeis.org/A243793) *`is_subgraph_free_open_bowtie=1 AND is_integral=0`*, `0,0,1,4,10,30,97,405,1957,12725`
++ [`A243794`](https://oeis.org/A243794) *`is_subgraph_free_open_bowtie=1 AND is_planar=1`*, `1,1,2,6,11,33,94,370,1627,8895`
++ [`A243795`](https://oeis.org/A243795)*`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,22,65,285,1442,10106`
+
 ## Potential:
 
 + *`is_chordal=1 AND is_eulerian=1`*, `1,0,1,0,3,2,13,18,116,366`
@@ -12,44 +20,14 @@
 + *`is_subgraph_free_bull=1 AND is_chordal=1`*, `1,1,2,5,6,12,25,55,126,304`
 + *`is_subgraph_free_open_bowtie=1 AND is_chordal=1`*, `1,1,2,5,6,13,25,58,130,316`
 
-### 243781
-+ *`is_hamiltonian=1 AND is_subgraph_free_banner=1`*, `1,0,1,3,1,2,4,11,31,176`
-+ *`is_subgraph_free_banner=1 AND is_bipartite=1`*, `1,1,1,3,3,7,12,30,64,177`
-+ *`is_subgraph_free_banner=1 AND is_eulerian=1`*, `1,0,1,1,2,1,4,2,14,16`
-+ *`is_subgraph_free_banner=1 AND is_integral=0`*, `0,0,1,4,7,17,55,186,740,3385`
-+ *`is_subgraph_free_banner=1 AND is_integral=1`*, `1,1,1,2,1,2,2,0,0,4`
-+ *`is_subgraph_free_banner=1 AND is_planar=1`*, `1,1,2,6,8,19,57,186,739,3366`
-+ *`is_subgraph_free_banner=1 AND is_subgraph_free_bowtie=1`*, `1,1,2,6,7,17,47,150,561,2427`
-+ *`is_subgraph_free_banner=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,14,33,84,245,799`
-
-### 243789
-+ *`is_subgraph_free_open_bowtie=1 AND is_eulerian=1`*, `1,0,1,1,1,2,3,8,19,62`
-+ *`is_subgraph_free_open_bowtie=1 AND is_hamiltonian=1`*, `1,0,1,3,3,9,13,59,203,1651`
-+ *`is_subgraph_free_open_bowtie=1 AND is_integral=0`*, `0,0,1,4,10,30,97,405,1957,12725`
-+ *`is_subgraph_free_open_bowtie=1 AND is_integral=1`*, `1,1,1,2,1,4,1,3,0,15`
-+ *`is_subgraph_free_open_bowtie=1 AND is_planar=1`*, `1,1,2,6,11,33,94,370,1627,8895`
-+ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_banner=1`*, `1,1,2,6,6,14,34,95,291,1012`
-+ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,22,65,285,1442,10106`
-+ *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_diamond=1`*, `1,1,2,4,9,30,89,379,1864,12365`
-
-### 243797
-+ *`is_hamiltonian=1 AND is_subgraph_free_paw=1`*, `1,0,1,1,1,4,5,35,130,1293`
-+ *`is_subgraph_free_paw=1 AND is_eulerian=1`*, `1,0,1,1,1,2,3,8,19,62`
-+ *`is_subgraph_free_paw=1 AND is_integral=0`*, `0,0,1,2,5,16,58,264,1380,9818`
-+ *`is_subgraph_free_paw=1 AND is_integral=1`*, `1,1,1,1,1,3,1,3,0,14`
+------------------------------------------------------------------------------------------
 
 Unknown relation:
-
-*`is_subgraph_free_banner=1 AND is_chordal=1`*, `1,1,2,5,7,16,41,106,304,880`
-+ [`A091487`](https://oeis.org/A091487) `1,1,2,3,7,16,41,106,304,880,2674,8284`
 
 *`is_subgraph_free_diamond=1 AND is_chordal=1`*, `1,1,2,3,7,16,41,106,304,880`
 + [`A091487`](https://oeis.org/A091487) `1,1,2,3,7,16,41,106,304,880,2674,8284`
 
 *`is_subgraph_free_open_bowtie=1 AND is_bipartite=1`*, `1,1,1,3,5,17,44,182,730,4032`
-+ [`A005142`](https://oeis.org/A005142) `1,1,1,1,3,5,17,44,182,730,4032,25598`
-
-*`is_subgraph_free_paw=1 AND is_bipartite=1`*, `1,1,1,3,5,17,44,182,730,4032`
 + [`A005142`](https://oeis.org/A005142) `1,1,1,1,3,5,17,44,182,730,4032,25598`
 
 

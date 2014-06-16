@@ -27,8 +27,6 @@ consider_only = ["is_planar",
 
 must_include = [
     "is_chordal",
-    "is_subgraph_free_paw",
-    "is_subgraph_free_banner",
     "is_subgraph_free_open_bowtie",]
 
 consider_only += must_include
