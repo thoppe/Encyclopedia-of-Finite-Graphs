@@ -1,7 +1,7 @@
 ## Pending (2)
 
-`has_fractional_duality_gap_vertex_chromatic=0`, `0, 1, 2, 6, 20, 109, 820, 10621, 244616, 10747278`
-`has_fractional_duality_gap_vertex_chromatic=1`, `1, 0, 0, 0, 1, 3, 33, 496, 16464, 969293`
++ `has_fractional_duality_gap_vertex_chromatic=0`, `1, 1, 2, 6, 20, 109, 820, 10621, 244616, 10747278`
++ `has_fractional_duality_gap_vertex_chromatic=1`, `0, 0, 0, 0, 1, 3, 33, 496, 16464, 969293`
 
 
 ## Completed (60):
