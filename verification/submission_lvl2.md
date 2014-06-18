@@ -1,13 +1,5 @@
 ## Pending:
 
-+ [`A243789`](https://oeis.org/A243789) *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_diamond=1`*, `1,1,2,4,9,30,89,379,1864,12365`
-+ [`A243790`](https://oeis.org/A243790) *`is_subgraph_free_open_bowtie=1 AND is_hamiltonian=1`*, `1,0,1,3,3,9,13,59,203,1651`
-+ [`A243791`](https://oeis.org/A243791) *`is_subgraph_free_open_bowtie=1 AND is_eulerian=1`*, `1,0,1,1,1,2,3,8,19,62`
-+ [`A243792`](https://oeis.org/A243792) *`is_subgraph_free_open_bowtie=1 AND is_integral=1`*, `1,1,1,2,1,4,1,3,0,15`
-+ [`A243783`](https://oeis.org/A243793) *`is_subgraph_free_open_bowtie=1 AND is_integral=0`*, `0,0,1,4,10,30,97,405,1957,12725`
-+ [`A243794`](https://oeis.org/A243794) *`is_subgraph_free_open_bowtie=1 AND is_planar=1`*, `1,1,2,6,11,33,94,370,1627,8895`
-+ [`A243795`](https://oeis.org/A243795)*`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,22,65,285,1442,10106`
-
 ## Potential:
 
 + *`is_chordal=1 AND is_eulerian=1`*, `1,0,1,0,3,2,13,18,116,366`
@@ -31,7 +23,7 @@ Unknown relation:
 + [`A005142`](https://oeis.org/A005142) `1,1,1,1,3,5,17,44,182,730,4032,25598`
 
 
-## Completed (52):
+## Completed (59):
 
 + [`A243270`](https://oeis.org/A243270) *`is_hamiltonian=1 AND is_bipartite=1`*, `1,0,0,1,0,4,0,24,0,473`
 + [`A243271`](https://oeis.org/A243271) *`is_hamiltonian=1 AND is_distance_regular=1`*, `1,0,1,2,2,4,2,5,4,6`
@@ -85,6 +77,14 @@ Unknown relation:
 + [`A243566`](https://oeis.org/A243566) *`is_subgraph_free_diamond=1 AND is_subgraph_free_K4=1`*, `1,1,2,4,11,39,165,967,7684,87012`
 + [`A243567`](https://oeis.org/A243567) *`is_subgraph_free_diamond=1 AND is_subgraph_free_bowtie=1`*, `1,1,2,4,10,36,141,784,5626,56249`
 + [`A243568`](https://oeis.org/A243568) *`is_subgraph_free_diamond=1 AND is_subgraph_free_bull=1`*, `1,1,2,4,9,26,80,340,1690,11432`
++ [`A243789`](https://oeis.org/A243789) *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_diamond=1`*, `1,1,2,4,9,30,89,379,1864,12365`
++ [`A243790`](https://oeis.org/A243790) *`is_subgraph_free_open_bowtie=1 AND is_hamiltonian=1`*, `1,0,1,3,3,9,13,59,203,1651`
++ [`A243791`](https://oeis.org/A243791) *`is_subgraph_free_open_bowtie=1 AND is_eulerian=1`*, `1,0,1,1,1,2,3,8,19,62`
++ [`A243792`](https://oeis.org/A243792) *`is_subgraph_free_open_bowtie=1 AND is_integral=1`*, `1,1,1,2,1,4,1,3,0,15`
++ [`A243783`](https://oeis.org/A243793) *`is_subgraph_free_open_bowtie=1 AND is_integral=0`*, `0,0,1,4,10,30,97,405,1957,12725`
++ [`A243794`](https://oeis.org/A243794) *`is_subgraph_free_open_bowtie=1 AND is_planar=1`*, `1,1,2,6,11,33,94,370,1627,8895`
++ [`A243795`](https://oeis.org/A243795)*`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,22,65,285,1442,10106`
+
 
 ## Already in database
 

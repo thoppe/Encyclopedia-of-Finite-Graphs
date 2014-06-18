@@ -1,3 +1,9 @@
+## Pending (2)
+
+`has_fractional_duality_gap_vertex_chromatic=0`, `0, 1, 2, 6, 20, 109, 820, 10621, 244616, 10747278`
+`has_fractional_duality_gap_vertex_chromatic=1`, `1, 0, 0, 0, 1, 3, 33, 496, 16464, 969293`
+
+
 ## Completed (60):
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`

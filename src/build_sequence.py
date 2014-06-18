@@ -9,8 +9,7 @@ excluded_terms = ["n_vertex","n_edge","n_endpoints",
                   "n_cycle_basis","radius","circumference","radius",
                   "is_subgraph_free_C6","is_subgraph_free_C7",
                   "is_subgraph_free_C8","is_subgraph_free_C9",
-                  "is_subgraph_free_C10","is_rational_spectrum",
-                  "has_fractional_duality_gap_vertex_chromatic"]
+                  "is_subgraph_free_C10","is_rational_spectrum",]
 # These will use a different operator
 special_conditionals = {"vertex_connectivity":">"}
 
@@ -22,7 +21,7 @@ cargs = vars(parser.parse_args())
 
 # List of terms that we should ignore for the moment
 # for example, terms that haven't finished computing...
-ignored_terms = ["has_fractional_duality_gap_vertex_chromatic",]
+ignored_terms = []
 
 # Start the logger
 logging.root.setLevel(logging.INFO)

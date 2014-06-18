@@ -20,7 +20,7 @@ cargs = vars(parser.parse_args())
 logging.root.setLevel(logging.INFO)
 
 # These terms are not considered
-ignored_terms = ["has_fractional_duality_gap_vertex_chromatic",]
+ignored_terms = []
 
 ##########################################################################
 
