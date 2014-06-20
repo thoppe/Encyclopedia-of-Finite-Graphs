@@ -74,6 +74,10 @@ Fractional invariants
 
 + [`has_fractional_duality_gap_vertex_chromatic`](http://en.wikipedia.org/wiki/Fractional_coloring)
 
+Others
+
++ [`maximal_independent_vertex_set`](http://mathworld.wolfram.com/IndependenceNumber.html) also called the Independence number.
+
 
 =======================
 
@@ -86,6 +90,8 @@ Proposed Invariants
 + [`spectrum`](http://mathworld.wolfram.com/GraphSpectrum.html)
 + [`is_cartesian_product`](mathworld.wolfram.com/GraphCartesianProduct.html) (SAGE)
 
++ [`is_well_covered`](http://mathworld.wolfram.com/Well-CoveredGraph.html)
+
 Other Invariants (hard)
 
 + [`hajos_number`](http://mathworld.wolfram.com/HajosNumber.html)
@@ -95,7 +101,6 @@ Other Invariants (hard)
 + [`domination_number`](http://mathworld.wolfram.com/DominationNumber.html)
 + [`coarseness`](http://mathworld.wolfram.com/GraphCoarseness.html), [`thickness`](http://mathworld.wolfram.com/GraphThickness.html)
 + [`genus`](http://mathworld.wolfram.com/GraphGenus.html), [`skewness`](http://mathworld.wolfram.com/GraphSkewness.html)
-+ [`independence_number`](http://mathworld.wolfram.com/IndependenceNumber.html)
 
 Other Invariants (trivial)
 + [`n_non_adjacent_vertex_pairs`](http://mathworld.wolfram.com/NonadjacentVertexPairs.html)

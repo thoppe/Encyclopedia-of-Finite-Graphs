@@ -1,11 +1,12 @@
 ## Pending (6)
 
-+ `has_fractional_duality_gap_vertex_chromatic=0`, `1, 1, 2, 6, 20, 109, 820, 10621, 244616, 10747278`
-+ `has_fractional_duality_gap_vertex_chromatic=1`, `0, 0, 0, 0, 1, 3, 33, 496, 16464, 969293`
-+ `maximal_independent_vertex_set=2` `0, 0, 1, 4, 11, 34, 103, 405, 1892, 12166`
-+ `maximal_independent_vertex_set=3` `0, 0, 0, 1, 8, 63, 524, 5863, 100702, 2880002`
-+ `maximal_independent_vertex_set=4` `0, 0, 0, 0, 1, 13, 205, 4308, 135563, 7161399`
-+ `maximal_independent_vertex_set=5` `0, 0, 0, 0, 0, 1, 19, 513, 21782, 1576634`
++ [`A243251`](https://oeis.org/A243251) `has_fractional_duality_gap_vertex_chromatic=1`, `0, 0, 0, 0, 1, 3, 33, 496, 16464, 969293`
++ [`A243252`](https://oeis.org/A243252) `has_fractional_duality_gap_vertex_chromatic=0`, `1, 1, 2, 6, 20, 109, 820, 10621, 244616, 10747278`
++ [`A243781`](https://oeis.org/A243781) `maximal_independent_vertex_set=2` `0, 0, 1, 4, 11, 34, 103, 405, 1892, 12166`
++ [`A243782`](https://oeis.org/A243782) `maximal_independent_vertex_set=3` `0, 0, 0, 1, 8, 63, 524, 5863, 100702, 2880002`
++ [`A243783`](https://oeis.org/A243783) `maximal_independent_vertex_set=4` `0, 0, 0, 0, 1, 13, 205, 4308, 135563, 7161399`
++ [`A243784`](https://oeis.org/A243784) `maximal_independent_vertex_set=5` `0, 0, 0, 0, 0, 1, 19, 513, 21782, 1576634`
+
 
 ## Completed (60):
 
