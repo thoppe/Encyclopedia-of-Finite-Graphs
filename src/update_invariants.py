@@ -99,7 +99,7 @@ ref_invariant_lookup = dict(conn.execute(cmd).fetchall())
 cmd_mark_success = '''
 INSERT OR IGNORE INTO computed (function_name) VALUES (?)'''
 
-ignored = []
+ignored = ["n_independent_vertex_sets", "maximal_independent_vertex_set"]
 compute_invariant_functions = [x for x in compute_invariant_functions 
                                if x not in ignored]
 
