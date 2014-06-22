@@ -76,7 +76,7 @@ Fractional invariants
 
 Others
 
-+ [`maximal_independent_vertex_set`](http://mathworld.wolfram.com/IndependenceNumber.html) also called the Independence number.
++ [`maximal_independent_vertex_set`](http://mathworld.wolfram.com/IndependenceNumber.html) also called the Independence number, [`n_independent_vertex_sets`](http://mathworld.wolfram.com/IndependentVertexSet.html)
 
 
 =======================
@@ -89,7 +89,6 @@ Proposed Invariants
 + [`characteristic_polynomial`](http://mathworld.wolfram.com/CharacteristicPolynomial.html)
 + [`spectrum`](http://mathworld.wolfram.com/GraphSpectrum.html)
 + [`is_cartesian_product`](mathworld.wolfram.com/GraphCartesianProduct.html) (SAGE)
-
 + [`is_well_covered`](http://mathworld.wolfram.com/Well-CoveredGraph.html)
 
 Other Invariants (hard)

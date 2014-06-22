@@ -1,14 +1,6 @@
-## Pending (6)
+## Pending (0)
 
-+ [`A243251`](https://oeis.org/A243251) `has_fractional_duality_gap_vertex_chromatic=1`, `0, 0, 0, 0, 1, 3, 33, 496, 16464, 969293`
-+ [`A243252`](https://oeis.org/A243252) `has_fractional_duality_gap_vertex_chromatic=0`, `1, 1, 2, 6, 20, 109, 820, 10621, 244616, 10747278`
-+ [`A243781`](https://oeis.org/A243781) `maximal_independent_vertex_set=2` `0, 0, 1, 4, 11, 34, 103, 405, 1892, 12166`
-+ [`A243782`](https://oeis.org/A243782) `maximal_independent_vertex_set=3` `0, 0, 0, 1, 8, 63, 524, 5863, 100702, 2880002`
-+ [`A243783`](https://oeis.org/A243783) `maximal_independent_vertex_set=4` `0, 0, 0, 0, 1, 13, 205, 4308, 135563, 7161399`
-+ [`A243784`](https://oeis.org/A243784) `maximal_independent_vertex_set=5` `0, 0, 0, 0, 0, 1, 19, 513, 21782, 1576634`
-
-
-## Completed (60):
+## Completed (66):
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
 + [`A241455`](https://oeis.org/A241455) *`[automorphism_group_n=4]`*, `0,0,0,1,3,28,198,1971,29047,672516`
@@ -70,6 +62,12 @@
 + [`A243248`](https://oeis.org/A243248) *`[is_subgraph_free_bull=0]`*, `0, 0, 0, 0, 12, 86, 773, 10777, 259390, 11705139`
 + [`A243249`](https://oeis.org/A243249) *`[is_subgraph_free_bowtie=0]`*, `0,0,0,0,6,52,580,9348,246244,11542460`
 + [`A243250`](https://oeis.org/A243250) *`[is_subgraph_free_diamond=0]`*, `0,0,0,2,10,73,688,10150,253396,11629559`
++ [`A243251`](https://oeis.org/A243251) `has_fractional_duality_gap_vertex_chromatic=1`, `0, 0, 0, 0, 1, 3, 33, 496, 16464, 969293`
++ [`A243252`](https://oeis.org/A243252) `has_fractional_duality_gap_vertex_chromatic=0`, `1, 1, 2, 6, 20, 109, 820, 10621, 244616, 10747278`
++ [`A243781`](https://oeis.org/A243781) `maximal_independent_vertex_set=2` `0, 0, 1, 4, 11, 34, 103, 405, 1892, 12166`
++ [`A243782`](https://oeis.org/A243782) `maximal_independent_vertex_set=3` `0, 0, 0, 1, 8, 63, 524, 5863, 100702, 2880002`
++ [`A243783`](https://oeis.org/A243783) `maximal_independent_vertex_set=4` `0, 0, 0, 0, 1, 13, 205, 4308, 135563, 7161399`
++ [`A243784`](https://oeis.org/A243784) `maximal_independent_vertex_set=5` `0, 0, 0, 0, 0, 1, 19, 513, 21782, 1576634`
 
 ## Unsubmitted:
 
