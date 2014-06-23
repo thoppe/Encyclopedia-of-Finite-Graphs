@@ -17,4 +17,5 @@ clean:
 
 $(PROJECT_NAME).pdf: $(PROJECT_NAME).tex
 	$(SPELL_CHECK) $(PROJECT_NAME).tex
+	$(SPELL_CHECK) $(PROJECT_NAME).tex
 	pdflatex $(PROJECT_NAME).tex
