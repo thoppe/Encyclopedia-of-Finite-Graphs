@@ -39,6 +39,8 @@ The work can be extended by considering other graph classes like trees or regula
 
 \section{Introduction}
 
+\textbf{ADD INTRODUCTION, DETAIL WHY PROJECT IS IMPORTANT}
+
 The Online Encyclopedia of Integer Sequences (\OEIS{}), sometimes referred to just as Sloane's, was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems. 
 The motivation for collecting and storing integer sequences in one place is to allow a researcher, who perhaps comes across the first few values of a sequence, to be able to quickly look up the subsequent values. 
 The OEIS not only contains the values, but also links to references made to the sequence, cross references to related sequences, the sequence's history, graphical representation, etc. 
@@ -47,6 +49,7 @@ The database currently contains over 250,000 sequences and is highly cited, with
 Typically the sequences are in the fields of number theory, combinatorics, and graph theory, and there are many that relate to computer science as well. 
 While originally constructed and maintained solely by Sloane, today the database is under control of the ``OEIS Foundation" which receives contributions from its users. 
 Through our exhaustive enumeration of all small graphs, we were able to submit XXX new sequences to the OEIS and extend XXX existing sequences.
+\textbf{TRIM PARAGRAPH}
 
 An invariant is a property of a graph that is preserved under isomorphism. 
 Invariants can be simple binary properties (planarity), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching).
@@ -86,11 +89,18 @@ Two invariant equalities are \textit{exclusive to order $n$}, $\SEQ_a \cap_n \SE
 In addition to contributing to the OEIS, a secondary goal is to identify all \textit{suggestive} and \textit{exclusive} relations between the invariants studied for $n=10$.
 
 \section{Methods}
+
+\textbf{EXPAND SECTION, TALK ABOUT DATA STORAGE AND SQL-LIKE THINGS}
 Using the \texttt{geng -c} command from \texttt{nauty} (ref), we enumerated the class of $\SIMPLECLASS$ up to order $n \le 10$.
 For each graph we computed a series of invariants.
 For completeness these invariants are described below.
 
+
+\textbf{MOVE TO APPENDIX OR SUPP. INFO}
+
 \subsection{Invariants}
+
+\textbf{Cross-ref all invariants with the internal name}
 
 \begin{itemize}
 
@@ -127,7 +137,7 @@ The \textit{vertex/edge connectivity} of a graph is the minimum number of vertic
 
 \item The \textit{crossing number} is the minimum possible number of edge crossings for an embedding of the graph in a plane.
 A graph is \textit{planar} if the crossing number is zero, that is there exists an embedding in the plane with no overlapping edges.
-[Note: we don't compute crossing number (just yet?)]
+\textbf{Note: we don't compute crossing number (just yet?)}
 
 \item A graph's \textit{cycle space} is the set of all of its Eulerian subgraphs, where every member can be constructed as the symmetric difference of members of the \textit{cycle basis}. 
 A \textit{tree} is an acyclic connected graph, one whose cycle basis is the empty set.
@@ -137,12 +147,12 @@ In a \textit{chordal graph}, all cycles of order four or more have a cycle chord
  
 \item The \textit{Tutte polynomial} is a bivariate polynomial which encodes information about the graph's connectedness. 
 It requires knowledge of the number of connected components of the graph and the number of connected components of every graph formed by the removal of edges. 
-[DEFINE THE TUTTE POLYNOMIAL!]
+\textbf{DEFINE THE TUTTE POLYNOMIAL}!
 
 \item The \textit{chromatic polynomial} is a specialization of the Tutte polynomial formed by taking the second variable to be zero. 
-[ADD: What is a proper coloring?]
 The chromatic polynomial $P(G,k)$ gives the number of $k$-colorings on graph $G$. 
 The \textit{chromatic number} is the (integer) value of $k$ for which $P(G,k)$ attains its smallest positive value. 
+\textbf{What is a proper coloring?}
 
 \item A \textit{vertex-induced subgraph} is a subset of vertices and all the edges common to all members of this subset. 
 With $K_n$ as the complete graph over $n$ vertices, a graph is \textit{triangle free} (\textit{square free}) if it does not contain $K_3$ ($K_4$) as an induced subgraph.
@@ -151,16 +161,31 @@ Additionally we check for the induced subgraphs $K_5$, the cycle graphs $C_4, C_
 \item The \textit{fractional coloring number} is motivated by the chromatic number, an assignment of a color to each vertex so that no two adjacent vertices have the same color. 
 In the fractional coloring problem, a set of $b$ colors must be assigned to each vertex, out of a set $a$ of available colors with no adjacent vertices sharing any colors.
 $\chi_b(G)$, for a given $b$, is the smallest value of $a$ such that an $a:b$ fractional coloring exists. 
-One can formulate the chromatic number as in integer programming problem and the fractional coloring number as the linear relaxation of this problem. [CITE GRAPH BOOK].
+One can formulate the chromatic number as in integer programming problem and the fractional coloring number as the linear relaxation of this problem. 
+\textbf{CITE GRAPH BOOK}
 
-\item \textit{distance regular} ???
+\item \textit{distance regular}
+\textbf{COMPLETE DEF. HERE}
 
 \end{itemize}
 
 
+\section{Results}
+
+\textbf{ADD TABLE OF PRIMARY SEQUENCES}
+
+\textbf{ADD TABLE OF CORRECTED SEQUENCES}
+
+\textbf{LIST SOME INTERESTING SECONDARY SEQUENCES}
+
 \section{Discussion}
 
+\textbf{LIST SOME INTERESTING RELATIONS}
+
+\textbf{DISCUSS HOW PROJECT CAN BE EXPANDED, NEW INVARIANTS, OTHER GRAPH CLASSES}
 
 \section{References}
+
+\textbf{CREATE BIBTEX FILE, ADD REFS.}
 
 \end{document}
