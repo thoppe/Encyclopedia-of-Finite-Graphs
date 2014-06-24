@@ -5,7 +5,7 @@
 \usepackage[margin=1in]{geometry}
 
 \usepackage{todonotes}
-\newcommand{\note}[1]{\todo[inline,size=\tiny]{#1}}
+\newcommand{\note}[1]{\todo[inline]{#1}}
 \newcommand{\needref}[1]{\mbox{({\color{blue}\rule{.3cm}{.3cm}} REF) }}
 
 \newcommand{\OEIS}[1]
@@ -44,7 +44,7 @@ We released the code in a fully open-sourced manner allowing others to build off
 
 
 Through our exhaustive enumeration of all small graphs, we were able to submit XXX new sequences to the OEIS and extend XXX existing sequences.
-\note{ADD INTRODUCTION, DETAIL WHY PROJECT IS IMPORTANT}
+\note{Add introduction, detail why project is important}
 
 The Online Encyclopedia of Integer Sequences (\OEIS{}) \needref, sometimes referred to just as Sloane's, was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems. 
 Collecting and storing integer sequences in one place allows a researcher, who perhaps comes across the first few values of an unknown sequence, to be able to quickly look up the subsequent values. 
@@ -81,7 +81,7 @@ S(f_\text{tree}, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
 %
 this sequence is \OEIS{A000055}. 
-While this sequences has been known for quite some time and admits a generating function, we have computed other sequences related to more difficult invariants.
+While this sequence has been known for quite some time and admits a generating function, we have computed other sequences related to more difficult invariants.
 Some invariants, like the independence number, have produced sequences (for example \OEIS{A243781}), that were hitherto unknown to OEIS and yet amenable under exhaustive enumeration.
 
 In this paper, we restrict the classes examined to $\SIMPLECLASS$ and let $S(f,\SIMPLECLASS)=S(f)$ for convenience. 
@@ -96,13 +96,13 @@ In addition to contributing to the OEIS, a secondary goal is to identify all \te
 
 \section{Methods}
 
-\note{EXPAND SECTION, TALK ABOUT DATA STORAGE AND SQL-LIKE THINGS}
+\note{Expand section, talk about data storage and SQL-like things}
 Using the \texttt{geng -c} command from \texttt{nauty} \needref, we enumerated the class of $\SIMPLECLASS$ up to order $n \le 10$.
 For each graph we computed a series of invariants.
 For completeness these invariants are described below.
 
 
-\note{MOVE TO APPENDIX OR SUPP. INFO}
+\note{Move to appendix or supp. info}
 
 \subsection{Invariants}
 
@@ -154,7 +154,7 @@ In a \textit{chordal graph}, all cycles of order four or more have a cycle chord
  
 \item The \textit{Tutte polynomial} is a bivariate polynomial which encodes information about the graph's connectedness. 
 It requires knowledge of the number of connected components of the graph and the number of connected components of every graph formed by the removal of edges. 
-\note{DEFINE THE TUTTE POLYNOMIAL}!
+\note{Define the Tutte polynomial!}
 
 \item The \textit{chromatic polynomial} is a specialization of the Tutte polynomial formed by taking the second variable to be zero. 
 The chromatic polynomial $P(G,k)$ gives the number of $k$-colorings on graph $G$. 
@@ -168,31 +168,30 @@ Additionally we check for the induced subgraphs $K_5$, the cycle graphs $C_4, C_
 \item The \textit{fractional coloring number} is motivated by the chromatic number, an assignment of a color to each vertex so that no two adjacent vertices have the same color. 
 In the fractional coloring problem, a set of $b$ colors must be assigned to each vertex, out of a set $a$ of available colors with no adjacent vertices sharing any colors.
 $\chi_b(G)$, for a given $b$, is the smallest value of $a$ such that an $a:b$ fractional coloring exists. 
-One can formulate the chromatic number as in integer programming problem and the fractional coloring number as the linear relaxation of this problem. 
-\note{CITE GRAPH BOOK}
+One can formulate the chromatic number as in integer programming problem and the fractional coloring number as the linear relaxation of this problem. \needref
 
 \item \textit{distance regular}
-\note{COMPLETE DEF. HERE}
+\note{Complete def. here}
 
 \end{itemize}
 
 
 \section{Results}
 
-\note{ADD TABLE OF PRIMARY SEQUENCES}
+\note{Add table of primary sequences}
 
-\note{ADD TABLE OF CORRECTED SEQUENCES}
+\note{add table of corrected sequences}
 
-\note{LIST SOME INTERESTING SECONDARY SEQUENCES}
+\note{list some interesting secondary sequences}
 
 \section{Discussion}
 
-\note{LIST SOME INTERESTING RELATIONS}
+\note{list some interesting relations}
 
-\note{DISCUSS HOW PROJECT CAN BE EXPANDED, NEW INVARIANTS, OTHER GRAPH CLASSES}
+\note{discuss how project can be expanded, new invariants, other graph classes}
 
 \section{References}
 
-\note{CREATE BIBTEX FILE, ADD REFS.}
+\note{create BIBTEX file, add refs.}
 
 \end{document}
