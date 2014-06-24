@@ -12,6 +12,9 @@ view:
 edit:
 	emacs $(PROJECT_NAME).tex &
 
+editrefs:
+	emacs refs.bib &
+
 clean:
 	rm -vf *.aux *.pdf *.log *~ *.bbl *.blg *.out
 
