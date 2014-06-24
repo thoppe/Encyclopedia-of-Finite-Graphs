@@ -4,6 +4,8 @@
 \usepackage{hyperref}
 \usepackage[margin=1in]{geometry}
 
+\usepackage[toc,page]{appendix}
+
 \usepackage{todonotes}
 \newcommand{\note}[1]{\todo[inline]{#1}}
 \newcommand{\needref}[1]{\mbox{({\color{blue}\rule{.3cm}{.3cm}} REF) }}
@@ -46,7 +48,7 @@ We released the code in a fully open-sourced manner allowing others to build off
 Through our exhaustive enumeration of all small graphs, we were able to submit XXX new sequences to the OEIS and extend XXX existing sequences.
 \note{Add introduction, detail why project is important}
 
-The Online Encyclopedia of Integer Sequences (\OEIS{}) \needref, sometimes referred to just as Sloane's, was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems. 
+The Online Encyclopedia of Integer Sequences (OEIS), was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems\cite{sloane2003line}. 
 Collecting and storing integer sequences in one place allows a researcher, who perhaps comes across the first few values of an unknown sequence, to be able to quickly look up the subsequent values. 
 The OEIS not only provides the values, but seeks to function as a true encyclopedia with cross references to related sequences, references to other literature, and formulas when known.
 A given sequence may contain any number of terms, ranging from at least four up to as many as 500,000 in the cases where the sequence admits a readily computable expression.
@@ -100,12 +102,31 @@ In addition to contributing to the OEIS, a secondary goal is to identify all \te
 
 Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the class of $\SIMPLECLASS$ up to order $n \le 10$.
 For each graph we computed a series of invariants.
-For completeness these invariants are described below.
+For completeness these invariants are described in Appendix \ref{app:invariants}.
 
 
-\note{Move to appendix or supp. info}
+\section{Results}
 
-\subsection{Invariants}
+\note{Add table of primary sequences}
+
+\note{add table of corrected sequences}
+
+\note{list some interesting secondary sequences}
+
+\section{Discussion}
+
+\note{list some interesting relations}
+
+\note{discuss how project can be expanded, new invariants, other graph classes}
+
+\bibliographystyle{unsrt}
+\bibliography{refs}
+
+
+\begin{appendices}
+
+\section{Invariant Descriptions}
+\label{app:invariants}
 
 \note{Cross-ref all invariants with the internal name}
 \note{Discuss which algorithm was used, the software}
@@ -177,25 +198,6 @@ One can formulate the chromatic number as in integer programming problem and the
 \end{itemize}
 
 
-\section{Results}
-
-\note{Add table of primary sequences}
-
-\note{add table of corrected sequences}
-
-\note{list some interesting secondary sequences}
-
-\section{Discussion}
-
-\note{list some interesting relations}
-
-\note{discuss how project can be expanded, new invariants, other graph classes}
-
-\section{References}
-
-\note{create BIBTEX file, add refs.}
-
-\bibliographystyle{plain}
-\bibliography{refs}
+\end{appendices}
 
 \end{document}
