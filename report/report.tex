@@ -43,20 +43,18 @@ The work can be extended by considering other graph classes like trees or regula
 \section{Introduction}
 
 
+Through our exhaustive enumeration of all small graphs, we were able to submit XXX new sequences to the OEIS and extend XXX existing sequences.
 \note{ADD INTRODUCTION, DETAIL WHY PROJECT IS IMPORTANT}
 
 The Online Encyclopedia of Integer Sequences (\OEIS{}), sometimes referred to just as Sloane's, was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems. 
-The motivation for collecting and storing integer sequences in one place is to allow a researcher, who perhaps comes across the first few values of a sequence, to be able to quickly look up the subsequent values. 
-The OEIS not only contains the values, but also links to references made to the sequence, cross references to related sequences, the sequence's history, graphical representation, etc. 
-For a given sequence, the OEIS may contain any number of terms, ranging from at least four up to as many as 500,000 in the cases where the sequence admits an easily computable expression.
-The database currently contains over 250,000 sequences and is highly cited, with over 3,000 citations as of June 2013. 
-Typically the sequences are in the fields of number theory, combinatorics, and graph theory, and there are many that relate to computer science as well. 
-While originally constructed and maintained solely by Sloane, today the database is under control of the ``OEIS Foundation" which receives contributions from its users. 
-Through our exhaustive enumeration of all small graphs, we were able to submit XXX new sequences to the OEIS and extend XXX existing sequences.
-\note{TRIM PARAGRAPH}
+Collecting and storing integer sequences in one place allows a researcher, who perhaps comes across the first few values of an unknown sequence, to be able to quickly look up the subsequent values. 
+The OEIS not only provides the values, but seeks to function as a true encyclopedia with cross references to related sequences, references to other literature, and formulas when known.
+A given sequence may contain any number of terms, ranging from at least four up to as many as 500,000 in the cases where the sequence admits a readily computable expression.
+The database currently contains over 250,000 sequences and is highly cited, with over 3,000 citations.
+The sequences are of general interest, spanning topics such as number theory, combinatorics, and graph theory.
 
-An invariant is a property of a graph that is preserved under isomorphism. 
-Invariants can be simple binary properties (planarity), integers (chromatic number), polynomials (chromatic or Tutte polynomials), sets (dominion sets) or even graphs themselves (subgraph and minor matching).
+A graph invariant is any property that is preserved under isomorphism. 
+Invariants can be simple binary properties (planarity), integers (automorphism group size), polynomials (chromatic or Tutte polynomials), rationals (fractional chromatic numbers), complex numbers (adjacency spectra), sets (dominion sets) or even graphs themselves (subgraph and minor matching).
 We are primarily concerned with the sequences produced by graph invariants, \ie the combinatorial problem of how many graphs of a given class satisfy a particular criteria.
 Let a graph be defined as the pair $G = (V,E)$, where $V$ is a set of vertices and $E$ a set of edges. 
 Define $\CLASS$ as a class which forms an isomorphically distinct set of graphs that satisfy a specified criteria.
@@ -82,20 +80,24 @@ be the sequence of integers defined by $\SEQ(f, \CLASS)$. For example, if $f_\te
 S(f_\text{tree}, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
 %
-this sequence is \OEIS{A000055}.
+this sequence is \OEIS{A000055}. 
+While this sequences has been known for quite some time and admits a generating function, we have computed other sequences related to more difficult invariants.
+Some invariants, like the independence number, have produced sequences (for example \OEIS{A243781}), that were hitherto unknown to OEIS and yet amenable under exhaustive enumeration.
+
 In this paper, we restrict the classes examined to $\SIMPLECLASS$ and let $S(f,\SIMPLECLASS)=S(f)$ for convenience. 
 Provided one had a means of enumeration, an extension to other classes would be straightforward.
+Exhaustive generation algorithms are known for many specialized classes such as bipartite graphs, digraphs, multigraphs, trees and planar graph to name a few. \note{REF}
 
 Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
 
-Similar to the \textit{House of Graphs} project (ref), we say that a relation between two invariants is \textit{suggestive to order $n$}, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
+Similar to the \textit{House of Graphs} project \note{REF}, we say that a relation between two invariants is \textit{suggestive to order $n$}, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
 Two invariant equalities are \textit{exclusive to order $n$}, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
-In addition to contributing to the OEIS, a secondary goal is to identify all \textit{suggestive} and \textit{exclusive} relations between the invariants studied for $n=10$.
+In addition to contributing to the OEIS, a secondary goal is to identify all \textit{suggestive} and \textit{exclusive} relations between the invariants studied to order $n=10$.
 
 \section{Methods}
 
 \note{EXPAND SECTION, TALK ABOUT DATA STORAGE AND SQL-LIKE THINGS}
-Using the \texttt{geng -c} command from \texttt{nauty} (ref), we enumerated the class of $\SIMPLECLASS$ up to order $n \le 10$.
+Using the \texttt{geng -c} command from \texttt{nauty} \note{REF}, we enumerated the class of $\SIMPLECLASS$ up to order $n \le 10$.
 For each graph we computed a series of invariants.
 For completeness these invariants are described below.
 
@@ -105,12 +107,13 @@ For completeness these invariants are described below.
 \subsection{Invariants}
 
 \note{Cross-ref all invariants with the internal name}
+\note{Discuss which algorithm was used, the software}
 
 \begin{itemize}
 
 \item The \textit{automorphism group} is the group where each member is a mapping of the vertices onto themselves which preserve isomorphism. 
 The cardinality of this group is the \textit{automorphism number}.
-We use BLISS (ref) to compute this.
+We use BLISS \note{REF} to compute this.
 
 \item Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
 A graph is \textit{connected} if there is a path between all pairs vertices.
