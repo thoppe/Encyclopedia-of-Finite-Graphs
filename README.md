@@ -1,8 +1,7 @@
 Encyclopedia of Finite Graphs
 =============================
 
-Set of tools and data to compute all known invariants for small finite graphs [in progress].
-The project has three major aims, 
+This project has three major aims, 
 
 1. To build an exhaustive reference database for all graphs of a given type. 
 2. To "mine" this database for sequences not present (or incomplete) in the [OEIS](https://oeis.org/). 
@@ -15,9 +14,7 @@ The project has three major aims,
 
 *Roadmap*:
 
-+ Submit level 2+ sequences
-+ Write code to determine set relations between invariants
-+ Writeup project as an experimental math [`paper`](report/report.tex)
++ [`Writeup`](report/report.tex) for submission to either [Journal of Integer Sequences](https://cs.uwaterloo.ca/journals/JIS/), [Discrete Applied Mathematics](www.journals.elsevier.com/discrete-applied-mathematics/), [Experimental Mathematics](http://www.tandfonline.com/loi/uexm20).
 
 =======================
 
