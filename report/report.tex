@@ -2,13 +2,18 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{hyperref}
-\usepackage[margin=1in]{geometry}
-
+\usepackage{fullpage}
+%\usepackage[margin=1in]{geometry}
 \usepackage[toc,page]{appendix}
 
+% To do note packages. Remove when complete.
 \usepackage{todonotes}
 \newcommand{\note}[1]{\todo[inline]{#1}}
 \newcommand{\needref}[1]{\mbox{({\color{blue}\rule{.3cm}{.3cm}} REF) }}
+
+% Counters for number of edits made to OEIS
+\newcommand{\OEISedits}{XXX}
+\newcommand{\OEISprimary}{XXX}
 
 \newcommand{\OEIS}[1]
 {\href{https://oeis.org/#1}{OEIS \texttt{#1}}}
@@ -35,25 +40,26 @@
 
 \begin{abstract}
 We exhaustively enumerate all simple, connected graphs of a finite order and compute a selection of invariants over this set.
-Invariants sequences were constructed and checked against the Online Encyclopedia of Integer Sequences (OEIS).
-XXX new sequences were added and XXX sequences were appended or corrected.
-From the graph database we are able to suggest relationships among the invariants.
+Integer sequences were constructed from these invariants and checked against the Online Encyclopedia of Integer Sequences (OEIS).
+\OEISprimary new sequences were added and \OEISedits sequences were appended or corrected.
+From the graph database we are able to programmatically suggest relationships among the invariants.
 We show that we can readily visualize any sequence of graphs with a given criteria.
-We released the code in a fully open-sourced manner allowing others to build off this work.
+The code has been released as an open-source framework for others to add additional invariants not considered in this work.
 \end{abstract}
 
 \section{Introduction}
 
 
-Through our exhaustive enumeration of all small graphs, we were able to submit XXX new sequences to the OEIS and extend XXX existing sequences.
+Through our exhaustive enumeration of all small graphs, we were able to submit \OEISprimary new sequences to the OEIS and extend \OEISedits existing sequences.
 \note{Add introduction, detail why project is important}
 
-The Online Encyclopedia of Integer Sequences (OEIS), was created by Neil Sloane in 1964, who began collecting integer sequences as a graduate student studying combinatorial problems\cite{sloane2003line}. 
-Collecting and storing integer sequences in one place allows a researcher, who perhaps comes across the first few values of an unknown sequence, to be able to quickly look up the subsequent values. 
-The OEIS not only provides the values, but seeks to function as a true encyclopedia with cross references to related sequences, references to other literature, and formulas when known.
-A given sequence may contain any number of terms, ranging from at least four up to as many as 500,000 in the cases where the sequence admits a readily computable expression.
-The database currently contains over 250,000 sequences and is highly cited, with over 3,000 citations.
+The Online Encyclopedia of Integer Sequences (OEIS), was created by Neil Sloane in 1964.
+Sloane, as a graduate student, began collecting integer sequences while studying combinatorial problems\cite{sloane2003line}. 
+Since then, the database has grown to over 250,000 sequences and is highly cited, with over 3,000 citations to date.
 The sequences are of general interest, spanning topics such as number theory, combinatorics, and graph theory.
+Collecting and storing integer sequences in one place allows a researcher, who perhaps comes across the first few values of an unknown sequence, to be able to quickly look up the subsequent values. 
+A given sequence may contain any number of terms, ranging from at least four up to as many as 500,000 in the cases where the sequence admits a readily computable expression.
+The OEIS not only provides the values, but seeks to function as a true encyclopedia with cross references to related sequences, references to other literature, and formulas when known.
 
 A graph invariant is any property that is preserved under isomorphism. 
 Invariants can be simple binary properties (planarity), integers (automorphism group size), polynomials (chromatic or Tutte polynomials), rationals (fractional chromatic numbers), complex numbers (adjacency spectra), sets (dominion sets) or even graphs themselves (subgraph and minor matching). 
@@ -72,29 +78,28 @@ From here, define an ordered sequence of subsets of the graph class
 &= f(\CLASS_1), f(\CLASS_2), f(\CLASS_3), \ldots
 \end{align}
 %
-where $f$ is some invariant equality that further subdivides each set $\CLASS_n$.
+where $f$ is some invariant condition that further subdivides each set $\CLASS_n$.
 
 Let 
 $S(f, \CLASS) = |f(\CLASS_1)|, |f(\CLASS_2)|, |f(\CLASS_3)|, \ldots$
 be the sequence of integers defined by $\SEQ(f, \CLASS)$. For example, if $f_\text{tree}$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\SIMPLECLASS$ is the set of all simple unlabeled connected graphs
 %
 \begin{align}
-S(f_\text{tree}, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
+S(f_\text{tree}=1, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
 %
-this sequence is \OEIS{A000055}. 
-While this sequence has been known for quite some time and admits a generating function \needref, we have computed other sequences related to more difficult invariants.
-Some invariants, like the independence number, have produced sequences (for example \OEIS{A243781}), that were hitherto unknown to OEIS and yet amenable under exhaustive enumeration.
+known as \OEIS{A000055}.
+While this particular sequence has been known for quite some time (and admits a generating function \needref ), we have computed other sequences related to more difficult invariants.
+Some invariants, like the independence number \OEIS{A243781}, have produced sequences that were hitherto unknown to OEIS but amenable under the scope of this project.
+
+Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
+Similar to the House of Graphs project\cite{brinkmann2013house}, we say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
+They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
+In addition to contributing to the OEIS, a secondary goal is to identify all suggestive and exclusive relations between the invariants studied up to order $n=10$.
 
 In this paper, we restrict the classes examined to $\SIMPLECLASS$ and let $S(f,\SIMPLECLASS)=S(f)$ for convenience. 
 Provided one had a means of enumeration, an extension to other classes would be straightforward.
-Exhaustive generation algorithms are known for many specialized classes such as bipartite graphs, digraphs, multigraphs, trees and planar graph to name a few. \needref
-
-Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
-
-Similar to the \textit{House of Graphs} project \cite{brinkmann2013house}, we say that a relation between two invariants is \textit{suggestive to order $n$}, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
-Two invariant equalities are \textit{exclusive to order $n$}, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
-In addition to contributing to the OEIS, a secondary goal is to identify all \textit{suggestive} and \textit{exclusive} relations between the invariants studied to order $n=10$.
+Exhaustive generation algorithms are known for many specialized classes such as bipartite graphs, digraphs, multigraphs, trees and planar graphs \needref.
 
 \section{Methods}
 
@@ -103,21 +108,17 @@ In addition to contributing to the OEIS, a secondary goal is to identify all \te
 Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the class of $\SIMPLECLASS$ up to order $n \le 10$.
 For each graph we computed a series of invariants.
 For completeness these invariants are described in Appendix \ref{app:invariants}.
+A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq} and relations in Appendix \ref{app:relations}.
 
-
-\section{Results}
-
-\note{Add table of primary sequences}
-
-\note{add table of corrected sequences}
-
+\note{Give example of simple relations and sequences here}
 \note{list some interesting secondary sequences}
+\note{list some interesting relations}
 
 \section{Discussion}
 
-\note{list some interesting relations}
-
 \note{discuss how project can be expanded, new invariants, other graph classes}
+
+
 
 \bibliographystyle{unsrt}
 \bibliography{refs}
@@ -135,7 +136,7 @@ For completeness these invariants are described in Appendix \ref{app:invariants}
 
 \item The \textit{automorphism group} is the group where each member is a mapping of the vertices onto themselves which preserve isomorphism. 
 The cardinality of this group is the \textit{automorphism number}.
-We use BLISS \cite{junttila2007engineering} to compute this.
+Both \texttt{nauty} and \texttt{BLISS} \cite{junttila2007engineering} are available to compute this invariants.
 
 \item Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
 A graph is \textit{connected} if there is a path between all pairs vertices.
@@ -158,7 +159,8 @@ A regular graph is \textit{strongly regular} if in addition there exist $\lambda
 \item A graph is \textit{Hamiltonian}/\textit{Eulerian} if there is a circuit that visits each vertex/edge exactly once.
 
 \item A vertex of a graph is an \textit{articulation point} if its removal disconnects the graph. 
-The \textit{vertex/edge connectivity} of a graph is the minimum number of vertices/edges needed to disconnect the graph with their removal. 
+The \textit{vertex/edge connectivity} of a graph is the minimum number of vertices/edges needed to disconnect the graph.
+A vertex joined to only a single edge is an \textit{end point}.
 
 \item A \textit{clique} is a subgraph of a graph that is complete. The \textit{maximum clique number} of graph $G$ is the cardinality of the largest clique in $G$. 
 
@@ -166,7 +168,8 @@ The \textit{vertex/edge connectivity} of a graph is the minimum number of vertic
 
 \item The \textit{crossing number} is the minimum possible number of edge crossings for an embedding of the graph in a plane.
 A graph is \textit{planar} if the crossing number is zero, that is there exists an embedding in the plane with no overlapping edges.
-\note{Note: we don't compute crossing number (just yet?)}
+The \textit{genus} is the minimum number of edges that must be added to make it planar.
+Due to a lack of freely available algorithms, planarity is the only embedding considered.
 
 \item A graph's \textit{cycle space} is the set of all of its Eulerian subgraphs, where every member can be constructed as the symmetric difference of members of the \textit{cycle basis}. 
 A \textit{tree} is an acyclic connected graph, one whose cycle basis is the empty set.
@@ -183,20 +186,40 @@ The chromatic polynomial $P(G,k)$ gives the number of $k$-colorings on graph $G$
 The \textit{chromatic number} is the (integer) value of $k$ for which $P(G,k)$ attains its smallest positive value. 
 \note{What is a proper coloring?}
 
-\item A \textit{vertex-induced subgraph} is a subset of vertices and all the edges common to all members of this subset. 
+\item A \textit{vertex-induced subgraph} is a subset of vertices and edges who are common to all members of this subset. 
 With $K_n$ as the complete graph over $n$ vertices, a graph is \textit{triangle free} (\textit{square free}) if it does not contain $K_3$ ($K_4$) as an induced subgraph.
-Additionally we check for the induced subgraphs $K_5$, the cycle graphs $C_4, C_5, C_6$ and the following named graphs \bowtiegraph, \diamondgraph, \bannergraph, and the open-bowtie graph. 
+Additionally, we have checked for the induced subgraphs $K_5$, the cycle graphs $C_4, C_5, C_6$ and the following named graphs: the \bowtiegraph, \diamondgraph, \bannergraph, and the open-bowtie graph. 
+\note{Added picture of these graphs}
+\note{Mention k max clique here}
 
 \item The \textit{fractional coloring number} is motivated by the chromatic number, an assignment of a color to each vertex so that no two adjacent vertices have the same color. 
 In the fractional coloring problem, a set of $b$ colors must be assigned to each vertex, out of a set $a$ of available colors with no adjacent vertices sharing any colors.
 $\chi_b(G)$, for a given $b$, is the smallest value of $a$ such that an $a:b$ fractional coloring exists. 
-One can formulate the chromatic number as in integer programming problem and the fractional coloring number as the linear relaxation of this problem. \cite{scheinerman2011fractional}
+One can formulate the chromatic number as in integer programming problem and the fractional coloring number as the linear relaxation of this problem\cite{scheinerman2011fractional}.
+The integral chromatic number need not be equal to its fractional counter part, in fact $\chi_f(G) \le \chi(G)$. 
+A graph has a \textit{fractional chromatic gap} if $\chi_f(G) \ne \chi(G)$.
 
 \item \textit{distance regular}
 \note{Complete def. here}
 
+\item \textit{Independent edge/vertex sets}, \textit{independence number}, \textit{Hosoya index}.
+\note{Complete def. here}
+
 \end{itemize}
 
+\section{Submitted sequences}
+\label{app:submittedseq}
+
+\subsection{Primary sequences}
+\note{Add table of primary sequences}
+\note{add table of corrected sequences}
+
+\subsection{Secondary sequences}
+\note{Add table of secondary sequences}
+
+\section{Relations}
+\label{app:relations}
+\note{Add table of secondary sequences}
 
 \end{appendices}
 

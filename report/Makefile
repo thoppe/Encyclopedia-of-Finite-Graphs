@@ -16,9 +16,10 @@ editrefs:
 	emacs refs.bib &
 
 clean:
-	rm -vf *.aux *.pdf *.log *~ *.bbl *.blg *.out
+	rm -vf *.aux *.pdf *.log *~ *.bbl *.blg *.out \#* *.bak
 
 $(PROJECT_NAME).pdf: $(PROJECT_NAME).tex
+	make clean
 	$(SPELL_CHECK) $(PROJECT_NAME).tex
 	pdflatex $(PROJECT_NAME).tex
 	pdflatex $(PROJECT_NAME).tex
