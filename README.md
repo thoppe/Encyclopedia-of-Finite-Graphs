@@ -14,7 +14,7 @@ This project has three major aims,
 
 *Roadmap*:
 
-+ [`Writeup`](report/report.tex) for submission to either [Journal of Integer Sequences](https://cs.uwaterloo.ca/journals/JIS/), [Discrete Applied Mathematics](www.journals.elsevier.com/discrete-applied-mathematics/), [Experimental Mathematics](http://www.tandfonline.com/loi/uexm20).
++ [Writeup](report/report.tex) for submission to either [Journal of Integer Sequences](https://cs.uwaterloo.ca/journals/JIS/), [Discrete Applied Mathematics](http://www.journals.elsevier.com/discrete-applied-mathematics/), [Experimental Mathematics](http://www.tandfonline.com/loi/uexm20).
 
 =======================
 
