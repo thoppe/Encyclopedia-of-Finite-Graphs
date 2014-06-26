@@ -14,9 +14,10 @@ __script_dir = os.path.dirname(os.path.realpath(__file__))
 
 ######################### Conversion code ######################### 
 
-def viz_graph(g):
-    pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
-    graph_tool.draw.graph_draw(g,pos)
+def viz_graph(g,pos=None,**kwargs):
+    if pos == None:
+        pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
+    graph_tool.draw.graph_draw(g,pos,**kwargs)
 
 def convert_to_numpy(adj,**args):
     N = args["N"]

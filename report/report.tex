@@ -129,7 +129,7 @@ A full table of all sequences submitted to the OEIS can be found in Appendix \re
 \label{app:invariants}
 
 \note{Broadly describe the categories}
-Discuss which algorithm was used, the software, \texttt{networkx} \needref, \texttt{graph-tool} \needref, etc...
+Discuss which algorithm was used, the software, \texttt{networkx} \cite{SciPyProceedings_11}, \texttt{graph-tool} \needref, etc...
 
 \subsubsection*{Algebraic Graph Theory}
 
@@ -204,12 +204,16 @@ In a \textit{chordal graph}, all cycles of order four or more have a cycle chord
  
 A \textit{vertex-induced subgraph} is a subset of vertices and edges who are common to all members of this subset. 
 With $K_n$ as the complete graph over $n$ vertices, a graph is \textit{triangle free} (\textit{square free}) if it does not contain $K_3$ ($K_4$) as an induced subgraph.
-Additionally, we have checked for the induced subgraphs $K_5$, the cycle graphs $C_4, C_5, C_6$ and the following named graphs: the \bowtiegraph, \diamondgraph, \bannergraph, and the open-bowtie graph. 
+Additionally, we have checked for the induced subgraphs $K_5$, the cycle graphs $C_4, C_5, C_6$ and the following named graphs: the bowtie graph, the diamond graph, the bull graph, and the open-bowtie graph. 
+The named graphs are illustrated in Figure \ref{fig:namedgraphs}. 
+A \textit{clique} is a subgraph of a graph that is complete. 
+The \textit{maximum clique number} of graph $G$ is the cardinality of the largest clique in $G$. 
 
-A \textit{clique} is a subgraph of a graph that is complete. The \textit{maximum clique number} of graph $G$ is the cardinality of the largest clique in $G$. 
-
-\note{Add a picture of these graphs}
-
+\begin{figure}[h]
+  \label{fig:namedgraphs}
+  \includegraphics[width=0.4\textwidth]{simple_drawings/combined_subgraphs.png}
+  \caption{The named graphs checked for the vertex-induced subgraphs invariant. Clockwise from top: the open-bowtie, bowtie, bull and diamond graph.}
+\end{figure}
 
 \section{Submitted sequences}
 \label{app:submittedseq}
