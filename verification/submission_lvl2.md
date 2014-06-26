@@ -83,7 +83,7 @@ Unknown relation:
 + [`A243792`](https://oeis.org/A243792) *`is_subgraph_free_open_bowtie=1 AND is_integral=1`*, `1,1,1,2,1,4,1,3,0,15`
 + [`A243783`](https://oeis.org/A243793) *`is_subgraph_free_open_bowtie=1 AND is_integral=0`*, `0,0,1,4,10,30,97,405,1957,12725`
 + [`A243794`](https://oeis.org/A243794) *`is_subgraph_free_open_bowtie=1 AND is_planar=1`*, `1,1,2,6,11,33,94,370,1627,8895`
-+ [`A243795`](https://oeis.org/A243795)*`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,22,65,285,1442,10106`
++ [`A243795`](https://oeis.org/A243795) *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,22,65,285,1442,10106`
 
 
 ## Already in database
