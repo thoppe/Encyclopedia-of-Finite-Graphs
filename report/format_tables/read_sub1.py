@@ -22,10 +22,9 @@ with open(f) as FIN:
                 OEIS = "\\OEIS{%s}" % terms[1]
                 raw_name = remove_extra(terms[3])
                 name, cond = split_name(raw_name)
-                cond = "$%s$"%cond
-                name = "$\\VAR%s$" % name
+                name = "$\\VAR%s %s$" % (name,cond)
 
-                output = [OEIS, name, cond]
+                output = [OEIS, name]
 
                 seq = terms[5]
                 seq = seq.replace(',',' ').split()

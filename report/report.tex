@@ -4,10 +4,16 @@
 \usepackage{hyperref}
 \usepackage{fullpage}
 \usepackage{booktabs}
-
+\usepackage{xspace}
 \usepackage[toc,page]{appendix}
 
-\usepackage{xspace}
+% Much nicer visual links
+\hypersetup{
+    colorlinks=true,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
 
 % To do note packages. Remove when complete.
 \usepackage{todonotes}
@@ -21,20 +27,15 @@
 \newcommand{\OEIS}[1]
 {\href{https://oeis.org/#1}{\texttt{#1}}}
 
+% Text shortcuts
 \newcommand{\SEQ}{\mathcal{S}}
 \newcommand{\CLASS}{\mathcal{C}}
 \newcommand{\SIMPLECLASS}{\mathcal{C}_\text{simple}}
-
 \newcommand{\ie}[0]{i.e.\ }
 
-\newcommand{\bowtiegraph}{\href{http://mathworld.wolfram.com/ButterflyGraph.html}{bowtie graph}}
-\newcommand{\diamondgraph}{\href{http://mathworld.wolfram.com/DiamondGraph.html}{diamond graph}}
-\newcommand{\pawgraph}{\href{http://mathworld.wolfram.com/PawGraph.html}{paw graph}}
-\newcommand{\bannergraph}{\href{http://mathworld.wolfram.com/BannerGraph.html}{banner graph}}
+\setlength{\parindent}{.35cm}
 
 \begin{document}
-
-\setlength{\parindent}{.35cm}
 
 \title{Integer sequence discovery from small graphs}
 \author{Travis Hoppe and Anna Petrone}
@@ -227,32 +228,33 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 Primary sequences are those involving a single invariant, while secondary sequences are those that involve the union of two invariants.
 Note that not every sequence computed was submitted to OEIS, many sequences already existed and served as a useful check on the accuracy of our programs.
 \note{Fix this paragraph}
+\note{Add a table of invariant symbols}
 
 \subsection{Primary sequences}
 \newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
 
-\begin{tabular}{ l r l r r r r r r r r r r}
+\begin{tabular}{ l l r r r r r r r r r r}
 \toprule
-OEIS code & Invariant & Condition & Sequence \\
+OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
 \midrule\bottomrule
-\OEIS{A241454} & $\VARautomorphismgroupn$ & $=2$ & 0 & 1 & 1 & 2 & 9 & 37 & 317 & 4098 & 84602 & 2933996 \\
-\OEIS{A241455} & $\VARautomorphismgroupn$ & $=4$ & 0 & 0 & 0 & 1 & 3 & 28 & 198 & 1971 & 29047 & 672516 \\
-\OEIS{A241456} & $\VARautomorphismgroupn$ & $=6$ & 0 & 0 & 1 & 1 & 1 & 7 & 31 & 221 & 3025 & 68033 \\
-\OEIS{A241457} & $\VARautomorphismgroupn$ & $=8$ & 0 & 0 & 0 & 1 & 2 & 9 & 55 & 499 & 6017 & 107312 \\
-\OEIS{A241458} & $\VARautomorphismgroupn$ & $=10$ & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 3 & 13 & 123 \\
-\OEIS{A241459} & $\VARautomorphismgroupn$ & $=12$ & 0 & 0 & 0 & 0 & 3 & 10 & 51 & 356 & 3395 & 49862 \\
-\OEIS{A241460} & $\VARautomorphismgroupn$ & $=14$ & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 2 & 2 & 6 \\
-\OEIS{A241461} & $\VARautomorphismgroupn$ & $=16$ & 0 & 0 & 0 & 0 & 0 & 3 & 10 & 123 & 992 & 14026 \\
-\OEIS{A241462} & $\VARautomorphismgroupn$ & $=20$ & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 6 & 29 & 199 \\
-\OEIS{A241463} & $\VARautomorphismgroupn$ & $=24$ & 0 & 0 & 0 & 1 & 1 & 1 & 14 & 118 & 1247 & 17191 \\
-\OEIS{A241464} & $\VARautomorphismgroupn$ & $=36$ & 0 & 0 & 0 & 0 & 0 & 1 & 3 & 16 & 132 & 1341 \\
-\OEIS{A241465} & $\VARautomorphismgroupn$ & $=48$ & 0 & 0 & 0 & 0 & 0 & 4 & 14 & 65 & 504 & 5215 \\
-\OEIS{A241466} & $\VARautomorphismgroupn$ & $=72$ & 0 & 0 & 0 & 0 & 0 & 1 & 2 & 16 & 124 & 1070 \\
-\OEIS{A241467} & $\VARautomorphismgroupn$ & $=120$ & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 5 & 21 & 211 \\
-\OEIS{A241468} & $\VARautomorphismgroupn$ & $=144$ & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 12 & 51 & 477 \\
-\OEIS{A241469} & $\VARautomorphismgroupn$ & $=240$ & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 8 & 51 & 336 \\
-\OEIS{A241470} & $\VARautomorphismgroupn$ & $=720$ & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 4 & 13 & 60 \\
-\OEIS{A241471} & $\VARautomorphismgroupn$ & $=5040$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 5 \\
+\OEIS{A241454} & $\VARautomorphismgroupn =2$ & 0 & 1 & 1 & 2 & 9 & 37 & 317 & 4098 & 84602 & 2933996 \\
+\OEIS{A241455} & $\VARautomorphismgroupn =4$ & 0 & 0 & 0 & 1 & 3 & 28 & 198 & 1971 & 29047 & 672516 \\
+\OEIS{A241456} & $\VARautomorphismgroupn =6$ & 0 & 0 & 1 & 1 & 1 & 7 & 31 & 221 & 3025 & 68033 \\
+\OEIS{A241457} & $\VARautomorphismgroupn =8$ & 0 & 0 & 0 & 1 & 2 & 9 & 55 & 499 & 6017 & 107312 \\
+\OEIS{A241458} & $\VARautomorphismgroupn =10$ & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 3 & 13 & 123 \\
+\OEIS{A241459} & $\VARautomorphismgroupn =12$ & 0 & 0 & 0 & 0 & 3 & 10 & 51 & 356 & 3395 & 49862 \\
+\OEIS{A241460} & $\VARautomorphismgroupn =14$ & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 2 & 2 & 6 \\
+\OEIS{A241461} & $\VARautomorphismgroupn =16$ & 0 & 0 & 0 & 0 & 0 & 3 & 10 & 123 & 992 & 14026 \\
+\OEIS{A241462} & $\VARautomorphismgroupn =20$ & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 6 & 29 & 199 \\
+\OEIS{A241463} & $\VARautomorphismgroupn =24$ & 0 & 0 & 0 & 1 & 1 & 1 & 14 & 118 & 1247 & 17191 \\
+\OEIS{A241464} & $\VARautomorphismgroupn =36$ & 0 & 0 & 0 & 0 & 0 & 1 & 3 & 16 & 132 & 1341 \\
+\OEIS{A241465} & $\VARautomorphismgroupn =48$ & 0 & 0 & 0 & 0 & 0 & 4 & 14 & 65 & 504 & 5215 \\
+\OEIS{A241466} & $\VARautomorphismgroupn =72$ & 0 & 0 & 0 & 0 & 0 & 1 & 2 & 16 & 124 & 1070 \\
+\OEIS{A241467} & $\VARautomorphismgroupn =120$ & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 5 & 21 & 211 \\
+\OEIS{A241468} & $\VARautomorphismgroupn =144$ & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 12 & 51 & 477 \\
+\OEIS{A241469} & $\VARautomorphismgroupn =240$ & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 8 & 51 & 336 \\
+\OEIS{A241470} & $\VARautomorphismgroupn =720$ & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 4 & 13 & 60 \\
+\OEIS{A241471} & $\VARautomorphismgroupn =5040$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 5 \\
 \end{tabular}
 
 \subsection{Secondary sequences}
