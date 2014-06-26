@@ -5,6 +5,7 @@
 \usepackage{fullpage}
 \usepackage{booktabs}
 \usepackage{xspace}
+\usepackage{longtable}
 \usepackage[toc,page]{appendix}
 
 % Much nicer visual links
@@ -231,9 +232,16 @@ Note that not every sequence computed was submitted to OEIS, many sequences alre
 \note{Add a table of invariant symbols}
 
 \subsection{Primary sequences}
-\newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
 
-\begin{tabular}{ l l r r r r r r r r r r}
+\newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
+\newcommand{\VARchromaticnumber}{\chi(g)}
+\newcommand{\VARedgeconnectivity}{\kappa_{E}(g)}
+\newcommand{\VARvertexconnectivity}{\kappa_{V}(g)}
+\newcommand{\VARdiameter}{\text{dia}(g)}
+\newcommand{\VARgirth}{\text{girth}(g)}
+\newcommand{\VARnarticulationpoints}{a(g)}
+
+\begin{longtable}{ l l r r r r r r r r r r}
 \toprule
 OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
 \midrule\bottomrule
@@ -255,7 +263,26 @@ OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
 \OEIS{A241469} & $\VARautomorphismgroupn =240$ & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 8 & 51 & 336 \\
 \OEIS{A241470} & $\VARautomorphismgroupn =720$ & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 4 & 13 & 60 \\
 \OEIS{A241471} & $\VARautomorphismgroupn =5040$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 5 \\
-\end{tabular}
+\OEIS{A241702} & $\VARchromaticnumber =7$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 6 & 110 & 4125 \\
+\OEIS{A241703} & $\VARedgeconnectivity =4$ & 0 & 0 & 0 & 0 & 1 & 3 & 25 & 378 & 14306 & 1141575 \\
+\OEIS{A241704} & $\VARedgeconnectivity =5$ & 0 & 0 & 0 & 0 & 0 & 1 & 3 & 41 & 1095 & 104829 \\
+\OEIS{A241705} & $\VARedgeconnectivity =6$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 4 & 65 & 3441 \\
+\OEIS{A241706} & $\VARdiameter =2$ & 0 & 0 & 1 & 4 & 14 & 59 & 373 & 4154 & 91518 & 4116896 \\
+\OEIS{A241707} & $\VARdiameter =3$ & 0 & 0 & 0 & 1 & 5 & 43 & 387 & 5797 & 148229 & 6959721 \\
+\OEIS{A241708} & $\VARdiameter =4$ & 0 & 0 & 0 & 0 & 1 & 8 & 82 & 1027 & 19320 & 598913 \\
+\OEIS{A241709} & $\VARdiameter =5$ & 0 & 0 & 0 & 0 & 0 & 1 & 9 & 125 & 1818 & 37856 \\
+\OEIS{A241710} & $\VARdiameter =6$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 12 & 180 & 2928 \\
+\OEIS{A241711} & $\VARgirth =3$ & 0 & 0 & 1 & 3 & 15 & 93 & 792 & 10833 & 259420 & 11704309 \\
+\OEIS{A241712} & $\VARgirth =4$ & 0 & 0 & 0 & 1 & 2 & 11 & 43 & 234 & 1498 & 11451 \\
+\OEIS{A241713} & $\VARgirth =5$ & 0 & 0 & 0 & 0 & 1 & 1 & 5 & 18 & 82 & 539 \\
+\OEIS{A241714} & $\VARgirth =6$ & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 7 & 25 & 137 \\
+\OEIS{A241715} & $\VARgirth =7$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 6 & 20 \\
+\OEIS{A241767} & $\VARnarticulationpoints =1$ & 0 & 0 & 1 & 2 & 7 & 33 & 244 & 2792 & 52448 & 1690206 \\
+\OEIS{A241768} & $\VARnarticulationpoints =2$ & 0 & 0 & 0 & 1 & 3 & 17 & 101 & 890 & 11468 & 239728 \\
+\OEIS{A241769} & $\VARnarticulationpoints =3$ & 0 & 0 & 0 & 0 & 1 & 5 & 32 & 242 & 2461 & 35839 \\
+\OEIS{A241770} & $\VARnarticulationpoints =4$ & 0 & 0 & 0 & 0 & 0 & 1 & 7 & 60 & 527 & 6056 \\
+\OEIS{A241771} & $\VARnarticulationpoints =5$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 9 & 97 & 1029 \\
+\end{longtable}
 
 \subsection{Secondary sequences}
 \note{Add table of secondary sequences}
