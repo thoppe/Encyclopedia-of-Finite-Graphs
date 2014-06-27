@@ -228,10 +228,6 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 
 Primary sequences are those involving a single invariant, while secondary sequences are those that involve the union of two invariants.
 Note that not every sequence computed was submitted to OEIS, many sequences already existed and served as a useful check on the accuracy of our programs.
-\note{Fix this paragraph}
-\note{Add a table of invariant symbols}
-
-\subsection{Primary sequences}
 
 \newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
 \newcommand{\VARchromaticnumber}{\chi(g)}
@@ -240,6 +236,20 @@ Note that not every sequence computed was submitted to OEIS, many sequences alre
 \newcommand{\VARdiameter}{\text{dia}(g)}
 \newcommand{\VARgirth}{\text{girth}(g)}
 \newcommand{\VARnarticulationpoints}{a(g)}
+
+\begin{longtable}{ l l}
+\toprule
+Invariant symbol & Description \\
+\midrule
+$\VARautomorphismgroupn$ & Automorphism group size \\
+$\VARchromaticnumber$ & Chromatic number \\
+$\VARedgeconnectivity$, $\VARedgeconnectivity$ & Vertex/Edge connectivity \\
+$\VARdiameter$ & diameter \\
+$\VARgirth$ & girth \\
+$\VARnarticulationpoints$ & number of articulation points \\
+\end{longtable}
+
+\subsection{Primary sequences}
 
 \begin{longtable}{ l l r r r r r r r r r r}
 \toprule

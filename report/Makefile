@@ -18,6 +18,10 @@ editrefs:
 clean:
 	rm -vf *.aux *.pdf *.log *~ *.bbl *.blg *.out \#* *.bak
 
+commit:
+	(cd .. && make commit)
+
+
 $(PROJECT_NAME).pdf: $(PROJECT_NAME).tex
 	make clean
 	$(SPELL_CHECK) $(PROJECT_NAME).tex
