@@ -1,27 +1,18 @@
 ## Pending:
 
++ [`A243253`](https://oeis.org/A243253) *`is_chordal=1 AND is_eulerian=1`*, `1,0,1,0,3,2,13,18,116,366`
++ [`A243785`](https://oeis.org/A243785)  *`is_chordal=1 AND is_integral=0`*, `0,0,1,4,12,56,267,1605,11909,109525`
++ [`A243786`](https://oeis.org/A243786)  *`is_chordal=1 AND is_integral=1`*, `1,1,1,1,3,2,5,9,2,14`
++ [`A243787`](https://oeis.org/A243787)  *`is_chordal=1 AND is_planar=1`*, `1,1,2,5,14,52,228,1209,7463,52520`
++ [`A243788`](https://oeis.org/A243788)  *`is_chordal=1 AND is_subgraph_free_K4=1`*, `1,1,2,4,11,35,124,500,2224,10640`
++ [`A243796`](https://oeis.org/A243796)  *`is_hamiltonian=1 AND is_chordal=1`*, `1,0,1,2,4,15,58,360,2793,28761`
++ [`A243797`](https://oeis.org/A243797)  *`is_subgraph_free_bowtie=1 AND is_chordal=1`*, `1,1,2,5,10,27,70,206,613,1942`
++ [`A243798`](https://oeis.org/A243798)  *`is_subgraph_free_bull=1 AND is_chordal=1`*, `1,1,2,5,6,12,25,55,126,304`
++ [`A243799`](https://oeis.org/A243799)  *`is_subgraph_free_open_bowtie=1 AND is_chordal=1`*, `1,1,2,5,6,13,25,58,130,316`
+
 ## Potential:
 
-+ *`is_chordal=1 AND is_eulerian=1`*, `1,0,1,0,3,2,13,18,116,366`
-+ *`is_chordal=1 AND is_integral=0`*, `0,0,1,4,12,56,267,1605,11909,109525`
-+ *`is_chordal=1 AND is_integral=1`*, `1,1,1,1,3,2,5,9,2,14`
-+ *`is_chordal=1 AND is_planar=1`*, `1,1,2,5,14,52,228,1209,7463,52520`
-+ *`is_chordal=1 AND is_subgraph_free_K4=1`*, `1,1,2,4,11,35,124,500,2224,10640`
-+ *`is_hamiltonian=1 AND is_chordal=1`*, `1,0,1,2,4,15,58,360,2793,28761`
-+ *`is_subgraph_free_bowtie=1 AND is_chordal=1`*, `1,1,2,5,10,27,70,206,613,1942`
-+ *`is_subgraph_free_bull=1 AND is_chordal=1`*, `1,1,2,5,6,12,25,55,126,304`
-+ *`is_subgraph_free_open_bowtie=1 AND is_chordal=1`*, `1,1,2,5,6,13,25,58,130,316`
-
 ------------------------------------------------------------------------------------------
-
-Unknown relation:
-
-*`is_subgraph_free_diamond=1 AND is_chordal=1`*, `1,1,2,3,7,16,41,106,304,880`
-+ [`A091487`](https://oeis.org/A091487) `1,1,2,3,7,16,41,106,304,880,2674,8284`
-
-*`is_subgraph_free_open_bowtie=1 AND is_bipartite=1`*, `1,1,1,3,5,17,44,182,730,4032`
-+ [`A005142`](https://oeis.org/A005142) `1,1,1,1,3,5,17,44,182,730,4032,25598`
-
 
 ## Completed (59):
 
@@ -97,9 +88,9 @@ Unknown relation:
 *`is_subgraph_free_K3=1 AND is_planar=1`*
 + [`A049368`](https://oeis.org/A049368) `1,1,1,3,6,18,55,230,1063,6161,41004`
 
-Trival, every bipartite graph is free of the complete graph K_n>3, bowtie, bull, diamond
+Every bipartite graph is free of the complete graph K_n>3, bowtie, bull, diamond, open-bowtie
 
-*`is_subgraph_free_K3=1 AND is_bipartite=1`*, *`is_subgraph_free_K4=1 AND is_bipartite=1`*, *`is_subgraph_free_bowtie=1 AND is_bipartite=1`*, *`is_subgraph_free_bull=1 AND is_bipartite=1`*, *`is_subgraph_free_diamond=1 AND is_bipartite=1`*
+*`is_subgraph_free_K3=1 AND is_bipartite=1`*, *`is_subgraph_free_K4=1 AND is_bipartite=1`*, *`is_subgraph_free_bowtie=1 AND is_bipartite=1`*, *`is_subgraph_free_bull=1 AND is_bipartite=1`*, *`is_subgraph_free_diamond=1 AND is_bipartite=1`*, *`is_subgraph_free_open_bowtie=1 AND is_bipartite=1`*
 + [`A005142`](https://oeis.org/A005142) `1,1,1,1,3,5,17,44,182,730,4032,25598`
 
 These graphs already include a triangle:
@@ -116,6 +107,11 @@ All chordal graphs are trees if they have any of these induced subgraphs
 
 *`is_subgraph_free_paw=1 AND is_chordal=1`*, `1,1,2,2,3,6,11,23,47,106`
 + [`A000055`](https://oeis.org/A000055) `1,1,1,1,2,3,6,11,23,47,106,235`
+
+Chordal graphs do not have a diamond subgraph (that would be a cycle of length 3)
+
+*`is_subgraph_free_diamond=1 AND is_chordal=1`*, `1,1,2,3,7,16,41,106,304,880`
++ [`A091487`](https://oeis.org/A091487) `1,1,2,3,7,16,41,106,304,880,2674,8284`
 
 K3 is already a subgraph of these graphs: bowtie, bull, diamond, banner
 
@@ -140,6 +136,7 @@ This matches triangle free graphs (thus paw captures this after finite n)
 
 *`is_subgraph_free_paw=1 AND is_planar=1`*, `1,1,2,3,6,18,55,230,1063,6161`
 + [`A049368`](https://oeis.org/A049368) `1,1,1,3,6,18,55,230,1063,6161,41004`
+
 
 ## Unfiltered:
 
@@ -1458,6 +1455,7 @@ A064731 (integral graphs)
 A241842 (non integral graphs)
 A000055 (tree graphs)
 A003216 (Hamiltonian graphs)
+A048192 (chordal graphs)
 
 A024607 (triangle free graphs)
 A079574 (K_4 free graphs)
