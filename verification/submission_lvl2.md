@@ -1,20 +1,8 @@
 ## Pending:
 
-+ [`A243253`](https://oeis.org/A243253) *`is_chordal=1 AND is_eulerian=1`*, `1,0,1,0,3,2,13,18,116,366`
-+ [`A243785`](https://oeis.org/A243785)  *`is_chordal=1 AND is_integral=0`*, `0,0,1,4,12,56,267,1605,11909,109525`
-+ [`A243786`](https://oeis.org/A243786)  *`is_chordal=1 AND is_integral=1`*, `1,1,1,1,3,2,5,9,2,14`
-+ [`A243787`](https://oeis.org/A243787)  *`is_chordal=1 AND is_planar=1`*, `1,1,2,5,14,52,228,1209,7463,52520`
-+ [`A243788`](https://oeis.org/A243788)  *`is_chordal=1 AND is_subgraph_free_K4=1`*, `1,1,2,4,11,35,124,500,2224,10640`
-+ [`A243796`](https://oeis.org/A243796)  *`is_hamiltonian=1 AND is_chordal=1`*, `1,0,1,2,4,15,58,360,2793,28761`
-+ [`A243797`](https://oeis.org/A243797)  *`is_subgraph_free_bowtie=1 AND is_chordal=1`*, `1,1,2,5,10,27,70,206,613,1942`
-+ [`A243798`](https://oeis.org/A243798)  *`is_subgraph_free_bull=1 AND is_chordal=1`*, `1,1,2,5,6,12,25,55,126,304`
-+ [`A243799`](https://oeis.org/A243799)  *`is_subgraph_free_open_bowtie=1 AND is_chordal=1`*, `1,1,2,5,6,13,25,58,130,316`
-
 ## Potential:
 
-------------------------------------------------------------------------------------------
-
-## Completed (59):
+## Completed (68):
 
 + [`A243270`](https://oeis.org/A243270) *`is_hamiltonian=1 AND is_bipartite=1`*, `1,0,0,1,0,4,0,24,0,473`
 + [`A243271`](https://oeis.org/A243271) *`is_hamiltonian=1 AND is_distance_regular=1`*, `1,0,1,2,2,4,2,5,4,6`
@@ -75,7 +63,15 @@
 + [`A243783`](https://oeis.org/A243793) *`is_subgraph_free_open_bowtie=1 AND is_integral=0`*, `0,0,1,4,10,30,97,405,1957,12725`
 + [`A243794`](https://oeis.org/A243794) *`is_subgraph_free_open_bowtie=1 AND is_planar=1`*, `1,1,2,6,11,33,94,370,1627,8895`
 + [`A243795`](https://oeis.org/A243795) *`is_subgraph_free_open_bowtie=1 AND is_subgraph_free_bull=1`*, `1,1,2,6,7,22,65,285,1442,10106`
-
++ [`A243253`](https://oeis.org/A243253) *`is_chordal=1 AND is_eulerian=1`*, `1,0,1,0,3,2,13,18,116,366`
++ [`A243785`](https://oeis.org/A243785)  *`is_chordal=1 AND is_integral=0`*, `0,0,1,4,12,56,267,1605,11909,109525`
++ [`A243786`](https://oeis.org/A243786)  *`is_chordal=1 AND is_integral=1`*, `1,1,1,1,3,2,5,9,2,14`
++ [`A243787`](https://oeis.org/A243787)  *`is_chordal=1 AND is_planar=1`*, `1,1,2,5,14,52,228,1209,7463,52520`
++ [`A243788`](https://oeis.org/A243788)  *`is_chordal=1 AND is_subgraph_free_K4=1`*, `1,1,2,4,11,35,124,500,2224,10640`
++ [`A243796`](https://oeis.org/A243796)  *`is_hamiltonian=1 AND is_chordal=1`*, `1,0,1,2,4,15,58,360,2793,28761`
++ [`A243797`](https://oeis.org/A243797)  *`is_subgraph_free_bowtie=1 AND is_chordal=1`*, `1,1,2,5,10,27,70,206,613,1942`
++ [`A243798`](https://oeis.org/A243798)  *`is_subgraph_free_bull=1 AND is_chordal=1`*, `1,1,2,5,6,12,25,55,126,304`
++ [`A243799`](https://oeis.org/A243799)  *`is_subgraph_free_open_bowtie=1 AND is_chordal=1`*, `1,1,2,5,6,13,25,58,130,316`
 
 ## Already in database
 

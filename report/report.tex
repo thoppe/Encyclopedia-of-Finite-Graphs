@@ -216,6 +216,7 @@ A \textit{clique} is a subgraph of a graph that is complete.
 The \textit{maximum clique number} of graph $G$ is the cardinality of the largest clique in $G$. 
 Additionally, we have checked for the induced subgraphs $K_5$, the cycle graphs $C_4, C_5, C_6$ and the following named graphs: the bowtie graph, the diamond graph, the bull graph, and the open-bowtie graph. 
 The named graphs are illustrated in Figure \ref{fig:namedgraphs}. 
+\note{Need to fix, we didn't check for \textit{induced} subgraphs, we just checked for subgraphs!}
 
 \begin{figure}[h]
   \includegraphics[width=0.4\textwidth]{simple_drawings/combined_subgraphs.png}
@@ -236,6 +237,8 @@ Note that not every sequence computed was submitted to OEIS, many sequences alre
 \newcommand{\VARdiameter}{\text{dia}(g)}
 \newcommand{\VARgirth}{\text{girth}(g)}
 \newcommand{\VARnarticulationpoints}{a(g)}
+
+\newcommand{\VARsubgraphfree}[1]{g)}
 
 \begin{longtable}{ l l}
 \toprule
