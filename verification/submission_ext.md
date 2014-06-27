@@ -10,14 +10,11 @@ The following sequences have been extended with this project:
 + [`edge_connectivity=2`](https://oeis.org/A052447)
 + [`edge_connectivity=3`](https://oeis.org/A052448)
 
-## Corrected (2):
+## Corrected (1):
 
 The following sequences were incorrect and fixed with this project:
 
-+ [`is_subgraph_free_bull=1`](https://oeis.org/A079575)
 + [`is_hamiltonian=0`](https://oeis.org/A126149)
-
-----
 
 ## Notes:
 

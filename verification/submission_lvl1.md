@@ -68,6 +68,7 @@
 + [`A243782`](https://oeis.org/A243782) `[maximal_independent_vertex_set=3]` `0, 0, 0, 1, 8, 63, 524, 5863, 100702, 2880002`
 + [`A243783`](https://oeis.org/A243783) `[maximal_independent_vertex_set=4]` `0, 0, 0, 0, 1, 13, 205, 4308, 135563, 7161399`
 + [`A243784`](https://oeis.org/A243784) `[maximal_independent_vertex_set=5]` `0, 0, 0, 0, 0, 1, 19, 513, 21782, 1576634`
++ [`A244427`](https://oeis.org/A244427) *`[is_subgraph_free_bull=1]`*, `1, 1, 2, 6, 9, 26, 80, 340, 1690, 11432` 
 
 ## Unsubmitted:
 
@@ -197,10 +198,6 @@ All almost all banner-free graphs are square-free graphs, they differs only for 
 
 *`[is_subgraph_free_banner=1]`*, `1,1,2,6,8,19,57,186,740,3389`
 + [`A077269`](https://oeis.org/A077269)
-
-*`[is_subgraph_free_bull=1]`*, `1, 1, 2, 6, 9, 26, 80, 340, 1690, 11432`
-+ [`A079575`](https://oeis.org/A079575)
-
 
 ## Notes:
 
