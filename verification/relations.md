@@ -532,6 +532,7 @@
 + `is_tree=1` -> `is_subgraph_free_bowtie=1`
 + `k_max_clique=2` -> `is_subgraph_free_bowtie=1`
 + `is_subgraph_free_paw=1` -> `is_subgraph_free_bowtie=1`
++ `is_subgraph_free_open_bowtie=1` -> `is_subgraph_free_bowtie=1`
 + `chromatic_number=5` -> `is_subgraph_free_diamond=0`
 + `chromatic_number=6` -> `is_subgraph_free_diamond=0`
 + `chromatic_number=7` -> `is_subgraph_free_diamond=0`
@@ -628,6 +629,7 @@
 + `k_max_clique=5` -> `is_subgraph_free_open_bowtie=0`
 + `k_max_clique=6` -> `is_subgraph_free_open_bowtie=0`
 + `k_max_clique=7` -> `is_subgraph_free_open_bowtie=0`
++ `is_subgraph_free_bowtie=0` -> `is_subgraph_free_open_bowtie=0`
 + `chromatic_number=2` -> `is_subgraph_free_open_bowtie=1`
 + `girth=0` -> `is_subgraph_free_open_bowtie=1`
 + `girth=6` -> `is_subgraph_free_open_bowtie=1`
@@ -2276,6 +2278,7 @@
 + `is_subgraph_free_bowtie=0` intersect `is_tree=1` = 0
 + `is_subgraph_free_bowtie=0` intersect `k_max_clique=2` = 0
 + `is_subgraph_free_bowtie=0` intersect `is_subgraph_free_paw=1` = 0
++ `is_subgraph_free_bowtie=0` intersect `is_subgraph_free_open_bowtie=1` = 0
 + `is_subgraph_free_bowtie=1` intersect `chromatic_number=5` = 0
 + `is_subgraph_free_bowtie=1` intersect `chromatic_number=6` = 0
 + `is_subgraph_free_bowtie=1` intersect `chromatic_number=7` = 0
@@ -2393,3 +2396,4 @@
 + `is_subgraph_free_open_bowtie=1` intersect `k_max_clique=5` = 0
 + `is_subgraph_free_open_bowtie=1` intersect `k_max_clique=6` = 0
 + `is_subgraph_free_open_bowtie=1` intersect `k_max_clique=7` = 0
++ `is_subgraph_free_open_bowtie=1` intersect `is_subgraph_free_bowtie=0` = 0

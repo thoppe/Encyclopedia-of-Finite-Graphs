@@ -7,14 +7,26 @@ all: $(TARGETS)
 	-make view
 
 view:
-	evince $(PROJECT_NAME).pdf
+	evince $(PROJECT_NAME).pdf &
 
 edit:
 	emacs $(PROJECT_NAME).tex &
 
+editrefs:
+	emacs refs.bib &
+
 clean:
-	rm -vf *.aux *.pdf *.log *~
+	rm -vf *.aux *.pdf *.log *~ *.bbl *.blg *.out \#* *.bak
+
+commit:
+	(cd .. && make commit)
+
 
 $(PROJECT_NAME).pdf: $(PROJECT_NAME).tex
+	make clean
 	$(SPELL_CHECK) $(PROJECT_NAME).tex
+	pdflatex $(PROJECT_NAME).tex
+	pdflatex $(PROJECT_NAME).tex
+	bibtex $(PROJECT_NAME).aux
+	pdflatex $(PROJECT_NAME).tex
 	pdflatex $(PROJECT_NAME).tex

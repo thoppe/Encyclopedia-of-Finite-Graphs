@@ -14,9 +14,10 @@ __script_dir = os.path.dirname(os.path.realpath(__file__))
 
 ######################### Conversion code ######################### 
 
-def viz_graph(g):
-    pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
-    graph_tool.draw.graph_draw(g,pos)
+def viz_graph(g,pos=None,**kwargs):
+    if pos == None:
+        pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
+    graph_tool.draw.graph_draw(g,pos,**kwargs)
 
 def convert_to_numpy(adj,**args):
     N = args["N"]
@@ -589,11 +590,17 @@ def has_fractional_duality_gap_vertex_chromatic(adj,**args):
     
 if __name__ == "__main__":
 
-    def viz_graph(g):
-        pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
-        graph_tool.draw.graph_draw(g,pos)
+    g = _complete_graphs[4]
+    h = _cycle_graphs[4]
+    #viz_graph(g)
+    #viz_graph(h)
+    
+    #print is_subgraph_free_C4(g,**{"N":4})
+    print _has_subgraph(g,h)
+    print len(_has_subgraph(h,g))
 
-    #viz_graph(_banner_graph)
+    exit()
+    
 
     # Function testing here
 

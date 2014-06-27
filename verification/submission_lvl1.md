@@ -1,4 +1,6 @@
-## Completed:
+## Pending (0)
+
+## Completed (66):
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
 + [`A241455`](https://oeis.org/A241455) *`[automorphism_group_n=4]`*, `0,0,0,1,3,28,198,1971,29047,672516`
@@ -47,7 +49,7 @@
 + [`A241843`](https://oeis.org/A241843) *`[is_chordal=0]`*, `0,0,0,1,6,54,581,9503,249169,11607032`
 + [`A242790`](https://oeis.org/A242790) *`[is_subgraph_free_diamond=1]`*, `1,1,2,4,11,39,165,967,7684,87012`
 + [`A242792`](https://oeis.org/A242792) *`[is_subgraph_free_bowtie=1]`*, `1,1,2,6,15,60,273,1769,14836,174111`
-+ [`A242791`](https://oeis.org/A242791) *`[is_subgraph_free_open_bowtie=1]`*, `1, 1, 2, 6, 11, 34, 98, 408, 1957, 12797`
++ [`A242791`](https://oeis.org/A242791) *`[is_subgraph_free_open_bowtie=1]`*, `1, 1, 2, 6, 11, 34, 98, 408, 1957, 12740`
 + [`A242952`](https://oeis.org/A242952) *`[is_real_spectrum=1]`*, `1,1,1,3,11,54,539,7319,209471,10000304`
 + [`A242953`](https://oeis.org/A242953) *`[is_real_spectrum=0]`*, `0,0,1,3,10,58,314,3798,51609,1716267`
 + [`A243241`](https://oeis.org/A243241) *`[is_strongly_regular=0]`*, `0,0,1,4,19,109,852,11114,261077,11716566`
@@ -56,10 +58,16 @@
 + [`A243244`](https://oeis.org/A243244) *`[is_subgraph_free_K4=0]`*, `0,0,0,1,4,30,317,5511,165165,8932499`
 + [`A243245`](https://oeis.org/A243245) *`[is_subgraph_free_K3=0]`*, `0,0,1,3,15,93,794,10850,259700,11706739`
 + [`A243246`](https://oeis.org/A243246) *`[is_subgraph_free_C5=0]`*, `0,0,0,0,8,68,709,10540,258623,11704072`
-+ [`A243247`](https://oeis.org/A243247) *`[is_subgraph_open_bowtie=0]`*, `0, 0, 0, 0, 10, 78, 755, 10709, 259123, 11703774`
++ [`A243247`](https://oeis.org/A243247) *`[is_subgraph_free_open_bowtie=0]`*, `0, 0, 0, 0, 10, 78, 755, 10709, 259123, 11703831`
 + [`A243248`](https://oeis.org/A243248) *`[is_subgraph_free_bull=0]`*, `0, 0, 0, 0, 12, 86, 773, 10777, 259390, 11705139`
 + [`A243249`](https://oeis.org/A243249) *`[is_subgraph_free_bowtie=0]`*, `0,0,0,0,6,52,580,9348,246244,11542460`
 + [`A243250`](https://oeis.org/A243250) *`[is_subgraph_free_diamond=0]`*, `0,0,0,2,10,73,688,10150,253396,11629559`
++ [`A243251`](https://oeis.org/A243251) `[has_fractional_duality_gap_vertex_chromatic=1]`, `0, 0, 0, 0, 1, 3, 33, 496, 16464, 969293`
++ [`A243252`](https://oeis.org/A243252) `[has_fractional_duality_gap_vertex_chromatic=0]`, `1, 1, 2, 6, 20, 109, 820, 10621, 244616, 10747278`
++ [`A243781`](https://oeis.org/A243781) `[maximal_independent_vertex_set=2]` `0, 0, 1, 4, 11, 34, 103, 405, 1892, 12166`
++ [`A243782`](https://oeis.org/A243782) `[maximal_independent_vertex_set=3]` `0, 0, 0, 1, 8, 63, 524, 5863, 100702, 2880002`
++ [`A243783`](https://oeis.org/A243783) `[maximal_independent_vertex_set=4]` `0, 0, 0, 0, 1, 13, 205, 4308, 135563, 7161399`
++ [`A243784`](https://oeis.org/A243784) `[maximal_independent_vertex_set=5]` `0, 0, 0, 0, 0, 1, 19, 513, 21782, 1576634`
 
 ## Unsubmitted:
 
@@ -189,6 +197,9 @@ All almost all banner-free graphs are square-free graphs, they differs only for 
 
 *`[is_subgraph_free_banner=1]`*, `1,1,2,6,8,19,57,186,740,3389`
 + [`A077269`](https://oeis.org/A077269)
+
+*`[is_subgraph_free_bull=1]`*, `1, 1, 2, 6, 9, 26, 80, 340, 1690, 11432`
++ [`A079575`](https://oeis.org/A079575)
 
 
 ## Notes:

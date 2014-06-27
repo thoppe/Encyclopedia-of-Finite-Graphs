@@ -1,8 +1,7 @@
 Encyclopedia of Finite Graphs
 =============================
 
-Set of tools and data to compute all known invariants for small finite graphs [in progress].
-The project has three major aims, 
+This project has three major aims, 
 
 1. To build an exhaustive reference database for all graphs of a given type. 
 2. To "mine" this database for sequences not present (or incomplete) in the [OEIS](https://oeis.org/). 
@@ -15,9 +14,7 @@ The project has three major aims,
 
 *Roadmap*:
 
-+ Submit level 2+ sequences
-+ Write code to determine set relations between invariants
-+ Writeup project as an experimental math [`paper`](report/report.tex)
++ [Writeup](report/report.tex) for submission to either [Journal of Integer Sequences](https://cs.uwaterloo.ca/journals/JIS/), [Discrete Applied Mathematics](http://www.journals.elsevier.com/discrete-applied-mathematics/), [Experimental Mathematics](http://www.tandfonline.com/loi/uexm20).
 
 =======================
 
@@ -74,6 +71,10 @@ Fractional invariants
 
 + [`has_fractional_duality_gap_vertex_chromatic`](http://en.wikipedia.org/wiki/Fractional_coloring)
 
+Others
+
++ [`maximal_independent_vertex_set`](http://mathworld.wolfram.com/IndependenceNumber.html) also called the Independence number, [`n_independent_vertex_sets`](http://mathworld.wolfram.com/IndependentVertexSet.html)
+
 
 =======================
 
@@ -85,6 +86,7 @@ Proposed Invariants
 + [`characteristic_polynomial`](http://mathworld.wolfram.com/CharacteristicPolynomial.html)
 + [`spectrum`](http://mathworld.wolfram.com/GraphSpectrum.html)
 + [`is_cartesian_product`](mathworld.wolfram.com/GraphCartesianProduct.html) (SAGE)
++ [`is_well_covered`](http://mathworld.wolfram.com/Well-CoveredGraph.html)
 
 Other Invariants (hard)
 
@@ -95,7 +97,6 @@ Other Invariants (hard)
 + [`domination_number`](http://mathworld.wolfram.com/DominationNumber.html)
 + [`coarseness`](http://mathworld.wolfram.com/GraphCoarseness.html), [`thickness`](http://mathworld.wolfram.com/GraphThickness.html)
 + [`genus`](http://mathworld.wolfram.com/GraphGenus.html), [`skewness`](http://mathworld.wolfram.com/GraphSkewness.html)
-+ [`independence_number`](http://mathworld.wolfram.com/IndependenceNumber.html)
 
 Other Invariants (trivial)
 + [`n_non_adjacent_vertex_pairs`](http://mathworld.wolfram.com/NonadjacentVertexPairs.html)

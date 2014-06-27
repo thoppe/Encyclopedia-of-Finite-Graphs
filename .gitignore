@@ -56,4 +56,8 @@ report/*.log
 report/*.out
 report/*.pdf
 report/*.bak
+report/*.bbl
+report/*.blg
+report/*.tdo
 report/auto
+

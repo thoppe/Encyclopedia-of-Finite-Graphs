@@ -20,11 +20,14 @@ consider_only = ["is_planar",
                  "is_integral",
                  "is_hamiltonian",
                  "is_subgraph_free_K3",
-                 "is_subgraph_free_K4",]
+                 "is_subgraph_free_K4",
+                 "is_subgraph_free_bull",
+                 "is_subgraph_free_diamond",
+                 "is_subgraph_free_bowtie"]
 
-must_include = ["is_subgraph_free_bull",
-                "is_subgraph_free_diamond",
-                "is_subgraph_free_bowtie"]
+must_include = [
+    "is_chordal",
+    "is_subgraph_free_open_bowtie",]
 
 consider_only += must_include
 
