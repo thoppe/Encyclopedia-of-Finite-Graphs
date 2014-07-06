@@ -143,7 +143,23 @@ A full table of all sequences submitted to the OEIS can be found in Appendix \re
 \newcommand{\VARdiameter}{\text{dia}(g)}
 \newcommand{\VARgirth}{\text{girth}(g)}
 \newcommand{\VARnarticulationpoints}{a(g)}
-\newcommand{\VARsubgraph}{s(g,}
+\newcommand{\VARsubgraph}{s}
+
+\newcommand{\namedsubgraph}[1]{\VARsubgraph{}(g,#1)}
+\newcommand{\VARissubgraphfreeKthree}{\namedsubgraph{K_3}}
+\newcommand{\VARissubgraphfreeKfour}{\namedsubgraph{K_4}}
+\newcommand{\VARissubgraphfreeKfive}{\namedsubgraph{K_5}}
+\newcommand{\VARissubgraphfreeCfour}{\namedsubgraph{C_4}}
+\newcommand{\VARissubgraphfreeCfive}{\namedsubgraph{C_5}}
+\newcommand{\VARissubgraphfreeCsix}{\namedsubgraph{C_6}}
+\newcommand{\VARissubgraphfreediamond}{\namedsubgraph{\text{diamond}}}
+\newcommand{\VARissubgraphfreebull}{\namedsubgraph{\text{bull}}}
+\newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\text{bowtie}}}
+\newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\text{open-bowtie}}}
+
+
+
+
 
 \note{Broadly describe the categories}
 Discuss which algorithm was used, the software, \texttt{networkx} \cite{SciPyProceedings_11}, \texttt{graph-tool} \needref, etc...
@@ -224,7 +240,7 @@ In a \textit{chordal graph}, all cycles of order four or more have a cycle chord
 A \textit{vertex subgraph} or simply a subgraph, is a subset of vertices and the edges which are common to all members of this subset. 
 Let $\VARsubgraph(g,h)$ equal the number of vertex sets that form subgraphs of $h$ in $g$.
 The \textit{maximum clique number} is the largest non-zero value of $\VARsubgraph(g, K_n)$, where $K_n$ is the complete graph on $n$ vertices. 
-A graph is \textit{triangle free} (\textit{square free}) if $\VARsubgraph(g,C_3)=0$ ($\VARsubgraph(g,C_4)=0$) where $C_n$ is the cycle graph on $n$ vertices.
+A graph is \textit{triangle free} or \textit{square free} if $\VARsubgraph(g,C_3)=0$ or $\VARsubgraph(g,C_4)=0$ respectively where $C_n$ is the cycle graph on $n$ vertices.
 In addition, we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and the following named graphs: the bowtie graph, the diamond graph, the bull graph, and the open-bowtie graph. 
 The named graphs are illustrated in Figure \ref{fig:namedgraphs}. 
 
@@ -295,6 +311,23 @@ OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
 \OEIS{A241769} & $\VARnarticulationpoints =3$ & 0 & 0 & 0 & 0 & 1 & 5 & 32 & 242 & 2461 & 35839 \\
 \OEIS{A241770} & $\VARnarticulationpoints =4$ & 0 & 0 & 0 & 0 & 0 & 1 & 7 & 60 & 527 & 6056 \\
 \OEIS{A241771} & $\VARnarticulationpoints =5$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 9 & 97 & 1029 \\
+
+\OEIS{A241782} & $\VARissubgraphfreeKfive =0$ & 1 & 1 & 2 & 6 & 20 & 107 & 802 & 10252 & 232850 & 9905775 \\
+\OEIS{A241784} & $\VARissubgraphfreeCfive =0$ & 1 & 1 & 2 & 6 & 13 & 44 & 144 & 577 & 2457 & 12499 \\
+\OEIS{A242790} & $\VARissubgraphfreediamond =0$ & 1 & 1 & 2 & 4 & 11 & 39 & 165 & 967 & 7684 & 87012 \\
+\OEIS{A242792} & $\VARissubgraphfreebowtie =0$ & 1 & 1 & 2 & 6 & 15 & 60 & 273 & 1769 & 14836 & 174111 \\
+\OEIS{A242791} & $\VARissubgraphfreeopenbowtie =0$ & 1 & 1 & 2 & 6 & 11 & 34 & 98 & 408 & 1957 & 12740 \\
+
+\OEIS{A243243} & $\VARissubgraphfreeCfour >0$ & 0 & 0 & 0 & 3 & 13 & 93 & 796 & 10931 & 260340 & 11713182 \\
+\OEIS{A243246} & $\VARissubgraphfreeCfive >0$ & 0 & 0 & 0 & 0 & 8 & 68 & 709 & 10540 & 258623 & 11704072 \\
+\OEIS{A243245} & $\VARissubgraphfreeKthree >0$ & 0 & 0 & 1 & 3 & 15 & 93 & 794 & 10850 & 259700 & 11706739 \\
+\OEIS{A243244} & $\VARissubgraphfreeKfour >0$ & 0 & 0 & 0 & 1 & 4 & 30 & 317 & 5511 & 165165 & 8932499 \\
+\OEIS{A243242} & $\VARissubgraphfreeKfive >0$ & 0 & 0 & 0 & 0 & 1 & 5 & 51 & 865 & 28230 & 1810796 \\
+\OEIS{A243250} & $\VARissubgraphfreediamond >0$ & 0 & 0 & 0 & 2 & 10 & 73 & 688 & 10150 & 253396 & 11629559 \\
+\OEIS{A243248} & $\VARissubgraphfreebull >0$ & 0 & 0 & 0 & 0 & 12 & 86 & 773 & 10777 & 259390 & 11705139 \\
+\OEIS{A243249} & $\VARissubgraphfreebowtie >0$ & 0 & 0 & 0 & 0 & 6 & 52 & 580 & 9348 & 246244 & 11542460 \\
+\OEIS{A243247} & $\VARissubgraphfreeopenbowtie >0$ & 0 & 0 & 0 & 0 & 10 & 78 & 755 & 10709 & 259123 & 11703831 \\
+
 \end{longtable}
 
 \subsection{Secondary sequences}
