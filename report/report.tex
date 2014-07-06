@@ -157,9 +157,16 @@ A full table of all sequences submitted to the OEIS can be found in Appendix \re
 \newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\text{bowtie}}}
 \newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\text{open-bowtie}}}
 
+\newcommand{\indicatorfunction}[1]{f_\text{#1}(g)}
+\newcommand{\VARisdistanceregular}{\indicatorfunction{distance-regular}}
+\newcommand{\VARistree}{\indicatorfunction{tree}}
+\newcommand{\VARiskregular}{\indicatorfunction{k-regular}}
+\newcommand{\VARisstronglyregular}{\indicatorfunction{strongly regular}}
+\newcommand{\VARisintegral}{\indicatorfunction{integral}}
+\newcommand{\VARischordal}{\indicatorfunction{chordal}}
+\newcommand{\VARisrealspectrum}{\indicatorfunction{real}}
 
-
-
+%\newcommand{\VARhasfractionaldualitygapvertexchromatic}{}
 
 \note{Broadly describe the categories}
 Discuss which algorithm was used, the software, \texttt{networkx} \cite{SciPyProceedings_11}, \texttt{graph-tool} \needref, etc...
@@ -327,6 +334,23 @@ OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
 \OEIS{A243248} & $\VARissubgraphfreebull >0$ & 0 & 0 & 0 & 0 & 12 & 86 & 773 & 10777 & 259390 & 11705139 \\
 \OEIS{A243249} & $\VARissubgraphfreebowtie >0$ & 0 & 0 & 0 & 0 & 6 & 52 & 580 & 9348 & 246244 & 11542460 \\
 \OEIS{A243247} & $\VARissubgraphfreeopenbowtie >0$ & 0 & 0 & 0 & 0 & 10 & 78 & 755 & 10709 & 259123 & 11703831 \\
+
+\OEIS{A241814} & $\VARisdistanceregular =1$ & 1 & 1 & 1 & 2 & 2 & 4 & 2 & 5 & 4 & 7 \\
+\OEIS{A241839} & $\VARiskregular =0$ & 1 & 0 & 1 & 4 & 19 & 107 & 849 & 11100 & 261058 & 11716404 \\
+\OEIS{A241840} & $\VARisdistanceregular =0$ & 0 & 0 & 1 & 4 & 19 & 108 & 851 & 11112 & 261076 & 11716564 \\
+\OEIS{A241841} & $\VARistree =0$ & 0 & 0 & 1 & 4 & 18 & 106 & 842 & 11094 & 261033 & 11716465 \\
+\OEIS{A241842} & $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 18 & 106 & 846 & 11095 & 261056 & 11716488 \\
+\OEIS{A241843} & $\VARischordal =0$ & 0 & 0 & 0 & 1 & 6 & 54 & 581 & 9503 & 249169 & 11607032 \\
+\OEIS{A242952} & $\VARisrealspectrum =1$ & 1 & 1 & 1 & 3 & 11 & 54 & 539 & 7319 & 209471 & 10000304 \\
+\OEIS{A242953} & $\VARisrealspectrum =0$ & 0 & 0 & 1 & 3 & 10 & 58 & 314 & 3798 & 51609 & 1716267 \\
+\OEIS{A243241} & $\VARisstronglyregular =0$ & 0 & 0 & 1 & 4 & 19 & 109 & 852 & 11114 & 261077 & 11716566 \\
+
+%\OEIS{A243251} & $\VARhasfractionaldualitygapvertexchromatic =1$ & 0 & 0 & 0 & 0 & 1 & 3 & 33 & 496 & 16464 & 969293 \\
+%\OEIS{A243252} & $\VARhasfractionaldualitygapvertexchromatic =0$ & 1 & 1 & 2 & 6 & 20 & 109 & 820 & 10621 & 244616 & 10747278 \\
+%\OEIS{A243781} & $\VARmaximalindependentvertexset =2$ & 0 & 0 & 1 & 4 & 11 & 34 & 103 & 405 & 1892 & 12166 \\
+%\OEIS{A243782} & $\VARmaximalindependentvertexset =3$ & 0 & 0 & 0 & 1 & 8 & 63 & 524 & 5863 & 100702 & 2880002 \\
+%\OEIS{A243783} & $\VARmaximalindependentvertexset =4$ & 0 & 0 & 0 & 0 & 1 & 13 & 205 & 4308 & 135563 & 7161399 \\
+%\OEIS{A243784} & $\VARmaximalindependentvertexset =5$ & 0 & 0 & 0 & 0 & 0 & 1 & 19 & 513 & 21782 & 1576634 \\
 
 \end{longtable}
 
