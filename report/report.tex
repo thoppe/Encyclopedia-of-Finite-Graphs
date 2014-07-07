@@ -57,6 +57,19 @@ The code has been released as an open-source framework for others to add additio
 \note{Add introduction, detail why project is important}
 \note{mention it is good for benchmarks, cite Santo paper. Cite other publicly available databases such as those in the House of Graphs intro, mention how this is more exhaustive and give DOI for project.}
 
+\begin{itemize}
+\item verify existing sequences
+\item extend existing integer sequences where terms are difficult to compute
+\item fill in gaps of invariants (e. g.\  Aut group)
+\item come up with new sequences  
+\item find suggestive relations, ``all graphs with property A = x also have property B = y," as work for graph theorists to prove 
+  
+\item reference of graphs (invariants like coloring number, etc that are hard to compute)
+\item allow others to compute invariants and add to the database  
+\end{itemize}
+
+
+
 The Online Encyclopedia of Integer Sequences (OEIS) was created by Neil Sloane in 1964.
 As a graduate student, Sloane began collecting integer sequences while studying combinatorial problems.
 Since then, the database has grown to over 250,000 sequences and is highly cited, with over 3,000 citations to date\cite{sloane2003line}.
@@ -122,6 +135,44 @@ A full table of all sequences submitted to the OEIS can be found in Appendix \re
 \note{Give example of simple relations and sequences here}
 \note{list some interesting secondary sequences}
 \note{list some interesting relations}
+
+
+\begin{itemize}
+\item  use SQLite3 database. separate database for each n, so each database is larger (exponentially) than the one before it. 
+\item The largest database, holding all graphs with 10 nodes (there are XXX such graphs) is XXX. (depends on if you use the vertical or indexed representation. probably better to quote the size without indexes, because that has more to do with the number of graphs and not design decisions. ) 
+\end{itemize}
+
+representation of graph stuff 
+\begin{itemize}
+\item store the adjacency matrix using 2's complement - allows storage of a string of zeros and 1's instead as an integer.  Max size would be 2\^100(?) 
+\item invariants are stored as integers: either the value, e. g.\  girth, or as a 0 or 1, e. g.\  is-bipartite. Special invariants: Tutte polynomial 
+\end{itemize}
+
+queries 
+\begin{itemize}
+\item invariants have an id number and for each graph, every invariant is computed.  
+\item a ``level one query" selects all graphs that for a particular invariant id have a particular value. Example: XXX . 
+\item A ``level two query" selects graphs with a pair of invariant values, example: XXX. 
+\item Queries are stored recursively. For example, a level one query might be query \#100 = (1, 7, $<$null$>$) meaning invariant id = 1, value = 7. 
+\item A level two query might then be query \#200 = (2, 5, 100) meaning invariant id = 2, value = 5 AND query 100 is satisfied. A level three query could then be query \#300 = (5, 0, \#200), etc. 
+\item This ensures that no matter the level of the query, it will only require three columns to store. 
+\end{itemize}
+
+building sequences 
+\begin{itemize}
+\item queries are performed on each database (corresponding to number of nodes)
+\item an additional database stores the query results (counts) from each of the n databases.
+\item we are able to see if two queries return the same set of graphs: we first store the results of each query in a temporary table. then count the number of graphs returned by each query. 
+\item the temporary table is ``left joined" to itself on the graph id. Call the left side A and the right side B. 
+\item For any queries on the left hand side with no null values on the right, this implies query A ``is contained in B," in other words, all graphs returned by query A are also returned by query B. 
+\item If A is contained in B and B is contained in A, then the queries are ``equal," meaning they return the same set of graphs. 
+\item containment and equality are checked for each n=1..10. 
+\item If the relations hold for all n, then we report them. 
+\item We did not find any non-obvious equality relations (example.. )  
+\end{itemize}
+
+
+
 
 \section{Discussion}
 
