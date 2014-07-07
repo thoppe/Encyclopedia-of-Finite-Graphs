@@ -250,6 +250,7 @@ The \textit{maximum clique number} is the largest non-zero value of $\VARsubgrap
 A graph is \textit{triangle free} or \textit{square free} if $\VARsubgraph(g,C_3)=0$ or $\VARsubgraph(g,C_4)=0$ respectively where $C_n$ is the cycle graph on $n$ vertices.
 In addition, we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and the following named graphs: the bowtie graph, the diamond graph, the bull graph, and the open-bowtie graph. 
 The named graphs are illustrated in Figure \ref{fig:namedgraphs}. 
+\note{Need to fix, we didn't check for \textit{induced} subgraphs, we just checked for subgraphs!}
 
 \begin{figure}[h]
   \includegraphics[width=0.4\textwidth]{simple_drawings/combined_subgraphs.png}
@@ -262,6 +263,8 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 
 Primary sequences are those involving a single invariant, while secondary sequences are those that involve the union of two invariants.
 The sequences already present in the OEIS served as a useful check on the accuracy of our programs.
+
+\newcommand{\VARsubgraphfree}[1]{g)}
 
 \begin{longtable}{ l l}
 \toprule
