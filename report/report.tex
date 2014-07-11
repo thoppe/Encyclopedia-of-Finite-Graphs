@@ -1,6 +1,8 @@
 \documentclass[12pt]{article}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{slashed}
 \usepackage{hyperref}
 \usepackage{fullpage}
 \usepackage{booktabs}
@@ -204,10 +206,11 @@ building sequences
 \newcommand{\VARissubgraphfreeCfour}{\namedsubgraph{C_4}}
 \newcommand{\VARissubgraphfreeCfive}{\namedsubgraph{C_5}}
 \newcommand{\VARissubgraphfreeCsix}{\namedsubgraph{C_6}}
-\newcommand{\VARissubgraphfreediamond}{\namedsubgraph{\text{diamond}}}
 \newcommand{\VARissubgraphfreebull}{\namedsubgraph{\text{bull}}}
-\newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\text{bowtie}}}
-\newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\text{open-bowtie}}}
+
+\newcommand{\VARissubgraphfreediamond}{\namedsubgraph{\slashed{\square}}}
+\newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\rtimes}}
+\newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\bowtie}}
 
 \newcommand{\indicatorfunction}[1]{f_\text{#1}(g)}
 \newcommand{\VARisdistanceregular}{\indicatorfunction{distance-regular}}
@@ -218,10 +221,10 @@ building sequences
 \newcommand{\VARischordal}{\indicatorfunction{chordal}}
 \newcommand{\VARisrealspectrum}{\indicatorfunction{real}}
 \newcommand{\VARhasfractionaldualitygapvertexchromatic}{\indicatorfunction{chromatic gap}}
-\newcommand{\VARishamiltonian}{\indicatorfunction{Hamiltonian}}
-\newcommand{\VARisbipartite}{\indicatorfunction{Bipartite}}
-\newcommand{\VARiseulerian}{\indicatorfunction{Eulerian}}
-\newcommand{\VARisplanar}{\indicatorfunction{Planar}}
+\newcommand{\VARishamiltonian}{\indicatorfunction{hamiltonian}}
+\newcommand{\VARisbipartite}{\indicatorfunction{bipartite}}
+\newcommand{\VARiseulerian}{\indicatorfunction{eulerian}}
+\newcommand{\VARisplanar}{\indicatorfunction{planar}}
 
 \note{Broadly describe the categories}
 Discuss which algorithm was used, the software, \texttt{networkx} \cite{SciPyProceedings_11}, \texttt{graph-tool} \needref, etc...
@@ -491,7 +494,7 @@ OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
 
 \section{Relations}
 \label{app:relations}
-\note{Add table of secondary sequences}
+\note{Add table of relations}
 
 \end{appendices}
 
