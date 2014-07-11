@@ -19,5 +19,17 @@ add_to(g,inv._open_bowtie_graph)
 add_to(g,inv._bull_graph)
 
 f_png = "combined_subgraphs.png"
-pos = gt.draw.fruchterman_reingold_layout(g,a=20,scale=1.,circular=True)
-inv.viz_graph(g, output=f_png)
+pos = gt.draw.sfdp_layout(g, cooling_step=0.99)
+help( gt.draw.sfdp_layout )
+
+print pos.a, pos.fa, pos.ma
+exit()
+print pos.get_array()
+help(pos)
+
+for n in pos:
+    print n
+
+for n in g.vertices():
+    print dir(g.vertex(n))
+#graph_tool.draw.graph_draw(g,pos,output=f_png)

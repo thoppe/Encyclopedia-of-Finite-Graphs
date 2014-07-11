@@ -73,6 +73,8 @@
 + [`A243798`](https://oeis.org/A243798)  *`is_subgraph_free_bull=1 AND is_chordal=1`*, `1,1,2,5,6,12,25,55,126,304`
 + [`A243799`](https://oeis.org/A243799)  *`is_subgraph_free_open_bowtie=1 AND is_chordal=1`*, `1,1,2,5,6,13,25,58,130,316`
 
+## Unsubmitted
+
 ## Already in database
 
 *`is_hamiltonian=1 AND is_planar=1`*
