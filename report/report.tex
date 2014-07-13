@@ -206,25 +206,35 @@ building sequences
 \newcommand{\VARissubgraphfreeCfour}{\namedsubgraph{C_4}}
 \newcommand{\VARissubgraphfreeCfive}{\namedsubgraph{C_5}}
 \newcommand{\VARissubgraphfreeCsix}{\namedsubgraph{C_6}}
-\newcommand{\VARissubgraphfreebull}{\namedsubgraph{\text{bull}}}
 
-\newcommand{\VARissubgraphfreediamond}{\namedsubgraph{\slashed{\square}}}
-\newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\rtimes}}
-\newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\bowtie}}
+\newcommand{\subgraphBULL}{B_5}
+\newcommand{\subgraphDIAMOND}{D_4}
+\newcommand{\subgraphBOWTIE}{\bowtie}
+\newcommand{\subgraphOPENBOWTIE}{\rtimes}
 
-\newcommand{\indicatorfunction}[1]{f_\text{#1}(g)}
-\newcommand{\VARisdistanceregular}{\indicatorfunction{distance-regular}}
-\newcommand{\VARistree}{\indicatorfunction{tree}}
-\newcommand{\VARiskregular}{\indicatorfunction{k-regular}}
-\newcommand{\VARisstronglyregular}{\indicatorfunction{strongly regular}}
-\newcommand{\VARisintegral}{\indicatorfunction{integral}}
-\newcommand{\VARischordal}{\indicatorfunction{chordal}}
-\newcommand{\VARisrealspectrum}{\indicatorfunction{real}}
-\newcommand{\VARhasfractionaldualitygapvertexchromatic}{\indicatorfunction{chromatic gap}}
-\newcommand{\VARishamiltonian}{\indicatorfunction{hamiltonian}}
-\newcommand{\VARisbipartite}{\indicatorfunction{bipartite}}
-\newcommand{\VARiseulerian}{\indicatorfunction{eulerian}}
-\newcommand{\VARisplanar}{\indicatorfunction{planar}}
+\newcommand{\VARissubgraphfreebull}{\namedsubgraph{\subgraphBULL}}
+\newcommand{\VARissubgraphfreediamond}{\namedsubgraph{\subgraphDIAMOND}}
+\newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\subgraphBOWTIE}}
+\newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\subgraphOPENBOWTIE}}
+
+\newcommand{\indicatorfunctionX}[1]{\Theta(g,#1)}
+
+\newcommand{\VARhasfractionaldualitygapvertexchromatic}{\indicatorfunctionX{\mathcal{X}}}
+
+\newcommand{\VARisdistanceregular}{\indicatorfunctionX{\mathcal{D}}}
+\newcommand{\VARishamiltonian}{\indicatorfunctionX{\mathcal{H}}}
+\newcommand{\VARisbipartite}{\indicatorfunctionX{\mathcal{B}}}
+\newcommand{\VARiseulerian}{\indicatorfunctionX{\mathcal{E}}}
+\newcommand{\VARisplanar}{\indicatorfunctionX{\mathcal{P}}}
+\newcommand{\VARistree}{\indicatorfunctionX{\mathcal{T}}}
+\newcommand{\VARischordal}{\indicatorfunctionX{\mathcal{C}}}
+
+\newcommand{\VARiskregular}{\indicatorfunctionX{\mathcal{R}}}
+\newcommand{\VARisstronglyregular}{\indicatorfunctionX{\mathcal{R}^*}}
+
+\newcommand{\VARisintegral}{\indicatorfunctionX{\mathcal{I}}}
+\newcommand{\VARisrealspectrum}{\indicatorfunctionX{\mathcal{I}^*}}
+
 
 \note{Broadly describe the categories}
 Discuss which algorithm was used, the software, \texttt{networkx} \cite{SciPyProceedings_11}, \texttt{graph-tool} \needref, etc...
@@ -306,13 +316,12 @@ A \textit{vertex subgraph} or simply a subgraph, is a subset of vertices and the
 Let $\VARsubgraph(g,h)$ equal the number of vertex sets that form subgraphs of $h$ in $g$.
 The \textit{maximum clique number} is the largest non-zero value of $\VARsubgraph(g, K_n)$, where $K_n$ is the complete graph on $n$ vertices. 
 A graph is \textit{triangle free} or \textit{square free} if $\VARsubgraph(g,C_3)=0$ or $\VARsubgraph(g,C_4)=0$ respectively where $C_n$ is the cycle graph on $n$ vertices.
-In addition, we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and the following named graphs: the bowtie graph, the diamond graph, the bull graph, and the open-bowtie graph. 
+In addition, we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and the following named graphs: the diamond graph $\subgraphDIAMOND{}$, the bull graph $\subgraphBULL{}$, the bowtie graph $\subgraphBOWTIE{}$, and the open-bowtie graph $\subgraphOPENBOWTIE{}$, 
 The named graphs are illustrated in Figure \ref{fig:namedgraphs}. 
-\note{Need to fix, we didn't check for \textit{induced} subgraphs, we just checked for subgraphs!}
 
 \begin{figure}[h]
   \includegraphics[width=0.4\textwidth]{simple_drawings/combined_subgraphs.png}
-  \caption{The named graphs checked for the vertex subgraphs invariant. Clockwise from top: the open-bowtie, bowtie, bull and diamond graph.}
+  \caption{The named graphs checked for the vertex subgraphs invariant. Clockwise from top: the open-bowtie $\subgraphOPENBOWTIE{}$, bowtie $\subgraphBOWTIE{}$, bull  $\subgraphBULL{}$ and diamond graph $\subgraphDIAMOND{}$.}
   \label{fig:namedgraphs}
 \end{figure}
 
@@ -330,10 +339,15 @@ Invariant symbol & Description \\
 \midrule
 $\VARautomorphismgroupn$ & Automorphism group size \\
 $\VARchromaticnumber$ & Chromatic number \\
-$\VARedgeconnectivity$, $\VARedgeconnectivity$ & Vertex/Edge connectivity \\
+$\VARedgeconnectivity$, $\VARedgeconnectivity$ & vertex/edge connectivity \\
 $\VARdiameter$ & diameter \\
 $\VARgirth$ & girth \\
 $\VARnarticulationpoints$ & number of articulation points \\
+$\namedsubgraph{h}$ & number of subgraphs of $h$ in $g$ \\
+$\Theta(g,\mathcal{P})$ & indicator function for property $\mathcal{P}$ \\
+$\mathcal{T},\mathcal{H},\mathcal{E}, \mathcal{I}, \mathcal{I}^*$ & properties: tree, Hamiltonian, Eulerian, integral, real \\
+$\mathcal{R},\mathcal{R}^*,\mathcal{D}, \mathcal{B}, \mathcal{C}$ & properties: regular, strongly regular, distance regular, bipartite, chordal \\
+$\mathcal{X}$ & properties: chromatic gap
 \end{longtable}
 
 \subsection{Primary sequences}
@@ -418,78 +432,78 @@ OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
 
 \subsection{Secondary sequences}
 
-\begin{longtable}{ l l r r r r r r r r r r}
+\begin{longtable}{ l l l r r r r r r r r r r}
 \toprule
-OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
+OEIS & Invariant & & \multicolumn{10}{l}{Sequence} \\
 \midrule\bottomrule
-\OEIS{A243270} & $\VARishamiltonian =1$, $\VARisbipartite =1$ & 1 & 0 & 0 & 1 & 0 & 4 & 0 & 24 & 0 & 473 \\
-\OEIS{A243271} & $\VARishamiltonian =1$, $\VARisdistanceregular =1$ & 1 & 0 & 1 & 2 & 2 & 4 & 2 & 5 & 4 & 6 \\
-\OEIS{A243272} & $\VARishamiltonian =1$, $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 5 & 21 & 120 & 1312 & 26525 \\
-\OEIS{A243273} & $\VARishamiltonian =1$, $\VARisintegral =0$ & 0 & 0 & 0 & 1 & 7 & 43 & 379 & 6185 & 177071 & 9305068 \\
-\OEIS{A243274} & $\VARishamiltonian =1$, $\VARisintegral =1$ & 1 & 0 & 1 & 2 & 1 & 5 & 4 & 11 & 12 & 50 \\
-\OEIS{A243275} & $\VARishamiltonian =1$, $\VARissubgraphfreeKthree =0$ & 1 & 0 & 0 & 1 & 1 & 4 & 5 & 35 & 130 & 1293 \\
-\OEIS{A243276} & $\VARishamiltonian =1$, $\VARissubgraphfreeKfour =0$ & 1 & 0 & 1 & 2 & 5 & 29 & 188 & 2481 & 52499 & 1857651 \\
-\OEIS{A243319} & $\VARisbipartite =1$, $\VARisdistanceregular =1$ & 1 & 1 & 0 & 1 & 0 & 2 & 0 & 3 & 0 & 3 \\
-\OEIS{A243320} & $\VARisbipartite =1$, $\VARiseulerian =1$ & 1 & 0 & 0 & 1 & 0 & 2 & 1 & 6 & 7 & 29 \\
-\OEIS{A243321} & $\VARisbipartite =1$, $\VARisplanar =1$ & 1 & 1 & 1 & 3 & 5 & 16 & 41 & 158 & 582 & 2749 \\
-\OEIS{A243322} & $\VARisdistanceregular =1$, $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 2 & 2 & 3 & 4 & 4 \\
-\OEIS{A243323} & $\VARisintegral =0$, $\VARisbipartite =1$ & 0 & 0 & 1 & 2 & 4 & 14 & 43 & 179 & 730 & 4019 \\
-\OEIS{A243324} & $\VARisintegral =0$, $\VARiseulerian =1$ & 0 & 0 & 0 & 0 & 2 & 6 & 33 & 180 & 1773 & 31006 \\
-\OEIS{A243325} & $\VARisintegral =0$, $\VARisplanar =1$ & 0 & 0 & 1 & 4 & 18 & 95 & 642 & 5962 & 71876 & 1052786 \\
-\OEIS{A243326} & $\VARisintegral =0$, $\VARissubgraphfreeKthree =0$ & 0 & 0 & 1 & 2 & 5 & 16 & 58 & 264 & 1380 & 9818 \\
-\OEIS{A243327} & $\VARisintegral =0$, $\VARissubgraphfreeKfour =0$ & 0 & 0 & 1 & 4 & 15 & 77 & 531 & 5597 & 95900 & 2784034 \\
-\OEIS{A243328} & $\VARisintegral =1$, $\VARisbipartite =1$ & 1 & 1 & 0 & 1 & 1 & 3 & 1 & 3 & 0 & 13 \\
-\OEIS{A243329} & $\VARisintegral =1$, $\VARisdistanceregular =1$ & 1 & 1 & 1 & 2 & 1 & 4 & 1 & 4 & 3 & 6 \\
-\OEIS{A243330} & $\VARisintegral =1$, $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 2 & 4 & 4 & 9 & 20 \\
-\OEIS{A243331} & $\VARisintegral =1$, $\VARisplanar =1$ & 1 & 1 & 1 & 2 & 2 & 4 & 4 & 12 & 9 & 19 \\
-\OEIS{A243332} & $\VARisintegral =1$, $\VARissubgraphfreeKthree =0$ & 1 & 1 & 0 & 1 & 1 & 3 & 1 & 3 & 0 & 14 \\
-\OEIS{A243333} & $\VARisintegral =1$, $\VARissubgraphfreeKfour =0$ & 1 & 1 & 1 & 1 & 2 & 5 & 5 & 9 & 15 & 38 \\
-\OEIS{A243334} & $\VARissubgraphfreeKthree =0$, $\VARisdistanceregular =1$ & 1 & 1 & 0 & 1 & 1 & 2 & 1 & 3 & 1 & 4 \\
-\OEIS{A243335} & $\VARissubgraphfreeKthree =0$, $\VARiseulerian =1$ & 1 & 0 & 0 & 1 & 1 & 2 & 3 & 8 & 19 & 62 \\
-\OEIS{A243336} & $\VARissubgraphfreeKfour =0$, $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 3 & 6 & 22 & 93 & 656 & 7484 \\
-\OEIS{A243337} & $\VARissubgraphfreeKfour =0$, $\VARisplanar =1$ & 1 & 1 & 2 & 5 & 17 & 79 & 478 & 4123 & 46666 & 648758 \\
-\OEIS{A243338} & $\VARistree =1$, $\VARisintegral =0$ & 0 & 0 & 1 & 2 & 2 & 5 & 10 & 23 & 47 & 105 \\
-\OEIS{A243339} & $\VARissubgraphfreeKfour =0$, $\VARisdistanceregular =1$ & 1 & 1 & 1 & 1 & 1 & 3 & 1 & 3 & 3 & 4 \\
-\OEIS{A243545} & $\VARishamiltonian =1$, $\VARissubgraphfreebowtie =0$ & 1 & 0 & 1 & 3 & 3 & 14 & 50 & 390 & 3627 & 52858 \\
-\OEIS{A243546} & $\VARissubgraphfreebowtie =0$, $\VARisdistanceregular =1$ & 1 & 1 & 1 & 2 & 1 & 2 & 1 & 3 & 1 & 4 \\
-\OEIS{A243547} & $\VARissubgraphfreebowtie =0$, $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 4 & 8 & 35 & 115 & 629 \\
-\OEIS{A243548} & $\VARissubgraphfreebowtie =0$, $\VARisintegral =1$ & 1 & 1 & 1 & 2 & 2 & 4 & 1 & 8 & 1 & 19 \\
-\OEIS{A243549} & $\VARissubgraphfreebowtie =0$, $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 13 & 56 & 272 & 1761 & 14835 & 174092 \\
-\OEIS{A243550} & $\VARissubgraphfreebowtie =0$, $\VARisplanar =1$ & 1 & 1 & 2 & 6 & 15 & 58 & 255 & 1510 & 10766 & 94109 \\
-\OEIS{A243551} & $\VARissubgraphfreebowtie =0$, $\VARissubgraphfreeKfour =0$ & 1 & 1 & 2 & 5 & 14 & 56 & 256 & 1656 & 13952 & 163878 \\
-\OEIS{A243552} & $\VARissubgraphfreebowtie =0$, $\VARissubgraphfreebull =0$ & 1 & 1 & 2 & 6 & 8 & 25 & 77 & 333 & 1668 & 11355 \\
-\OEIS{A243553} & $\VARishamiltonian =1$, $\VARissubgraphfreebull =0$ & 1 & 0 & 1 & 3 & 1 & 4 & 5 & 35 & 130 & 1293 \\
-\OEIS{A243554} & $\VARissubgraphfreebull =0$, $\VARisdistanceregular =1$ & 1 & 1 & 1 & 2 & 1 & 2 & 1 & 3 & 1 & 4 \\
-\OEIS{A243555} & $\VARissubgraphfreebull =0$, $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 3 & 5 & 14 & 30 & 95 \\
-\OEIS{A243556} & $\VARissubgraphfreebull =0$, $\VARisintegral =1$ & 1 & 1 & 1 & 2 & 1 & 3 & 2 & 3 & 0 & 14 \\
-\OEIS{A243557} & $\VARissubgraphfreebull =0$, $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 8 & 23 & 78 & 337 & 1690 & 11418 \\
-\OEIS{A243558} & $\VARissubgraphfreebull =0$, $\VARisplanar =1$ & 1 & 1 & 2 & 6 & 9 & 25 & 76 & 302 & 1360 & 7606 \\
-\OEIS{A243559} & $\VARissubgraphfreebull =0$, $\VARissubgraphfreeKfour =0$ & 1 & 1 & 2 & 5 & 9 & 26 & 80 & 340 & 1690 & 11432 \\
-\OEIS{A243560} & $\VARishamiltonian =1$, $\VARissubgraphfreediamond =0$ & 1 & 0 & 1 & 1 & 2 & 9 & 27 & 190 & 1750 & 25658 \\
-\OEIS{A243561} & $\VARissubgraphfreediamond =0$, $\VARisdistanceregular =1$ & 1 & 1 & 1 & 1 & 1 & 2 & 1 & 3 & 2 & 4 \\
-\OEIS{A243562} & $\VARissubgraphfreediamond =0$, $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 3 & 8 & 21 & 79 & 334 \\
-\OEIS{A243563} & $\VARissubgraphfreediamond =0$, $\VARisintegral =0$ & 0 & 0 & 1 & 3 & 10 & 35 & 162 & 964 & 7682 & 86994 \\
-\OEIS{A243564} & $\VARissubgraphfreediamond =0$, $\VARisintegral =1$ & 1 & 1 & 1 & 1 & 1 & 4 & 3 & 3 & 2 & 18 \\
-\OEIS{A243565} & $\VARissubgraphfreediamond =0$, $\VARisplanar =1$ & 1 & 1 & 2 & 4 & 11 & 38 & 159 & 882 & 6242 & 55316 \\
-\OEIS{A243566} & $\VARissubgraphfreediamond =0$, $\VARissubgraphfreeKfour =0$ & 1 & 1 & 2 & 4 & 11 & 39 & 165 & 967 & 7684 & 87012 \\
-\OEIS{A243567} & $\VARissubgraphfreediamond =0$, $\VARissubgraphfreebowtie =0$ & 1 & 1 & 2 & 4 & 10 & 36 & 141 & 784 & 5626 & 56249 \\
-\OEIS{A243568} & $\VARissubgraphfreediamond =0$, $\VARissubgraphfreebull =0$ & 1 & 1 & 2 & 4 & 9 & 26 & 80 & 340 & 1690 & 11432 \\
-\OEIS{A243789} & $\VARissubgraphfreeopenbowtie =0$, $\VARissubgraphfreediamond =0$ & 1 & 1 & 2 & 4 & 9 & 30 & 89 & 379 & 1864 & 12365 \\
-\OEIS{A243790} & $\VARissubgraphfreeopenbowtie =0$, $\VARishamiltonian =1$ & 1 & 0 & 1 & 3 & 3 & 9 & 13 & 59 & 203 & 1651 \\
-\OEIS{A243791} & $\VARissubgraphfreeopenbowtie =0$, $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 1 & 2 & 3 & 8 & 19 & 62 \\
-\OEIS{A243792} & $\VARissubgraphfreeopenbowtie =0$, $\VARisintegral =1$ & 1 & 1 & 1 & 2 & 1 & 4 & 1 & 3 & 0 & 15 \\
-\OEIS{A243783} & $\VARissubgraphfreeopenbowtie =0$, $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 10 & 30 & 97 & 405 & 1957 & 12725 \\
-\OEIS{A243794} & $\VARissubgraphfreeopenbowtie =0$, $\VARisplanar =1$ & 1 & 1 & 2 & 6 & 11 & 33 & 94 & 370 & 1627 & 8895 \\
-\OEIS{A243795} & $\VARissubgraphfreeopenbowtie =0$, $\VARissubgraphfreebull =0$ & 1 & 1 & 2 & 6 & 7 & 22 & 65 & 285 & 1442 & 10106 \\
-\OEIS{A243253} & $\VARischordal =1$, $\VARiseulerian =1$ & 1 & 0 & 1 & 0 & 3 & 2 & 13 & 18 & 116 & 366 \\
-\OEIS{A243785} & $\VARischordal =1$, $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 12 & 56 & 267 & 1605 & 11909 & 109525 \\
-\OEIS{A243786} & $\VARischordal =1$, $\VARisintegral =1$ & 1 & 1 & 1 & 1 & 3 & 2 & 5 & 9 & 2 & 14 \\
-\OEIS{A243787} & $\VARischordal =1$, $\VARisplanar =1$ & 1 & 1 & 2 & 5 & 14 & 52 & 228 & 1209 & 7463 & 52520 \\
-\OEIS{A243788} & $\VARischordal =1$, $\VARissubgraphfreeKfour =0$ & 1 & 1 & 2 & 4 & 11 & 35 & 124 & 500 & 2224 & 10640 \\
-\OEIS{A243796} & $\VARishamiltonian =1$, $\VARischordal =1$ & 1 & 0 & 1 & 2 & 4 & 15 & 58 & 360 & 2793 & 28761 \\
-\OEIS{A243797} & $\VARissubgraphfreebowtie =0$, $\VARischordal =1$ & 1 & 1 & 2 & 5 & 10 & 27 & 70 & 206 & 613 & 1942 \\
-\OEIS{A243798} & $\VARissubgraphfreebull =0$, $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 12 & 25 & 55 & 126 & 304 \\
-\OEIS{A243799} & $\VARissubgraphfreeopenbowtie =0$, $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 13 & 25 & 58 & 130 & 316 \\
+\OEIS{A243270} & $\VARishamiltonian =1$, & $\VARisbipartite =1$ & 1 & 0 & 0 & 1 & 0 & 4 & 0 & 24 & 0 & 473 \\
+\OEIS{A243271} & $\VARishamiltonian =1$, & $\VARisdistanceregular =1$ & 1 & 0 & 1 & 2 & 2 & 4 & 2 & 5 & 4 & 6 \\
+\OEIS{A243272} & $\VARishamiltonian =1$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 5 & 21 & 120 & 1312 & 26525 \\
+\OEIS{A243273} & $\VARishamiltonian =1$, & $\VARisintegral =0$ & 0 & 0 & 0 & 1 & 7 & 43 & 379 & 6185 & 177071 & 9305068 \\
+\OEIS{A243274} & $\VARishamiltonian =1$, & $\VARisintegral =1$ & 1 & 0 & 1 & 2 & 1 & 5 & 4 & 11 & 12 & 50 \\
+\OEIS{A243275} & $\VARishamiltonian =1$, & $\VARissubgraphfreeKthree =0$ & 1 & 0 & 0 & 1 & 1 & 4 & 5 & 35 & 130 & 1293 \\
+\OEIS{A243276} & $\VARishamiltonian =1$, & $\VARissubgraphfreeKfour =0$ & 1 & 0 & 1 & 2 & 5 & 29 & 188 & 2481 & 52499 & 1857651 \\
+\OEIS{A243319} & $\VARisbipartite =1$, & $\VARisdistanceregular =1$ & 1 & 1 & 0 & 1 & 0 & 2 & 0 & 3 & 0 & 3 \\
+\OEIS{A243320} & $\VARisbipartite =1$, & $\VARiseulerian =1$ & 1 & 0 & 0 & 1 & 0 & 2 & 1 & 6 & 7 & 29 \\
+\OEIS{A243321} & $\VARisbipartite =1$, & $\VARisplanar =1$ & 1 & 1 & 1 & 3 & 5 & 16 & 41 & 158 & 582 & 2749 \\
+\OEIS{A243322} & $\VARisdistanceregular =1$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 2 & 2 & 3 & 4 & 4 \\
+\OEIS{A243323} & $\VARisintegral =0$, & $\VARisbipartite =1$ & 0 & 0 & 1 & 2 & 4 & 14 & 43 & 179 & 730 & 4019 \\
+\OEIS{A243324} & $\VARisintegral =0$, & $\VARiseulerian =1$ & 0 & 0 & 0 & 0 & 2 & 6 & 33 & 180 & 1773 & 31006 \\
+\OEIS{A243325} & $\VARisintegral =0$, & $\VARisplanar =1$ & 0 & 0 & 1 & 4 & 18 & 95 & 642 & 5962 & 71876 & 1052786 \\
+\OEIS{A243326} & $\VARisintegral =0$, & $\VARissubgraphfreeKthree =0$ & 0 & 0 & 1 & 2 & 5 & 16 & 58 & 264 & 1380 & 9818 \\
+\OEIS{A243327} & $\VARisintegral =0$, & $\VARissubgraphfreeKfour =0$ & 0 & 0 & 1 & 4 & 15 & 77 & 531 & 5597 & 95900 & 2784034 \\
+\OEIS{A243328} & $\VARisintegral =1$, & $\VARisbipartite =1$ & 1 & 1 & 0 & 1 & 1 & 3 & 1 & 3 & 0 & 13 \\
+\OEIS{A243329} & $\VARisintegral =1$, & $\VARisdistanceregular =1$ & 1 & 1 & 1 & 2 & 1 & 4 & 1 & 4 & 3 & 6 \\
+\OEIS{A243330} & $\VARisintegral =1$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 2 & 4 & 4 & 9 & 20 \\
+\OEIS{A243331} & $\VARisintegral =1$, & $\VARisplanar =1$ & 1 & 1 & 1 & 2 & 2 & 4 & 4 & 12 & 9 & 19 \\
+\OEIS{A243332} & $\VARisintegral =1$, & $\VARissubgraphfreeKthree =0$ & 1 & 1 & 0 & 1 & 1 & 3 & 1 & 3 & 0 & 14 \\
+\OEIS{A243333} & $\VARisintegral =1$, & $\VARissubgraphfreeKfour =0$ & 1 & 1 & 1 & 1 & 2 & 5 & 5 & 9 & 15 & 38 \\
+\OEIS{A243334} & $\VARissubgraphfreeKthree =0$, & $\VARisdistanceregular =1$ & 1 & 1 & 0 & 1 & 1 & 2 & 1 & 3 & 1 & 4 \\
+\OEIS{A243335} & $\VARissubgraphfreeKthree =0$, & $\VARiseulerian =1$ & 1 & 0 & 0 & 1 & 1 & 2 & 3 & 8 & 19 & 62 \\
+\OEIS{A243336} & $\VARissubgraphfreeKfour =0$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 3 & 6 & 22 & 93 & 656 & 7484 \\
+\OEIS{A243337} & $\VARissubgraphfreeKfour =0$, & $\VARisplanar =1$ & 1 & 1 & 2 & 5 & 17 & 79 & 478 & 4123 & 46666 & 648758 \\
+\OEIS{A243338} & $\VARistree =1$, & $\VARisintegral =0$ & 0 & 0 & 1 & 2 & 2 & 5 & 10 & 23 & 47 & 105 \\
+\OEIS{A243339} & $\VARissubgraphfreeKfour =0$, & $\VARisdistanceregular =1$ & 1 & 1 & 1 & 1 & 1 & 3 & 1 & 3 & 3 & 4 \\
+\OEIS{A243545} & $\VARishamiltonian =1$, & $\VARissubgraphfreebowtie =0$ & 1 & 0 & 1 & 3 & 3 & 14 & 50 & 390 & 3627 & 52858 \\
+\OEIS{A243546} & $\VARissubgraphfreebowtie =0$, & $\VARisdistanceregular =1$ & 1 & 1 & 1 & 2 & 1 & 2 & 1 & 3 & 1 & 4 \\
+\OEIS{A243547} & $\VARissubgraphfreebowtie =0$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 4 & 8 & 35 & 115 & 629 \\
+\OEIS{A243548} & $\VARissubgraphfreebowtie =0$, & $\VARisintegral =1$ & 1 & 1 & 1 & 2 & 2 & 4 & 1 & 8 & 1 & 19 \\
+\OEIS{A243549} & $\VARissubgraphfreebowtie =0$, & $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 13 & 56 & 272 & 1761 & 14835 & 174092 \\
+\OEIS{A243550} & $\VARissubgraphfreebowtie =0$, & $\VARisplanar =1$ & 1 & 1 & 2 & 6 & 15 & 58 & 255 & 1510 & 10766 & 94109 \\
+\OEIS{A243551} & $\VARissubgraphfreebowtie =0$, & $\VARissubgraphfreeKfour =0$ & 1 & 1 & 2 & 5 & 14 & 56 & 256 & 1656 & 13952 & 163878 \\
+\OEIS{A243552} & $\VARissubgraphfreebowtie =0$, & $\VARissubgraphfreebull =0$ & 1 & 1 & 2 & 6 & 8 & 25 & 77 & 333 & 1668 & 11355 \\
+\OEIS{A243553} & $\VARishamiltonian =1$, & $\VARissubgraphfreebull =0$ & 1 & 0 & 1 & 3 & 1 & 4 & 5 & 35 & 130 & 1293 \\
+\OEIS{A243554} & $\VARissubgraphfreebull =0$, & $\VARisdistanceregular =1$ & 1 & 1 & 1 & 2 & 1 & 2 & 1 & 3 & 1 & 4 \\
+\OEIS{A243555} & $\VARissubgraphfreebull =0$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 3 & 5 & 14 & 30 & 95 \\
+\OEIS{A243556} & $\VARissubgraphfreebull =0$, & $\VARisintegral =1$ & 1 & 1 & 1 & 2 & 1 & 3 & 2 & 3 & 0 & 14 \\
+\OEIS{A243557} & $\VARissubgraphfreebull =0$, & $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 8 & 23 & 78 & 337 & 1690 & 11418 \\
+\OEIS{A243558} & $\VARissubgraphfreebull =0$, & $\VARisplanar =1$ & 1 & 1 & 2 & 6 & 9 & 25 & 76 & 302 & 1360 & 7606 \\
+\OEIS{A243559} & $\VARissubgraphfreebull =0$, & $\VARissubgraphfreeKfour =0$ & 1 & 1 & 2 & 5 & 9 & 26 & 80 & 340 & 1690 & 11432 \\
+\OEIS{A243560} & $\VARishamiltonian =1$, & $\VARissubgraphfreediamond =0$ & 1 & 0 & 1 & 1 & 2 & 9 & 27 & 190 & 1750 & 25658 \\
+\OEIS{A243561} & $\VARissubgraphfreediamond =0$, & $\VARisdistanceregular =1$ & 1 & 1 & 1 & 1 & 1 & 2 & 1 & 3 & 2 & 4 \\
+\OEIS{A243562} & $\VARissubgraphfreediamond =0$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 3 & 8 & 21 & 79 & 334 \\
+\OEIS{A243563} & $\VARissubgraphfreediamond =0$, & $\VARisintegral =0$ & 0 & 0 & 1 & 3 & 10 & 35 & 162 & 964 & 7682 & 86994 \\
+\OEIS{A243564} & $\VARissubgraphfreediamond =0$, & $\VARisintegral =1$ & 1 & 1 & 1 & 1 & 1 & 4 & 3 & 3 & 2 & 18 \\
+\OEIS{A243565} & $\VARissubgraphfreediamond =0$, & $\VARisplanar =1$ & 1 & 1 & 2 & 4 & 11 & 38 & 159 & 882 & 6242 & 55316 \\
+\OEIS{A243566} & $\VARissubgraphfreediamond =0$, & $\VARissubgraphfreeKfour =0$ & 1 & 1 & 2 & 4 & 11 & 39 & 165 & 967 & 7684 & 87012 \\
+\OEIS{A243567} & $\VARissubgraphfreediamond =0$, & $\VARissubgraphfreebowtie =0$ & 1 & 1 & 2 & 4 & 10 & 36 & 141 & 784 & 5626 & 56249 \\
+\OEIS{A243568} & $\VARissubgraphfreediamond =0$, & $\VARissubgraphfreebull =0$ & 1 & 1 & 2 & 4 & 9 & 26 & 80 & 340 & 1690 & 11432 \\
+\OEIS{A243789} & $\VARissubgraphfreeopenbowtie =0$, & $\VARissubgraphfreediamond =0$ & 1 & 1 & 2 & 4 & 9 & 30 & 89 & 379 & 1864 & 12365 \\
+\OEIS{A243790} & $\VARissubgraphfreeopenbowtie =0$, & $\VARishamiltonian =1$ & 1 & 0 & 1 & 3 & 3 & 9 & 13 & 59 & 203 & 1651 \\
+\OEIS{A243791} & $\VARissubgraphfreeopenbowtie =0$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 1 & 2 & 3 & 8 & 19 & 62 \\
+\OEIS{A243792} & $\VARissubgraphfreeopenbowtie =0$, & $\VARisintegral =1$ & 1 & 1 & 1 & 2 & 1 & 4 & 1 & 3 & 0 & 15 \\
+\OEIS{A243783} & $\VARissubgraphfreeopenbowtie =0$, & $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 10 & 30 & 97 & 405 & 1957 & 12725 \\
+\OEIS{A243794} & $\VARissubgraphfreeopenbowtie =0$, & $\VARisplanar =1$ & 1 & 1 & 2 & 6 & 11 & 33 & 94 & 370 & 1627 & 8895 \\
+\OEIS{A243795} & $\VARissubgraphfreeopenbowtie =0$, & $\VARissubgraphfreebull =0$ & 1 & 1 & 2 & 6 & 7 & 22 & 65 & 285 & 1442 & 10106 \\
+\OEIS{A243253} & $\VARischordal =1$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 0 & 3 & 2 & 13 & 18 & 116 & 366 \\
+\OEIS{A243785} & $\VARischordal =1$, & $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 12 & 56 & 267 & 1605 & 11909 & 109525 \\
+\OEIS{A243786} & $\VARischordal =1$, & $\VARisintegral =1$ & 1 & 1 & 1 & 1 & 3 & 2 & 5 & 9 & 2 & 14 \\
+\OEIS{A243787} & $\VARischordal =1$, & $\VARisplanar =1$ & 1 & 1 & 2 & 5 & 14 & 52 & 228 & 1209 & 7463 & 52520 \\
+\OEIS{A243788} & $\VARischordal =1$, & $\VARissubgraphfreeKfour =0$ & 1 & 1 & 2 & 4 & 11 & 35 & 124 & 500 & 2224 & 10640 \\
+\OEIS{A243796} & $\VARishamiltonian =1$, & $\VARischordal =1$ & 1 & 0 & 1 & 2 & 4 & 15 & 58 & 360 & 2793 & 28761 \\
+\OEIS{A243797} & $\VARissubgraphfreebowtie =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 10 & 27 & 70 & 206 & 613 & 1942 \\
+\OEIS{A243798} & $\VARissubgraphfreebull =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 12 & 25 & 55 & 126 & 304 \\
+\OEIS{A243799} & $\VARissubgraphfreeopenbowtie =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 13 & 25 & 58 & 130 & 316 \\
 \end{longtable}
 
 \section{Relations}
