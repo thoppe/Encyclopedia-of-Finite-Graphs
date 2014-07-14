@@ -74,7 +74,10 @@ INSERT OR IGNORE INTO ref_invariant_integer
   ("is_subgraph_free_open_bowtie",42),
 
   ("has_fractional_duality_gap_vertex_chromatic", 43),
-  ("n_independent_vertex_sets", 44),
-  ("maximal_independent_vertex_set", 45)
 
+  ("n_independent_vertex_sets", 44),
+  ("maximal_independent_vertex_set", 45),
+
+  ("n_independent_edge_sets", 46),
+  ("maximal_independent_edge_set", 47)
 ;
