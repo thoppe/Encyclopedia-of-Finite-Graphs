@@ -73,7 +73,8 @@ Fractional invariants
 
 Others
 
-+ [`maximal_independent_vertex_set`](http://mathworld.wolfram.com/IndependenceNumber.html) also called the Independence number, [`n_independent_vertex_sets`](http://mathworld.wolfram.com/IndependentVertexSet.html)
++ [`maximal_independent_vertex_set`](http://mathworld.wolfram.com/IndependentVertexSet.html) also called the [Independence number](http://mathworld.wolfram.com/IndependenceNumber.html), [`n_independent_vertex_sets`](http://mathworld.wolfram.com/IndependentVertexSet.html)
++ [`maximal_independent_edge_set`](http://mathworld.wolfram.com/MaximumIndependentEdgeSet.html), [`n_independent_edge_sets`](http://mathworld.wolfram.com/IndependentEdgeSet.html) also called the [Hosoya Index](http://mathworld.wolfram.com/HosoyaIndex.html).
 
 
 =======================
