@@ -1,9 +1,6 @@
-## Pending (2)
+## Pending (0)
 
-+ [`A243800`](https://oeis.org/A243800) *`[maximal_independent_edge_set=2]`*, `0,0,0,5,20,16,22,29,37,46`
-+ [`A243801`](https://oeis.org/A243800) *`[maximal_independent_edge_set=3]`*, `0, 0, 0, 0, 0, 95, 830, 790, 1479, 2625`
-
-## Completed (66):
+## Completed (68):
 
 + [`A241454`](https://oeis.org/A241454) *`[automorphism_group_n=2]`*, `0,1,1,2,9,37,317,4098,84602,2933996`
 + [`A241455`](https://oeis.org/A241455) *`[automorphism_group_n=4]`*, `0,0,0,1,3,28,198,1971,29047,672516`
@@ -72,6 +69,8 @@
 + [`A243782`](https://oeis.org/A243782) *`[maximal_independent_vertex_set=3]`* `0, 0, 0, 1, 8, 63, 524, 5863, 100702, 2880002`
 + [`A243783`](https://oeis.org/A243783) *`[maximal_independent_vertex_set=4]`* `0, 0, 0, 0, 1, 13, 205, 4308, 135563, 7161399`
 + [`A243784`](https://oeis.org/A243784) *`[maximal_independent_vertex_set=5]`* `0, 0, 0, 0, 0, 1, 19, 513, 21782, 1576634`
++ [`A243800`](https://oeis.org/A243800) *`[maximal_independent_edge_set=2]`*, `0,0,0,5,20,16,22,29,37,46`
++ [`A243801`](https://oeis.org/A243800) *`[maximal_independent_edge_set=3]`*, `0, 0, 0, 0, 0, 95, 830, 790, 1479, 2625`
 
 ## Unsubmitted:
 

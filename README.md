@@ -39,7 +39,6 @@ An auto-generated reported for various base queries and the link to the respecti
 
 Calculated Invariants
 
-+ [`n_edges`](http://mathworld.wolfram.com/EdgeCount.html), [`n_vertex`](http://mathworld.wolfram.com/VertexCount.html) (trivial)
 + [`diameter`](http://mathworld.wolfram.com/GraphDiameter.html), [`radius`](http://mathworld.wolfram.com/GraphRadius.html) (networkx)
 + [`is_eulerian`](http://mathworld.wolfram.com/EulerianGraph.html) (networkx)
 + [`is_distance_regular`](http://mathworld.wolfram.com/Distance-RegularGraph.html) (networkx)
@@ -76,6 +75,10 @@ Others
 + [`maximal_independent_vertex_set`](http://mathworld.wolfram.com/IndependentVertexSet.html) also called the [Independence number](http://mathworld.wolfram.com/IndependenceNumber.html), [`n_independent_vertex_sets`](http://mathworld.wolfram.com/IndependentVertexSet.html)
 + [`maximal_independent_edge_set`](http://mathworld.wolfram.com/MaximumIndependentEdgeSet.html), [`n_independent_edge_sets`](http://mathworld.wolfram.com/IndependentEdgeSet.html) also called the [Hosoya Index](http://mathworld.wolfram.com/HosoyaIndex.html).
 
+Trivial invariants
+
++ [`n_edges`](http://mathworld.wolfram.com/EdgeCount.html)
++ [`n_vertex`](http://mathworld.wolfram.com/VertexCount.html)
 
 =======================
 
@@ -92,7 +95,6 @@ Proposed Invariants
 Other Invariants (hard)
 
 + [`hajos_number`](http://mathworld.wolfram.com/HajosNumber.html)
-+ [`hosoya_index`](http://mathworld.wolfram.com/HosoyaIndex.html)
 + [`crossing_number`](http://mathworld.wolfram.com/GraphCrossingNumber.html), [`toroidal_crossing_number`](http://mathworld.wolfram.com/ToroidalCrossingNumber.html)
 + [`sigma_polynomial`](http://mathworld.wolfram.com/SigmaPolynomial.html), [`is_royle`](http://mathworld.wolfram.com/RoyleGraphs.html)
 + [`domination_number`](http://mathworld.wolfram.com/DominationNumber.html)
