@@ -114,17 +114,17 @@ This particular sequence has been known for some time, and even admits a generat
 We have computed sequences for a wide range of invariants, from those that computable in polynomial times, to those that are known to be $\mathcal{\#P}$-complete.
 While some sequences were merely extended, many invariants like the independence number \OEIS{A243781}, have produced sequences that were hitherto unknown to OEIS.
 
-Similar to the House of Graphs/GraphHadron project\cite{brinkmann2013house} \needref, we attempt to quantify the relationships between graph invariants.
+Similar to the GraPHedron project\cite{melot2008facet}, we attempt to quantify the relationships between graph invariants.
 Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
 Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
 We say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
 They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
 In addition to contributing to the OEIS, a secondary goal is to identify all suggestive and exclusive relations between the invariants studied up to order $n=10$.
+While not explored in this paper, the system of GraPHedron could be combined with our database for stronger conjectures.
 
 In this paper, we restrict the classes examined to $\SIMPLECLASS$ and let $S(f,\SIMPLECLASS)=S(f)$ for convenience. 
 Provided one had a means of enumeration, an extension to other classes would be straightforward.
 Exhaustive generation algorithms are known for many specialized classes such as bipartite graphs, digraphs, multigraphs, regular graphs, cubic graphs, snarks and maximal triangle-free graphs\cite{mckay2014practical, meringer1999fast, brinkmann1996fast, brinkmann2013generation, brandt2000generation}. 
-\note{Cite geng MTF, FracTree}
 
 \section{Methods}
 
@@ -237,7 +237,7 @@ building sequences
 
 
 \note{Broadly describe the categories}
-Discuss which algorithm was used, the software, \texttt{networkx} \cite{SciPyProceedings_11}, \texttt{graph-tool} \needref, etc...
+Discuss which algorithm was used, the software, \texttt{networkx} \cite{SciPyProceedings_11}, \texttt{graph-tool} \cite{Tiago2014graph}, etc...
 
 \subsubsection*{Algebraic Graph Theory}
 

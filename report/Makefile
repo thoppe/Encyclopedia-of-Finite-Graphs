@@ -22,7 +22,7 @@ commit:
 	(cd .. && make commit)
 
 
-$(PROJECT_NAME).pdf: $(PROJECT_NAME).tex
+$(PROJECT_NAME).pdf: $(PROJECT_NAME).tex refs.bib
 	make clean
 	$(SPELL_CHECK) $(PROJECT_NAME).tex
 	pdflatex $(PROJECT_NAME).tex
