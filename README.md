@@ -1,9 +1,10 @@
 Encyclopedia of Finite Graphs
 =============================
+[![DOI](https://zenodo.org/badge/5198/thoppe/Encyclopedia-of-Finite-Graphs.png)](http://dx.doi.org/10.5281/zenodo.10954)
 
 This project has three major aims, 
 
-1. To build an exhaustive reference database for all graphs of a given type. 
+1. To build an exhaustive reference database for graph invariants of a given class. 
 2. To "mine" this database for sequences not present (or incomplete) in the [OEIS](https://oeis.org/). 
 3. To use these sequences to suggest new mathematical relations between graph invariants.
 
