@@ -56,8 +56,19 @@ The code has been released as an open-source framework for others to add additio
 
 \section{Introduction}
 
-\note{Add introduction, detail why project is important}
-\note{mention it is good for benchmarks, cite Santo paper. Cite other publicly available databases such as those in the House of Graphs intro, mention how this is more exhaustive and give DOI for project.}
+There is a long history of public graph databases. 
+From hard copies such as the \textit{Atlas of Graphs}\cite{read1998atlas}, to graphs of mathematical interest \cite{de2003large, brinkmann2013house} , to those of applied scientific interest involving chemical structure or RNA topology \cite{pence2010chemspider, gan2004rag}, graphs are a ubiquitous structure.
+Due to the combinatorial graph (check?) in the number of unique isomorphic graphs however, the currently available databases are specialized in the class of graphs considered, whereas a judicious choice restricts the study to an ``interesting'' and more manageable set. 
+
+We proceed with the assumption however, that \textit{a priori} all graphs are interesting given the right question.
+This is the impetus behind the GraPHedron \cite{melot2008facet} project, an attempt to formulate and bound conjectures on prior knowledge.
+Our objective is more elementary, we aim to compute are large, comprehensive database of graph invariants. 
+Such a database will allow new forms of discovery, some of which will be directly explored in this paper.
+For example, integer sequences formed by invariants can be mined from the database and compared to those already known in the 
+ Online Encyclopedia of Integer Sequences (OEIS) \cite{sloane2003line}.
+In addition, the database will serve as a useful reference for benchmarking various algorithms, and has pedagogic applicability to view graphs having particular set of invariants or structure.
+
+\note{Create DOI for Encyclopedia of Finite Graphs}
 
 \begin{itemize}
 \item verify existing sequences
@@ -69,7 +80,6 @@ The code has been released as an open-source framework for others to add additio
 \item reference of graphs (invariants like coloring number, etc that are hard to compute)
 \item allow others to compute invariants and add to the database  
 \end{itemize}
-
 
 
 The Online Encyclopedia of Integer Sequences (OEIS) was created by Neil Sloane in 1964.
@@ -124,7 +134,7 @@ While not explored in this paper, the system of GraPHedron could be combined wit
 
 In this paper, we restrict the classes examined to $\SIMPLECLASS$ and let $S(f,\SIMPLECLASS)=S(f)$ for convenience. 
 Provided one had a means of enumeration, an extension to other classes would be straightforward.
-Exhaustive generation algorithms are known for many specialized classes such as bipartite graphs, digraphs, multigraphs, regular graphs, cubic graphs, snarks and maximal triangle-free graphs\cite{mckay2014practical, meringer1999fast, brinkmann1996fast, brinkmann2013generation, brandt2000generation}. 
+Exhaustive generation algorithms are known for many specialized classes such as bipartite graphs, digraphs, multigraphs, regular graphs, cubic graphs, snarks, trees and maximal triangle-free graphs\cite{mckay2014practical, meringer1999fast, brinkmann1996fast, brinkmann2013generation, sawada2006generating, brandt2000generation}. 
 
 \section{Methods}
 
@@ -146,8 +156,8 @@ A full table of all sequences submitted to the OEIS can be found in Appendix \re
 
 representation of graph stuff 
 \begin{itemize}
-\item store the adjacency matrix using 2's complement - allows storage of a string of zeros and 1's instead as an integer.  Max size would be 2\^100(?) 
-\item invariants are stored as integers: either the value, e. g.\  girth, or as a 0 or 1, e. g.\  is-bipartite. Special invariants: Tutte polynomial 
+\item store the adjacency matrix using 2's complement - allows storage of a string of zeros and 1's instead as an integer.  Max size would be $2^{100}$? 
+\item invariants are stored as integers: either the value, e. g.\  girth, or as a 0 or 1, e. g.\  is-bipartite. Special invariants: Tutte polynomial.
 \end{itemize}
 
 queries 
@@ -179,6 +189,8 @@ building sequences
 \section{Discussion}
 
 \note{Discuss how project can be expanded, new invariants, other graph classes}
+
+\note{Add URLs in references like House of Graphs and OEIS}
 
 \bibliographystyle{unsrt}
 \bibliography{refs}
@@ -338,7 +350,7 @@ Invariant symbol & Description \\
 \midrule
 $\VARautomorphismgroupn$ & Automorphism group size \\
 $\VARchromaticnumber$ & Chromatic number \\
-$\VARedgeconnectivity$, $\VARedgeconnectivity$ & vertex/edge connectivity \\
+$\VARvertexconnectivity$, $\VARedgeconnectivity$ & vertex/edge connectivity \\
 $\VARdiameter$ & diameter \\
 $\VARgirth$ & girth \\
 $\VARnarticulationpoints$ & number of articulation points \\
