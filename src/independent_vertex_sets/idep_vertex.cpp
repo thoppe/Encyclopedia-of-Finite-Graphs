@@ -8,12 +8,12 @@
 using namespace std;
 
 template <class T>
-bool is_in(const T &b, const set<T> &A) {
+bool is_in(const T &b, const vector<T> &A) {
   return std::find(A.begin(), A.end(), b) != A.end();
 };
 
 bool check_vertex_set(const boost::dynamic_bitset<> &verts,
-                      const set< pair<int, int> > &E) {
+                      const vector< pair<int, int> > &E) {
 
   const int n = verts.size();
 
@@ -27,6 +27,40 @@ bool check_vertex_set(const boost::dynamic_bitset<> &verts,
   return true;
 
 }
+
+
+void report_vertex_set(boost::dynamic_bitset<> &vertex_set) {
+  //cout << vertex_set.to_ulong() << endl;
+  cout << vertex_set << endl;
+}
+
+
+bool vertex_itr(vector< pair<int, int> > &E,
+                boost::dynamic_bitset<> &used_vertices,
+                int current_idx) {
+  // This does not report the empty set, do this manually
+  if(current_idx==0) { report_vertex_set(used_vertices);  }
+
+  if(current_idx < used_vertices.size()) {
+
+    auto trial_set = used_vertices; 
+    trial_set[current_idx] = 1;
+    bool condition = check_vertex_set(trial_set,E);
+
+    if(condition) {
+      report_vertex_set(trial_set);
+
+      // Recurse using this new valid set
+      vertex_itr(E, trial_set, current_idx+1);
+    }
+
+      // Recurse without flipping
+    vertex_itr(E, used_vertices, current_idx+1);
+  }
+
+  return false;
+}
+
 
 int main (int argc, char *argv[]) {
 
@@ -42,18 +76,20 @@ int main (int argc, char *argv[]) {
   int edge_n = (n*(n+1))/2;
   boost::dynamic_bitset<> adj_b(edge_n, adj);
 
-
   // Get the edge set
-  set< pair<int, int> > E; 
+  vector< pair<int, int> > E; 
   for(int i=0, b_idx=edge_n-1;i<n;i++) {
     for(int j=i;j<n;j++,b_idx--) {
       if(adj_b[b_idx]) {
-        E.insert( {i,j} );
+        E.push_back( {i,j} );
       }
     }
   }
 
+  boost::dynamic_bitset<> vertex_set(n,0);
+  vertex_itr(E, vertex_set, 0);
 
+  /*
   // Iterate throught the vert combinations
   // find those that form indepdent vertex sets
   unsigned long max_verts = pow(2,n);
@@ -65,7 +101,7 @@ int main (int argc, char *argv[]) {
       cout << verts <<  endl;
     }
   }
-
+  */
   return 0;
 }
 
