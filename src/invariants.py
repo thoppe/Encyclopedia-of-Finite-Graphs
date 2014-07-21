@@ -56,14 +56,24 @@ def compress_input(val):
 
 def special_cycle_basis(adj,**args):
     g = networkx_representation(adj,**args)
-    val = nx.cycle_basis(g)
-    return compress_input(val)
+    cycles = nx.cycle_basis(g)
+    sorted_cycles = tuple(sorted([tuple(sorted(c)) for c in cycles]))
+
+    terms = []
+    for cycle_k in range(len(sorted_cycles)):
+        for idx in sorted_cycles[cycle_k]:
+            terms.append( (cycle_k, idx) )
+    return tuple(terms)
+    
+    return sorted_cycles
+    #return compress_input(val)
 
 def special_degree_sequence(adj,**args):
     A = convert_to_numpy(adj,**args)
     deg = A.sum(axis=0)
     deg.sort()
-    return compress_input(deg.tolist())
+    return tuple([(x,) for x in deg])
+    #return compress_input(deg.tolist())
 
 def special_polynomial_tutte(adj,**args):
     A = convert_to_numpy(adj,**args)
@@ -72,7 +82,15 @@ def special_polynomial_tutte(adj,**args):
     cmd += ' ' + tutte_args
     proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
     sval = [[int(x) for x in line.split()] for line in proc.stdout]
-    return compress_input(sval)
+
+    terms = []
+    for xi in range(len(sval)):
+        for yi in range(len(sval[xi])):
+            val = sval[xi][yi]
+            if val:
+                terms.append( (xi+1,yi+1, val) )
+    return tuple(terms)
+    #return compress_input(sval)
 
 ######################### Invariant code ######################### 
 

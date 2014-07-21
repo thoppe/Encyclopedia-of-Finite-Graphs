@@ -4,11 +4,17 @@ import itertools, os, logging, multiprocessing
 def generate_database_name(N):
     return os.path.join("database", "graph{}.db".format(N))  
 
-def load_graph_database(N, check_exist=True):
+def generate_special_database_name(N):
+    return os.path.join("database", "special", "graph{}_special.db".format(N))  
+
+def load_graph_database(N, check_exist=True, special=False):
     ''' Given an input value of N, return a connection to the 
         cooresponding database '''
 
-    f_database = generate_database_name(N)
+    if not special:
+        f_database = generate_database_name(N)
+    else:
+        f_database = generate_special_database_name(N)
 
     # Check if database exists, if so exit!
     if check_exist and not os.path.exists(f_database):
