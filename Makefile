@@ -71,3 +71,5 @@ full_clean:
 
 compile:
 	(cd src/bliss && make gmp)
+	(cd src/independent_edge_sets && make)
+	(cd src/independent_vertex_sets && make)

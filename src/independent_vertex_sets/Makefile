@@ -3,4 +3,5 @@ args = 7 14781504
 
 all:
 	g++ -std=c++11 -O3 -o main idep_vertex.cpp
+test:
 	./main  $(args)

@@ -3,8 +3,9 @@ args = 10 17996771828415962
 
 all:
 	g++ -std=c++11 -O3 -o main idep_edge.cpp
-	./main  $(args)
 
+test:
+	./main  $(args)
 
 clean:
 	rm -vf ./main *~
