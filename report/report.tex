@@ -57,38 +57,38 @@ The code has been released as an open-source framework for others to add additio
 \section{Introduction}
 
 There is a long history of public graph databases. 
-From hard copies such as the \textit{Atlas of Graphs}\cite{read1998atlas}, to graphs of mathematical interest \cite{de2003large, brinkmann2013house} , to those of applied scientific interest involving chemical structure or RNA topology \cite{pence2010chemspider, gan2004rag}, graphs are a ubiquitous structure.
-Due to the combinatorial graph (check?) in the number of unique isomorphic graphs however, the currently available databases are specialized in the class of graphs considered, whereas a judicious choice restricts the study to an ``interesting'' and more manageable set. 
+Databases originally found only in print, such as the \textit{Atlas of Graphs}\cite{read1998atlas}, have rapidly expanded in the electronic medium.
+These databases range from those of mathematical and algorithmic interest \cite{de2003large, brinkmann2013house}, to those cataloging structures found in the applied sciences such as ChemSpider\cite{pence2010chemspider} or RNA topologies\cite{pence2010chemspider, gan2004rag}.
+Due to the rapid growth in the number of unique isomorphic graphs however, the currently available databases are specialized in the class of graphs considered; 
+a judicious choice often restricts the study to an interesting and and more manageable subset.
 
-We proceed with the assumption however, that \textit{a priori} all graphs are interesting given the right question.
-This is the impetus behind the GraPHedron \cite{melot2008facet} project, an attempt to formulate and bound conjectures on prior knowledge.
-Our objective is more elementary, we aim to compute are large, comprehensive database of graph invariants. 
+We proceed with the assumption however, that \textit{a priori} all graphs could be interesting given the right question.
+This is underlies the GraPHedron project\cite{melot2008facet}, an attempt to formulate and bound conjectures on prior knowledge.
+Our objective is more elementary, we aim to compute are large, comprehensive database of graphs and their respective invariants. 
 Such a database will allow new forms of discovery, some of which will be directly explored in this paper.
-For example, integer sequences formed by invariants can be mined from the database and compared to those already known in the 
- Online Encyclopedia of Integer Sequences (OEIS) \cite{sloane2003line}.
-While we explore a basic set of relations for the invariants, the framework of GraPHedron can be used to amplify the predictions.
-In addition, the database will serve as a useful reference for benchmarking various algorithms, and has pedagogic applicability to view graphs having particular set of invariants or structure.
+For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known in the Online Encyclopedia of Integer Sequences (OEIS)\cite{sloane2003line}.
+These sequences, and the set of graphs that belong to them, can be used to explore a basic set of relations among the invariants. 
+The framework of GraPHedron can be used to amplify the predictions.
 
-\note{Create DOI for Encyclopedia of Finite Graphs}
+The creation of a large, centralized database will serve as a useful reference for benchmarking various algorithms.
+Additionally a comprehensive database provides pedagogic value, representative graphs from any considered sequence can be rapidly visualized.
+To this end, we have created the Encyclopedia of Finite Graphs, a database of invariants and software needed to fully reproduce each invariant\cite{Travis2014Encyclopdia}. 
+The code and the database has been released under an open source license.
+The intention is for new invariants to be an added to the project when various algorithms become available.
 
-\begin{itemize}
-\item reference of graphs (invariants like coloring number, etc that are hard to compute)
-\item allow others to compute invariants and add to the database  
-\end{itemize}
-
-
-The Online Encyclopedia of Integer Sequences (OEIS) was created by Neil Sloane in 1964.
-As a graduate student, Sloane began collecting integer sequences while studying combinatorial problems.
-Since then, the database has grown to over 250,000 sequences and is highly cited, with over 3,000 citations to date\cite{sloane2003line}.
+An immediate tangible one can collect from a graph invariant database are the integer sequences formed by matching the number of graphs to the invariant for a given order.
+Many such sequences formed from graph invariants have been found and cataloged already in another database, the Online Encyclopedia of Integer Sequences (OEIS)\cite{sloane2003line}.
+Created by Neil Sloane in 1964 as a graduate student, Sloane began collecting integer sequences while studying combinatorial problems.
+Since then, the database has grown to over 250,000 sequences and is highly cited, with over 3,000 citations to date
 The sequences are of general interest, spanning topics such as number theory, combinatorics, and graph theory.
 A given sequence may contain any number of terms, ranging from at least four up to as many as 500,000 in the cases where the sequence admits a readily computable expression.
 Collecting and storing integer sequences in one place allows a researcher, who perhaps comes across the first few values of an unknown sequence, to be able to quickly look up subsequent values. 
 The OEIS not only provides the numerical values but seeks to function as a true encyclopedia, with cross references to related sequences, references to other literature, and formulas when known.
-One of the primary goals of this project was to systematically expand the sequences involving graph invariants known to the OEIS database.
-Through our exhaustive enumeration of all small graphs, we were able to submit \OEISprimary new sequences to the OEIS and extend \OEISedits existing sequences.
+One of the primary goals of this paper was to systematically expand the sequences involving graph invariants known to the OEIS database.
+Through our exhaustive enumeration of small graphs, we were able to submit \OEISprimary new sequences to the OEIS and extend \OEISedits existing sequences.
 
 A graph invariant is any property that is preserved under isomorphism. 
-Invariants can be simple binary properties (planarity), integers (automorphism group size), polynomials (chromatic or Tutte polynomials), rationals (fractional chromatic numbers), complex numbers (adjacency spectra), sets (dominion sets) or even graphs themselves (subgraph and minor matching). 
+Invariants can be simple binary properties (planarity), integers (automorphism group size), polynomials (chromatic polynomials), rationals (fractional chromatic numbers), complex numbers (adjacency spectra), sets (dominion sets) or even graphs themselves (subgraph and minor matching). 
 We are primarily concerned with the sequences produced by graph invariants, \ie the combinatorial problem of how many graphs of a given class satisfy a particular criteria.
 Let a graph be defined as the pair $G = (V,E)$, where $V$ is a set of vertices and $E$ a set of edges. 
 Define $\CLASS$ as a class which forms an isomorphically distinct set of graphs that satisfy a specified criteria.
@@ -115,19 +115,20 @@ S(f_\text{tree}=1, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
 %
 which is sequence \OEIS{A000055} in the OEIS.
-This particular sequence has been known for some time, and even admits a generating function \needref.
-We have computed sequences for a wide range of invariants, from those that computable in polynomial times, to those that are known to be $\mathcal{\#P}$-complete.
-While some sequences were merely extended, many invariants like the independence number, have produced sequences that were hitherto unknown to OEIS \OEIS{A243781}-\OEIS{A243784}.
+This particular sequence has been known for some time, and even admits a generating function.
+We have computed simple invariants that are computable in polynomial time, to those that are known to be $\mathcal{\#P}$-complete.
+While a few sequences were merely extended, invariants such as the the independence number were were hitherto unknown to OEIS and have produced novel sequences (\OEIS{A243781}-\OEIS{A243784}).
 
-Similar to the GraPHedron project\cite{melot2008facet}, we attempt to quantify the relationships between graph invariants.
+We also attempt to quantify the relationships between graph invariants.
 Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
 Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
 We say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
 They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
 In addition to contributing to the OEIS, a secondary goal is to identify all suggestive and exclusive relations between the invariants studied up to order $n=10$.
-While not explored in this paper, the system of GraPHedron could be combined with our database for stronger conjectures.
+While not explored in this paper, the system of GraPHedron could be combined with our database for stronger conjectures\cite{melot2008facet}.
 
-In this paper, we restrict the classes examined to $\SIMPLECLASS$ and let $S(f,\SIMPLECLASS)=S(f)$ for convenience. 
+In this paper, we restrict the classes examined to $\SIMPLECLASS$. 
+Unless otherwise stated, any referenced graph from this point is assumed to be simple and connected.
 Provided one had a means of enumeration, an extension to other classes would be straightforward.
 Exhaustive generation algorithms are known for many specialized classes such as bipartite graphs, digraphs, multigraphs, regular graphs, cubic graphs, snarks, trees and maximal triangle-free graphs\cite{mckay2014practical, meringer1999fast, brinkmann1996fast, brinkmann2013generation, sawada2006generating, brandt2000generation}. 
 
@@ -138,29 +139,31 @@ For each graph we computed a series of invariants, which for completeness are de
 A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq} and the relations between the sequences in Appendix \ref{app:relations}.
 
 Since the graphs in $\SIMPLECLASS$ are loopless and undirected, the edge incidence information for each graph requires $n(n+1)/2$ bits for storage.
-The largest class computed, $\SIMPLECLASS$ requires 45 bits and can be efficiently stored in a 64 bit unsigned integer with two's complement representation, commonly supported by many database programs. 
+The largest class computed of order 10, requires 45 bits. 
+This can be efficiently stored in a 64 bit unsigned integer using two's complement representation.
 We note that graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
 Internally, we use SQLite3 as the database back end for portability reasons.
 Most of the invariants, especially those used in integer sequence calculations, are stored as integers.
-We found however, that it was useful to store certain polynomials such as the Tutte polynomial as a separate text field.
+We found however, that it was useful to store certain non integer invariants, such as the Tutte polynomial, as a separate text field.
 \note{mention the size of the database?}
 
 The database construction first proceeds by the enumeration of graphs themselves.
-Once this has been done, the database checks against a reference table for invariants that have not been computed and allocates the processing to multiple computers.
-The invariants are stored in a flat table, to facilitate the addition of new invariants.
-Even with indexing however, this arrangement is not optimal for sequence like queries.
-Once the computation is completed for any finite set of invariants, a new database is created where each graph is stored as a row and each column is an indexed invariant.
+Once complete, the database checks against a reference table for invariants that have not been computed and allocates the processing to multiple computers.
+The invariants are stored in a flat table to facilitate the addition of new invariants.
+Even with indexing however, this arrangement is not optimal for sequence-like queries.
+Hence, the build the sequences themselves a second database is created where each graph is stored as a row and each column is an indexed invariant.
 
-Sequences are constructed by first enumerating all the unique values for each invariant and applying a condition.
-For example, sequence \OEIS{241454} describes the graphs whose automorphism group is equal to 2 while sequence \OEIS{A086216} describes graphs with a vertex connectivity greater or equal to three. 
-The sequence that involve only a single invariant are called primary sequences, while those involving two or more invariants are called secondary.
+Sequences are constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
+For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group is equal to two while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater or equal to three. 
+Sequences can involve more than one invariant condition.
+A sequence that with only a single invariant condition is called a primary sequences, while a sequencing involving two or more invariants are called secondary sequences.
 For a sequence to be considered for submission to the OEIS it must have at least four non-zero entries. 
 
-The suggestive and exclusive relations described in the previous section are built up in a similar way.
-For each pair of invariants conditions describing two sequences, the set of graphs related to the sequences are compared.
-These relations provided a useful check on the accuracy of the algorithms.
-For example, one of the equality relations tell us that all trees have zero girth and all graphs of zero girth are trees which obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle. 
-
+The suggestive relations described in the previous section are built in a similar way.
+For each pair of invariants conditions, the set of graphs related to the sequences are compared for set equality, exclusivity or as subsets.
+In addition to providing useful information, some of these relations provide a check on the accuracy of the algorithms.
+For example, one of the equality relations tell us a graph is a tree $\Leftrightarrow$ a graph has zero girth.
+This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle. 
 
 \note{Give example of simple relations and sequences here}
 \note{list some interesting secondary sequences}
@@ -190,7 +193,8 @@ For example, one of the equality relations tell us that all trees have zero girt
 \newcommand{\VARdiameter}{\text{dia}(g)}
 \newcommand{\VARgirth}{\text{girth}(g)}
 \newcommand{\VARnarticulationpoints}{a(g)}
-\newcommand{\VARmaximalindependentvertexset}{\alpha(g)}
+\newcommand{\VARmaximalindependentvertexset}{\alpha_V(g)}
+\newcommand{\VARmaximalindependentedgeset}{\alpha_E(g)}
 
 \newcommand{\VARsubgraph}{s}
 \newcommand{\namedsubgraph}[1]{\VARsubgraph{}(g,#1)}
@@ -322,10 +326,14 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 \label{app:submittedseq}
 
 Primary sequences are those involving a single invariant, while secondary sequences are those that involve the union of two invariants.
-The sequences already present in the OEIS served as a useful check on the accuracy of our programs.
+Each sequence was hand-checked against the OEIS.
+We validated that either the sequence was unique or the invariant description match the sequence found.
+For brevity, the symbols describing the invariants are show in below. %Table \ref{table:refinvariants}.
+%Many sequences were already present in the OEIS served as a useful check on the accuracy of our programs.
 
 \newcommand{\VARsubgraphfree}[1]{g)}
 
+%\begin{table}
 \begin{longtable}{ l l}
 \toprule
 Invariant symbol & Description \\
@@ -336,18 +344,24 @@ $\VARvertexconnectivity$, $\VARedgeconnectivity$ & vertex/edge connectivity \\
 $\VARdiameter$ & diameter \\
 $\VARgirth$ & girth \\
 $\VARnarticulationpoints$ & number of articulation points \\
+$\VARmaximalindependentvertexset, \VARmaximalindependentedgeset$ & size of maximal independent vertex/edge set \\
 $\namedsubgraph{h}$ & number of subgraphs of $h$ in $g$ \\
 $\Theta(g,\mathcal{P})$ & indicator function for property $\mathcal{P}$ \\
 $\mathcal{T},\mathcal{H},\mathcal{E}, \mathcal{I}, \mathcal{I}^*$ & properties: tree, Hamiltonian, Eulerian, integral, real \\
 $\mathcal{R},\mathcal{R}^*,\mathcal{D}, \mathcal{B}, \mathcal{C}$ & properties: regular, strongly regular, distance regular, bipartite, chordal \\
 $\mathcal{X}$ & properties: chromatic gap
 \end{longtable}
+%\label{table:refinvariants}
+%\end{table}
 
 \subsection{Primary sequences}
 
 \begin{longtable}{ l l r r r r r r r r r r}
 \toprule
-OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
+OEIS & Invariant & 
+\multicolumn{10}{l}{Sequence: \ $S_1, S_2, \ldots, S_{10}$} 
+%$S_1$ & $S_2$ & $S_3$ & $S_4$ & $S_5$ & $S_6$ & $S_7$ & $S_8$ & $S_9$ & $S_{10}$
+\\
 \midrule\bottomrule
 \OEIS{A241454} & $\VARautomorphismgroupn =2$ & 0 & 1 & 1 & 2 & 9 & 37 & 317 & 4098 & 84602 & 2933996 \\
 \OEIS{A241455} & $\VARautomorphismgroupn =4$ & 0 & 0 & 0 & 1 & 3 & 28 & 198 & 1971 & 29047 & 672516 \\
@@ -420,14 +434,18 @@ OEIS & Invariant & \multicolumn{10}{l}{Sequence} \\
 \OEIS{A243782} & $\VARmaximalindependentvertexset =3$ & 0 & 0 & 0 & 1 & 8 & 63 & 524 & 5863 & 100702 & 2880002 \\
 \OEIS{A243783} & $\VARmaximalindependentvertexset =4$ & 0 & 0 & 0 & 0 & 1 & 13 & 205 & 4308 & 135563 & 7161399 \\
 \OEIS{A243784} & $\VARmaximalindependentvertexset =5$ & 0 & 0 & 0 & 0 & 0 & 1 & 19 & 513 & 21782 & 1576634 \\
-
+\OEIS{A243800} & $\VARmaximalindependentedgeset =2$ & 0 & 0 & 0 & 5 & 20 & 16 & 22 & 29 & 37 & 46 \\
+\OEIS{A243801} & $\VARmaximalindependentedgeset =3$ & 0 & 0 & 0 & 0 & 0 & 95 & 830 & 790 & 1479 & 2625 \\
 \end{longtable}
 
 \subsection{Secondary sequences}
 
 \begin{longtable}{ l l l r r r r r r r r r r}
 \toprule
-OEIS & Invariant & & \multicolumn{10}{l}{Sequence} \\
+OEIS & Invariant & & 
+%\multicolumn{10}{l}{Sequence}
+\multicolumn{10}{l}{Sequence: \ $S_1, S_2, \ldots, S_{10}$ }
+\\
 \midrule\bottomrule
 \OEIS{A243270} & $\VARishamiltonian =1$, & $\VARisbipartite =1$ & 1 & 0 & 0 & 1 & 0 & 4 & 0 & 24 & 0 & 473 \\
 \OEIS{A243271} & $\VARishamiltonian =1$, & $\VARisdistanceregular =1$ & 1 & 0 & 1 & 2 & 2 & 4 & 2 & 5 & 4 & 6 \\
