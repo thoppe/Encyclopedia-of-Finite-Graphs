@@ -1,6 +1,6 @@
 import numpy as np
 import ast,itertools, os
-import subprocess
+import subprocess, fractions
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
@@ -63,17 +63,14 @@ def special_cycle_basis(adj,**args):
     for cycle_k in range(len(sorted_cycles)):
         for idx in sorted_cycles[cycle_k]:
             terms.append( (cycle_k, idx) )
+    if not terms: return ((None,None),)
     return tuple(terms)
-    
-    return sorted_cycles
-    #return compress_input(val)
 
 def special_degree_sequence(adj,**args):
     A = convert_to_numpy(adj,**args)
     deg = A.sum(axis=0)
     deg.sort()
     return tuple([(x,) for x in deg])
-    #return compress_input(deg.tolist())
 
 def special_polynomial_tutte(adj,**args):
     A = convert_to_numpy(adj,**args)
@@ -90,7 +87,6 @@ def special_polynomial_tutte(adj,**args):
             if val:
                 terms.append( (xi+1,yi+1, val) )
     return tuple(terms)
-    #return compress_input(sval)
 
 ######################### Invariant code ######################### 
 
@@ -564,40 +560,45 @@ def enumerate_independent_sets(gt):
                                            vertex_fill_color=c)
             '''
 
-def fractional_chromatic_number(adj,**args):
-    g = graph_tool_representation(adj,**args)
+def fractional_chromatic_number(adj, **args):
+    #g = graph_tool_representation(adj,**args)
     # As a check, the cycle graph should return 2.5 = 5/2
+    N = args["N"]
+
+    cmd_idep = "src/independent_vertex_sets/main {N} {adj}"
+    cmd = cmd_idep.format(N=N,adj=adj)
+    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    independent_sets = [line.strip() for line in proc.stdout]
 
     prob = pulp.LpProblem("fractional_chrom", 
                           pulp.LpMinimize)
 
-    independent_sets = [gx for gx in enumerate_independent_sets(g)]
     K = len(independent_sets)
 
     iset_strings = [k for k in xrange(K)]
     iset_vars = pulp.LpVariable.dicts("iset", range(K), 
                                      lowBound=0)
-
     
     prob += pulp.lpSum(iset_vars), "Objective"
 
-    for v in g.vertices():
+    for idx in xrange(N):
         isets_with_vertex = [iset_vars[k] for k in xrange(K)
-                             if v in independent_sets[k].vertices()]
+                             if independent_sets[k][idx]=="1"]
         prob += pulp.lpSum(isets_with_vertex) >= 1
 
     status = prob.solve()
-    
+
     if status == 1:
         sol = [x.value() for x in prob.variables()]
-        val = sum(sol)
-        return val
-        # This should work without rounding
-        # return fractions.Fraction(val).limit_denominator()
-    
+        f_sol = map(fractions.Fraction,sol)
+        sol = sum([x.limit_denominator(20*N*K) for x in f_sol])
+        a,b = sol.numerator, sol.denominator
+        return ((a,b),)
     else: 
         print "ERROR IN FRACTIONAL CHROMATIC!", adj
         return -1
+
+    print status
 
 def has_fractional_duality_gap_vertex_chromatic(adj,**args):
     cf = fractional_chromatic_number(adj,**args)

@@ -91,6 +91,15 @@ cmd_insert = '''INSERT INTO {} (graph_id, degree) VALUES ({},?)'''
 run_compute("degree_sequence", pfunc_degree, cmd_insert)
 
 #########################################################################
+# Now compute the fractional chromatic number
+
+def pfunc_frac_chrom((g_id,adj)):
+    return g_id, invariants.fractional_chromatic_number(adj, N=N)    
+
+cmd_insert = '''INSERT INTO {} (graph_id, a, b) VALUES ({},?,?)'''
+run_compute("fractional_chromatic_number", pfunc_frac_chrom, cmd_insert)
+
+#########################################################################
 # Now compute the Tutte polynomials
 
 def pfunc_tutte((g_id,adj)):
@@ -115,4 +124,4 @@ run_compute("cycle_basis", pfunc_cycle_basis, cmd_insert)
 #cmd_grab = '''SELECT graph_id,adj FROM graph'''
 #g_itr    = select_itr(conn, cmd_grab)
 #for g,adj in g_itr:
-#    print pfunc_cycle_basis((g,adj))
+#    print pfunc_frac_chrom((g,adj))

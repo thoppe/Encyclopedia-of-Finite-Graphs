@@ -3,6 +3,9 @@ database/*
 bak_database.tar*
 search_index/
 
+# Executable file
+main
+
 # Temp file
 dump_graphs.py
 
