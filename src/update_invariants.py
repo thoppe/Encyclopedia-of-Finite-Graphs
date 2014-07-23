@@ -1,7 +1,8 @@
 import numpy as np
-import logging, argparse, gc, inspect, os, csv
-from helper_functions import load_graph_database, parallel_compute, select_itr
-from helper_functions import grab_vector, landing_table_itr, attach_ref_table
+import logging, argparse, inspect, os, csv, collections
+from helper_functions import load_graph_database, select_itr
+from helper_functions import grab_vector, grab_all, attach_ref_table
+from helper_functions import compute_parallel
 
 desc   = "Updates the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -11,11 +12,14 @@ parser.add_argument('--chunksize',type=int,
                     default=1000)
 cargs = vars(parser.parse_args())
 
+N = cargs["N"]
+
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
 # Load the database
-conn = load_graph_database(cargs["N"])
+conn  = load_graph_database(cargs["N"])
+sconn = load_graph_database(cargs["N"], special=True)
 attach_ref_table(conn)
 
 logging.info("Starting invariant calculation for {N}".format(**cargs))
@@ -28,60 +32,72 @@ invariant_funcs = dict(inspect.getmembers(invariants,inspect.isfunction))
 cmd = '''SELECT * from graph LIMIT 1'''
 graph_args_names = zip(*conn.execute(cmd).description)[0]
 
+ignored_invariants = [
+    "n_independent_vertex_sets", 
+    "maximal_independent_vertex_set",
+    "n_independent_edge_sets", 
+    "maximal_independent_edge_set",
+    "has_fractional_duality_gap_vertex_chromatic",
+]
+
+special_invariants = {
+    "n_cycle_basis" : "cycle_basis",
+    "is_tree"       : "cycle_basis",
+    "girth"         : "cycle_basis",
+    "circumference" : "cycle_basis",
+    "n_edge"       : "degree_sequence",
+    "n_endpoints"  : "degree_sequence",
+    "is_k_regular" : "degree_sequence",
+    "chromatic_number" : "tutte_polynomial"
+}
+
 #########################################################################
 
-def compute_invariant(terms):
-    func_name = cargs["column"]
-    idx,adj   = terms[0], terms[1]
+def graph_target_iterator(func_name):
+    invariant_id = ref_invariant_lookup[func_name]
 
-    graph_args = cargs.copy()
-    for k,name in enumerate(graph_args_names[2:]):
-        graph_args[name] = terms[k+2]
+    cmd_grab = '''
+      SELECT a.* FROM graph as a
+      LEFT JOIN invariant_integer as b
+      ON a.graph_id = b.graph_id AND b.invariant_id={}
+      WHERE b.value IS NULL '''.format(invariant_id)
 
-    try:
-        func   = invariant_funcs[func_name] 
-        result = func(adj,**graph_args)
-    except Exception as ex:
-        err = "{}:{} idx:{} adj:{}".format(func_name, ex, idx, adj)
-        logging.critical(err)
-        raise ex
+    for g_id, adj in select_itr(conn, cmd_grab) :
+        yield (g_id,adj,{"N":N})
 
-    return (idx,cargs["invariant_id"],result)
+def iterator_degree_sequence(func_name):
+    itr = graph_target_iterator(func_name)
+    cmd = '''SELECT degree FROM degree_sequence WHERE graph_id=(?)'''
 
-def insert_invariants(vals):
-    with open(cargs["f_landing_table"], 'a') as FOUT:
-        for item in vals:
-            # Cast vals to ints
-            FOUT.write("%i %i %i\n"%item)
+    for g_id, adj, args in itr:
+        args["degree_sequence"] = grab_vector(sconn,cmd,(g_id,))
+        yield (g_id, adj, args)
 
-def insert_from_landing_table(f_landing_table):
+def iterator_cycle_basis(func_name):
+    itr = graph_target_iterator(func_name)
+    cmd = '''SELECT cycle_k,idx FROM cycle_basis WHERE graph_id=(?)'''
 
-    cmd_insert = '''
-      INSERT or IGNORE INTO invariant_integer
-      (graph_id, invariant_id, value) VALUES (?,?,?)'''
+    for g_id, adj, args in itr:
+        cycle_basis = grab_all(sconn,cmd,(g_id,))
+        if cycle_basis[0][0]==u"None":
+            cycle_basis = []
+        else:
+            # Convert the flat representation to a nested list
+            cb = collections.defaultdict(list)
+            for cycle_k, idx in cycle_basis:
+                cb[cycle_k].append(idx)
+            cycle_basis = cb.values()
 
-    count = 0
-    non_zero_terms = 0
-    for raw in landing_table_itr(f_landing_table, (0,1,2)):
-        msg = "Starting insert of {} values to {column}"
-        logging.info(msg.format(len(raw),**cargs))  
-        conn.executemany(cmd_insert.format(**cargs),raw)
-        count += len(raw)
-        
-        non_zero_terms += sum(int(x[2])>0 for x in raw)
+        args["cycle_basis"] = cycle_basis
+        yield (g_id, adj, args)
 
-    conn.commit()
+def iterator_tutte_polynomial(func_name):
+    itr = graph_target_iterator(func_name)
+    cmd = '''SELECT x_degree,y_degree,coeff FROM tutte_polynomial WHERE graph_id=(?)'''
 
-    msg = "Saved {} to values to {column}"
-    logging.info(msg.format(count,**cargs))  
-
-    msg = "Count of {column} nonzero terms ({})"
-    logging.info(msg.format(non_zero_terms,**cargs))  
-    
-    os.remove(f_landing_table)
-    gc.collect()
-
-    #logging.info("Removing %s"%f_landing_table)
+    for g_id, adj, args in itr:
+        args["tutte_polynomial"] = grab_all(sconn,cmd,(g_id,))
+        yield (g_id, adj, args)
 
 #########################################################################
 
@@ -99,55 +115,57 @@ ref_invariant_lookup = dict(conn.execute(cmd).fetchall())
 cmd_mark_success = '''
 INSERT OR IGNORE INTO computed (function_name) VALUES (?)'''
 
-ignored = ["n_independent_vertex_sets", "maximal_independent_vertex_set",
-           "n_independent_edge_sets", "maximal_independent_edge_set",
-           ]
 compute_invariant_functions = [x for x in compute_invariant_functions 
-                               if x not in ignored]
+                               if x not in ignored_invariants]
+
+special_iterator_mapping = {
+    "degree_sequence"  : iterator_degree_sequence,
+    "cycle_basis"      : iterator_cycle_basis,
+    "tutte_polynomial" : iterator_tutte_polynomial,  
+ }
 
 if compute_invariant_functions:
     msg = "Remaining invariants to compute {}"
-    logging.info(msg.format(compute_invariant_functions))
-
-for func in compute_invariant_functions:
-    cargs["column"] = func
-    cargs["invariant_id"] = ref_invariant_lookup[func]
-
-    f_landing = "landing_{N}_{column}.txt".format(**cargs)
-    f_landing = os.path.join("database",f_landing)  
-    cargs["f_landing_table"] = f_landing
-
-    # If computation exists from a previous run, add it in
-    if os.path.exists(f_landing):
-        insert_from_landing_table(f_landing)
-
-    cmd_grab = '''
-      SELECT a.* FROM graph as a
-      LEFT JOIN invariant_integer as b
-      ON a.graph_id = b.graph_id AND b.invariant_id={invariant_id}
-      WHERE b.value IS NULL '''.format(**cargs)
-
-    msg = "Starting calculation for {column}"
-    logging.info(msg.format(**cargs))  
-
-    itr = select_itr(conn, cmd_grab) 
-
-    success = parallel_compute(itr, compute_invariant, 
-                               callback=insert_invariants, 
-                               **cargs)
-
-    # Once changes have been completed, 
-    # mark the invariant as complete if successful
-
-    if success:
-        insert_from_landing_table(f_landing)    
-        conn.execute(cmd_mark_success, (func,))
-    else:
-        err = "{column} calculation failed"
-        logging.critical(err.format(**cargs))
-
-    conn.commit()    
-    gc.collect()
+    #logging.info(msg.format(compute_invariant_functions))
 
 
-conn.close()
+for func_name in compute_invariant_functions:
+
+    msg = "Starting calculation for {name}"
+
+    if func_name not in special_invariants:
+        itr = graph_target_iterator(func_name)
+    elif special_invariants[func_name] in special_iterator_mapping:
+        special_name = special_invariants[func_name]
+        itr = special_iterator_mapping[special_name](func_name)
+    else: 
+        err_msg = "Invariant {} unknown! Skipping.".format(func_name)
+        raise SyntaxError(err_msg)
+
+    func    = invariant_funcs[func_name] 
+    targets = itr        
+    invariant_id = ref_invariant_lookup[func_name]
+
+    def pfunc((g_id,adj,args)):
+        return g_id, ((invariant_id, int(func(adj,**args)), ),)
+
+    cmd_insert = '''
+      INSERT or IGNORE INTO invariant_integer
+      (graph_id, invariant_id, value) VALUES (?,?,?)'''
+
+    logging.info("Computing N={}, {} ".format(N, func_name))
+    
+    compute_parallel(func_name, conn, pfunc, cmd_insert,targets,N)
+    conn.execute(cmd_mark_success, (func_name,)) 
+    conn.commit()
+
+    # Debugging code
+    #func   = invariant_funcs[func_name] 
+    #if itr != None:
+    #    print func_name
+    #    for (g_id, adj, args) in itr:
+    #        args["N"] = N
+    #        result = func(adj,**args)
+    #        print g_id, adj, result
+
+

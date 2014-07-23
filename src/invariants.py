@@ -88,25 +88,45 @@ def special_polynomial_tutte(adj,**args):
                 terms.append( (xi+1,yi+1, val) )
     return tuple(terms)
 
-######################### Invariant code ######################### 
+######################### REQUIRES [degree_sequence] #################
 
-def n_vertex(adj,**args):
-    return args["N"]
+def n_edge(adj,**args):
+    # Defined this way for loopless simple graphs
+    deg = args["degree_sequence"]
+    return sum(deg) / 2
+
+def n_endpoints(adj,**args):
+    # Defined this way for loopless simple graphs
+    deg = args["degree_sequence"]
+    return sum([True for d in deg if d==1])
+
+def is_k_regular(adj, **args):
+    # Returns the value of k if it is k regular, otherwise 0
+    # Note that the singular graph is 0_regular
+    # Cubic graphs are related to http://oeis.org/A002851
+    deg = args["degree_sequence"]
+
+    if len(set(deg)) == 1:
+        return deg[0]
+    else:
+        return 0
+
+######################### REQUIRES [cycle_basis] #################
 
 def n_cycle_basis(adj, **args):
-    cycle_b = ast.literal_eval(args["special_cycle_basis"])
+    cycle_b = args["cycle_basis"]
     return len(cycle_b)
 
 def is_tree(adj, **args):
     # Trees have no cycles
-    cycle_b = ast.literal_eval(args["special_cycle_basis"])
-    return len(cycle_b)==0
+    cycle_b = args["cycle_basis"]
+    return int( len(cycle_b)==0 )
 
 def girth(adj,**args):
     # Since the cycle basis is the minimal set of fundemental cycles
     # the girth has to be the length of the smallest of these cycles
     # Graphs with no cycles have girth=0 (defined) as placeholder for infinity
-    cycle_b = ast.literal_eval(args["special_cycle_basis"])
+    cycle_b = args["cycle_basis"]
     if not cycle_b: return 0
 
     return min(map(len,cycle_b))
@@ -115,7 +135,7 @@ def circumference(adj,**args):
     # The circumference is found from the cycle_basis be the largest 
     # direct combination of terms 
     # Graphs with no cycles have cir=0 (defined) as placeholder for infinity
-    cycle_b = ast.literal_eval(args["special_cycle_basis"])
+    cycle_b = args["cycle_basis"]
     if not cycle_b: return 0
 
     N = args["N"]
@@ -127,26 +147,46 @@ def circumference(adj,**args):
     
     return len(combine_cycle(cycle_b))
 
-def n_edge(adj,**args):
-    # Defined this way for loopless simple graphs
-    deg = ast.literal_eval(args["special_degree_sequence"])
-    return sum(deg) / 2
+######################### REQUIRES [polynomial_tutte] #################
 
-def n_endpoints(adj,**args):
-    # Defined this way for loopless simple graphs
-    deg = ast.literal_eval(args["special_degree_sequence"])
-    return sum([True for d in deg if d==1])
+def eval_chromatic_from_tutte(z, N, tutte_poly):
+    # First adjust the indices, and remove those where k>0 in y**k
+    tutte_adjust = [(coeff,xd-1) for xd,yd,coeff in tutte_poly if yd==1]
 
-# Cubic graphs are related to http://oeis.org/A002851
-def is_k_regular(adj, **args):
-    # Returns the value of k if it is k regular, otherwise 0
-    # Note that the singular graph is 0_regular
-    deg = ast.literal_eval(args["special_degree_sequence"])
+    # The chromatic polynomial for a connected graphs evaluates T(x,y)
+    # at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*k
 
-    if len(set(deg)) == 1:
-        return deg[0]
-    else:
-        return 0
+    # Testing against sympy
+    '''
+    from sympy.abc import x
+    p = 0
+    for (coeff,power) in tutte_adjust: p += coeff*x**power
+    C = (-1)**(N-1)*x*p.subs(x,1-x).factor()
+    print C.factor()
+    print C.subs(x,z)
+    '''
+
+    terms = [coeff*(1-z)**xd for coeff,xd in tutte_adjust]
+    chi   = sum(terms)*((-1)**(N-1))*z
+
+    return chi
+
+def chromatic_number(adj,**args):
+    # Return 0 for the singleton graph (it's really infinity)
+    N,T = args["N"], args["tutte_polynomial"]
+    if N==1: return 0
+
+    for k in range(1,N+1):
+        if eval_chromatic_from_tutte(k,N,T) != 0:
+            return k
+
+    msg = "Should have exited by now"
+    raise ValueError(msg)
+
+######################### Invariant code ######################### 
+
+def n_vertex(adj,**args):
+    return args["N"]
 
 def is_strongly_regular(adj, **args):
     # Check with http://oeis.org/A088741
@@ -222,7 +262,6 @@ def vertex_connectivity(adj,**args):
 def edge_connectivity(adj,**args):
     g = networkx_representation(adj,**args)
     return nx_extra.global_edge_connectivity(g)
-
 
 def _poly_factorable_over_field(p,domain):
     # Factor the char poly over the integers
@@ -358,29 +397,6 @@ _banner_graph = _cycle_graphs[4].copy()
 _banner_graph_v1 = _banner_graph.add_vertex()
 _banner_graph.add_edge(_banner_graph_v1, _banner_graph.vertex(0))
 is_subgraph_free_banner = _is_subgraph_free(_banner_graph)
-
-def chromatic_number(adj,**args):
-    # Return 0 for the singleton graph (it's really infinity)
-    if args["N"]==1: return 0
-
-    # Read in the tutte poly
-    string_T =  args["special_polynomial_tutte"]
-    T = ast.literal_eval(string_T)
-    C = [row[0] if row else 0 for row in T]
-
-    def eval_chromatic(T,k):
-        # The chromatic polynomial use y=0, so only the top row
-        # and evaluates T(x,y) at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)
-        terms = [c*(1-k)**exponent for exponent,c in enumerate(C)]
-        c = sum(terms)*(-1)**(args["N"])*(1-k)
-        return c   
-
-    for k in range(1,args["N"]+1):
-        if eval_chromatic(T,k) != 0:
-            return k
-
-    msg = "Should have exited by now"
-    raise ValueError(msg)
 
 ######################### Bliss code ######################### 
 
@@ -606,17 +622,38 @@ def has_fractional_duality_gap_vertex_chromatic(adj,**args):
     return not np.isclose(c,cf)
     
 ######################### Test code ######################### 
+
+def convert_nx_to_adj(g):
+    edges = g.edges()
+    N     = len(g.nodes())
+    idx   = zip(*edges)
+    
+    # Since graph in undirected assign both sides
+    A = np.zeros((N,N),dtype=int)
+    A[idx[0],idx[1]] = 1
+    
+    __upper_matrix_index = np.triu_indices(N)
+    # The string representation of the upper triangular adj matrix
+    au = ''.join(map(str,A[__upper_matrix_index]))
+    
+    # Convert the binary string to an int
+    int_index = int(au,2)
+
+    return int_index
     
 if __name__ == "__main__":
 
-    g = _complete_graphs[4]
-    h = _cycle_graphs[4]
+    #g = _complete_graphs[4]
+    #h = _cycle_graphs[4]
     #viz_graph(g)
     #viz_graph(h)
-    
-    #print is_subgraph_free_C4(g,**{"N":4})
-    print _has_subgraph(g,h)
-    print len(_has_subgraph(h,g))
+    g   = nx.petersen_graph()
+    adj = convert_nx_to_adj(g)
+    T = special_polynomial_tutte(adj, N=10)
+    for k in xrange(0, 10):
+        print k, eval_chromatic_from_tutte(k,10,T)
+
+    print chromatic_number(adj,N=10,**{"tutte_polynomial":T})
 
     exit()
     
