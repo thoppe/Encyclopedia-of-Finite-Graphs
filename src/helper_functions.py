@@ -7,7 +7,7 @@ def generate_database_name(N):
 def generate_special_database_name(N):
     return os.path.join("database", "special", "graph{}_special.db".format(N))  
 
-def load_graph_database(N, check_exist=True, special=False):
+def load_graph_database(N, check_exist=True, special=False,timeout=5):
     ''' Given an input value of N, return a connection to the 
         cooresponding database '''
 
@@ -22,7 +22,8 @@ def load_graph_database(N, check_exist=True, special=False):
         logging.critical(err)
         exit()
 
-    return sqlite3.connect(f_database, check_same_thread=False)
+    return sqlite3.connect(f_database, check_same_thread=False,
+                           timeout=timeout)
 
 def load_sql_script(conn, f_script):
 
