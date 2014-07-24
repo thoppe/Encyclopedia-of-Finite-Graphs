@@ -617,6 +617,8 @@ def fractional_chromatic_number(adj, **args):
     print status
 
 def has_fractional_duality_gap_vertex_chromatic(adj,**args):
+    print "NOT COMPLETE YET"
+    exit()
     cf = fractional_chromatic_number(adj,**args)
     c  = chromatic_number(adj,**args)
     return not np.isclose(c,cf)

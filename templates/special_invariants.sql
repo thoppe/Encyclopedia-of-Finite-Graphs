@@ -23,6 +23,13 @@ CREATE TABLE IF NOT EXISTS cycle_basis(
     idx        UNSIGNED INTEGER
 );
 
+-- Marks if an invariant has been computed
+
+CREATE TABLE IF NOT EXISTS computed(
+  function_name TEXT PRIMARY KEY
+);
+
+
 CREATE INDEX IF NOT EXISTS "idx_tutte_polynomial"
 ON "tutte_polynomial" ("graph_id");
 
@@ -31,4 +38,6 @@ ON "degree_sequence" ("graph_id");
 
 CREATE INDEX IF NOT EXISTS "idx_cycle_basis" 
 ON "cycle_basis" ("graph_id");
+
+
 

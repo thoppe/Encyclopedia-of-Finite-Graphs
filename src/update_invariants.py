@@ -99,6 +99,14 @@ def iterator_tutte_polynomial(func_name):
         args["tutte_polynomial"] = grab_all(sconn,cmd,(g_id,))
         yield (g_id, adj, args)
 
+def iterator_fractional_chromatic_number(func_name):
+    itr = graph_target_iterator(func_name)
+    cmd = '''SELECT a,b FROM tutte_polynomial WHERE graph_id=(?)'''
+
+    for g_id, adj, args in itr:
+        args["fractional_chromatic_number"] = grab_all(sconn,cmd,(g_id,))
+        yield (g_id, adj, args)
+
 #########################################################################
 
 # Identify the invariants that have not been computed
@@ -122,6 +130,7 @@ special_iterator_mapping = {
     "degree_sequence"  : iterator_degree_sequence,
     "cycle_basis"      : iterator_cycle_basis,
     "tutte_polynomial" : iterator_tutte_polynomial,  
+    "fractional_chromatic_number" : iterator_fractional_chromatic_number,
  }
 
 if compute_invariant_functions:
