@@ -87,6 +87,13 @@ def special_polynomial_tutte(adj,**args):
                 terms.append( (xi+1,yi+1, val) )
     return tuple(terms)
 
+def special_independent_vertex_sets(adj,**args):
+    cmd_idep = "main {N} {adj}".format(adj=adj, **args)
+    cmd = os.path.join(__script_dir,'independent_vertex_sets',cmd_idep)
+    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    independent_sets = [int(line,2) for line in proc.stdout]
+    return tuple(independent_sets)
+
 ######################### REQUIRES [degree_sequence] #################
 
 def n_edge(adj,**args):
@@ -539,26 +546,6 @@ def is_hamiltonian(adj,**args):
 
 
 ########## Independent set iterator/Fractional programs #################
-
-def enumerate_independent_sets(gt):
-    # Ignores the empty set, usually won't matter
-
-    N = len(list(gt.vertices()))
-    w = gt.new_vertex_property("int")
-    c = gt.new_vertex_property("double")
-
-    pos = graph_tool.draw.sfdp_layout(gt, cooling_step=0.99)
-
-    for k in range(1,N+1)[::-1]:
-
-        for subset in itertools.combinations(gt.vertices(),k):
-            subset_func = lambda x: x in subset
-            g_sub = graph_tool.GraphView(gt,vfilt=subset_func).copy()
-            conn  = graph_tool.topology.label_largest_component(g_sub)
-
-            if sum(conn.a)==1:
-                yield g_sub
-
 
 def fractional_chromatic_number(adj, **args):
     # As a check, the cycle graph should return 2.5 = 5/2

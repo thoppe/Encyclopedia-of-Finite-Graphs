@@ -16,6 +16,11 @@ CREATE TABLE IF NOT EXISTS fractional_chromatic_number(
     b          INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS independent_vertex_sets(
+    graph_id   INTEGER,
+    vertex_map UNSIGNED BIG INTEGER
+);
+
 -- Note that this is not a true invariant (as it can change on reindexing)
 CREATE TABLE IF NOT EXISTS cycle_basis(
     graph_id   INTEGER,
@@ -29,6 +34,14 @@ CREATE TABLE IF NOT EXISTS computed(
   function_name TEXT PRIMARY KEY
 );
 
+
+-- Create indices for faster searching
+
+CREATE INDEX IF NOT EXISTS "idx_ independent_vertex_sets"
+ON "independent_vertex_sets" ("graph_id");
+
+CREATE INDEX IF NOT EXISTS "idx_fractional_chromatic_number"
+ON "fractional_chromatic_number" ("graph_id");
 
 CREATE INDEX IF NOT EXISTS "idx_tutte_polynomial"
 ON "tutte_polynomial" ("graph_id");

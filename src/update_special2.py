@@ -73,7 +73,7 @@ def run_compute(function_name, pfunc, cmd_insert):
 def check_computed(target_function, pfunc, cmd_insert):
     if target_function not in computed_functions:
         msg = "Computing {}"
-        logging.info(msg.format(function_name))
+        logging.info(msg.format(target_function))
 
         run_compute(target_function, pfunc_degree, cmd_insert)
         sconn.execute(cmd_mark_computed, (target_function,))
@@ -129,8 +129,20 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, cycle_k, idx) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_cycle_basis, cmd_insert)
 
+#########################################################################
+# Now compute the independent vertex sets
+
+target_function = "independent_vertex_sets"
+
+def pfunc_IVS((g_id,adj)):
+    return g_id, invariants.special_independent_vertex_sets(adj, N=N)
+
+cmd_insert    = '''INSERT INTO {} 
+(graph_id, vertex_map) VALUES (?,?)'''
+check_computed(target_function, pfunc_IVS, cmd_insert)
+
 # Debug code below
 #cmd_grab = '''SELECT graph_id,adj FROM graph'''
 #g_itr    = select_itr(conn, cmd_grab)
 #for g,adj in g_itr:
-#    print pfunc_frac_chrom((g,adj))
+#    print pfunc_IVS((g,adj))

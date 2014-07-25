@@ -171,6 +171,7 @@ for func_name in compute_invariant_functions:
     if not cargs["debug"]:
         compute_parallel(func_name, conn, pfunc, cmd_insert,targets,N)
         conn.execute(cmd_mark_success, (func_name,)) 
+        logging.info("Commiting changes")
         conn.commit()
 
     else:
