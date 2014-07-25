@@ -1,13 +1,12 @@
-import numpy as np
-import ast,itertools, os
+import ast,itertools, os, fractions
 import subprocess, fractions
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
 
 import connectivity.connectivity as nx_extra
+import numpy as np
 import sympy
-
 import pulp
 
 __script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -557,27 +556,11 @@ def enumerate_independent_sets(gt):
             g_sub = graph_tool.GraphView(gt,vfilt=subset_func).copy()
             conn  = graph_tool.topology.label_largest_component(g_sub)
 
-
             if sum(conn.a)==1:
                 yield g_sub
-            '''
-                # Debugging visualization code here
-                w.a = 1
-                c.a = 1
 
-                val = np.ones(N)
-
-                sub_mask = np.array([int(x) for x in subset])
-                w.a[sub_mask] = 0
-                c.a[sub_mask] = 0
-            
-                graph_tool.draw.graph_draw(gt,pos,
-                                           vertex_shape=w, 
-                                           vertex_fill_color=c)
-            '''
 
 def fractional_chromatic_number(adj, **args):
-    #g = graph_tool_representation(adj,**args)
     # As a check, the cycle graph should return 2.5 = 5/2
     N = args["N"]
 
@@ -617,11 +600,10 @@ def fractional_chromatic_number(adj, **args):
     print status
 
 def has_fractional_duality_gap_vertex_chromatic(adj,**args):
-    print "NOT COMPLETE YET"
-    exit()
-    cf = fractional_chromatic_number(adj,**args)
-    c  = chromatic_number(adj,**args)
-    return not np.isclose(c,cf)
+    chi = chromatic_number(adj,**args)
+    a,b = args["fractional_chromatic_number"]
+    chi_f = fractions.Fraction(a,b)
+    return chi != chi_f
     
 ######################### Test code ######################### 
 

@@ -5,20 +5,19 @@ test_N = 4
 all:
 #	rm -vf database/graph$(test_N).db
 	python src/generate_db.py $(test_N)
-#	python src/update_special.py $(test_N)
 	python src/update_special2.py $(test_N)
 	python src/update_invariants.py $(test_N)
 
 view:
 	sqlitebrowser database/graph$(test_N).db
-view_invariants:
-	sqlitebrowser database/ref_invariant_integer.db
 view_seq:
 	sqlitebrowser database/sequence.db
 view_ref:
 	sqlitebrowser database/ref_invariant_integer.db
 view_special:
-	sqlitebrowser database/special/graph5_special.db
+	sqlitebrowser database/special/graph$(test_N)_special.db
+view_final:
+	sqlitebrowser database/graph$(test_N)_search.db
 
 report_lvl1:
 	python verification/lvl1_report.py > verification/raw_lvl1.md
@@ -26,22 +25,24 @@ report_lvl1:
 
 possible_N_values = 1 2 3 4 5 6 7 8 9 10
 
-rebuild_database:
+build:
 	$(foreach n,$(possible_N_values),python src/generate_db.py $(n);)
 	make compute
-#	make sequence
-#	make package
-
-finalize_database:
-	$(foreach n,$(possible_N_values),python src/build_finalized_version.py $(n);)
+	make finalize
+	make sequence
 
 compute:
 	$(foreach n,$(possible_N_values),python src/update_special2.py $(n);)
-#	$(foreach n,$(possible_N_values),python src/update_special.py $(n);)
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
+
+finalize:
+	$(foreach n,$(possible_N_values),python src/build_finalized_version.py $(n);)
 
 sequence:
 	python src/build_sequence.py --max_n 10
+
+########################################################################
+
 
 relations:
 	python src/build_relations.py

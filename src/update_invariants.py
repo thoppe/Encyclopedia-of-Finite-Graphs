@@ -10,6 +10,8 @@ parser.add_argument('N', type=int)
 parser.add_argument('--chunksize',type=int,
                     help="Entries to compute before insert is called",
                     default=1000)
+parser.add_argument('--debug',default=False,action="store_true",
+                    help="Runs the computation in debug mode [not parallel, no commit]")
 cargs = vars(parser.parse_args())
 
 N = cargs["N"]
@@ -37,7 +39,7 @@ ignored_invariants = [
     "maximal_independent_vertex_set",
     "n_independent_edge_sets", 
     "maximal_independent_edge_set",
-    "has_fractional_duality_gap_vertex_chromatic",
+#    "has_fractional_duality_gap_vertex_chromatic",
 ]
 
 special_invariants = {
@@ -48,7 +50,8 @@ special_invariants = {
     "n_edge"       : "degree_sequence",
     "n_endpoints"  : "degree_sequence",
     "is_k_regular" : "degree_sequence",
-    "chromatic_number" : "tutte_polynomial"
+    "chromatic_number" : "tutte_polynomial",
+    "has_fractional_duality_gap_vertex_chromatic" : "fractional_chromatic_number"
 }
 
 #########################################################################
@@ -101,10 +104,12 @@ def iterator_tutte_polynomial(func_name):
 
 def iterator_fractional_chromatic_number(func_name):
     itr = graph_target_iterator(func_name)
-    cmd = '''SELECT a,b FROM tutte_polynomial WHERE graph_id=(?)'''
+    cmd_f = '''SELECT a,b FROM fractional_chromatic_number WHERE graph_id=(?) LIMIT 1'''
+    cmd_t = '''SELECT x_degree,y_degree,coeff FROM tutte_polynomial WHERE graph_id=(?)'''
 
     for g_id, adj, args in itr:
-        args["fractional_chromatic_number"] = grab_all(sconn,cmd,(g_id,))
+        args["fractional_chromatic_number"] = grab_all(sconn,cmd_f,(g_id,))[0]
+        args["tutte_polynomial"] = grab_all(sconn,cmd_t,(g_id,))
         yield (g_id, adj, args)
 
 #########################################################################
@@ -137,7 +142,6 @@ if compute_invariant_functions:
     msg = "Remaining invariants to compute {}"
     #logging.info(msg.format(compute_invariant_functions))
 
-
 for func_name in compute_invariant_functions:
 
     msg = "Starting calculation for {name}"
@@ -163,10 +167,16 @@ for func_name in compute_invariant_functions:
       (graph_id, invariant_id, value) VALUES (?,?,?)'''
 
     logging.info("Computing N={}, {} ".format(N, func_name))
-    
-    compute_parallel(func_name, conn, pfunc, cmd_insert,targets,N)
-    conn.execute(cmd_mark_success, (func_name,)) 
-    conn.commit()
+
+    if not cargs["debug"]:
+        compute_parallel(func_name, conn, pfunc, cmd_insert,targets,N)
+        conn.execute(cmd_mark_success, (func_name,)) 
+        conn.commit()
+
+    else:
+        for (g_id,adj,args) in itr:
+            result = func(adj,**args)
+            print g_id, adj, result
 
     # Debugging code
     #func   = invariant_funcs[func_name] 

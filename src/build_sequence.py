@@ -18,6 +18,8 @@ desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('--max_n',type=int,default=10,
                     help="Maximum graph size n to compute sequence over")
+parser.add_argument('--force',default=False,action="store_true",
+                    help="Recomputes the sequences.")
 cargs = vars(parser.parse_args())
 
 # List of terms that we should ignore for the moment
@@ -27,8 +29,13 @@ ignored_terms = []
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-# Connect to the sequence database
 f_database = "database/sequence.db"
+
+# If forced, delete the sequence database if it exists
+if os.path.exists(f_database) and cargs["force"]:
+    os.remove(f_database)
+
+# Connect to the sequence database
 seq_conn = sqlite3.connect(f_database, check_same_thread=False)
 
 f_database_template = "templates/sequence.sql"
@@ -84,6 +91,22 @@ for f in set(func_names).difference(unique_computed_functions):
     seq_conn.execute(cmd_mark_computed.format(f))
     seq_conn.commit()
 
+# Check unique values for consistancy
+cmd_find = '''SELECT invariant_val_id, value FROM unique_invariant_val'''
+warn_flag = False
+for invar_id,val in grab_all(seq_conn,cmd_find):
+    if type(val) != int:
+        func_name = ref_lookup_inv[invar_id]
+        msg = "{} has non-integer value {}".format(func_name,val)
+        logging.warning(msg)
+        warn_flag = True
+if warn_flag:
+    msg = "Errors found in database. Exiting"
+    raise ValueError(msg)
+
+exit()
+
+
 # Build a list of all level 1 sequences
 cmd_find = '''
 SELECT unique_invariant_id, invariant_val_id, value FROM
@@ -132,6 +155,9 @@ cmd_save = cmd_save.format(','.join(s_string),
 for s_id,conditional,invar_id,value in remaining_seq_info:
     func_name = ref_lookup_inv[invar_id]
     cmd = cmd_sequence.format(func_name, conditional,value)
+
+    print cmd
+
     seq = [grab_scalar(search_conn[n],cmd) for n in search_conn]
 
     items = [s_id,1] + seq

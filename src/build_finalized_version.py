@@ -19,7 +19,8 @@ attach_ref_table(graph_conn)
 # Create a new database
 f_database = helper_functions.generate_database_name(cargs["N"])
 f_search_database = f_database.replace('.db','_search.db')
-search_conn = sqlite3.connect(f_search_database, check_same_thread=False)
+#search_conn = sqlite3.connect(f_search_database, check_same_thread=False,timeout=60)
+search_conn = sqlite3.connect(f_search_database,check_same_thread=False,timeout=5)
 
 f_search_template = "templates/searchable_graph.sql"
 helper_functions.load_sql_script(search_conn, f_search_template)
@@ -85,7 +86,8 @@ cmd_mark_complete = '''
 UPDATE computed SET is_computed=1 
 WHERE function_name="{}"'''
 
-for name in uncomputed_names:
+def compute_names(name):
+
     logging.info("Inserting column: {}".format(name))
 
     idx = ref_lookup[name]
@@ -96,8 +98,11 @@ for name in uncomputed_names:
 
     search_conn.execute(cmd_mark_complete.format(name))
 
-    search_conn.commit()
+    return name
 
-
+for name in uncomputed_names:
+    compute_names(name)
     
+search_conn.commit()
+
 
