@@ -42,8 +42,7 @@ attach_table(conn, generate_special_database_name(N),"sconn")
 # Find out which variables have been computed
 cmd_check = '''SELECT function_name FROM computed'''
 computed_functions = set( grab_vector(sconn,cmd_check) )
-cmd_mark_computed= '''
-INSERT OR IGNORE INTO computed (function_name) VALUES (?)'''
+
 #logging.info("Previously computed special invariants {}".format(computed_functions))
 
 #########################################################################
@@ -70,12 +69,15 @@ def run_compute(function_name, pfunc, cmd_insert):
     targets = select_itr(conn, cmd, chunksize=10000)
     compute_parallel(function_name, sconn, pfunc, cmd_insert,targets,N)
 
-def check_computed(target_function, pfunc, cmd_insert):
+def check_computed(target_function, pfunc, cmd_custom_insert):
     if target_function not in computed_functions:
         msg = "Computing {}"
         logging.info(msg.format(target_function))
 
-        run_compute(target_function, pfunc_degree, cmd_insert)
+        run_compute(target_function, pfunc, cmd_custom_insert)
+
+        cmd_mark_computed= '''
+        INSERT OR IGNORE INTO computed (function_name) VALUES (?);'''
         sconn.execute(cmd_mark_computed, (target_function,))
         sconn.commit()
     
@@ -141,8 +143,20 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, vertex_map) VALUES (?,?)'''
 check_computed(target_function, pfunc_IVS, cmd_insert)
 
+#########################################################################
+# Now compute the independent edge sets
+
+target_function = "independent_edge_sets"
+
+def pfunc_IES((g_id,adj)):
+    return g_id, invariants.special_independent_edge_sets(adj, N=N)
+
+cmd_insert    = '''INSERT INTO {} 
+(graph_id, edge_map) VALUES (?,?)'''
+check_computed(target_function, pfunc_IES, cmd_insert)
+
 # Debug code below
 #cmd_grab = '''SELECT graph_id,adj FROM graph'''
 #g_itr    = select_itr(conn, cmd_grab)
 #for g,adj in g_itr:
-#    print pfunc_IVS((g,adj))
+#    print pfunc_IES((g,adj))

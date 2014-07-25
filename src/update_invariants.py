@@ -34,13 +34,7 @@ invariant_funcs = dict(inspect.getmembers(invariants,inspect.isfunction))
 cmd = '''SELECT * from graph LIMIT 1'''
 graph_args_names = zip(*conn.execute(cmd).description)[0]
 
-ignored_invariants = [
-    "n_independent_vertex_sets", 
-    "maximal_independent_vertex_set",
-    "n_independent_edge_sets", 
-    "maximal_independent_edge_set",
-#    "has_fractional_duality_gap_vertex_chromatic",
-]
+ignored_invariants = [ ]
 
 special_invariants = {
     "n_cycle_basis" : "cycle_basis",
@@ -51,7 +45,11 @@ special_invariants = {
     "n_endpoints"  : "degree_sequence",
     "is_k_regular" : "degree_sequence",
     "chromatic_number" : "tutte_polynomial",
-    "has_fractional_duality_gap_vertex_chromatic" : "fractional_chromatic_number"
+    "has_fractional_duality_gap_vertex_chromatic" : "fractional_chromatic_number",
+    "n_independent_vertex_sets"      : "independent_vertex_sets",
+    "maximal_independent_vertex_set" : "independent_vertex_sets",
+    "n_independent_edge_sets"      : "independent_edge_sets",
+    "maximal_independent_edge_set" : "independent_edge_sets",
 }
 
 #########################################################################
@@ -112,6 +110,22 @@ def iterator_fractional_chromatic_number(func_name):
         args["tutte_polynomial"] = grab_all(sconn,cmd_t,(g_id,))
         yield (g_id, adj, args)
 
+def iterator_IVS(func_name):
+    itr = graph_target_iterator(func_name)
+    cmd = '''SELECT vertex_map FROM independent_vertex_sets WHERE graph_id=(?)'''
+
+    for g_id, adj, args in itr:
+        args["independent_vertex_sets"] = grab_all(sconn,cmd,(g_id,))
+        yield (g_id, adj, args)
+
+def iterator_IES(func_name):
+    itr = graph_target_iterator(func_name)
+    cmd = '''SELECT edge_map FROM independent_edge_sets WHERE graph_id=(?)'''
+
+    for g_id, adj, args in itr:
+        args["independent_edge_sets"] = grab_all(sconn,cmd,(g_id,))
+        yield (g_id, adj, args)
+
 #########################################################################
 
 # Identify the invariants that have not been computed
@@ -136,6 +150,8 @@ special_iterator_mapping = {
     "cycle_basis"      : iterator_cycle_basis,
     "tutte_polynomial" : iterator_tutte_polynomial,  
     "fractional_chromatic_number" : iterator_fractional_chromatic_number,
+    "independent_vertex_sets" : iterator_IVS,
+    "independent_edge_sets"   : iterator_IES,
  }
 
 if compute_invariant_functions:
@@ -153,6 +169,7 @@ for func_name in compute_invariant_functions:
         itr = special_iterator_mapping[special_name](func_name)
     else: 
         err_msg = "Invariant {} unknown! Skipping.".format(func_name)
+        print special_invariants
         raise SyntaxError(err_msg)
 
     func    = invariant_funcs[func_name] 
@@ -178,14 +195,5 @@ for func_name in compute_invariant_functions:
         for (g_id,adj,args) in itr:
             result = func(adj,**args)
             print g_id, adj, result
-
-    # Debugging code
-    #func   = invariant_funcs[func_name] 
-    #if itr != None:
-    #    print func_name
-    #    for (g_id, adj, args) in itr:
-    #        args["N"] = N
-    #        result = func(adj,**args)
-    #        print g_id, adj, result
 
 

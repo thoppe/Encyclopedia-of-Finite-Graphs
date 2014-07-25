@@ -91,8 +91,17 @@ def special_independent_vertex_sets(adj,**args):
     cmd_idep = "main {N} {adj}".format(adj=adj, **args)
     cmd = os.path.join(__script_dir,'independent_vertex_sets',cmd_idep)
     proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    # Convert to two's representation
     independent_sets = [int(line,2) for line in proc.stdout]
-    return tuple(independent_sets)
+    return tuple([(x,) for x in independent_sets])
+
+def special_independent_edge_sets(adj,**args):
+    cmd_idep = "main {N} {adj}".format(adj=adj, **args)
+    cmd = os.path.join(__script_dir,'independent_edge_sets',cmd_idep)
+    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    # Already in two's representation
+    independent_sets = [int(line) for line in proc.stdout]
+    return tuple([(x,) for x in independent_sets])
 
 ######################### REQUIRES [degree_sequence] #################
 
@@ -591,6 +600,24 @@ def has_fractional_duality_gap_vertex_chromatic(adj,**args):
     a,b = args["fractional_chromatic_number"]
     chi_f = fractions.Fraction(a,b)
     return chi != chi_f
+
+def n_independent_vertex_sets(adj, **args):
+    IVS = args["independent_vertex_sets"]
+    return len(IVS)
+
+def maximal_independent_vertex_set(adj, **args):
+    IVS = args["independent_vertex_sets"]
+    active = [bin(x[0]).count('1') for x in IVS]
+    return max(active)
+
+def n_independent_edge_sets(adj, **args):
+    IES = args["independent_edge_sets"]
+    return len(IES)
+
+def maximal_independent_edge_set(adj, **args):
+    IES = args["independent_edge_sets"]
+    active = [bin(x[0]).count('1') for x in IES]
+    return max(active)
     
 ######################### Test code ######################### 
 
@@ -620,11 +647,14 @@ if __name__ == "__main__":
     #viz_graph(h)
     g   = nx.petersen_graph()
     adj = convert_nx_to_adj(g)
-    T = special_polynomial_tutte(adj, N=10)
-    for k in xrange(0, 10):
-        print k, eval_chromatic_from_tutte(k,10,T)
+    
+    print adj
+    print special_independent_vertex_sets(adj,N=10)
 
-    print chromatic_number(adj,N=10,**{"tutte_polynomial":T})
+    #T = special_polynomial_tutte(adj, N=10)   
+    #for k in xrange(0, 10):
+    #    print k, eval_chromatic_from_tutte(k,10,T)
+    #print chromatic_number(adj,N=10,**{"tutte_polynomial":T})
 
     exit()
     

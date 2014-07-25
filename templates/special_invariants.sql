@@ -21,6 +21,11 @@ CREATE TABLE IF NOT EXISTS independent_vertex_sets(
     vertex_map UNSIGNED BIG INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS independent_edge_sets(
+    graph_id   INTEGER,
+    edge_map UNSIGNED BIG INTEGER
+);
+
 -- Note that this is not a true invariant (as it can change on reindexing)
 CREATE TABLE IF NOT EXISTS cycle_basis(
     graph_id   INTEGER,
@@ -37,8 +42,14 @@ CREATE TABLE IF NOT EXISTS computed(
 
 -- Create indices for faster searching
 
-CREATE INDEX IF NOT EXISTS "idx_ independent_vertex_sets"
+DROP INDEX IF EXISTS "idx_ independent_vertex_sets";
+DROP INDEX IF EXISTS "idx_ independent_edge_sets";
+
+CREATE INDEX IF NOT EXISTS "idx_independent_vertex_sets"
 ON "independent_vertex_sets" ("graph_id");
+
+CREATE INDEX IF NOT EXISTS "idx_independent_edge_sets"
+ON "independent_edge_sets" ("graph_id");
 
 CREATE INDEX IF NOT EXISTS "idx_fractional_chromatic_number"
 ON "fractional_chromatic_number" ("graph_id");

@@ -63,8 +63,11 @@ for n in graph_conn:
             msg = "Removed {function_name} from graph database {}"
             logging.info(msg.format(n, **cargs))
 
-            search_conn.execute(cmd_clear_search.format(**cargs))
-            search_conn.commit()
+            try:
+                search_conn.execute(cmd_clear_search.format(**cargs))
+                search_conn.commit()
+            except:
+                pass
 
 
 
