@@ -59,20 +59,20 @@ The code has been released as an open-source framework for further analysis and 
 There is a long history of public graph databases. 
 Databases originally found only in print, such as the \textit{Atlas of Graphs}\cite{read1998atlas}, have rapidly expanded in the electronic medium.
 These databases range from those of mathematical and algorithmic interest \cite{de2003large, brinkmann2013house} \needref, to those cataloging structures found in the applied sciences such as ChemSpider\cite{pence2010chemspider}, RNA topologies\cite{gan2004rag} (get other RNA paper \needref) or social databases (\needref).
-Due to the rapid growth in the number of unique isomorphic graphs however, the currently available databases are specialized in the class of graphs considered; 
+Due to the rapid growth in the number of unique isomorphic graphs however, the currently available databases are specialized in the number of graphs considered; 
 a judicious choice often restricts the study to an interesting and more manageable subset.
 
 We proceed with the assumption however, that \textit{a priori} all graphs could be interesting given the right question.
 This is similar the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bound an inequality or constraint.
 Our objective is more elementary, we aim to compute are large, comprehensive database of graphs and their respective invariants. 
 Such a database will allow new forms of discovery, some of which will be directly explored in this paper.
-For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known in the Online Encyclopedia of Integer Sequences (OEIS)\cite{sloane2003line}.
+For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known in the Online Encyclopedia of Integer Sequences.
 These sequences, and the set of graphs that belong to them, can be used to explore a basic set of relations among the invariants. 
 Since the input to GraPHedron consists of a set of invariants, a larger the input set will amplify the predictive power.
 Additionally, the creation of a large, centralized database will serve as a useful reference for benchmarking various algorithms.
 Finally, a comprehensive database provides pedagogic value, as representative graphs from any considered sequence can be rapidly visualized.
 
-To this end, we have created the \textit{Encyclopedia of Finite Graphs}, a database of invariants (add DOI ref for the database itself \needref) and software needed to fully reproduce each invariant\cite{Travis2014Encyclopdia}. 
+To this end, we have created the \textit{Encyclopedia of Finite Graphs}, a database of invariants (add DOI ref for the database itself \needref) and the software to fully populate it\cite{Travis2014Encyclopdia}. 
 The code and the database has been released under an open source license.
 The intention is for new invariants to be an added to the project when various algorithms become available.
 
@@ -104,19 +104,20 @@ From here, define an ordered sequence of subsets of the graph class
 &= f(\CLASS_1), f(\CLASS_2), f(\CLASS_3), \ldots
 \end{align}
 %
-where $f$ is some invariant condition that further subdivides each set $\CLASS_n$.
+where $f$ is some invariant condition that selects from each set $\CLASS_n$.
 
 Let 
 $S(f, \CLASS) = |f(\CLASS_1)|, |f(\CLASS_2)|, |f(\CLASS_3)|, \ldots$
-be the sequence of integers defined by $\SEQ(f, \CLASS)$. For example, if $f_\text{tree}$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\SIMPLECLASS$ is the set of all simple unlabeled connected graphs,
+be the sequence of integers defined by $\SEQ(f, \CLASS)$. 
+For example, if $f_\text{tree}$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\SIMPLECLASS$ is the set of all simple unlabeled connected graphs,
 %
 \begin{align}
 S(f_\text{tree}=1, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
 %
 which is sequence \OEIS{A000055} in the OEIS.
-This particular sequence is well-known and is easily computable.
-We have computed simple invariants that are computable in polynomial time, to those that are known to be $\mathcal{\#P}$-complete.
+This particular sequence is well-known and easily computable.
+We have evaluated a range of invariants, from those that are computable in polynomial time, to some that are known to be $\mathcal{\#P}$-complete.
 While a few sequences were merely extended, other invariants, such as the the independence number, were hitherto unknown to OEIS and have produced novel sequences (\OEIS{A243781}-\OEIS{A243784}).
 
 We also attempt to quantify the relationships between graph invariants.
@@ -142,7 +143,7 @@ A full table of all sequences submitted to the OEIS can be found in Appendix \re
 
 Since the graphs in $\SIMPLECLASS$ are loopless and undirected, the edge incidence information for each graph requires $n(n+1)/2$ bits of storage.
 The largest class we computed is of order 10, which requires 45 bits. 
-This can be efficiently stored as a 64 bit unsigned integer using two's complement representation.
+This can be efficiently stored as a 64 bit unsigned integer using a binary reresentation.
 We note that graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
 Internally, we use SQLite3 as the database back end for portability reasons.
 Most of the invariants were stored as integers.
@@ -165,8 +166,8 @@ For a sequence to be considered for submission to the OEIS it must have at least
 The suggestive relations described in the previous section are built in a similar way.
 For each pair of invariants conditions, the set of graphs related to the sequences are compared for set equality, exclusivity or as subsets.
 In addition to providing useful information, some of these relations provide a check on the accuracy of the algorithms.
-For example, one of the equality relations state that, a graph is a tree $\Leftrightarrow$ a graph has zero girth.
-This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle. 
+For example, one of the equality relations state that, a graph is a tree $\Leftrightarrow$ a graph has infinite girth.
+This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinte for graphs without cycles). 
 
 \note{list some interesting relations}
 \note{Mention the ``distinct'' integer sequences}
@@ -304,6 +305,7 @@ A vertex joined to only a single edge is an \textit{end point}.
 The \textit{cycle space} of a graph is the set of all of its Eulerian subgraphs, where every member can be constructed as the symmetric difference of members of the \textit{cycle basis}. 
 A \textit{tree} is an acyclic connected graph, one whose cycle basis is the empty set.
 The length of the shortest/longest cycle in a graph is its \textit{girth}/\textit{circumference}.
+Trees are defined to have infinite girth and circumference, but are stored as zero in our database.
 A \textit{chord} of a cycle is an edge with one vertex belonging to the cycle and one edge outside of the cycle.
 In a \textit{chordal graph}, all cycles of order four or more have a cycle chord.   
  
