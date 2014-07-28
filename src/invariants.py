@@ -296,11 +296,8 @@ def _poly_factorable_over_field(p,domain):
     return True
 
 def is_integral(adj, **args):
-
     # Check with http://oeis.org/A064731
-    # Symbolically determine the char poly and evaluate it on
-    # the rounded eigenvalues. A non-zero result is a non-intergral eigenvalue
-    # this avoids the "all_close" condition
+    # Symbolically determine if char poly factors over Z
 
     A = convert_to_numpy(adj,**args)
     N = args["N"]
@@ -309,9 +306,8 @@ def is_integral(adj, **args):
     return _poly_factorable_over_field(p, "ZZ")
 
 def is_rational_spectrum(adj, **args):
-
     # Like is_integral, checks if the char. poly factors over Q instead of Z
-
+    # 
     A = convert_to_numpy(adj,**args)
     N = args["N"]
     M = sympy.Matrix(A)
@@ -319,7 +315,6 @@ def is_rational_spectrum(adj, **args):
     return _poly_factorable_over_field(p, "QQ")
 
 def is_real_spectrum(adj, **args):
-
     # Like is_integral, checks if the char. poly factors over R instead of Z
 
     A = convert_to_numpy(adj,**args)

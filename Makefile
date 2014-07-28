@@ -1,7 +1,7 @@
 
 # Debugging/Testing commands
 
-test_N = 8
+test_N = 4
 all:
 	python src/generate_graphs.py $(test_N)
 	python src/update_special2.py $(test_N)
@@ -22,7 +22,7 @@ report_lvl1:
 	python verification/lvl1_report.py > verification/raw_lvl1.md
 
 
-possible_N_values = 1 2 3 4 5 6 7 8 9 10
+possible_N_values = 1 2 3 4 5 6 7 8 9
 
 build:
 	$(foreach n,$(possible_N_values),python src/generate_graphs.py $(n);)
