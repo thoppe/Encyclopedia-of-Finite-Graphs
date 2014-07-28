@@ -28,7 +28,6 @@ possible_N_values = 1 2 3 4 5 6 7 8 9
 build:
 	$(foreach n,$(possible_N_values),python src/generate_graphs.py $(n);)
 	make compute
-	make finalize
 	make sequence
 
 compute:
@@ -36,11 +35,11 @@ compute:
 	$(foreach n,$(possible_N_values),python src/build_distinct_seq.py $(n);)
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
-finalize:
-	$(foreach n,$(possible_N_values),python src/build_finalized_version.py $(n);)
+#finalize:
+#	$(foreach n,$(possible_N_values),python src/build_finalized_version.py $(n);)
 
-sequence:
-	python src/build_sequence.py --max_n 10
+#sequence:
+#	python src/build_sequence.py --max_n 10
 
 ########################################################################
 

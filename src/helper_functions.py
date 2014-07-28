@@ -255,7 +255,7 @@ def compute_parallel(
         os.remove(f_landing_table)
 
     P = multiprocessing.Pool()
-    sol = P.imap(pfunc,targets)
+    sol = P.imap(pfunc,targets,chunksize=5)
     cmd_insert = cmd_insert.format(function_name)
     FOUT = open(f_landing_table,'w')
 

@@ -175,7 +175,7 @@ if compute_invariant_functions:
 for func_name in compute_invariant_functions:
 
     msg = "Starting calculation for {name}"
-    logging.info(msg.format(name=name))
+    logging.info(msg.format(name=func_name))
 
     if func_name not in special_invariants:
         itr = graph_target_iterator(func_name)
