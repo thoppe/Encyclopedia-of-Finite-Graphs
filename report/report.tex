@@ -63,7 +63,7 @@ Due to the rapid growth in the number of unique isomorphic graphs however, the c
 a judicious choice often restricts the study to an interesting and more manageable subset.
 
 We proceed with the assumption however, that \textit{a priori} all graphs could be interesting given the right question.
-This is similar the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bound an inequality or constraint.
+This is similar the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bounded by an inequality or constraint.
 Our objective is more elementary, we aim to compute are large, comprehensive database of graphs and their respective invariants. 
 Such a database will allow new forms of discovery, some of which will be directly explored in this paper.
 For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known in the Online Encyclopedia of Integer Sequences.
@@ -126,6 +126,7 @@ Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ a
 We say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
 They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
 In addition to contributing to the OEIS, a secondary goal is to identify all suggestive and exclusive relations between the invariants studied up to order $n=10$.
+% isn't \SEQ the operator? In other words I don't understand why we need \SEQ_a and \SEQ_b. Wouldn't it just be \SEQ(f, C), \SEQ(g, C)?
 
 In this paper, we restrict the classes examined to $\SIMPLECLASS$. 
 Unless otherwise stated, from this point any referenced graph is assumed to be simple and connected.
@@ -155,7 +156,8 @@ Once complete, the database checks against a reference table for invariants that
 The invariants are stored in a flat table to facilitate the addition of new invariants.
 Even with indexing however, this arrangement is not optimal for sequence-like queries.
 Hence, we build the sequences themselves in a second database which is created at the end of the invariant calculation.
-In this second database, each graph is stored as a row and each column is an indexed invariant.
+In this second database, each graph is stored as a row and each column is an indexed invariant. % I don't think the phrase "indexed invariant" makes sense. 
+% I would say "... and each column contains the value of a particular invariant for each graph. We place an index on each of the invariant columns to allow for fast querying, at the expense of disk space (which is readily available, and cheap).
 
 Sequences are constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
 For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group is equal to two while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater or equal to three. 
