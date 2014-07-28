@@ -26,27 +26,24 @@ report_lvl1:
 possible_N_values = 1 2 3 4 5 6 7 8 9
 
 build:
-	$(foreach n,$(possible_N_values),python src/generate_graphs.py $(n);)
+	make generate
 	make compute
 	make sequence
+
+generate:
+	$(foreach n,$(possible_N_values),python src/generate_graphs.py $(n);)
 
 compute:
 	$(foreach n,$(possible_N_values),python src/update_special2.py $(n);)
 	$(foreach n,$(possible_N_values),python src/build_distinct_seq.py $(n);)
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
-#finalize:
-#	$(foreach n,$(possible_N_values),python src/build_finalized_version.py $(n);)
-
-#sequence:
-#	python src/build_sequence.py --max_n 10
+sequence:
+	python src/build_sequence.py --max_n 10
+	python src/build_relations.py --max_n 10
+	python verification/raw_dump_relations.py
 
 ########################################################################
-
-
-relations:
-	python src/build_relations.py
-	python verification/raw_dump_relations.py
 
 test:
 	python src/unit_tests.py --max_n 8

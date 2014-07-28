@@ -14,6 +14,8 @@ parser.add_argument('--min_n',type=int,default=3,
                     help="Only compare graph of this order and larger")
 parser.add_argument('--max_n',type=int,default=10,
                     help="Only compare graph of this order and smaller")
+parser.add_argument('--commit_freq',default=25,
+                    help="Sequences between database commit.")
 cargs = vars(parser.parse_args())
 
 # Start the logger
@@ -22,20 +24,15 @@ logging.root.setLevel(logging.INFO)
 # Load the search database
 search_conn = collections.OrderedDict()
 for n in range(1, cargs["max_n"]+1):
-    f_database = helper_functions.generate_database_name(n)
-    f_search_database = f_database.replace('.db','_search.db')
-    search_conn[n] = sqlite3.connect(f_search_database, check_same_thread=False)
-    helper_functions.attach_ref_table(search_conn[n])
+    search_conn[n]  = load_graph_database(n)
 
 # Connect to the database and add structure info
 f_seq_database = "database/sequence.db"
 conn = sqlite3.connect(f_seq_database, check_same_thread=False)
-attach_ref_table(conn)
 
 f_database_template = "templates/sequence.sql"
 with open(f_database_template) as FIN:
     conn.executescript(FIN.read())
-
 
 # Find all sequences that have at least four known terms
 cmd = '''
@@ -44,9 +41,9 @@ WHERE query_level=1 AND non_zero_terms >= 4'''
 full_seq = set(grab_vector(conn, cmd))
 
 # Build the lookup table
-cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
+cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer
 ORDER BY invariant_id'''
-ref_lookup = dict( helper_functions.grab_all(search_conn[1],cmd) )
+ref_lookup = dict( grab_all(conn,cmd) )
 ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
 func_names = ref_lookup.keys()
 
@@ -91,7 +88,6 @@ missing_subset = grab_all(conn,cmd)
 msg = "There are {} unknown subset relations"
 logging.info(msg.format(len(missing_subset)))
 
-
 # Identify the sequence which CAN'T be subset 
 # (e.g. one is strictly larger than the other)
 cmd = '''UPDATE relations SET subset=0 WHERE relation_id={}'''
@@ -111,7 +107,7 @@ logging.info(msg.format(len(missing_subset)))
 if missing_subset: conn.commit()
 
 def check_subset(s1,s2):
-    cmd_find = '''SELECT graph_id FROM graph_search WHERE {} {} {}'''
+    cmd_find = '''SELECT graph_id FROM invariant_integer WHERE {} {} {}'''
 
     invar_val_id1, c1, v1 = SEQ_QUERY[s1]
     invar_val_id2, c2, v2 = SEQ_QUERY[s2]
@@ -129,19 +125,26 @@ def check_subset(s1,s2):
         GID2 = set( grab_vector(search_conn[n],cmd2) )
 
         if not GID2.issubset(GID1):
-            return False
+            return 0, ""
 
     msg = "Subset found {}{}{} -> {}{}{}"
-    logging.info(msg.format(func_name2, c2,v2, func_name1, c1, v1))
+    msg = msg.format(func_name2, c2,v2, func_name1, c1, v1)
     
-    return True
+    return 1, msg
 
-for ridx, s1,s2 in missing_subset:
-    valid_subset = int(check_subset(s1,s2))
+for k, (ridx, s1,s2) in enumerate(missing_subset):
+    valid_subset,msg = check_subset(s1,s2)
     cmd = '''UPDATE relations SET subset={} WHERE relation_id={}'''
-    conn.execute(cmd.format(valid_subset,ridx))
-if missing_subset: conn.commit()
+    conn.execute(cmd.format(int(valid_subset),ridx))
+    if msg: logging.info(msg)
 
+    if k and k%cargs["commit_freq"]==0:
+        conn.commit()
+        msg = "Remaining calculations {}/{}".format(len(missing_subset)-k,
+                                                    len(missing_subset))
+        logging.info(msg)
+
+conn.commit()
 
 # Find the relations where we don't know equality
 cmd = '''SELECT relation_id, s1_id,s2_id FROM relations WHERE equal IS NULL'''
@@ -185,9 +188,8 @@ msg = "There are {} unknown exclusive relations remaining after cardinality test
 logging.info(msg.format(len(missing_ex)))
 
 
-
 def check_exclusive(s1,s2):
-    cmd_find = '''SELECT graph_id FROM graph_search WHERE {} {} {}'''
+    cmd_find = '''SELECT graph_id FROM invariant_integer WHERE {} {} {}'''
 
     invar_val_id1, c1, v1 = SEQ_QUERY[s1]
     invar_val_id2, c2, v2 = SEQ_QUERY[s2]
@@ -198,21 +200,29 @@ def check_exclusive(s1,s2):
     cmd1 = cmd_find.format(func_name1, c1, v1)
     cmd2 = cmd_find.format(func_name2, c2, v2)
 
-    msg = "Checking {}{}{} exclusive of {}{}{}"
-    logging.info(msg.format(func_name1, c1,v1, func_name2, c2, v2))
-
     for n in range(cargs["min_n"],cargs["max_n"]+1):
         GID1 = set( grab_vector(search_conn[n],cmd1) )
         GID2 = set( grab_vector(search_conn[n],cmd2) )
         if GID1.intersection(GID2):
-            return False
+            return False,""
 
-    return True
+    msg = "Checking {}{}{} exclusive of {}{}{}"
+    msg = msg.format(func_name1, c1,v1, func_name2, c2, v2)
 
-for ridx, s1,s2 in missing_ex:
-    valid_exclusive = int(check_exclusive(s1,s2))
+    return True,msg
+
+for k, (ridx,s1,s2) in enumerate(missing_ex):
+    valid_exclusive,msg = check_exclusive(s1,s2)
 
     cmd = '''UPDATE relations SET exclusive={} WHERE relation_id={}'''
-    conn.execute(cmd.format(valid_exclusive,ridx))
-    conn.commit()
+    conn.execute(cmd.format(int(valid_exclusive),ridx))
+    if msg: logging.info(msg)
+
+    if k and k%cargs["commit_freq"]==0:
+        conn.commit()
+        msg = "Remaining calculations {}/{}".format(len(missing_ex)-k,
+                                                    len(missing_ex))
+        logging.info(msg)
+
+conn.commit()
 
