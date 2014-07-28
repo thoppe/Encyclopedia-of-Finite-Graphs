@@ -647,6 +647,8 @@ if __name__ == "__main__":
     #viz_graph(h)
     g   = nx.petersen_graph()
     adj = convert_nx_to_adj(g)
+    print edge_connectivity(adj,N=10)
+    exit()
     
     print adj
     print special_independent_vertex_sets(adj,N=10)
