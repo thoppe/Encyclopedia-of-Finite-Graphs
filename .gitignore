@@ -1,10 +1,11 @@
 # Graph database (don't auto store)
 database/*
-bak_database.tar*
 search_index/
 
 # Executable file
 main
+
+landing_table_*
 
 # Temp file
 dump_graphs.py

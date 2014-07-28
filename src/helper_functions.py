@@ -1,5 +1,13 @@
-import sqlite3, gc, csv
+import sqlite3, gc, csv, os, errno
 import itertools, os, logging, multiprocessing
+
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc: # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else: raise
 
 def generate_database_name(N):
     return os.path.join("database", "graph{}.db".format(N))  
@@ -10,6 +18,10 @@ def generate_special_database_name(N):
 def load_graph_database(N, check_exist=True, special=False,timeout=5):
     ''' Given an input value of N, return a connection to the 
         cooresponding database '''
+    
+    # Build the needed directories
+    mkdir_p("database")
+    mkdir_p("database/special")
 
     if not special:
         f_database = generate_database_name(N)
