@@ -1,8 +1,8 @@
 import numpy as np
-import logging, argparse, inspect, os, csv, collections
+import logging, argparse, inspect, os, collections, json
 from helper_functions import load_graph_database, select_itr
-from helper_functions import grab_vector, grab_all, attach_ref_table
-from helper_functions import compute_parallel
+from helper_functions import grab_vector, grab_all
+from helper_functions import compute_parallel, grab_col_names
 
 desc   = "Updates the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -10,10 +10,11 @@ parser.add_argument('N', type=int)
 parser.add_argument('--chunksize',type=int,
                     help="Entries to compute before insert is called",
                     default=1000)
+help_msg = "Runs the computation in debug mode [not parallel, no commit]"
 parser.add_argument('--debug',default=False,action="store_true",
-                    help="Runs the computation in debug mode [not parallel, no commit]")
-cargs = vars(parser.parse_args())
+                    help=help_msg)
 
+cargs = vars(parser.parse_args())
 N = cargs["N"]
 
 # Start the logger
@@ -22,20 +23,38 @@ logging.root.setLevel(logging.INFO)
 # Load the database
 conn  = load_graph_database(cargs["N"])
 sconn = load_graph_database(cargs["N"], special=True)
-attach_ref_table(conn)
 
 logging.info("Starting invariant calculation for {N}".format(**cargs))
+
+# Load the list of invariants to compute
+f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
+with open(f_invariant_json,'r') as FIN:
+    invariant_names = json.loads(FIN.read())["invariant_function_names"]
 
 # Create a mapping to all the known invariant functions
 import invariants
 invariant_funcs = dict(inspect.getmembers(invariants,inspect.isfunction))
 
-# Get the special column names
-cmd = '''SELECT * from graph LIMIT 1'''
-graph_args_names = zip(*conn.execute(cmd).description)[0]
+# Make sure all invariant functions are defined
+for name in invariant_names:
+    if name not in invariant_funcs:
+        err = "Invariant function {} not defined".format(name)
+        raise KeyError(err)
 
-ignored_invariants = [ ]
+# Get a list of the column names
+col_names = grab_col_names(conn,"invariant_integer")
 
+# Add any columns that do not exist yet
+cmd_insert = '''
+ALTER TABLE invariant_integer ADD COLUMN {name} INTEGER;
+CREATE INDEX IF NOT EXISTS "idx_{name}" ON "invariant_integer" ("{name}" ASC);
+'''
+for name in invariant_names:
+    if name not in col_names:
+        logging.info("Adding column {name}".format(name=name))
+        conn.executescript(cmd_insert.format(name=name))
+
+# List any special rules for the invariants
 special_invariants = {
     "n_cycle_basis" : "cycle_basis",
     "is_tree"       : "cycle_basis",
@@ -55,13 +74,12 @@ special_invariants = {
 #########################################################################
 
 def graph_target_iterator(func_name):
-    invariant_id = ref_invariant_lookup[func_name]
 
     cmd_grab = '''
-      SELECT a.* FROM graph as a
-      LEFT JOIN invariant_integer as b
-      ON a.graph_id = b.graph_id AND b.invariant_id={}
-      WHERE b.value IS NULL '''.format(invariant_id)
+      SELECT a.graph_id, a.adj FROM graph AS a
+      LEFT JOIN invariant_integer AS b
+      ON a.graph_id = b.graph_id AND b.{} IS NULL
+      '''.format(func_name)
 
     for g_id, adj in select_itr(conn, cmd_grab) :
         yield (g_id,adj,{"N":N})
@@ -128,21 +146,17 @@ def iterator_IES(func_name):
 
 #########################################################################
 
-# Identify the invariants that have not been computed
-cmd = '''
-SELECT function_name FROM ref_invariant_integer 
-EXCEPT SELECT function_name FROM computed
-'''
+# Identify the invariants that have been computed
+cmd = '''SELECT function_name FROM computed'''
+computed_invariant_functions = grab_vector(conn,cmd)
+remaining_invariant_functions = [x for x in invariant_names 
+                                 if x not in computed_invariant_functions]
 
-compute_invariant_functions = grab_vector(conn,cmd)
+ignored_invariants = []
 
-cmd = "SELECT function_name,invariant_id FROM ref_invariant_integer"
-ref_invariant_lookup = dict(conn.execute(cmd).fetchall())
+cmd_mark_success = '''INSERT OR IGNORE INTO computed (function_name) VALUES (?)'''
 
-cmd_mark_success = '''
-INSERT OR IGNORE INTO computed (function_name) VALUES (?)'''
-
-compute_invariant_functions = [x for x in compute_invariant_functions 
+compute_invariant_functions = [x for x in remaining_invariant_functions
                                if x not in ignored_invariants]
 
 special_iterator_mapping = {
@@ -161,6 +175,7 @@ if compute_invariant_functions:
 for func_name in compute_invariant_functions:
 
     msg = "Starting calculation for {name}"
+    logging.info(msg.format(name=name))
 
     if func_name not in special_invariants:
         itr = graph_target_iterator(func_name)
@@ -174,14 +189,15 @@ for func_name in compute_invariant_functions:
 
     func    = invariant_funcs[func_name] 
     targets = itr        
-    invariant_id = ref_invariant_lookup[func_name]
 
     def pfunc((g_id,adj,args)):
-        return g_id, ((invariant_id, int(func(adj,**args)), ),)
+        result = int(func(adj,**args))
+        return result, ((g_id,),)
+        #return g_id, ((result,),)
 
     cmd_insert = '''
-      INSERT or IGNORE INTO invariant_integer
-      (graph_id, invariant_id, value) VALUES (?,?,?)'''
+      UPDATE invariant_integer SET {} = (?)
+      WHERE  graph_id=(?)'''.format(func_name)
 
     logging.info("Computing N={}, {} ".format(N, func_name))
 
@@ -191,9 +207,9 @@ for func_name in compute_invariant_functions:
         logging.info("Commiting changes")
         conn.commit()
 
-    else:
-        for (g_id,adj,args) in itr:
-            result = func(adj,**args)
-            print g_id, adj, result
+    #else:
+    #    for (g_id,adj,args) in itr:
+    #        result = func(adj,**args)
+    #        print g_id, adj, result
 
 

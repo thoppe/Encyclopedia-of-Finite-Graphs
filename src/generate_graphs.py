@@ -37,9 +37,8 @@ with open(f_graph_template) as FIN:
     conn.commit()
 
 # Check if the database is populated, if so exit
-cmd_check = "SELECT * FROM graph LIMIT 1"
-
-is_populated = len(conn.execute(cmd_check).fetchall()) > 0 
+cmd_check = '''SELECT COUNT(*) FROM computed WHERE function_name="adj"'''
+is_populated = helper_functions.grab_scalar(conn,cmd_check)
 
 if is_populated:
     err = "Database {N} has been populated. Skipping nauty."
@@ -99,6 +98,13 @@ PC = helper_functions.parallel_compute
 PC(all_graph_itr, 
    convert_edge_to_adj, 
    callback=insert_graph_list, **cargs)
+
+cmd_mark = '''INSERT OR IGNORE INTO computed VALUES ("adj")'''
+conn.execute(cmd_mark)
+
+cmd_copy = '''
+INSERT INTO invariant_integer (graph_id) SELECT graph_id FROM graph'''
+conn.execute(cmd_copy)
 
 conn.commit()
 

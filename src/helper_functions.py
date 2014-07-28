@@ -76,6 +76,12 @@ def grab_vector(connection, cmd,*args):
 def grab_scalar(connection, cmd,*args):
     return [x[0] for x in connection.execute(cmd,*args).fetchall()][0]
 
+# Helper function to get the column names
+def grab_col_names(connection, table):
+    cmd = '''SELECT * FROM {} LIMIT 1;'''.format(table)
+    cursor = connection.execute(cmd)
+    return [x[0] for x in cursor.description]
+
 def landing_table_itr(f_landing_table, index_args, max_iter=50000):
     with open(f_landing_table,'r') as FIN:
         for group in grouper(FIN,max_iter):
@@ -87,11 +93,10 @@ def landing_table_itr(f_landing_table, index_args, max_iter=50000):
             yield VALS
     
 
-def select_itr(conn, cmd, chunksize=1000):  
+def select_itr(conn, cmd, chunksize=5000):  
     ''' Creates an iterator over an SQL query so the
         result isn't spammed in memory '''
 
-    count = 0
     itr = conn.execute(cmd)
 
     while True:
@@ -100,10 +105,6 @@ def select_itr(conn, cmd, chunksize=1000):
         if not results:         break
         for result in results:  
             yield result      
-            count += 1
-
-    #logging.info("Selected {} results".format(count))
-
 
 
 def grouper(iterable, n):
@@ -225,12 +226,7 @@ def import_csv_to_table(f_csv, table, cmd_insert):
 def compute_parallel(
         function_name, 
         connection,
-        pfunc, cmd_insert, targets,N,
-        single_result=False):
-
-    P = multiprocessing.Pool()
-    sol = P.imap(pfunc,targets)
-    cmd_insert = cmd_insert.format(function_name)
+        pfunc, cmd_insert, targets,N):
 
     f_landing_table = os.path.join("landing_table_{}_{}"
                                    .format(function_name,N))
@@ -241,15 +237,17 @@ def compute_parallel(
         connection.commit()
         os.remove(f_landing_table)
 
-    FOUT = open(f_landing_table,'w')   
+    P = multiprocessing.Pool()
+    sol = P.imap(pfunc,targets)
+    cmd_insert = cmd_insert.format(function_name)
+    FOUT = open(f_landing_table,'w')
 
     for k, (g_id, terms) in enumerate(sol):
         cmd = cmd_insert.format(function_name, g_id)
-
         for item in terms:
             s  = ','.join(["{}"]*(len(item) + 1))
             s  = s.format(g_id, *item)
-            s += ',1\n'  # Validitor bit
+            s += ',1\n'  # Validator bit
             FOUT.write(s)
         
         if k and k%5000==0:
