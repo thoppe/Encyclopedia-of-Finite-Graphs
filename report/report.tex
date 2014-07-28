@@ -46,11 +46,11 @@
 \maketitle
 
 \begin{abstract}
-We exhaustively enumerate all simple, connected graphs of a finite order and compute a selection of invariants over this set.
+We have exhaustively enumerated all simple, connected graphs of a finite order and have computed a selection of invariants over this set.
 Integer sequences were constructed from these invariants and checked against the Online Encyclopedia of Integer Sequences (OEIS).
 \OEISprimary new sequences were added and \OEISedits sequences were appended or corrected.
-From the graph database we are able to programmatically suggest relationships among the invariants.
-We show that we can readily visualize any sequence of graphs with a given criteria.
+From the graph database, we were able to programmatically suggest relationships among the invariants.
+We will show that we can readily visualize any sequence of graphs with a given criteria. 
 The code has been released as an open-source framework for further analysis and the database was constructed to be extensible to invariants not considered in this work.
 \end{abstract}
 
@@ -63,16 +63,18 @@ Due to the rapid growth in the number of unique isomorphic graphs however, the c
 a judicious choice often restricts the study to an interesting and more manageable subset.
 
 We proceed with the assumption however, that \textit{a priori} all graphs could be interesting given the right question.
-This is similar the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bounded by an inequality or constraint.
-Our objective is more elementary, we aim to compute are large, comprehensive database of graphs and their respective invariants. 
+This is similar to the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bounded by an inequality or constraint.
+Our objective is more elementary. We aim to compute a large, comprehensive database of graphs and their respective invariants. 
 Such a database will allow new forms of discovery, some of which will be directly explored in this paper.
 For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known in the Online Encyclopedia of Integer Sequences.
+% is it ok to talk about the OEIS before we say what it is? 
 These sequences, and the set of graphs that belong to them, can be used to explore a basic set of relations among the invariants. 
-Since the input to GraPHedron consists of a set of invariants, a larger the input set will amplify the predictive power.
+Since the input to GraPHedron consists of a set of invariants, a larger input set will amplify the predictive power.
 Additionally, the creation of a large, centralized database will serve as a useful reference for benchmarking various algorithms.
 Finally, a comprehensive database provides pedagogic value, as representative graphs from any considered sequence can be rapidly visualized.
 
 To this end, we have created the \textit{Encyclopedia of Finite Graphs}, a database of invariants (add DOI ref for the database itself \needref) and the software to fully populate it\cite{Travis2014Encyclopdia}. 
+% Makybe you can say "henceforth Encyclopedia" (no italics) and then only refer to it as Encyclopedia in the rest of the text
 The code and the database has been released under an open source license.
 The intention is for new invariants to be an added to the project when various algorithms become available.
 
@@ -84,7 +86,7 @@ The sequences are of general interest, spanning topics such as number theory, co
 A given sequence may contain any number of terms, ranging from at least four up to as many as 500,000 (in the cases where the sequence admits a readily computable expression).
 Collecting and storing integer sequences in one place allows a researcher, who perhaps comes across the first few values of an unknown sequence, to be able to quickly look up subsequent values. 
 The OEIS not only provides the numerical values but seeks to function as a true encyclopedia, with cross references to related sequences, references to other literature, and formulas when known.
-One of the primary goals of this paper was to systematically expand the sequences involving graph invariants known to the OEIS database.
+One of the primary goals of this paper is to systematically expand the sequences involving graph invariants known to the OEIS database.
 Through our exhaustive enumeration of small graphs, we were able to submit \OEISprimary new sequences to the OEIS and extend \OEISedits existing sequences.
 
 A graph invariant is any property that is preserved under isomorphism. 
@@ -110,6 +112,7 @@ Let
 $S(f, \CLASS) = |f(\CLASS_1)|, |f(\CLASS_2)|, |f(\CLASS_3)|, \ldots$
 be the sequence of integers defined by $\SEQ(f, \CLASS)$. 
 For example, if $f_\text{tree}$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\SIMPLECLASS$ is the set of all simple unlabeled connected graphs,
+% so later in the table, we can get rid of \Theta and just say that T = f_tree, H = f_hamiltonian ...
 %
 \begin{align}
 S(f_\text{tree}=1, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
@@ -123,10 +126,11 @@ While a few sequences were merely extended, other invariants, such as the the in
 We also attempt to quantify the relationships between graph invariants.
 Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
 Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
+% This is confusing because sequences has two meanings, a sequence of sets of graphs, \SEQ, and an integer sequence, S. maybe we can call \SEQ a query, since everywhere else in teh paper, sequence refers to an integer sequence. 
 We say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
 They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
 In addition to contributing to the OEIS, a secondary goal is to identify all suggestive and exclusive relations between the invariants studied up to order $n=10$.
-% isn't \SEQ the operator? In other words I don't understand why we need \SEQ_a and \SEQ_b. Wouldn't it just be \SEQ(f, C), \SEQ(g, C)?
+% isn't \SEQ the operator? In other words I don't understand why we need \SEQ_a and \SEQ_b. I think it should be "let \SEQ_a = \SEQ(f, C), and \SEQ_b = \SEQ(g, C)"
 
 In this paper, we restrict the classes examined to $\SIMPLECLASS$. 
 Unless otherwise stated, from this point any referenced graph is assumed to be simple and connected.
@@ -145,30 +149,33 @@ A full table of all sequences submitted to the OEIS can be found in Appendix \re
 Since the graphs in $\SIMPLECLASS$ are loopless and undirected, the edge incidence information for each graph requires $n(n+1)/2$ bits of storage.
 The largest class we computed is of order 10, which requires 45 bits. 
 This can be efficiently stored as a 64 bit unsigned integer using a binary reresentation.
-We note that graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
-Internally, we use SQLite3 as the database back end for portability reasons.
+Graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
+Internally, we used SQLite3 as the database back end for portability reasons.
 Most of the invariants were stored as integers.
-However, we found it useful to store certain non integer invariants, such as the Tutte polynomial in a separate, specialized database.
+However, we found it useful to store certain non-integer invariants, such as the Tutte polynomial in a separate, specialized database. %not sure about the hyphenation rules but we have "non-zero" later, so I put a hyphen in non-integer
 \note{mention the size of the database?}
 
-The database construction first proceeds by the enumeration of graphs themselves.
-Once complete, the database checks against a reference table for invariants that have not been computed and allocates the processing to multiple computers.
-The invariants are stored in a flat table to facilitate the addition of new invariants.
-Even with indexing however, this arrangement is not optimal for sequence-like queries.
-Hence, we build the sequences themselves in a second database which is created at the end of the invariant calculation.
-In this second database, each graph is stored as a row and each column is an indexed invariant. % I don't think the phrase "indexed invariant" makes sense. 
-% I would say "... and each column contains the value of a particular invariant for each graph. We place an index on each of the invariant columns to allow for fast querying, at the expense of disk space (which is readily available, and cheap).
+%The database construction first proceeds with the enumeration of graphs themselves.
+%Once complete, the database checks against a reference table for invariants that have not been computed and allocates the processing to multiple computers.
+The database was created by first the full enumeration of the graphs themselves.
+Then all of the invariants found in the invariant reference table were allocated to multiplue computers to be calculated.
+The graph invariant values were stored in a normalized table to facilitate the addition of new invariants.
+Even with indexing however, this arrangement was not optimal for sequence-like queries.
+Hence, we built the sequences themselves in a second, denormalized, database which was created at the end of the invariant calculation.
+In this second database, each graph was stored as a row and each column as an indexed invariant. 
+% I don't think the phrase "indexed invariant" makes sense. 
+% I would say "... and each column contained the value of a particular invariant for each graph. We placed an index on each of the invariant columns to allow for fast querying, at the expense of disk space (which was readily available, and cheap).
 
-Sequences are constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
-For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group is equal to two while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater or equal to three. 
+Sequences were constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
+For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group is equal to two, while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater than or equal to three. 
 Sequences can involve more than one invariant condition.
 A sequence with only a single invariant condition is called a primary sequence, while a sequence involving two or more invariant conditions is called a secondary sequence.
-For a sequence to be considered for submission to the OEIS it must have at least four non-zero entries. 
+For a sequence to be considered for submission to the OEIS, it must have at least four non-zero entries. 
 
-The suggestive relations described in the previous section are built in a similar way.
-For each pair of invariants conditions, the set of graphs related to the sequences are compared for set equality, exclusivity or as subsets.
-In addition to providing useful information, some of these relations provide a check on the accuracy of the algorithms.
-For example, one of the equality relations state that, a graph is a tree $\Leftrightarrow$ a graph has infinite girth.
+The suggestive relations described in the previous section were built in a similar way.
+For each pair of invariants conditions, the sets of graphs related to the sequences were compared for set equality, exclusivity or as subsets.
+In addition to providing useful information, some of these relations provided a check on the accuracy of the algorithms.
+For example, one of the equality relations state that a graph is a tree $\Leftrightarrow$ it has infinite girth.
 This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinte for graphs without cycles). 
 
 \note{list some interesting relations}
@@ -236,7 +243,7 @@ While not explored in this paper, the system of GraPHedron could be combined wit
 \section{Invariant Descriptions}
 \label{app:invariants}
 
-The invariant descriptions are broadly organized into sections of algebraic graph theory, topological graph theory, and invariants related to structure like connectivity.
+The invariant descriptions are broadly organized into sections of algebraic graph theory, topological graph theory, and invariants related to structure-like connectivity.  %again with the hyphens.. I'm not totally sure
 Readers are instructed to look to standard references for more comprehensive definitions \needref.
 
 \subsubsection*{Algebraic Graph Theory}
@@ -329,7 +336,7 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 
 Primary sequences are those involving a single invariant, while secondary sequences are those that involve the union of two invariants.
 Each sequence was hand-checked against the OEIS.
-We validated that either the sequence was unique or the invariant description match the sequence found.
+We validated that either the sequence was unique or the invariant description matched the sequence found.
 For some invariants, the definition may be ambiguous for small orders.
 When possible, we tried to refer to conventions found in the literature and the OEIS for these cases.
 For brevity, the symbols describing the invariants are show in below. %Table \ref{table:refinvariants}.
