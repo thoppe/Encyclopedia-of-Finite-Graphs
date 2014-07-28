@@ -1,87 +1,73 @@
-import sqlite3, logging, argparse, os, collections, ast
-import subprocess, itertools
+import sqlite3, logging, argparse, os, collections
+import subprocess, itertools, multiprocessing, json
 import numpy as np
 import helper_functions
-from helper_functions import load_graph_database
-from helper_functions import attach_ref_table, load_sql_script
+from helper_functions import load_graph_database, load_distinct_database
+from helper_functions import load_sql_script, select_itr
 from helper_functions import attach_table, generate_database_name
 from helper_functions import grab_vector, grab_all, grab_scalar
 
 desc   = "Build sequences from distinct counts (e.g. number of automorhism groups for a given size n."
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('-f','--force',default=False,action='store_true')
-parser.add_argument('--min_n',type=int,default=1,
-                    help="Only compare graph of this order and larger")
-parser.add_argument('--max_n',type=int,default=10,
-                    help="Only compare graph of this order and smaller")
+parser.add_argument('N', type=int)
+#parser.add_argument('--max_n',type=int,default=10,
+#                    help="Only compare graph of this order and smaller")
 cargs = vars(parser.parse_args())
+N = cargs["N"]
 
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-# These terms are not considered
-ignored_terms = []
+# Load the list of invariants to compute
+f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
+with open(f_invariant_json,'r') as FIN:
+    distinct_seq_names = json.loads(FIN.read())["distinct_sequences"]
 
 ##########################################################################
 
-# Load the standard search database
-search_conn = collections.OrderedDict()
-for n in range(1, cargs["max_n"]+1):
-    f_database = helper_functions.generate_database_name(n)
-    f_search_database = f_database.replace('.db','_search.db')
-    search_conn[n] = sqlite3.connect(f_search_database, check_same_thread=False)
-    helper_functions.attach_ref_table(search_conn[n])
+# Load the special database
+sconn = load_graph_database(N,check_exist=True, special=True)
+cmd_get_id = '''SELECT DISTINCT(graph_id) FROM {}'''
 
-# Build the lookup table
-cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
-ORDER BY invariant_id'''
-ref_lookup = dict( helper_functions.grab_all(search_conn[1],cmd) )
-ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
-func_names = ref_lookup.keys()
+dconn = load_distinct_database(check_exist=False)
+load_sql_script(dconn, "templates/distinct.sql")
 
-# Build the distinct searches
+# Skip terms that have already been computed
+cmd_computed = '''SELECT function_name FROM distinct_sequence WHERE N=(?)'''
+known_terms = set(grab_vector(dconn, cmd_computed, (N,)))
 
-def compute_distinct_seq(func):
-    cmd_search = '''SELECT DISTINCT {} FROM graph_search'''
-    seq = []
-    for n in range(cargs["min_n"],cargs["max_n"]+1):
-        cmd   = cmd_search.format(func)
-        items = grab_vector(search_conn[n], cmd)
-        seq.append(len(items))
-    return seq
+for term in known_terms.intersection(distinct_seq_names):
+    del distinct_seq_names[term]
 
-print "## Interesting distinct sequences (e.g. non-binary):"
-output_msg = "+ `{}` `{}`"
-for func in func_names:
-    if func not in ignored_terms:
-        seq = compute_distinct_seq(func)
-        check_seq = np.array(seq,dtype=int)
-        if (check_seq>2).any():
-            print output_msg.format(func, seq)
-print
+##########################################################################
 
-###########################################################################
+def build_collection(target_function, target_columns):
+    g_id_itr = select_itr(sconn,cmd_get_id.format(target_function))
 
-# Build the "special" searches
+    cmd_get_seq = '''
+    SELECT {cols} FROM {func} WHERE graph_id=(?) ORDER BY {cols}'''
+    cmd_get_seq = cmd_get_seq.format(cols=target_columns, func=target_function)
+    C = collections.Counter()
 
-def compute_distinct_special_seq(func):
-    cmd_search = '''SELECT DISTINCT {} FROM graph'''
-    seq = []
-    for n in range(cargs["min_n"],cargs["max_n"]+1):
-        conn = load_graph_database(n)
-        cmd   = cmd_search.format(func)
-        items = grab_vector(conn, cmd)
-        seq.append(len(items))
-    return seq
+    def format_collection_query(g):
+        vals = grab_all(sconn,cmd_get_seq,g)
+        return tuple(vals)
 
-special_names = ("special_cycle_basis", 
-                 "special_degree_sequence",
-                 "special_polynomial_tutte")
-print "# Special searches:"
-for func in special_names:
-    if func not in ignored_terms:
-        seq = compute_distinct_special_seq(func)
-        check_seq = np.array(seq,dtype=int)
-        if (check_seq>2).any():
-            print output_msg.format(func, seq)
+    for g in g_id_itr:
+        vals = format_collection_query(g)
+        C[vals] += 1
+    return C
 
+
+for target_function, target_columns in distinct_seq_names.items():
+
+    msg = "Computing distinct terms in {} ({})".format(target_function,N)
+    logging.info(msg)
+
+    C = build_collection(target_function, target_columns)
+    cmd_insert = '''INSERT INTO distinct_sequence 
+    (function_name, N, coeff) VALUES ("{}",{},{})'''
+    cmd = cmd_insert.format(target_function, N, len(C))
+    dconn.execute(cmd)
+    dconn.commit()
+        

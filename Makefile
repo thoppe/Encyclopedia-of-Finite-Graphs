@@ -6,13 +6,14 @@ all:
 	python src/generate_graphs.py $(test_N)
 	python src/update_special2.py $(test_N)
 	python src/update_invariants.py $(test_N)
+	python src/build_distinct_seq.py $(test_N)
 
 view:
 	sqlitebrowser database/graph$(test_N).db
 view_seq:
 	sqlitebrowser database/sequence.db
-view_ref:
-	sqlitebrowser database/ref_invariant_integer.db
+view_distinct:
+	sqlitebrowser database/distinct_seq.db
 view_special:
 	sqlitebrowser database/special/graph$(test_N)_special.db
 view_final:
@@ -32,6 +33,7 @@ build:
 
 compute:
 	$(foreach n,$(possible_N_values),python src/update_special2.py $(n);)
+	$(foreach n,$(possible_N_values),python src/build_distinct_seq.py $(n);)
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 finalize:

@@ -15,6 +15,23 @@ def generate_database_name(N):
 def generate_special_database_name(N):
     return os.path.join("database", "special", "graph{}_special.db".format(N))  
 
+def generate_distinct_sequence_database_name():
+    return os.path.join("database","distinct_seq.db")
+
+def load_distinct_database(check_exist=True,timeout=5):
+
+    f_database = generate_distinct_sequence_database_name()
+
+    # Check if database exists, if so exit!
+    if check_exist and not os.path.exists(f_database):
+        err = "Database %s does not exist."%f_database
+        logging.critical(err)
+        exit()
+
+    return sqlite3.connect(f_database, check_same_thread=False,
+                           timeout=timeout)
+    
+
 def load_graph_database(N, check_exist=True, special=False,timeout=5):
     ''' Given an input value of N, return a connection to the 
         cooresponding database '''

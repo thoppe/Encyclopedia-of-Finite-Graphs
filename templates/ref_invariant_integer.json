@@ -44,5 +44,12 @@
     "maximal_independent_vertex_set", 
     "n_independent_edge_sets", 
     "maximal_independent_edge_set"
-  ]
+  ],
+  "distinct_sequences" :       
+      {
+          "degree_sequence" :"degree",
+          "tutte_polynomial":"x_degree, y_degree, coeff",
+          "fractional_chromatic_number":"a,b"
+      }
+  
 }
