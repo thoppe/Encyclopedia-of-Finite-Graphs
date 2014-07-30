@@ -33,8 +33,75 @@
 % Text shortcuts
 \newcommand{\SEQ}{\mathcal{S}}
 \newcommand{\CLASS}{\mathcal{C}}
-\newcommand{\SIMPLECLASS}{\mathcal{C}_\text{simple}}
 \newcommand{\ie}[0]{i.e.\ }
+
+% Shortcuts for the invariant function names
+\newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
+\newcommand{\VARchromaticnumber}{\chi(g)}
+\newcommand{\VARedgeconnectivity}{\kappa_{E}(g)}
+\newcommand{\VARvertexconnectivity}{\kappa_{V}(g)}
+\newcommand{\VARdiameter}{\text{dia}(g)}
+\newcommand{\VARgirth}{\text{girth}(g)}
+\newcommand{\VARnarticulationpoints}{a(g)}
+\newcommand{\VARmaximalindependentvertexset}{\alpha_V(g)}
+\newcommand{\VARmaximalindependentedgeset}{\alpha_E(g)}
+
+\newcommand{\VARsubgraph}{s}
+\newcommand{\namedsubgraph}[1]{\VARsubgraph{}(g,#1)}
+\newcommand{\VARissubgraphfreeKthree}{\namedsubgraph{K_3}}
+\newcommand{\VARissubgraphfreeKfour}{\namedsubgraph{K_4}}
+\newcommand{\VARissubgraphfreeKfive}{\namedsubgraph{K_5}}
+\newcommand{\VARissubgraphfreeCfour}{\namedsubgraph{C_4}}
+\newcommand{\VARissubgraphfreeCfive}{\namedsubgraph{C_5}}
+\newcommand{\VARissubgraphfreeCsix}{\namedsubgraph{C_6}}
+\newcommand{\subgraphBULL}{B_5}
+\newcommand{\subgraphDIAMOND}{D_4}
+\newcommand{\subgraphBOWTIE}{\bowtie}
+\newcommand{\subgraphOPENBOWTIE}{\rtimes}
+\newcommand{\VARissubgraphfreebull}{\namedsubgraph{\subgraphBULL}}
+\newcommand{\VARissubgraphfreediamond}{\namedsubgraph{\subgraphDIAMOND}}
+\newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\subgraphBOWTIE}}
+\newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\subgraphOPENBOWTIE}}
+
+\newcommand{\indicatorfunctionX}[1]{{#1}(g)}
+
+\newcommand{\VARfractionaldualitygapvertexchromatic}{X}
+\newcommand{\VARdistanceregular}{D}
+\newcommand{\VARhamiltonian}{H}
+\newcommand{\VARbipartite}{B}
+\newcommand{\VAReulerian}{E}
+\newcommand{\VARplanar}{P}
+\newcommand{\VARtree}{T}
+\newcommand{\VARchordal}{C}
+\newcommand{\VARkregular}{R}
+\newcommand{\VARstronglyregular}{R^*}
+\newcommand{\VARintegral}{I}
+\newcommand{\VARrealspectrum}{I^*}
+
+\newcommand{\VARhasfractionaldualitygapvertexchromatic}
+{\indicatorfunctionX{\VARfractionaldualitygapvertexchromatic}}
+\newcommand{\VARisdistanceregular}
+{\indicatorfunctionX{\VARdistanceregular}}
+\newcommand{\VARishamiltonian}
+{\indicatorfunctionX{\VARhamiltonian}}
+\newcommand{\VARisbipartite}
+{\indicatorfunctionX{\VARbipartite}}
+\newcommand{\VARiseulerian}
+{\indicatorfunctionX{\VAReulerian}}
+\newcommand{\VARisplanar}
+{\indicatorfunctionX{\VARplanar}}
+\newcommand{\VARistree}
+{\indicatorfunctionX{\VARtree}}
+\newcommand{\VARischordal}
+{\indicatorfunctionX{\VARchordal}}
+\newcommand{\VARiskregular}
+{\indicatorfunctionX{\VARkregular}}
+\newcommand{\VARisstronglyregular}
+{\indicatorfunctionX{\VARstronglyregular}}
+\newcommand{\VARisintegral}
+{\indicatorfunctionX{\VARintegral}}
+\newcommand{\VARisrealspectrum}
+{\indicatorfunctionX{\VARrealspectrum}}
 
 \setlength{\parindent}{.35cm}
 
@@ -66,19 +133,17 @@ We proceed with the assumption however, that \textit{a priori} all graphs could 
 This is similar to the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bounded by an inequality or constraint.
 Our objective is more elementary. We aim to compute a large, comprehensive database of graphs and their respective invariants. 
 Such a database will allow new forms of discovery, some of which will be directly explored in this paper.
-For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known in the Online Encyclopedia of Integer Sequences.
-% is it ok to talk about the OEIS before we say what it is? 
+For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known.
 These sequences, and the set of graphs that belong to them, can be used to explore a basic set of relations among the invariants. 
 Since the input to GraPHedron consists of a set of invariants, a larger input set will amplify the predictive power.
 Additionally, the creation of a large, centralized database will serve as a useful reference for benchmarking various algorithms.
 Finally, a comprehensive database provides pedagogic value, as representative graphs from any considered sequence can be rapidly visualized.
 
-To this end, we have created the \textit{Encyclopedia of Finite Graphs}, a database of invariants (add DOI ref for the database itself \needref) and the software to fully populate it\cite{Travis2014Encyclopdia}. 
-% Makybe you can say "henceforth Encyclopedia" (no italics) and then only refer to it as Encyclopedia in the rest of the text
+To this end, we have created the \textit{Encyclopedia of Finite Graphs} (henceforth Encyclopedia), a database of invariants (add DOI ref for the database itself \needref) and the software to fully populate it\cite{Travis2014Encyclopdia}. 
 The code and the database has been released under an open source license.
 The intention is for new invariants to be an added to the project when various algorithms become available.
 
-Once built, the Encyclopedia of Finite Graphs readily yields integer sequences formed by matching the number of graphs to an invariant constraint at each order.
+Once built, the Encyclopedia readily yields integer sequences formed by matching the number of graphs to an invariant constraint at each order.
 Many such sequences have already been found and cataloged in another database, the Online Encyclopedia of Integer Sequences (OEIS)\cite{sloane2003line}.
 The OEIS was created by Neil Sloane in 1964 as a graduate student during his studies of combinatorial problems.
 Since then, the database has grown to over 250,000 sequences and is highly cited, with over 3,000 citations to date.
@@ -111,11 +176,10 @@ where $f$ is some invariant condition that selects from each set $\CLASS_n$.
 Let 
 $S(f, \CLASS) = |f(\CLASS_1)|, |f(\CLASS_2)|, |f(\CLASS_3)|, \ldots$
 be the sequence of integers defined by $\SEQ(f, \CLASS)$. 
-For example, if $f_\text{tree}$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\SIMPLECLASS$ is the set of all simple unlabeled connected graphs,
-% so later in the table, we can get rid of \Theta and just say that T = f_tree, H = f_hamiltonian ...
+For example, if $\VARistree$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\CLASS^\prime$ is the set of all simple unlabeled connected graphs,
 %
 \begin{align}
-S(f_\text{tree}=1, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
+S(\VARistree=1, \CLASS^\prime) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
 %
 which is sequence \OEIS{A000055} in the OEIS.
@@ -132,33 +196,31 @@ They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i
 In addition to contributing to the OEIS, a secondary goal is to identify all suggestive and exclusive relations between the invariants studied up to order $n=10$.
 % isn't \SEQ the operator? In other words I don't understand why we need \SEQ_a and \SEQ_b. I think it should be "let \SEQ_a = \SEQ(f, C), and \SEQ_b = \SEQ(g, C)"
 
-In this paper, we restrict the classes examined to $\SIMPLECLASS$. 
-Unless otherwise stated, from this point any referenced graph is assumed to be simple and connected.
+In this paper, we restrict the classes examined to those of simple connected graphs.
+Unless otherwise stated, any referenced graph is assumed to be simple and connected.
 Provided one had a means of enumeration, an extension of this program to other classes would be straightforward.
 Exhaustive generation algorithms are known for many specialized classes such as bipartite graphs, digraphs, multigraphs, regular graphs, cubic graphs, snarks, trees and maximal triangle-free graphs\cite{mckay2014practical, meringer1999fast, brinkmann1996fast, brinkmann2013generation, sawada2006generating, brandt2000generation}. 
 
 \section{Methods}
 
-Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the class of $\SIMPLECLASS$ up to order $n \le 10$.
+Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the the simple connected graphs up to order $n \le 10$.
 Our calculations drew upon a large number of open source libraries and tools. 
 Many of the graph invariant calculations were done with either \texttt{networkx} \cite{SciPyProceedings_11} or \texttt{graph-tool} \cite{Tiago2014graph}.
 The invariants that were computable with integer or linear programming were done with PuLP \needref.
 For each graph we computed a series of invariants, which for completeness are described in Appendix \ref{app:invariants}.
 A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq} and the relations between the sequences in Appendix \ref{app:relations}.
 
-Since the graphs in $\SIMPLECLASS$ are loopless and undirected, the edge incidence information for each graph requires $n(n+1)/2$ bits of storage.
-The largest class we computed is of order 10, which requires 45 bits. 
-This can be efficiently stored as a 64 bit unsigned integer using a binary reresentation.
+Since the graphs we consider are loopless and undirected, the edge incidence information for each graph requires $n(n+1)/2$ bits of storage.
+The largest we computed is of order 10, which requires 45 bits. 
+This can be efficiently stored as a 64 bit unsigned integer using a binary representation.
 Graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
 Internally, we used SQLite3 as the database back end for portability reasons.
 Most of the invariants were stored as integers.
-However, we found it useful to store certain non-integer invariants, such as the Tutte polynomial in a separate, specialized database. %not sure about the hyphenation rules but we have "non-zero" later, so I put a hyphen in non-integer
+However, we found it useful to store certain non-integer invariants, such as the Tutte polynomial in a separate, specialized database.
 \note{mention the size of the database?}
 
-%The database construction first proceeds with the enumeration of graphs themselves.
-%Once complete, the database checks against a reference table for invariants that have not been computed and allocates the processing to multiple computers.
 The database was created by first the full enumeration of the graphs themselves.
-Then all of the invariants found in the invariant reference table were allocated to multiplue computers to be calculated.
+Then all of the invariants found in the invariant reference table were allocated to multiple computers to be calculated.
 The graph invariant values were stored in a normalized table to facilitate the addition of new invariants.
 Even with indexing however, this arrangement was not optimal for sequence-like queries.
 Hence, we built the sequences themselves in a second, denormalized, database which was created at the end of the invariant calculation.
@@ -176,7 +238,7 @@ The suggestive relations described in the previous section were built in a simil
 For each pair of invariants conditions, the sets of graphs related to the sequences were compared for set equality, exclusivity or as subsets.
 In addition to providing useful information, some of these relations provided a check on the accuracy of the algorithms.
 For example, one of the equality relations state that a graph is a tree $\Leftrightarrow$ it has infinite girth.
-This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinte for graphs without cycles). 
+This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinite for graphs without cycles). 
 
 \note{list some interesting relations}
 \note{Mention the ``distinct'' integer sequences}
@@ -191,65 +253,16 @@ While not explored in this paper, the system of GraPHedron could be combined wit
 
 \begin{appendices}
 
-% Shortcuts for the invariant function names
-\newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
-\newcommand{\VARchromaticnumber}{\chi(g)}
-\newcommand{\VARedgeconnectivity}{\kappa_{E}(g)}
-\newcommand{\VARvertexconnectivity}{\kappa_{V}(g)}
-\newcommand{\VARdiameter}{\text{dia}(g)}
-\newcommand{\VARgirth}{\text{girth}(g)}
-\newcommand{\VARnarticulationpoints}{a(g)}
-\newcommand{\VARmaximalindependentvertexset}{\alpha_V(g)}
-\newcommand{\VARmaximalindependentedgeset}{\alpha_E(g)}
-
-\newcommand{\VARsubgraph}{s}
-\newcommand{\namedsubgraph}[1]{\VARsubgraph{}(g,#1)}
-\newcommand{\VARissubgraphfreeKthree}{\namedsubgraph{K_3}}
-\newcommand{\VARissubgraphfreeKfour}{\namedsubgraph{K_4}}
-\newcommand{\VARissubgraphfreeKfive}{\namedsubgraph{K_5}}
-\newcommand{\VARissubgraphfreeCfour}{\namedsubgraph{C_4}}
-\newcommand{\VARissubgraphfreeCfive}{\namedsubgraph{C_5}}
-\newcommand{\VARissubgraphfreeCsix}{\namedsubgraph{C_6}}
-
-\newcommand{\subgraphBULL}{B_5}
-\newcommand{\subgraphDIAMOND}{D_4}
-\newcommand{\subgraphBOWTIE}{\bowtie}
-\newcommand{\subgraphOPENBOWTIE}{\rtimes}
-
-\newcommand{\VARissubgraphfreebull}{\namedsubgraph{\subgraphBULL}}
-\newcommand{\VARissubgraphfreediamond}{\namedsubgraph{\subgraphDIAMOND}}
-\newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\subgraphBOWTIE}}
-\newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\subgraphOPENBOWTIE}}
-
-\newcommand{\indicatorfunctionX}[1]{\Theta(g,#1)}
-
-\newcommand{\VARhasfractionaldualitygapvertexchromatic}{\indicatorfunctionX{\mathcal{X}}}
-
-\newcommand{\VARisdistanceregular}{\indicatorfunctionX{\mathcal{D}}}
-\newcommand{\VARishamiltonian}{\indicatorfunctionX{\mathcal{H}}}
-\newcommand{\VARisbipartite}{\indicatorfunctionX{\mathcal{B}}}
-\newcommand{\VARiseulerian}{\indicatorfunctionX{\mathcal{E}}}
-\newcommand{\VARisplanar}{\indicatorfunctionX{\mathcal{P}}}
-\newcommand{\VARistree}{\indicatorfunctionX{\mathcal{T}}}
-\newcommand{\VARischordal}{\indicatorfunctionX{\mathcal{C}}}
-
-\newcommand{\VARiskregular}{\indicatorfunctionX{\mathcal{R}}}
-\newcommand{\VARisstronglyregular}{\indicatorfunctionX{\mathcal{R}^*}}
-
-\newcommand{\VARisintegral}{\indicatorfunctionX{\mathcal{I}}}
-\newcommand{\VARisrealspectrum}{\indicatorfunctionX{\mathcal{I}^*}}
-
-
 \section{Invariant Descriptions}
 \label{app:invariants}
 
-The invariant descriptions are broadly organized into sections of algebraic graph theory, topological graph theory, and invariants related to structure-like connectivity.  %again with the hyphens.. I'm not totally sure
+The invariant descriptions are broadly organized into sections of algebraic graph theory, topological graph theory, and invariants related to structure-like connectivity.
 Readers are instructed to look to standard references for more comprehensive definitions \needref.
 
 \subsubsection*{Algebraic Graph Theory}
 
 The \textit{adjacency matrix} $A$ has the value at $A_{ij}$ equal to the number of edges joining vertex $i$ to $j$. 
-For $\SIMPLECLASS$, this is a $\{0,1\}$ matrix with zeros down the diagonal. 
+For simple graphs, is a $\{0,1\}$ matrix with zeros down the diagonal. 
 The \textit{spectrum}, $\lambda_1, \lambda_2, \ldots$ of a graph are the eigenvalues of $A$. 
 A graph is $integral$ if all the values of the graph spectrum are integral, $\lambda_k \in \mathbb{Z}$. 
 A graph is $real$ if $\lambda_k \in \mathbb{R}$.
@@ -295,12 +308,12 @@ Due to a lack of freely available algorithms, planarity is the only embedding cu
 Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
 A graph is \textit{connected} if there is a path between all pairs vertices.
 If there is no path between vertices $i$ and $j$, $D_{ij}=\infty$.
-By construction, all distances in $\SIMPLECLASS$ are finite.
+By construction, all distances in connected graphs are finite.
 The \textit{eccentricity} of a vertex $k$ is the maximum value of $D_{k j}$ for all $j$.
 The \textit{radius}/\textit{diameter} is the minimum/maximum value of eccentricity for all vertices.
 
 The \textit{degree} of vertex $k$ is the number of edges incident to the vertex, $d(v_k) = \sum_j A_{k j}$. 
-The \textit{degree sequence} is formed by listing the vertex degrees in descending order, and the number of distinct degree sequences for graphs in $\SIMPLECLASS$ is OEIS \OEIS{A007721}.
+The \textit{degree sequence} is formed by listing the vertex degrees in descending order, and the number of distinct degree sequences for graphs for simple connected graphs is OEIS \OEIS{A007721}.
 A \textit{$k$-regular graph} is one in which every vertex has degree $k$. 
 A regular graph is \textit{strongly regular}, if in addition there exist $\lambda$ and $\mu$ such that any two adjacent vertices have $\lambda$ neighbors in common and any two non-adjacent vertices have $\mu$ neighbors in common. 
 
@@ -339,7 +352,7 @@ Each sequence was hand-checked against the OEIS.
 We validated that either the sequence was unique or the invariant description matched the sequence found.
 For some invariants, the definition may be ambiguous for small orders.
 When possible, we tried to refer to conventions found in the literature and the OEIS for these cases.
-For brevity, the symbols describing the invariants are show in below. %Table \ref{table:refinvariants}.
+For brevity, the symbols describing the invariants are show in below. 
 
 \newcommand{\VARsubgraphfree}[1]{g)}
 
@@ -356,10 +369,12 @@ $\VARgirth$ & girth \\
 $\VARnarticulationpoints$ & number of articulation points \\
 $\VARmaximalindependentvertexset, \VARmaximalindependentedgeset$ & size of maximal independent vertex/edge set \\
 $\namedsubgraph{h}$ & number of subgraphs of $h$ in $g$ \\
-$\Theta(g,\mathcal{P})$ & indicator function for property $\mathcal{P}$ \\
-$\mathcal{T},\mathcal{H},\mathcal{E}, \mathcal{I}, \mathcal{I}^*$ & properties: tree, Hamiltonian, Eulerian, integral, real \\
-$\mathcal{R},\mathcal{R}^*,\mathcal{D}, \mathcal{B}, \mathcal{C}$ & properties: regular, strongly regular, distance regular, bipartite, chordal \\
-$\mathcal{X}$ & properties: chromatic gap
+$\VARtree,\VARhamiltonian,\VAReulerian, \VARintegral, \VARrealspectrum$ & 
+properties: tree, Hamiltonian, Eulerian, integral, real \\
+$\VARkregular,\VARstronglyregular,\VARdistanceregular, \VARbipartite, \VARchordal$ & 
+properties: regular, strongly regular, distance regular, bipartite, chordal \\
+$\VARfractionaldualitygapvertexchromatic$ 
+& properties: chromatic gap
 \end{longtable}
 %\label{table:refinvariants}
 %\end{table}
