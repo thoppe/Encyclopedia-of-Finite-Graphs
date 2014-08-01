@@ -1,4 +1,3 @@
-
 # Debugging/Testing commands
 
 test_N = 5
@@ -48,10 +47,6 @@ sequence:
 
 test:
 	python src/unit_tests.py --max_n 8
-
-package:
-	tar -cf bak_database.tar database/
-	pbzip2 -f bak_database.tar
 
 commit:
 	-@make push
