@@ -65,22 +65,6 @@ def attach_table(conn, f_attach, as_name):
     cmd_attach = '''ATTACH database "{}" AS "{}"'''
     conn.execute(cmd_attach.format(f_attach,as_name))
 
-def attach_ref_table(conn):
-    ''' 
-    Attaches the master invariant reference table to the connection.
-    Additionally, builds/updates the table from the template '''
-    
-    f_ref = os.path.join("database","ref_invariant_integer.db")
-
-    f_ref_template = os.path.join("templates",
-                                  "ref_invariant_integer.sql")
-
-    ref_conn = sqlite3.connect(f_ref)         
-    load_sql_script(ref_conn, f_ref_template)
-    ref_conn.close()
-
-    attach_table(conn, f_ref, "ref_db")
-
 # Helper function to grab all data
 def grab_all(connection, cmd,*args):
     return connection.execute(cmd,*args).fetchall()

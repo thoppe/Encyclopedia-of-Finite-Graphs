@@ -3,7 +3,7 @@ import subprocess, itertools
 import numpy as np
 import helper_functions
 from helper_functions import load_graph_database
-from helper_functions import attach_ref_table, load_sql_script
+from helper_functions import load_sql_script
 from helper_functions import attach_table, generate_database_name
 from helper_functions import grab_vector, grab_all, grab_scalar
 

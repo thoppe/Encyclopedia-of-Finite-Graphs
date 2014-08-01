@@ -19,8 +19,6 @@ view_distinct:
 	sqlitebrowser database/distinct_seq.db
 view_special:
 	sqlitebrowser database/special/graph$(test_N)_special.db
-view_final:
-	sqlitebrowser database/graph$(test_N)_search.db
 
 report_lvl1:
 	python verification/lvl1_report.py > verification/raw_lvl1.md
@@ -38,7 +36,7 @@ generate:
 
 compute:
 	$(foreach n,$(possible_N_values),python src/update_special2.py $(n);)
-#	$(foreach n,$(possible_N_values),python src/build_distinct_seq.py $(n);)
+	$(foreach n,$(possible_N_values),python src/build_distinct_seq.py $(n);)
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
