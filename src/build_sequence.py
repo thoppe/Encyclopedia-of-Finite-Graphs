@@ -1,34 +1,28 @@
 import sqlite3, logging, argparse, os, collections, ast, sys
-import subprocess, itertools
+import subprocess, itertools, json
 import numpy as np
-import helper_functions
 from helper_functions import grab_vector, grab_all, grab_scalar
-
-# These variants will not be used in the powerset construction
-excluded_terms = ["n_vertex","n_edge","n_endpoints",
-                  "n_cycle_basis","radius","circumference","radius",
-                  "is_subgraph_free_C6","is_subgraph_free_C7",
-                  "is_subgraph_free_C8","is_subgraph_free_C9",
-                  "is_subgraph_free_C10","is_rational_spectrum",
-                  "n_independent_vertex_sets"]
-# These will use a different operator
-special_conditionals = {"vertex_connectivity":">"}
+from helper_functions import load_graph_database
 
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=10,
+parser.add_argument('--max_n',type=int,default=9,
                     help="Maximum graph size n to compute sequence over")
+parser.add_argument('--force',default=False,action="store_true",
+                    help="Recomputes the sequences.")
+parser.add_argument('--commit_freq',default=25,
+                    help="Sequences between database commit.")
 cargs = vars(parser.parse_args())
-
-# List of terms that we should ignore for the moment
-# for example, terms that haven't finished computing...
-ignored_terms = []
 
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-# Connect to the sequence database
 f_database = "database/sequence.db"
+# If forced, delete the sequence database if it exists
+if os.path.exists(f_database) and cargs["force"]:
+    os.remove(f_database)
+
+# Connect to the sequence database
 seq_conn = sqlite3.connect(f_database, check_same_thread=False)
 
 f_database_template = "templates/sequence.sql"
@@ -38,37 +32,46 @@ with open(f_database_template) as FIN:
 # Load the search database
 search_conn = collections.OrderedDict()
 for n in range(1, cargs["max_n"]+1):
-    f_database = helper_functions.generate_database_name(n)
-    f_search_database = f_database.replace('.db','_search.db')
-    search_conn[n] = sqlite3.connect(f_search_database, check_same_thread=False)
-    helper_functions.attach_ref_table(search_conn[n])
+    search_conn[n]  = load_graph_database(n)
+
+# Load the list of invariants to compute
+f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
+with open(f_invariant_json,'r') as FIN:
+    js = json.loads(FIN.read())
+    func_names = js["invariant_function_names"]
+
+    # These will use a different operator
+    special_conditionals = js["sequence_info"]["special_conditionals"]
+
+    # These variants will not be used in the powerset construction
+    excluded_terms = js["sequence_info"]["excluded_terms"]
+
+# Add the known functions to the reference list
+cmd_insert = '''INSERT OR IGNORE INTO ref_invariant_integer
+(function_name) VALUES (?)'''
+seq_conn.executemany(cmd_insert, [(x,) for x in func_names])
+seq_conn.commit()
 
 # Build the lookup table
-cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
+cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer
 ORDER BY invariant_id'''
-ref_lookup = dict( helper_functions.grab_all(search_conn[1],cmd) )
+ref_lookup = dict( grab_all(seq_conn,cmd) )
 ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
 func_names = ref_lookup.keys()
 
 # Find all the computed unique values
-cmd = '''SELECT function_name FROM computed 
-WHERE has_computed=1 
-AND compute_type="unique"
-'''
+cmd = '''SELECT function_name FROM computed''' 
 unique_computed_functions = set(grab_vector(seq_conn, cmd))
-
-# Filter for the ignored terms
-func_names = [x for x in func_names if x not in ignored_terms]
 
 # Find all the unique values for each invariant, 
 # skipping those that have been computed already
-cmd_find = '''SELECT DISTINCT {} FROM graph_search'''
+cmd_find = '''SELECT DISTINCT {} FROM invariant_integer'''
 cmd_save = '''INSERT INTO unique_invariant_val(invariant_val_id, value) 
 VALUES (?,?)'''
 cmd_mark_computed = '''INSERT OR REPLACE INTO 
-computed(function_name,compute_type,has_computed) VALUES ("{}","unique",1)'''
+computed(function_name) VALUES ("{}")'''
 
-for f in set(func_names).difference(unique_computed_functions):
+for k,f in enumerate(set(func_names).difference(unique_computed_functions)):
     logging.info("Computing unique values for {}".format(f))
 
     unique_vals = set()
@@ -77,12 +80,29 @@ for f in set(func_names).difference(unique_computed_functions):
         unique_vals.update(vals)
 
     invar_id = ref_lookup[f]
-        
+
     for x in unique_vals:
         seq_conn.execute(cmd_save, (invar_id, x))
 
     seq_conn.execute(cmd_mark_computed.format(f))
-    seq_conn.commit()
+
+    if k and k%cargs["commit_freq"]==0:
+        seq_conn.commit()
+
+seq_conn.commit()
+
+# Check unique values for consistancy
+cmd_find = '''SELECT invariant_val_id, value FROM unique_invariant_val'''
+warn_flag = False
+for invar_id,val in grab_all(seq_conn,cmd_find):
+    if type(val) != int:
+        func_name = ref_lookup_inv[invar_id]
+        msg = "{} has non-integer value {}".format(func_name,val)
+        logging.warning(msg)
+        warn_flag = True
+if warn_flag:
+    msg = "Errors found in database. Exiting"
+    raise ValueError(msg)
 
 # Build a list of all level 1 sequences
 cmd_find = '''
@@ -93,7 +113,7 @@ INSERT OR IGNORE INTO ref_sequence_level1
 (unique_invariant_id, invariant_val_id, conditional, value)
 VALUES (?,?,?,?)'''
 
-for uid, invar_id, value in helper_functions.grab_all(seq_conn, cmd_find):
+for uid, invar_id, value in grab_all(seq_conn, cmd_find):
     func_name = ref_lookup_inv[invar_id]
 
     if func_name in special_conditionals:
@@ -121,7 +141,7 @@ if remaining_seq_info:
     logging.info(msg)
 
 cmd_sequence = '''
-SELECT COUNT(*) FROM graph_search WHERE {} {} {}'''
+SELECT COUNT(*) FROM invariant_integer WHERE {} {} {}'''
 
 cmd_save = '''INSERT INTO sequence({}) VALUES ({})'''
 s_string = ["sequence_id","query_level"] + ["s%i"%i for i in search_conn]
@@ -129,7 +149,7 @@ q_string = ["?"]*len(s_string)
 cmd_save = cmd_save.format(','.join(s_string),
                            ','.join(q_string))
 
-for s_id,conditional,invar_id,value in remaining_seq_info:
+for k,(s_id,conditional,invar_id,value) in enumerate(remaining_seq_info):
     func_name = ref_lookup_inv[invar_id]
     cmd = cmd_sequence.format(func_name, conditional,value)
     seq = [grab_scalar(search_conn[n],cmd) for n in search_conn]
@@ -140,7 +160,11 @@ for s_id,conditional,invar_id,value in remaining_seq_info:
     msg = "Level 1 seq: {} {} {}".format(func_name, value,seq)
     logging.info(msg)
 
-    seq_conn.commit()
+    if k and k%cargs["commit_freq"]==0:
+        seq_conn.commit()
+
+seq_conn.commit()
+
 
 # Function to compute the number of non-zero terms in a seq and record it
 
@@ -216,15 +240,9 @@ if remaining_seq_info:
 # Compute level 2 sequences
 
 cmd_sequence = '''
-SELECT COUNT(*) FROM graph_search WHERE {} {} {} AND {} {} {}'''
+SELECT COUNT(*) FROM invariant_integer WHERE {} {} {} AND {} {} {}'''
 
-#cmd_save = '''INSERT INTO sequence({}) VALUES ({})'''
-#s_string = ["sequence_id","query_level"] + ["s%i"%i for i in search_conn]
-#q_string = ["?"]*len(s_string)
-#cmd_save = cmd_save.format(','.join(s_string),
-#                           ','.join(q_string))
-
-for s_id,id1,c1,v1,id2,c2,v2 in remaining_seq_info:
+for k,(s_id,id1,c1,v1,id2,c2,v2) in enumerate(remaining_seq_info):
     func_name1 = ref_lookup_inv[id1]
     func_name2 = ref_lookup_inv[id2]
 
@@ -235,11 +253,14 @@ for s_id,id1,c1,v1,id2,c2,v2 in remaining_seq_info:
     seq_conn.execute(cmd_save, items)
     
     msg = "Level 2 seq: {} {} {} AND {} {} {}\n{}".format(func_name1,c1,v1, 
-                                                           func_name2, c2, v2, 
-                                                           seq)
+                                                          func_name2, c2, v2, 
+                                                          seq)
     logging.info(msg)
-    seq_conn.commit()
 
+    if k and k%cargs["commit_freq"]==0:
+        seq_conn.commit()
+
+seq_conn.commit()
 
 compute_non_zero_terms(2)
 seq_conn.commit()

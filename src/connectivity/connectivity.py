@@ -4,6 +4,7 @@ Flow based connectivity and cutsets
 """
 # http://www.informatik.uni-augsburg.de/thi/personen/kammer/Graph_Connectivity.pdf
 # http://www.cse.msu.edu/~cse835/Papers/Graph_connectivity_revised.pdf
+
 import itertools
 import networkx as nx
 __author__ = '\n'.join(['Jordi Torrents <jtorrents@milnou.net>'])
@@ -18,6 +19,7 @@ __all__ = [ 'vertex_connectivity',
             'minimum_st_edge_cutset',
             'minimum_edge_cutset',
             ]
+
 def _aux_digraph_vertex_connectivity(G):
     r""" Creates a directed graph D from an undirected graph G to compute flow
     based vertex connectivity.
@@ -120,7 +122,7 @@ def vertex_connectivity(G, s, t, aux_digraph=None, mapping=None):
     all_pairs_vertex_connectivity_matrix
     edge_connectivity
     global_edge_connectivity
-    max_flow
+    maximum_flow
     ford_fulkerson
     References
     ----------
@@ -134,7 +136,7 @@ def vertex_connectivity(G, s, t, aux_digraph=None, mapping=None):
         H, mapping = _aux_digraph_vertex_connectivity(G)
     else:
         H = aux_digraph
-    return nx.max_flow(H,'%sB'%mapping[s],'%sA'%mapping[t])
+    return nx.maximum_flow(H,'%sB'%mapping[s],'%sA'%mapping[t])
 def global_vertex_connectivity(G):
     r"""Returns vertex connectivity for a graph or digraph G.
     Global vertex connectivity is the minimum number of nodes that
@@ -177,7 +179,7 @@ def global_vertex_connectivity(G):
     all_pairs_vertex_connectivity_matrix
     edge_connectivity
     global_edge_connectivity
-    max_flow
+    maximum_flow
     ford_fulkerson
     References
     ----------
@@ -239,7 +241,7 @@ def all_pairs_vertex_connectivity_matrix(G):
     global_vertex_connectivity
     edge_connectivity
     global_edge_connectivity
-    max_flow
+    maximum_flow
     ford_fulkerson
     """
     try:
@@ -337,7 +339,7 @@ def edge_connectivity(G, u, v, aux_digraph=None):
     vertex_connectivity
     global_vertex_connectivity
     global_edge_connectivity
-    max_flow
+    maximum_flow
     ford_fulkerson
     References
     ----------
@@ -350,7 +352,7 @@ def edge_connectivity(G, u, v, aux_digraph=None):
         H = _aux_digraph_edge_connectivity(G)
     else:
         H = aux_digraph
-    return nx.max_flow(H, u, v)
+    return nx.maximum_flow(H, u, v)
 def global_edge_connectivity(G):
     r"""Returns the edge connectivity of the graph or digraph G.
     Global edge connectivity is the minimum number of edges that
@@ -393,7 +395,7 @@ def global_edge_connectivity(G):
     vertex_connectivity
     global_vertex_connectivity
     edge_connectivity
-    max_flow
+    maximum_flow
     ford_fulkerson
     References
     ----------

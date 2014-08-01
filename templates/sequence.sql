@@ -1,3 +1,9 @@
+CREATE TABLE IF NOT EXISTS ref_invariant_integer(
+    invariant_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    function_name STRING,
+    UNIQUE(function_name)
+);
+
 -- Keeps tracks of all unique values for each invariant
 CREATE TABLE IF NOT EXISTS unique_invariant_val(
   unique_invariant_id integer primary key autoincrement,
@@ -7,9 +13,7 @@ CREATE TABLE IF NOT EXISTS unique_invariant_val(
 
 --- Tracks if various items have been computed
 CREATE TABLE IF NOT EXISTS computed(
-  function_name STRING,
-  compute_type  STRING, 
-  has_computed TINYINT DEFAULT false
+  function_name STRING
 );
 
 -- This needs to be as long as max N
