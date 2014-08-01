@@ -1,6 +1,6 @@
 import numpy as np
 import logging, argparse, gc, inspect, os, csv
-import multiprocessing, sys
+import multiprocessing, sys, json
 
 from helper_functions import load_graph_database, select_itr
 from helper_functions import attach_table, generate_special_database_name
@@ -39,6 +39,14 @@ with open(f_graph_template) as FIN:
 
 attach_table(conn, generate_special_database_name(N),"sconn")
 
+# Load the list of invariants to compute
+f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
+with open(f_invariant_json,'r') as FIN:
+    js = json.loads(FIN.read())
+    special_names = js["special_function_names"]
+    ignored = js["ignored_special_function_names"]
+    special_names = [x for x in special_names if x not in ignored]
+
 # Find out which variables have been computed
 cmd_check = '''SELECT function_name FROM computed'''
 computed_functions = set( grab_vector(sconn,cmd_check) )
@@ -56,21 +64,36 @@ computed_functions = set( grab_vector(sconn,cmd_check) )
 
 def run_compute(function_name, pfunc, cmd_insert):
 
+    cmd_insert = cmd_insert.format(function_name)
+
     #cmd_count = '''SELECT COUNT(DISTINCT graph_id) FROM {}'''
     #g_id_n = grab_scalar(sconn, cmd_count.format(function_name))
     #if g_id_n == gn: return True
 
     #msg = "Computing {} ({}/{})"
     #logging.info(msg.format(function_name, gn-g_id_n,gn))
+    index_name = "idx_{}".format(function_name)
 
     cmd_grab_targets = '''SELECT graph_id,adj FROM graph
     WHERE graph_id NOT IN (SELECT graph_id FROM {})'''
     cmd = cmd_grab_targets.format(function_name)
     targets = select_itr(conn, cmd, chunksize=10000)
+
+    # Drop an index if it exists
+    cmd_drop = '''DROP INDEX IF EXISTS "{}";'''
+    sconn.execute(cmd_drop.format(index_name))
+
     compute_parallel(function_name, sconn, pfunc, cmd_insert,targets,N)
 
+    # Create an index once complete
+    cmd_create = '''CREATE INDEX IF NOT EXISTS "{}" ON "{}" ("graph_id");'''
+    sconn.execute(cmd_create.format(index_name,function_name))
+
+
 def check_computed(target_function, pfunc, cmd_custom_insert):
-    if target_function not in computed_functions:
+    if (target_function not in computed_functions and 
+        target_function in special_names):
+
         msg = "Computing {}"
         logging.info(msg.format(target_function))
 

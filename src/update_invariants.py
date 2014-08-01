@@ -1,7 +1,7 @@
 import numpy as np
 import logging, argparse, inspect, os, collections, json
 from helper_functions import load_graph_database, select_itr
-from helper_functions import grab_vector, grab_all
+from helper_functions import grab_vector, grab_all, import_csv_to_table
 from helper_functions import compute_parallel, grab_col_names
 
 desc   = "Updates the database for fixed N"
@@ -45,14 +45,16 @@ for name in invariant_names:
 col_names = grab_col_names(conn,"invariant_integer")
 
 # Add any columns that do not exist yet
-cmd_insert = '''
-ALTER TABLE invariant_integer ADD COLUMN {name} INTEGER;
-CREATE INDEX IF NOT EXISTS "idx_{name}" ON "invariant_integer" ("{name}" ASC);
-'''
+cmd_insert = '''ALTER TABLE invariant_integer ADD COLUMN {name} INTEGER;'''
+alter_script = []
 for name in invariant_names:
     if name not in col_names:
         logging.info("Adding column {name}".format(name=name))
-        conn.executescript(cmd_insert.format(name=name))
+        alter_script.append(cmd_insert.format(name=name))
+if alter_script:
+    alter_script = '\n'.join(alter_script)
+    conn.executescript(alter_script)
+    conn.commit()
 
 # List any special rules for the invariants
 special_invariants = {
@@ -60,11 +62,12 @@ special_invariants = {
     "is_tree"       : "cycle_basis",
     "girth"         : "cycle_basis",
     "circumference" : "cycle_basis",
-    "n_edge"       : "degree_sequence",
-    "n_endpoints"  : "degree_sequence",
-    "is_k_regular" : "degree_sequence",
+    "n_edge"        : "degree_sequence",
+    "n_endpoints"   : "degree_sequence",
+    "is_k_regular"  : "degree_sequence",
     "chromatic_number" : "tutte_polynomial",
-    "has_fractional_duality_gap_vertex_chromatic" : "fractional_chromatic_number",
+    "has_fractional_duality_gap_vertex_chromatic" : 
+    "fractional_chromatic_number",
     "n_independent_vertex_sets"      : "independent_vertex_sets",
     "maximal_independent_vertex_set" : "independent_vertex_sets",
     "n_independent_edge_sets"      : "independent_edge_sets",
@@ -77,8 +80,8 @@ def graph_target_iterator(func_name):
 
     cmd_grab = '''
       SELECT a.graph_id, a.adj FROM graph AS a
-      LEFT JOIN invariant_integer AS b
-      ON a.graph_id = b.graph_id AND b.{} IS NULL
+      JOIN invariant_integer AS b
+      ON a.graph_id = b.graph_id WHERE b.{} IS NULL
       '''.format(func_name)
 
     for g_id, adj in select_itr(conn, cmd_grab) :
@@ -177,6 +180,12 @@ for func_name in compute_invariant_functions:
     msg = "Starting calculation for {name}"
     logging.info(msg.format(name=func_name))
 
+    cmd_insert = '''
+      UPDATE invariant_integer SET {} = (?)
+      WHERE  graph_id=(?)'''.format(func_name)   
+    
+    import_csv_to_table(func_name, N, conn, cmd_insert)
+
     if func_name not in special_invariants:
         itr = graph_target_iterator(func_name)
     elif special_invariants[func_name] in special_iterator_mapping:
@@ -188,16 +197,11 @@ for func_name in compute_invariant_functions:
         raise SyntaxError(err_msg)
 
     func    = invariant_funcs[func_name] 
-    targets = itr        
+    targets = itr  
 
     def pfunc((g_id,adj,args)):
         result = int(func(adj,**args))
         return result, ((g_id,),)
-        #return g_id, ((result,),)
-
-    cmd_insert = '''
-      UPDATE invariant_integer SET {} = (?)
-      WHERE  graph_id=(?)'''.format(func_name)
 
     logging.info("Computing N={}, {} ".format(N, func_name))
 
@@ -207,9 +211,20 @@ for func_name in compute_invariant_functions:
         logging.info("Commiting changes")
         conn.commit()
 
-    #else:
-    #    for (g_id,adj,args) in itr:
-    #        result = func(adj,**args)
-    #        print g_id, adj, result
+    else:
+        for (g_id,adj,args) in itr:
+            result = func(adj,**args)
+            print g_id, adj, result
+
+
+# Create any missing indicies
+cmd_index = '''CREATE INDEX IF NOT EXISTS 
+"idx_{name}" ON "invariant_integer" ("{name}" ASC);'''
+logging.info("Creating indices {N}".format(N=N))
+for name in invariant_names:
+    conn.executescript(cmd_index.format(name=name))
+    conn.commit()
+
+conn.close()
 
 

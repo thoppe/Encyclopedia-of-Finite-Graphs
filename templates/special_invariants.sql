@@ -39,29 +39,3 @@ CREATE TABLE IF NOT EXISTS computed(
   function_name TEXT PRIMARY KEY
 );
 
-
--- Create indices for faster searching
-
-DROP INDEX IF EXISTS "idx_ independent_vertex_sets";
-DROP INDEX IF EXISTS "idx_ independent_edge_sets";
-
-CREATE INDEX IF NOT EXISTS "idx_independent_vertex_sets"
-ON "independent_vertex_sets" ("graph_id");
-
-CREATE INDEX IF NOT EXISTS "idx_independent_edge_sets"
-ON "independent_edge_sets" ("graph_id");
-
-CREATE INDEX IF NOT EXISTS "idx_fractional_chromatic_number"
-ON "fractional_chromatic_number" ("graph_id");
-
-CREATE INDEX IF NOT EXISTS "idx_tutte_polynomial"
-ON "tutte_polynomial" ("graph_id");
-
-CREATE INDEX IF NOT EXISTS "idx_degree_sequence" 
-ON "degree_sequence" ("graph_id");
-
-CREATE INDEX IF NOT EXISTS "idx_cycle_basis" 
-ON "cycle_basis" ("graph_id");
-
-
-

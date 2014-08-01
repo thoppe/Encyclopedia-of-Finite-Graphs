@@ -45,6 +45,17 @@
     "n_independent_edge_sets", 
     "maximal_independent_edge_set"
   ],
+
+  "special_function_names" : [  
+      "independent_vertex_sets",
+      "cycle_basis",
+      "tutte_polynomial",
+      "fractional_chromatic_number"
+  ],
+  "ignored_special_function_names" : [
+      "independent_edge_sets"
+  ],
+
   "distinct_sequences" :       
       {
           "degree_sequence" :"degree",

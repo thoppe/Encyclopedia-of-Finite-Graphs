@@ -1,12 +1,15 @@
 
 # Debugging/Testing commands
 
-test_N = 4
+test_N = 5
 all:
 	python src/generate_graphs.py $(test_N)
 	python src/update_special2.py $(test_N)
 	python src/update_invariants.py $(test_N)
 	python src/build_distinct_seq.py $(test_N)
+clean:
+	rm -vf database/special/graph$(test_N)_special.db
+	rm -vf database/graph$(test_N).db
 
 view:
 	sqlitebrowser database/graph$(test_N).db
@@ -23,7 +26,7 @@ report_lvl1:
 	python verification/lvl1_report.py > verification/raw_lvl1.md
 
 
-possible_N_values = 1 2 3 4 5 6 7 8 9
+possible_N_values = 1 2 3 4 5 6 7 8 9 10
 
 build:
 	make generate
@@ -35,7 +38,7 @@ generate:
 
 compute:
 	$(foreach n,$(possible_N_values),python src/update_special2.py $(n);)
-	$(foreach n,$(possible_N_values),python src/build_distinct_seq.py $(n);)
+#	$(foreach n,$(possible_N_values),python src/build_distinct_seq.py $(n);)
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:

@@ -99,15 +99,15 @@ def grab_col_names(connection, table):
     cursor = connection.execute(cmd)
     return [x[0] for x in cursor.description]
 
-def landing_table_itr(f_landing_table, index_args, max_iter=50000):
-    with open(f_landing_table,'r') as FIN:
-        for group in grouper(FIN,max_iter):
-            VALS = []
-            for item in group:
-                ix = item.strip().split()
-                val = [ix[n] for n in index_args]
-                VALS.append(val)
-            yield VALS
+#def landing_table_itr(f_landing_table, index_args, max_iter=50000):
+#    with open(f_landing_table,'r') as FIN:
+#        for group in grouper(FIN,max_iter):
+#            VALS = []
+#            for item in group:
+#                ix = item.strip().split()
+#                val = [ix[n] for n in index_args]
+#                VALS.append(val)
+#            yield VALS
     
 
 def select_itr(conn, cmd, chunksize=5000):  
@@ -227,35 +227,46 @@ def parallel_compute(itr, func, callback=None, **cargs):
 
 ########################################################################
 
+def generate_landing_table_name(function_name, N):
+    f_landing_table = os.path.join("landing_table_{}_{}"
+                                   .format(function_name,N))
+    return f_landing_table
+    
 def csv_validator(contents, cmd_insert):
     # Check for the extra bit written at the end
     expected_args = len([x for x in cmd_insert if x=="?"]) + 1
-    for item in contents:
+    for k,item in enumerate(contents):
+        #msg = "Inserting from landing table {}".format(k)
+        #if k and k%100000==0: logging.info(msg)
         if len(item) == expected_args:
             yield item[:-1]
     
-def import_csv_to_table(f_csv, table, cmd_insert):
-    with open(f_csv) as csvfile:
-        contents = csv.reader(csvfile, delimiter=',')
-        valid_contents = csv_validator(contents,cmd_insert)
-        table.executemany(cmd_insert, valid_contents)
+def import_csv_to_table(function_name, N, table, cmd_insert):
+    f_landing_table = generate_landing_table_name(function_name, N)
+
+    if os.path.exists(f_landing_table):
+        logging.info("Saving from landing table {}".format(f_landing_table))
+
+        with open(f_landing_table) as csvfile:
+            contents = csv.reader(csvfile, delimiter=',')
+            valid_contents = csv_validator(contents,cmd_insert)
+            table.executemany(cmd_insert, valid_contents)
+            table.commit()
+        os.remove(f_landing_table)
 
 def compute_parallel(
         function_name, 
         connection,
         pfunc, cmd_insert, targets,N):
 
-    f_landing_table = os.path.join("landing_table_{}_{}"
-                                   .format(function_name,N))
-
-    if os.path.exists(f_landing_table):
-        logging.info("Saving from landing table {}".format(f_landing_table))
-        import_csv_to_table(f_landing_table, connection,cmd_insert)
-        connection.commit()
-        os.remove(f_landing_table)
-
     P = multiprocessing.Pool()
     sol = P.imap(pfunc,targets,chunksize=5)
+    f_landing_table = generate_landing_table_name(function_name, N)
+
+    if os.path.exists(f_landing_table):
+        err_msg = "{} already exists (it should not)!"
+        raise ValueError(err_msg.format(f_landing_table))
+
     cmd_insert = cmd_insert.format(function_name)
     FOUT = open(f_landing_table,'w')
 
@@ -271,12 +282,9 @@ def compute_parallel(
             msg ="Saving {} graphs ({})".format(function_name,k)
             logging.info(msg)
             FOUT.flush()
-            os.fsync(FOUT.fileno())
+            #os.fsync(FOUT.fileno())
 
+    os.fsync(FOUT.fileno())
     FOUT.close()
+    import_csv_to_table(function_name, N, connection, cmd_insert)
 
-    if os.path.exists(f_landing_table):
-        logging.info("Saving from landing table {}".format(f_landing_table))
-        import_csv_to_table(f_landing_table, connection, cmd_insert)
-        connection.commit()
-        os.remove(f_landing_table)
