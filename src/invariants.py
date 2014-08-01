@@ -103,6 +103,25 @@ def special_independent_edge_sets(adj,**args):
     independent_sets = [int(line) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
 
+def special_laplacian_polynomial(adj,**args):
+    ''' 
+    This is the characteristic polynomial of the Laplacian matrix
+    L = A - D
+    '''
+    A = convert_to_numpy(adj,**args)
+    L = np.zeros(A.shape, dtype=int)
+    np.fill_diagonal(L, A.sum(axis=0))
+    L -= A
+    Ls = sympy.Matrix(L)
+    p = Ls.charpoly()
+
+    coeff_list = []
+    for degree in xrange(args["N"]):
+        coeff = p.nth(degree)
+        if coeff:
+            coeff_list.append( (degree,coeff) )
+    return tuple(coeff_list)
+
 ######################### REQUIRES [degree_sequence] #################
 
 def n_edge(adj,**args):
@@ -642,11 +661,9 @@ if __name__ == "__main__":
     #viz_graph(h)
     g   = nx.petersen_graph()
     adj = convert_nx_to_adj(g)
-    print edge_connectivity(adj,N=10)
+
+    special_laplacian_polynomial(adj, N=10)
     exit()
-    
-    print adj
-    print special_independent_vertex_sets(adj,N=10)
 
     #T = special_polynomial_tutte(adj, N=10)   
     #for k in xrange(0, 10):

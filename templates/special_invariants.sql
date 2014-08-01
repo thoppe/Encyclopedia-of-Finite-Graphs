@@ -10,6 +10,12 @@ CREATE TABLE IF NOT EXISTS tutte_polynomial(
     coeff      INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS laplacian_polynomial(
+    graph_id   INTEGER,
+    x_degree   UNSIGNED INTEGER,
+    coeff      BIG INTEGER
+);
+
 CREATE TABLE IF NOT EXISTS fractional_chromatic_number(
     graph_id   INTEGER,
     a          INTEGER,
