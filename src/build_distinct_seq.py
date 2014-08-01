@@ -53,7 +53,10 @@ def build_collection(target_function, target_columns):
         vals = grab_all(sconn,cmd_get_seq,g)
         return tuple(vals)
 
-    for g in g_id_itr:
+    for k,g in enumerate(g_id_itr):
+        if k and k%10000==0:
+            msg = "Computing distinct {}, working on graph {}, unique so far {}"
+            logging.info(msg.format(target_function, k, len(C)))
         vals = format_collection_query(g)
         C[vals] += 1
     return C
