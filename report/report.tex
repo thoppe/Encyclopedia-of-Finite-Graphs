@@ -34,6 +34,7 @@
 \newcommand{\SEQ}{\mathcal{S}}
 \newcommand{\CLASS}{\mathcal{C}}
 \newcommand{\ie}[0]{i.e.\ }
+\newcommand{\eg}[0]{e.g.\ }
 
 % Shortcuts for the invariant function names
 \newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
@@ -127,7 +128,7 @@ The code has been released as an open-source framework for further analysis and 
 
 There is a long history of public graph databases. 
 Databases originally found only in print, such as the \textit{Atlas of Graphs}\cite{read1998atlas}, have rapidly expanded in the electronic medium.
-These databases range from those of mathematical and algorithmic interest \cite{de2003large, brinkmann2013house} \needref, to those cataloging structures found in the applied sciences such as ChemSpider\cite{pence2010chemspider}, RNA topologies\cite{gan2004rag, laing2013predicting} or social databases \cite{mcauley2014circles,brandes2009wikipedia,oestreicher2006amazon}.
+These databases range from those of mathematical and algorithmic interest \cite{de2003large, brinkmann2013house}, to those cataloging structures found in the applied sciences such as ChemSpider\cite{pence2010chemspider}, RNA topologies\cite{gan2004rag, laing2013predicting} or social databases \cite{mcauley2014circles,brandes2009wikipedia,oestreicher2006amazon}.
 Due to the rapid growth in the number of unique isomorphic graphs however, the currently available databases are specialized in the number of graphs considered; 
 a judicious choice often restricts the study to an interesting and more manageable subset.
 
@@ -198,6 +199,10 @@ They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i
 In addition to contributing to the OEIS, a secondary goal is to identify all suggestive and exclusive relations between the invariants studied up to order $n=10$.
 \note{isn't $\SEQ$ the operator? In other words I don't understand why we need $\SEQ_a$ and $\SEQ_b$. I think it should be ``let $\SEQ_a = \SEQ(f, C)$, and $\SEQ_b = \SEQ(g, C)$''}
 
+We consider a final type of integer sequence, the number of distinct values an invariant could obtain for a given order.
+These sequences are not restricted to integer invariants. 
+As an example, consider the integer sequence defined by the number of unique chromatic polynomials of graphs of a given order.
+
 In this paper, we restrict the classes examined to those of simple connected graphs.
 Unless otherwise stated, any referenced graph is assumed to be simple and connected.
 Provided one had a means of enumeration, an extension of this program to other classes would be straightforward.
@@ -208,7 +213,7 @@ Exhaustive generation algorithms are known for many specialized classes such as 
 Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the the simple connected graphs up to order $n \le 10$.
 Our calculations drew upon a large number of open source libraries and tools. 
 Many of the graph invariant calculations were done with either \texttt{networkx} \cite{SciPyProceedings_11} or \texttt{graph-tool} \cite{Tiago2014graph}.
-The invariants that were computable with integer or linear programming were done with PuLP \needref.
+The invariants that were computable with integer or linear programming were done with PuLP \cite{mitchell2011pulp}.
 For each graph we computed a series of invariants, which for completeness are described in Appendix \ref{app:invariants}.
 A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq}.
 The relations between the invariants are numerous and are indexed online\cite{Travis2014Encyclopdia}.
@@ -241,8 +246,16 @@ In addition to providing useful information, some of these relations provided a 
 For example, one of the equality relations state that a graph is a tree $\Leftrightarrow$ it has infinite girth.
 This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinite for graphs without cycles). 
 
+The distinct sequences involved the creation of an additional database to store the non-integer invariants. 
+Each of these special invariants required their own individualized table.
+For example, the Tutte polynomial was stored as a denormalized table of graph identifiers with a row for each term of the polynomial containing the degree and coefficient.
+Since this specialized database was much larger than the invariant integer database it was not included in the public version.
+
+
+
+
 \note{list some interesting relations}
-\note{Mention the ``distinct'' integer sequences}
+
 
 \section{Discussion}
 
@@ -372,6 +385,7 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 \label{app:submittedseq}
 
 Primary sequences are those involving a single invariant, while secondary sequences are those that involve the union of two invariants.
+The distinct sequences were those formed by considering the number of unique values possible at a fixed order.
 Each sequence was hand-checked against the OEIS.
 We validated that either the sequence was unique or the invariant description matched the sequence found.
 For some invariants, the definition may be ambiguous for small orders.
@@ -402,6 +416,23 @@ $\VARfractionaldualitygapvertexchromatic$
 \end{longtable}
 %\label{table:refinvariants}
 %\end{table}
+
+
+\subsection{Extended sequences}
+
+\begin{longtable}{ l l r r r r r r r r r r}
+\toprule
+OEIS & Invariant & 
+\multicolumn{10}{l}{Sequence: \ $S_1, S_2, \ldots, S_{10}$, terms in $(\cdot)$ are new.} 
+\\
+\midrule\bottomrule
+\OEIS{A086216} & $\VARvertexconnectivity > 3$ & 0 & 0 & 0 & 0 & 1 & 4 & 25 & 384 & 14480 & (1211735) \\
+\OEIS{A086217} & $\VARvertexconnectivity > 4$ & 0 & 0 & 0 & 0 & 0 & 1 & 4 & 39 & 1051 & (102630) \\
+\OEIS{A052446} & $\VARedgeconnectivity =2$ & 	0& 1& 1& 3& 10& 52& 351& 3714& 63638& (1912203) \\
+\OEIS{A052447} & $\VARedgeconnectivity =3$ & 0& 0& 1& 2& 8& 41& 352& (4820) & (113256) & (4602039) \\
+\OEIS{A052448} & $\VARedgeconnectivity =4$ & 	0& 0& 0& 1& 2& 15& 121& (2159) & (68715) & (3952378) \\
+\OEIS{A088741} & $\VARstronglyregular(g)=1$ & 	1& 1& 1& 2& 2& 3& 1& 3& 3& (5) \\
+\end{longtable}
 
 \subsection{Primary sequences}
 
