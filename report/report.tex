@@ -37,7 +37,6 @@
 
 % Shortcuts for the invariant function names
 \newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
-\newcommand{\VARchromaticnumber}{\chi(g)}
 \newcommand{\VARedgeconnectivity}{\kappa_{E}(g)}
 \newcommand{\VARvertexconnectivity}{\kappa_{V}(g)}
 \newcommand{\VARdiameter}{\text{dia}(g)}
@@ -45,6 +44,9 @@
 \newcommand{\VARnarticulationpoints}{a(g)}
 \newcommand{\VARmaximalindependentvertexset}{\alpha_V(g)}
 \newcommand{\VARmaximalindependentedgeset}{\alpha_E(g)}
+
+\newcommand{\VARchromaticnumber}{\chi(g)}
+\newcommand{\VARfractionalchromaticnumber}[1]{\chi_{#1}(g)}
 
 \newcommand{\VARsubgraph}{s}
 \newcommand{\namedsubgraph}[1]{\VARsubgraph{}(g,#1)}
@@ -190,11 +192,11 @@ While a few sequences were merely extended, other invariants, such as the the in
 We also attempt to quantify the relationships between graph invariants.
 Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
 Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
-% This is confusing because sequences has two meanings, a sequence of sets of graphs, \SEQ, and an integer sequence, S. maybe we can call \SEQ a query, since everywhere else in teh paper, sequence refers to an integer sequence. 
+\note{ This is confusing because sequences has two meanings, a sequence of sets of graphs, $\SEQ$, and an integer sequence, S. maybe we can call $\SEQ$ a query, since everywhere else in the paper, sequence refers to an integer sequence. }
 We say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
 They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
 In addition to contributing to the OEIS, a secondary goal is to identify all suggestive and exclusive relations between the invariants studied up to order $n=10$.
-% isn't \SEQ the operator? In other words I don't understand why we need \SEQ_a and \SEQ_b. I think it should be "let \SEQ_a = \SEQ(f, C), and \SEQ_b = \SEQ(g, C)"
+\note{isn't $\SEQ$ the operator? In other words I don't understand why we need $\SEQ_a$ and $\SEQ_b$. I think it should be ``let $\SEQ_a = \SEQ(f, C)$, and $\SEQ_b = \SEQ(g, C)$''}
 
 In this paper, we restrict the classes examined to those of simple connected graphs.
 Unless otherwise stated, any referenced graph is assumed to be simple and connected.
@@ -208,16 +210,16 @@ Our calculations drew upon a large number of open source libraries and tools.
 Many of the graph invariant calculations were done with either \texttt{networkx} \cite{SciPyProceedings_11} or \texttt{graph-tool} \cite{Tiago2014graph}.
 The invariants that were computable with integer or linear programming were done with PuLP \needref.
 For each graph we computed a series of invariants, which for completeness are described in Appendix \ref{app:invariants}.
-A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq} and the relations between the sequences in Appendix \ref{app:relations}.
+A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq}.
+The relations between the invariants are numerous and are indexed online\cite{Travis2014Encyclopdia}.
 
 Since the graphs we consider are loopless and undirected, the edge incidence information for each graph requires $n(n+1)/2$ bits of storage.
 The largest we computed is of order 10, which requires 45 bits. 
 This can be efficiently stored as a 64 bit unsigned integer using a binary representation.
 Graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
 Internally, we used SQLite3 as the database back end for portability reasons.
-Most of the invariants were stored as integers.
-However, we found it useful to store certain non-integer invariants, such as the Tutte polynomial in a separate, specialized database.
-\note{mention the size of the database?}
+Most of the invariants were stored as integers and compressed, the invariant database is about $850$ MB.
+Some non-integer invariants, such as the Tutte polynomial, were stored in a separate, specialized database.
 
 The database was created by first the full enumeration of the graphs themselves.
 Then all of the invariants found in the invariant reference table were allocated to multiple computers to be calculated.
@@ -225,8 +227,7 @@ The graph invariant values were stored in a normalized table to facilitate the a
 Even with indexing however, this arrangement was not optimal for sequence-like queries.
 Hence, we built the sequences themselves in a second, denormalized, database which was created at the end of the invariant calculation.
 In this second database, each graph was stored as a row and each column as an indexed invariant. 
-% I don't think the phrase "indexed invariant" makes sense. 
-% I would say "... and each column contained the value of a particular invariant for each graph. We placed an index on each of the invariant columns to allow for fast querying, at the expense of disk space (which was readily available, and cheap).
+\note{ I don't think the phrase "indexed invariant" makes sense. I would say "... and each column contained the value of a particular invariant for each graph. We placed an index on each of the invariant columns to allow for fast querying, at the expense of disk space (which was readily available, and cheap).}
 
 Sequences were constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
 For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group is equal to two, while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater than or equal to three. 
@@ -267,10 +268,12 @@ The \textit{spectrum}, $\lambda_1, \lambda_2, \ldots$ of a graph are the eigenva
 A graph is $integral$ if all the values of the graph spectrum are integral, $\lambda_k \in \mathbb{Z}$. 
 A graph is $real$ if $\lambda_k \in \mathbb{R}$.
 
-\textit{Independent edge/vertex sets}, \textit{independence number}.
-The \textit{Hosoya index}\cite{hosoya1971topological} while fixed-parameter tractable for a bounded treewidth, is computational intractable in general as it is $\mathcal{\#P}$-complete\cite{jerrum1987two}.
+An \textit{independent vertex/edge set} is a subset of vertices/edges of a graph such that no two vertices/edges in the subset share an edge/vertex. 
+The \textit{maximal independent vertex set} or \textit{independence number}, is the cardinality of the largest independent vertex set.
 A graph is \textit{bipartite} if there exists two disjoint independent subsets of the vertices whose union is $V$.
-\note{Complete def. here}
+The \textit{maximal independent edge set} is the cardinality of the largest independent edge set.
+The total number of independent edges sets is sometimes referred to as the number of \textit{edge matchings}, or the \textit{Hosoya index}\cite{hosoya1971topological}.
+The Hosoya index, while fixed-parameter tractable for a bounded treewidth, is difficult to compute in general as it is $\mathcal{\#P}$-complete\cite{jerrum1987two}.
 
 The \textit{automorphism group} is formed by all mappings of the vertices onto themselves which preserve isomorphism. 
 The cardinality of this group is the \textit{automorphism number}.
@@ -285,13 +288,24 @@ The \textit{chromatic polynomial} is a specialization of the Tutte polynomial fo
 The chromatic polynomial $P(G,k)$ gives the number of proper $k$-colorings on graph $G$. 
 The \textit{chromatic number} $\VARchromaticnumber$, is the smallest non-zero $k$ such that $P(G,k)>0$.
 
-The \textit{fractional coloring number} is motivated by the chromatic number.
-In the fractional coloring problem, a set of $b$ colors must be assigned to each vertex, out of a set $a$ of available colors with no adjacent vertices sharing any colors.
-$\chi_b(G)$, for a given $b$, is the smallest value of $a$ such that an $a:b$ fractional coloring exists. 
-One can formulate the chromatic number as an integer program and the fractional coloring number as the linear relaxation of this program\cite{scheinerman2011fractional}.
-The integral chromatic number need not be equal to its fractional counter part, in fact $\chi_f(G) \le \chi(G)$. 
-A graph has a \textit{fractional chromatic gap} if $\chi_f(G) \ne \chi(G)$.
-\note{Check if there needs to be some minimal $b$ in the def above.}
+The fractional coloring number is motivated by the chromatic number.
+A graph is \textit{$a:b$ colorable} if each vertex is assigned $b$ colors out of a palette of $a$ total colors such that the coloring of each adjacent vertex is disjoint. 
+The least $a$ such that the graph can be assigned to $b$ colors is the $b$-fold chromatic number denoted by $\VARfractionalchromaticnumber{b}$. 
+Note that the standard chromatic number is $\VARchromaticnumber{} = \VARfractionalchromaticnumber{1}$.
+The \textit{fractional coloring number} is defined to be
+\begin{equation}
+\VARfractionalchromaticnumber{f} = 
+\lim_{b \rightarrow \infty} \frac{\VARfractionalchromaticnumber{b}}{b} = 
+\inf _ {b} \frac{\VARfractionalchromaticnumber{b}}{b} 
+\end{equation}
+Note only does the limit exists, but $\VARfractionalchromaticnumber{f} \in \mathbb{Q}$\cite{scheinerman2011fractional}.
+The integral chromatic number need not be equal to its fractional counter part, in fact 
+$\VARfractionalchromaticnumber{f} \le \VARchromaticnumber$.
+If the equality does not hold we say the graph has a \textit{fractional chromatic gap}
+Additionally, we can formulate $\VARfractionalchromaticnumber{f}$ as a solution to a linear program.
+Let $I(g)$ be the set of all independent vertex sets and $I(g,v)$ be the set of independent vertex sets that contain vertex $v$. 
+Define a system of non-negative variables $v_i$.
+Now $\VARfractionalchromaticnumber{f}$ is the minimum of $\sum_{I \in I(g)} v_i$ subject to the constraints $\sum_{I \in I(g,x)} v_i \ge 1$ on each $v_i$.
 
 \textit{distance regular} Defined by its automorphism.
 \note{Complete def. here}
@@ -546,10 +560,6 @@ OEIS & Invariant & &
 \OEIS{A243798} & $\VARissubgraphfreebull =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 12 & 25 & 55 & 126 & 304 \\
 \OEIS{A243799} & $\VARissubgraphfreeopenbowtie =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 13 & 25 & 58 & 130 & 316 \\
 \end{longtable}
-
-\section{Relations}
-\label{app:relations}
-\note{Add table of relations}
 
 \end{appendices}
 
