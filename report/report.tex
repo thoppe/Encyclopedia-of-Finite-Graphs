@@ -33,8 +33,78 @@
 % Text shortcuts
 \newcommand{\SEQ}{\mathcal{S}}
 \newcommand{\CLASS}{\mathcal{C}}
-\newcommand{\SIMPLECLASS}{\mathcal{C}_\text{simple}}
 \newcommand{\ie}[0]{i.e.\ }
+\newcommand{\eg}[0]{e.g.\ }
+
+% Shortcuts for the invariant function names
+\newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
+\newcommand{\VARedgeconnectivity}{\kappa_{E}(g)}
+\newcommand{\VARvertexconnectivity}{\kappa_{V}(g)}
+\newcommand{\VARdiameter}{\text{dia}(g)}
+\newcommand{\VARgirth}{\text{girth}(g)}
+\newcommand{\VARnarticulationpoints}{a(g)}
+\newcommand{\VARmaximalindependentvertexset}{\alpha_V(g)}
+\newcommand{\VARmaximalindependentedgeset}{\alpha_E(g)}
+
+\newcommand{\VARchromaticnumber}{\chi(g)}
+\newcommand{\VARfractionalchromaticnumber}[1]{\chi_{#1}(g)}
+
+\newcommand{\VARsubgraph}{s}
+\newcommand{\namedsubgraph}[1]{\VARsubgraph{}(g,#1)}
+\newcommand{\VARissubgraphfreeKthree}{\namedsubgraph{K_3}}
+\newcommand{\VARissubgraphfreeKfour}{\namedsubgraph{K_4}}
+\newcommand{\VARissubgraphfreeKfive}{\namedsubgraph{K_5}}
+\newcommand{\VARissubgraphfreeCfour}{\namedsubgraph{C_4}}
+\newcommand{\VARissubgraphfreeCfive}{\namedsubgraph{C_5}}
+\newcommand{\VARissubgraphfreeCsix}{\namedsubgraph{C_6}}
+\newcommand{\subgraphBULL}{B_5}
+\newcommand{\subgraphDIAMOND}{D_4}
+\newcommand{\subgraphBOWTIE}{\bowtie}
+\newcommand{\subgraphOPENBOWTIE}{\rtimes}
+\newcommand{\VARissubgraphfreebull}{\namedsubgraph{\subgraphBULL}}
+\newcommand{\VARissubgraphfreediamond}{\namedsubgraph{\subgraphDIAMOND}}
+\newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\subgraphBOWTIE}}
+\newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\subgraphOPENBOWTIE}}
+
+\newcommand{\indicatorfunctionX}[1]{{#1}(g)}
+
+\newcommand{\VARfractionaldualitygapvertexchromatic}{X}
+\newcommand{\VARdistanceregular}{D}
+\newcommand{\VARhamiltonian}{H}
+\newcommand{\VARbipartite}{B}
+\newcommand{\VAReulerian}{E}
+\newcommand{\VARplanar}{P}
+\newcommand{\VARtree}{T}
+\newcommand{\VARchordal}{C}
+\newcommand{\VARkregular}{R}
+\newcommand{\VARstronglyregular}{R^*}
+\newcommand{\VARintegral}{I}
+\newcommand{\VARrealspectrum}{I^*}
+
+\newcommand{\VARhasfractionaldualitygapvertexchromatic}
+{\indicatorfunctionX{\VARfractionaldualitygapvertexchromatic}}
+\newcommand{\VARisdistanceregular}
+{\indicatorfunctionX{\VARdistanceregular}}
+\newcommand{\VARishamiltonian}
+{\indicatorfunctionX{\VARhamiltonian}}
+\newcommand{\VARisbipartite}
+{\indicatorfunctionX{\VARbipartite}}
+\newcommand{\VARiseulerian}
+{\indicatorfunctionX{\VAReulerian}}
+\newcommand{\VARisplanar}
+{\indicatorfunctionX{\VARplanar}}
+\newcommand{\VARistree}
+{\indicatorfunctionX{\VARtree}}
+\newcommand{\VARischordal}
+{\indicatorfunctionX{\VARchordal}}
+\newcommand{\VARiskregular}
+{\indicatorfunctionX{\VARkregular}}
+\newcommand{\VARisstronglyregular}
+{\indicatorfunctionX{\VARstronglyregular}}
+\newcommand{\VARisintegral}
+{\indicatorfunctionX{\VARintegral}}
+\newcommand{\VARisrealspectrum}
+{\indicatorfunctionX{\VARrealspectrum}}
 
 \setlength{\parindent}{.35cm}
 
@@ -46,11 +116,11 @@
 \maketitle
 
 \begin{abstract}
-We exhaustively enumerate all simple, connected graphs of a finite order and compute a selection of invariants over this set.
+We have exhaustively enumerated all simple, connected graphs of a finite order and have computed a selection of invariants over this set.
 Integer sequences were constructed from these invariants and checked against the Online Encyclopedia of Integer Sequences (OEIS).
 \OEISprimary new sequences were added and \OEISedits sequences were appended or corrected.
-From the graph database we are able to programmatically suggest relationships among the invariants.
-We show that we can readily visualize any sequence of graphs with a given criteria.
+From the graph database, we were able to programmatically suggest relationships among the invariants.
+We will show that we can readily visualize any sequence of graphs with a given criteria. 
 The code has been released as an open-source framework for further analysis and the database was constructed to be extensible to invariants not considered in this work.
 \end{abstract}
 
@@ -58,25 +128,25 @@ The code has been released as an open-source framework for further analysis and 
 
 There is a long history of public graph databases. 
 Databases originally found only in print, such as the \textit{Atlas of Graphs}\cite{read1998atlas}, have rapidly expanded in the electronic medium.
-These databases range from those of mathematical and algorithmic interest \cite{de2003large, brinkmann2013house} \needref, to those cataloging structures found in the applied sciences such as ChemSpider\cite{pence2010chemspider}, RNA topologies\cite{gan2004rag} (get other RNA paper \needref) or social databases (\needref).
+These databases range from those of mathematical and algorithmic interest \cite{de2003large, brinkmann2013house}, to those cataloging structures found in the applied sciences such as ChemSpider\cite{pence2010chemspider}, RNA topologies\cite{gan2004rag, laing2013predicting} or social databases \cite{mcauley2014circles,brandes2009wikipedia,oestreicher2006amazon}.
 Due to the rapid growth in the number of unique isomorphic graphs however, the currently available databases are specialized in the number of graphs considered; 
 a judicious choice often restricts the study to an interesting and more manageable subset.
 
 We proceed with the assumption however, that \textit{a priori} all graphs could be interesting given the right question.
-This is similar the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bound an inequality or constraint.
-Our objective is more elementary, we aim to compute are large, comprehensive database of graphs and their respective invariants. 
+This is similar to the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bounded by an inequality or constraint.
+Our objective is more elementary. We aim to compute a large, comprehensive database of graphs and their respective invariants. 
 Such a database will allow new forms of discovery, some of which will be directly explored in this paper.
-For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known in the Online Encyclopedia of Integer Sequences.
+For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known.
 These sequences, and the set of graphs that belong to them, can be used to explore a basic set of relations among the invariants. 
-Since the input to GraPHedron consists of a set of invariants, a larger the input set will amplify the predictive power.
+Since the input to GraPHedron consists of a set of invariants, a larger input set will amplify the predictive power.
 Additionally, the creation of a large, centralized database will serve as a useful reference for benchmarking various algorithms.
 Finally, a comprehensive database provides pedagogic value, as representative graphs from any considered sequence can be rapidly visualized.
 
-To this end, we have created the \textit{Encyclopedia of Finite Graphs}, a database of invariants (add DOI ref for the database itself \needref) and the software to fully populate it\cite{Travis2014Encyclopdia}. 
+To this end, we have created the \textit{Encyclopedia of Finite Graphs} (henceforth Encyclopedia), a database of invariants (add DOI ref for the database itself \needref) and the software to fully populate it\cite{Travis2014Encyclopdia}. 
 The code and the database has been released under an open source license.
 The intention is for new invariants to be an added to the project when various algorithms become available.
 
-Once built, the Encyclopedia of Finite Graphs readily yields integer sequences formed by matching the number of graphs to an invariant constraint at each order.
+Once built, the Encyclopedia readily yields integer sequences formed by matching the number of graphs to an invariant constraint at each order.
 Many such sequences have already been found and cataloged in another database, the Online Encyclopedia of Integer Sequences (OEIS)\cite{sloane2003line}.
 The OEIS was created by Neil Sloane in 1964 as a graduate student during his studies of combinatorial problems.
 Since then, the database has grown to over 250,000 sequences and is highly cited, with over 3,000 citations to date.
@@ -84,7 +154,7 @@ The sequences are of general interest, spanning topics such as number theory, co
 A given sequence may contain any number of terms, ranging from at least four up to as many as 500,000 (in the cases where the sequence admits a readily computable expression).
 Collecting and storing integer sequences in one place allows a researcher, who perhaps comes across the first few values of an unknown sequence, to be able to quickly look up subsequent values. 
 The OEIS not only provides the numerical values but seeks to function as a true encyclopedia, with cross references to related sequences, references to other literature, and formulas when known.
-One of the primary goals of this paper was to systematically expand the sequences involving graph invariants known to the OEIS database.
+One of the primary goals of this paper is to systematically expand the sequences involving graph invariants known to the OEIS database.
 Through our exhaustive enumeration of small graphs, we were able to submit \OEISprimary new sequences to the OEIS and extend \OEISedits existing sequences.
 
 A graph invariant is any property that is preserved under isomorphism. 
@@ -109,10 +179,10 @@ where $f$ is some invariant condition that selects from each set $\CLASS_n$.
 Let 
 $S(f, \CLASS) = |f(\CLASS_1)|, |f(\CLASS_2)|, |f(\CLASS_3)|, \ldots$
 be the sequence of integers defined by $\SEQ(f, \CLASS)$. 
-For example, if $f_\text{tree}$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\SIMPLECLASS$ is the set of all simple unlabeled connected graphs,
+For example, if $\VARistree$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\CLASS^\prime$ is the set of all simple unlabeled connected graphs,
 %
 \begin{align}
-S(f_\text{tree}=1, \SIMPLECLASS) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
+S(\VARistree=1, \CLASS^\prime) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 \end{align}
 %
 which is sequence \OEIS{A000055} in the OEIS.
@@ -123,54 +193,69 @@ While a few sequences were merely extended, other invariants, such as the the in
 We also attempt to quantify the relationships between graph invariants.
 Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
 Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
+\note{ This is confusing because sequences has two meanings, a sequence of sets of graphs, $\SEQ$, and an integer sequence, S. maybe we can call $\SEQ$ a query, since everywhere else in the paper, sequence refers to an integer sequence. }
 We say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
 They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
 In addition to contributing to the OEIS, a secondary goal is to identify all suggestive and exclusive relations between the invariants studied up to order $n=10$.
+\note{isn't $\SEQ$ the operator? In other words I don't understand why we need $\SEQ_a$ and $\SEQ_b$. I think it should be ``let $\SEQ_a = \SEQ(f, C)$, and $\SEQ_b = \SEQ(g, C)$''}
 
-In this paper, we restrict the classes examined to $\SIMPLECLASS$. 
-Unless otherwise stated, from this point any referenced graph is assumed to be simple and connected.
+We consider a final type of integer sequence, the number of distinct values an invariant could obtain for a given order.
+These sequences are not restricted to integer invariants. 
+As an example, consider the integer sequence defined by the number of unique chromatic polynomials of graphs of a given order.
+
+In this paper, we restrict the classes examined to those of simple connected graphs.
+Unless otherwise stated, any referenced graph is assumed to be simple and connected.
 Provided one had a means of enumeration, an extension of this program to other classes would be straightforward.
 Exhaustive generation algorithms are known for many specialized classes such as bipartite graphs, digraphs, multigraphs, regular graphs, cubic graphs, snarks, trees and maximal triangle-free graphs\cite{mckay2014practical, meringer1999fast, brinkmann1996fast, brinkmann2013generation, sawada2006generating, brandt2000generation}. 
 
 \section{Methods}
 
-Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the class of $\SIMPLECLASS$ up to order $n \le 10$.
+Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the the simple connected graphs up to order $n \le 10$.
 Our calculations drew upon a large number of open source libraries and tools. 
 Many of the graph invariant calculations were done with either \texttt{networkx} \cite{SciPyProceedings_11} or \texttt{graph-tool} \cite{Tiago2014graph}.
-The invariants that were computable with integer or linear programming were done with PuLP \needref.
+The invariants that were computable with integer or linear programming were done with PuLP \cite{mitchell2011pulp}.
 For each graph we computed a series of invariants, which for completeness are described in Appendix \ref{app:invariants}.
-A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq} and the relations between the sequences in Appendix \ref{app:relations}.
+A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq}.
+The relations between the invariants are numerous and are indexed online\cite{Travis2014Encyclopdia}.
 
-Since the graphs in $\SIMPLECLASS$ are loopless and undirected, the edge incidence information for each graph requires $n(n+1)/2$ bits of storage.
-The largest class we computed is of order 10, which requires 45 bits. 
-This can be efficiently stored as a 64 bit unsigned integer using a binary reresentation.
-We note that graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
-Internally, we use SQLite3 as the database back end for portability reasons.
-Most of the invariants were stored as integers.
-However, we found it useful to store certain non integer invariants, such as the Tutte polynomial in a separate, specialized database.
-\note{mention the size of the database?}
+Since the graphs we consider are loopless and undirected, the edge incidence information for each graph requires $n(n+1)/2$ bits of storage.
+The largest we computed is of order 10, which requires 45 bits. 
+This can be efficiently stored as a 64 bit unsigned integer using a binary representation.
+Graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
+Internally, we used SQLite3 as the database back end for portability reasons.
+Most of the invariants were stored as integers and compressed, the invariant database is about $850$ MB.
+Some non-integer invariants, such as the Tutte polynomial, were stored in a separate, specialized database.
 
-The database construction first proceeds by the enumeration of graphs themselves.
-Once complete, the database checks against a reference table for invariants that have not been computed and allocates the processing to multiple computers.
-The invariants are stored in a flat table to facilitate the addition of new invariants.
-Even with indexing however, this arrangement is not optimal for sequence-like queries.
-Hence, we build the sequences themselves in a second database which is created at the end of the invariant calculation.
-In this second database, each graph is stored as a row and each column is an indexed invariant.
+The database was created by first the full enumeration of the graphs themselves.
+Then all of the invariants found in the invariant reference table were allocated to multiple computers to be calculated.
+The graph invariant values were stored in a normalized table to facilitate the addition of new invariants.
+Even with indexing however, this arrangement was not optimal for sequence-like queries.
+Hence, we built the sequences themselves in a second, denormalized, database which was created at the end of the invariant calculation.
+In this second database, each graph was stored as a row and each column as an indexed invariant. 
+\note{ I don't think the phrase "indexed invariant" makes sense. I would say "... and each column contained the value of a particular invariant for each graph. We placed an index on each of the invariant columns to allow for fast querying, at the expense of disk space (which was readily available, and cheap).}
 
-Sequences are constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
-For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group is equal to two while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater or equal to three. 
+Sequences were constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
+For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group is equal to two, while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater than or equal to three. 
 Sequences can involve more than one invariant condition.
 A sequence with only a single invariant condition is called a primary sequence, while a sequence involving two or more invariant conditions is called a secondary sequence.
-For a sequence to be considered for submission to the OEIS it must have at least four non-zero entries. 
+For a sequence to be considered for submission to the OEIS, it must have at least four non-zero entries. 
 
-The suggestive relations described in the previous section are built in a similar way.
-For each pair of invariants conditions, the set of graphs related to the sequences are compared for set equality, exclusivity or as subsets.
-In addition to providing useful information, some of these relations provide a check on the accuracy of the algorithms.
-For example, one of the equality relations state that, a graph is a tree $\Leftrightarrow$ a graph has infinite girth.
-This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinte for graphs without cycles). 
+The suggestive relations described in the previous section were built in a similar way.
+For each pair of invariants conditions, the sets of graphs related to the sequences were compared for set equality, exclusivity or as subsets.
+In addition to providing useful information, some of these relations provided a check on the accuracy of the algorithms.
+For example, one of the equality relations state that a graph is a tree $\Leftrightarrow$ it has infinite girth.
+This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinite for graphs without cycles). 
+
+The distinct sequences involved the creation of an additional database to store the non-integer invariants. 
+Each of these special invariants required their own individualized table.
+For example, the Tutte polynomial was stored as a denormalized table of graph identifiers with a row for each term of the polynomial containing the degree and coefficient.
+Since this specialized database was much larger than the invariant integer database it was not included in the public version.
+
+
+
 
 \note{list some interesting relations}
-\note{Mention the ``distinct'' integer sequences}
+
 
 \section{Discussion}
 
@@ -182,73 +267,27 @@ While not explored in this paper, the system of GraPHedron could be combined wit
 
 \begin{appendices}
 
-% Shortcuts for the invariant function names
-\newcommand{\VARautomorphismgroupn}{| \text{Aut}(g) |}
-\newcommand{\VARchromaticnumber}{\chi(g)}
-\newcommand{\VARedgeconnectivity}{\kappa_{E}(g)}
-\newcommand{\VARvertexconnectivity}{\kappa_{V}(g)}
-\newcommand{\VARdiameter}{\text{dia}(g)}
-\newcommand{\VARgirth}{\text{girth}(g)}
-\newcommand{\VARnarticulationpoints}{a(g)}
-\newcommand{\VARmaximalindependentvertexset}{\alpha_V(g)}
-\newcommand{\VARmaximalindependentedgeset}{\alpha_E(g)}
-
-\newcommand{\VARsubgraph}{s}
-\newcommand{\namedsubgraph}[1]{\VARsubgraph{}(g,#1)}
-\newcommand{\VARissubgraphfreeKthree}{\namedsubgraph{K_3}}
-\newcommand{\VARissubgraphfreeKfour}{\namedsubgraph{K_4}}
-\newcommand{\VARissubgraphfreeKfive}{\namedsubgraph{K_5}}
-\newcommand{\VARissubgraphfreeCfour}{\namedsubgraph{C_4}}
-\newcommand{\VARissubgraphfreeCfive}{\namedsubgraph{C_5}}
-\newcommand{\VARissubgraphfreeCsix}{\namedsubgraph{C_6}}
-
-\newcommand{\subgraphBULL}{B_5}
-\newcommand{\subgraphDIAMOND}{D_4}
-\newcommand{\subgraphBOWTIE}{\bowtie}
-\newcommand{\subgraphOPENBOWTIE}{\rtimes}
-
-\newcommand{\VARissubgraphfreebull}{\namedsubgraph{\subgraphBULL}}
-\newcommand{\VARissubgraphfreediamond}{\namedsubgraph{\subgraphDIAMOND}}
-\newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\subgraphBOWTIE}}
-\newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\subgraphOPENBOWTIE}}
-
-\newcommand{\indicatorfunctionX}[1]{\Theta(g,#1)}
-
-\newcommand{\VARhasfractionaldualitygapvertexchromatic}{\indicatorfunctionX{\mathcal{X}}}
-
-\newcommand{\VARisdistanceregular}{\indicatorfunctionX{\mathcal{D}}}
-\newcommand{\VARishamiltonian}{\indicatorfunctionX{\mathcal{H}}}
-\newcommand{\VARisbipartite}{\indicatorfunctionX{\mathcal{B}}}
-\newcommand{\VARiseulerian}{\indicatorfunctionX{\mathcal{E}}}
-\newcommand{\VARisplanar}{\indicatorfunctionX{\mathcal{P}}}
-\newcommand{\VARistree}{\indicatorfunctionX{\mathcal{T}}}
-\newcommand{\VARischordal}{\indicatorfunctionX{\mathcal{C}}}
-
-\newcommand{\VARiskregular}{\indicatorfunctionX{\mathcal{R}}}
-\newcommand{\VARisstronglyregular}{\indicatorfunctionX{\mathcal{R}^*}}
-
-\newcommand{\VARisintegral}{\indicatorfunctionX{\mathcal{I}}}
-\newcommand{\VARisrealspectrum}{\indicatorfunctionX{\mathcal{I}^*}}
-
-
 \section{Invariant Descriptions}
 \label{app:invariants}
 
-The invariant descriptions are broadly organized into sections of algebraic graph theory, topological graph theory, and invariants related to structure like connectivity.
+The invariant descriptions are broadly organized into sections of algebraic graph theory, topological graph theory, and invariants related to structure-like connectivity.
 Readers are instructed to look to standard references for more comprehensive definitions \needref.
 
 \subsubsection*{Algebraic Graph Theory}
 
 The \textit{adjacency matrix} $A$ has the value at $A_{ij}$ equal to the number of edges joining vertex $i$ to $j$. 
-For $\SIMPLECLASS$, this is a $\{0,1\}$ matrix with zeros down the diagonal. 
-The \textit{spectrum}, $\lambda_1, \lambda_2, \ldots$ of a graph are the eigenvalues of $A$. 
-A graph is $integral$ if all the values of the graph spectrum are integral, $\lambda_k \in \mathbb{Z}$. 
+For simple graphs, this is a $\{0,1\}$ matrix with zeros down the diagonal. 
+The \textit{characteristic polynomial} for a matrix is given by its eigenvalues, $\det(\lambda I - A)$.
+A sequence of eigenvalues $\lambda_1, \lambda_2, \ldots$ is called the \textit{spectrum}.
+A graph is $integral$ if all the values of the adjacency spectrum are integral, $\lambda_k \in \mathbb{Z}$. 
 A graph is $real$ if $\lambda_k \in \mathbb{R}$.
 
-\textit{Independent edge/vertex sets}, \textit{independence number}.
-The \textit{Hosoya index}\cite{hosoya1971topological} while fixed-parameter tractable for a bounded treewidth, is computational intractable in general as it is $\mathcal{\#P}$-complete\cite{jerrum1987two}.
+An \textit{independent vertex/edge set} is a subset of vertices/edges of a graph such that no two vertices/edges in the subset share an edge/vertex. 
+The \textit{maximal independent vertex set} or \textit{independence number}, is the cardinality of the largest independent vertex set.
 A graph is \textit{bipartite} if there exists two disjoint independent subsets of the vertices whose union is $V$.
-\note{Complete def. here}
+The \textit{maximal independent edge set} is the cardinality of the largest independent edge set.
+The total number of independent edges sets is sometimes referred to as the number of \textit{edge matchings}, or the \textit{Hosoya index}\cite{hosoya1971topological}.
+The Hosoya index, while fixed-parameter tractable for a bounded treewidth, is difficult to compute in general as it is $\mathcal{\#P}$-complete\cite{jerrum1987two}.
 
 The \textit{automorphism group} is formed by all mappings of the vertices onto themselves which preserve isomorphism. 
 The cardinality of this group is the \textit{automorphism number}.
@@ -263,16 +302,24 @@ The \textit{chromatic polynomial} is a specialization of the Tutte polynomial fo
 The chromatic polynomial $P(G,k)$ gives the number of proper $k$-colorings on graph $G$. 
 The \textit{chromatic number} $\VARchromaticnumber$, is the smallest non-zero $k$ such that $P(G,k)>0$.
 
-The \textit{fractional coloring number} is motivated by the chromatic number.
-In the fractional coloring problem, a set of $b$ colors must be assigned to each vertex, out of a set $a$ of available colors with no adjacent vertices sharing any colors.
-$\chi_b(G)$, for a given $b$, is the smallest value of $a$ such that an $a:b$ fractional coloring exists. 
-One can formulate the chromatic number as an integer program and the fractional coloring number as the linear relaxation of this program\cite{scheinerman2011fractional}.
-The integral chromatic number need not be equal to its fractional counter part, in fact $\chi_f(G) \le \chi(G)$. 
-A graph has a \textit{fractional chromatic gap} if $\chi_f(G) \ne \chi(G)$.
-\note{Check if there needs to be some minimal $b$ in the def above.}
-
-\textit{distance regular} Defined by its automorphism.
-\note{Complete def. here}
+The fractional coloring number is motivated by the chromatic number.
+A graph is \textit{$a:b$ colorable} if each vertex is assigned $b$ colors out of a palette of $a$ total colors such that the coloring of each adjacent vertex is disjoint. 
+The least $a$ such that the graph can be assigned to $b$ colors is the $b$-fold chromatic number denoted by $\VARfractionalchromaticnumber{b}$. 
+Note that the standard chromatic number is $\VARchromaticnumber{} = \VARfractionalchromaticnumber{1}$.
+The \textit{fractional coloring number} is defined to be
+\begin{equation}
+\VARfractionalchromaticnumber{f} = 
+\lim_{b \rightarrow \infty} \frac{\VARfractionalchromaticnumber{b}}{b} = 
+\inf _ {b} \frac{\VARfractionalchromaticnumber{b}}{b} 
+\end{equation}
+Note only does the limit exists, but $\VARfractionalchromaticnumber{f} \in \mathbb{Q}$\cite{scheinerman2011fractional}.
+The integral chromatic number need not be equal to its fractional counter part, in fact 
+$\VARfractionalchromaticnumber{f} \le \VARchromaticnumber$.
+If the equality does not hold we say the graph has a \textit{fractional chromatic gap}
+Additionally, we can formulate $\VARfractionalchromaticnumber{f}$ as a solution to a linear program.
+Let $I(g)$ be the set of all independent vertex sets and $I(g,v)$ be the set of independent vertex sets that contain vertex $v$. 
+Define a system of non-negative variables $v_i$.
+Now $\VARfractionalchromaticnumber{f}$ is the minimum of $\sum_{I \in I(g)} v_i$ subject to the constraints $\sum_{I \in I(g,x)} v_i \ge 1$ on each $v_i$.
 
 \subsubsection*{Topological Graph Theory}
 
@@ -283,17 +330,24 @@ Due to a lack of freely available algorithms, planarity is the only embedding cu
 
 \subsubsection*{Connectivity, Cycles and Subgraphs}
 
+The \textit{degree} of vertex $k$ is the number of edges incident to the vertex, $d(v_k) = \sum_j A_{k j}$. 
+The \textit{degree sequence} is formed by listing the vertex degrees in descending order, and the number of distinct degree sequences for graphs for simple connected graphs is OEIS \OEIS{A007721}.
+The degree matrix is a diagonal matrix defined by the degree sequence.
+The \textit{Laplacian matrix} is the difference of the diagonal matrix and the adjacency matrix.
+The \textit{Laplacian polynomial} is the characteristic polynomial of the Laplacian matrix.
+For connected graphs, the spectrum of the Laplacian matrix is real and $\lambda_i \le 0, \lambda_0 = 0$.
+The second-largest eigenvalue of is called the \textit{spectral gap}.
+
 Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
 A graph is \textit{connected} if there is a path between all pairs vertices.
 If there is no path between vertices $i$ and $j$, $D_{ij}=\infty$.
-By construction, all distances in $\SIMPLECLASS$ are finite.
+By construction, all distances in connected graphs are finite.
 The \textit{eccentricity} of a vertex $k$ is the maximum value of $D_{k j}$ for all $j$.
 The \textit{radius}/\textit{diameter} is the minimum/maximum value of eccentricity for all vertices.
 
-The \textit{degree} of vertex $k$ is the number of edges incident to the vertex, $d(v_k) = \sum_j A_{k j}$. 
-The \textit{degree sequence} is formed by listing the vertex degrees in descending order, and the number of distinct degree sequences for graphs in $\SIMPLECLASS$ is OEIS \OEIS{A007721}.
 A \textit{$k$-regular graph} is one in which every vertex has degree $k$. 
 A regular graph is \textit{strongly regular}, if in addition there exist $\lambda$ and $\mu$ such that any two adjacent vertices have $\lambda$ neighbors in common and any two non-adjacent vertices have $\mu$ neighbors in common. 
+A graph is \textit{distance regular} if, for all pairs of vertices $v$, $w$ and any pair of integers $i,j = 0,1,\ldots,d$ where $d$ is the graph diameter, the number of vertices from $v$ at a distance $i$ and the number of vertices from $w$ at a distance $j$ depend only on $i, j$ and the distance between $v$ and $w$, independent of the choice of $v$ and $w$\cite{brouwer2012distance}.
 
 A circuit is a path that begins and ends at the same vertex.
 A graph is \textit{Hamiltonian} (\textit{Eulerian}) if there is a circuit that visits each vertex (edge) exactly once.
@@ -317,8 +371,13 @@ In addition, we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and the foll
 The named graphs are illustrated in Figure \ref{fig:namedgraphs}. 
 
 \begin{figure}[h]
-  \includegraphics[width=0.4\textwidth]{simple_drawings/combined_subgraphs.png}
-  \caption{The named graphs checked for the vertex subgraphs invariant. Clockwise from top: the open-bowtie $\subgraphOPENBOWTIE{}$, bowtie $\subgraphBOWTIE{}$, bull  $\subgraphBULL{}$ and diamond graph $\subgraphDIAMOND{}$.}
+  \includegraphics[width=0.5\textwidth]{simple_drawings/combined_subgraphs.png}
+  \caption{The named graphs checked for the vertex subgraphs invariant. 
+    Left to right:
+    the bull graph $\subgraphBULL{}$,
+    the bowtie graph $\subgraphBOWTIE{}$, 
+    the open-bowtie graph $\subgraphOPENBOWTIE{}$,
+    and the diamond graph $\subgraphDIAMOND{}$.}
   \label{fig:namedgraphs}
 \end{figure}
 
@@ -326,38 +385,54 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 \label{app:submittedseq}
 
 Primary sequences are those involving a single invariant, while secondary sequences are those that involve the union of two invariants.
+The distinct sequences were those formed by considering the number of unique values possible at a fixed order.
 Each sequence was hand-checked against the OEIS.
-We validated that either the sequence was unique or the invariant description match the sequence found.
+We validated that either the sequence was unique or the invariant description matched the sequence found.
 For some invariants, the definition may be ambiguous for small orders.
 When possible, we tried to refer to conventions found in the literature and the OEIS for these cases.
-For brevity, the symbols describing the invariants are show in below. %Table \ref{table:refinvariants}.
+For brevity, the symbols describing the invariants are show in below. 
 
 \newcommand{\VARsubgraphfree}[1]{g)}
 
-%\begin{table}
-\begin{longtable}{ l l}
+\begin{longtable}{@{\extracolsep{\fill}} l l}
 \toprule
 Invariant symbol & Description \\
 \midrule
 $\VARautomorphismgroupn$ & Automorphism group size \\
 $\VARchromaticnumber$ & Chromatic number \\
 $\VARvertexconnectivity$, $\VARedgeconnectivity$ & vertex/edge connectivity \\
-$\VARdiameter$ & diameter \\
-$\VARgirth$ & girth \\
+$\VARdiameter, \VARgirth$ & diameter, girth \\
 $\VARnarticulationpoints$ & number of articulation points \\
 $\VARmaximalindependentvertexset, \VARmaximalindependentedgeset$ & size of maximal independent vertex/edge set \\
 $\namedsubgraph{h}$ & number of subgraphs of $h$ in $g$ \\
-$\Theta(g,\mathcal{P})$ & indicator function for property $\mathcal{P}$ \\
-$\mathcal{T},\mathcal{H},\mathcal{E}, \mathcal{I}, \mathcal{I}^*$ & properties: tree, Hamiltonian, Eulerian, integral, real \\
-$\mathcal{R},\mathcal{R}^*,\mathcal{D}, \mathcal{B}, \mathcal{C}$ & properties: regular, strongly regular, distance regular, bipartite, chordal \\
-$\mathcal{X}$ & properties: chromatic gap
+$\VARtree,\VARhamiltonian,\VAReulerian, \VARintegral, \VARrealspectrum$ & 
+properties: tree, Hamiltonian, Eulerian, integral, real \\
+$\VARkregular,\VARstronglyregular,\VARdistanceregular, \VARbipartite, \VARchordal$ & 
+properties: regular, strongly regular, distance regular, bipartite, chordal \\
+$\VARfractionaldualitygapvertexchromatic$ 
+& properties: chromatic gap
 \end{longtable}
-%\label{table:refinvariants}
-%\end{table}
+
+
+\subsection{Extended sequences}
+
+\begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
+\toprule
+OEIS & Invariant & 
+\multicolumn{10}{l}{Sequence: \ $S_1, S_2, \ldots, S_{10}$, terms in $(\cdot)$ are new.} 
+\\
+\midrule\bottomrule
+\OEIS{A086216} & $\VARvertexconnectivity > 3$ & 0 & 0 & 0 & 0 & 1 & 4 & 25 & 384 & 14480 & (1211735) \\
+\OEIS{A086217} & $\VARvertexconnectivity > 4$ & 0 & 0 & 0 & 0 & 0 & 1 & 4 & 39 & 1051 & (102630) \\
+\OEIS{A052446} & $\VARedgeconnectivity =2$ & 	0& 1& 1& 3& 10& 52& 351& 3714& 63638& (1912203) \\
+\OEIS{A052447} & $\VARedgeconnectivity =3$ & 0& 0& 1& 2& 8& 41& 352& (4820) & (113256) & (4602039) \\
+\OEIS{A052448} & $\VARedgeconnectivity =4$ & 	0& 0& 0& 1& 2& 15& 121& (2159) & (68715) & (3952378) \\
+\OEIS{A088741} & $\VARstronglyregular(g)=1$ & 	1& 1& 1& 2& 2& 3& 1& 3& 3& (5) \\
+\end{longtable}
 
 \subsection{Primary sequences}
 
-\begin{longtable}{ l l r r r r r r r r r r}
+\begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
 \toprule
 OEIS & Invariant & 
 \multicolumn{10}{l}{Sequence: \ $S_1, S_2, \ldots, S_{10}$} 
@@ -441,7 +516,7 @@ OEIS & Invariant &
 
 \subsection{Secondary sequences}
 
-\begin{longtable}{ l l l r r r r r r r r r r}
+\begin{longtable}{@{\extracolsep{\fill}} l l l r r r r r r r r r r}
 \toprule
 OEIS & Invariant & & 
 %\multicolumn{10}{l}{Sequence}
@@ -517,10 +592,6 @@ OEIS & Invariant & &
 \OEIS{A243798} & $\VARissubgraphfreebull =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 12 & 25 & 55 & 126 & 304 \\
 \OEIS{A243799} & $\VARissubgraphfreeopenbowtie =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 13 & 25 & 58 & 130 & 316 \\
 \end{longtable}
-
-\section{Relations}
-\label{app:relations}
-\note{Add table of relations}
 
 \end{appendices}
 
