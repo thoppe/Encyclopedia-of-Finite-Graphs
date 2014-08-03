@@ -22,8 +22,8 @@ view_special:
 report_lvl1:
 	python verification/lvl1_report.py > verification/raw_lvl1.md
 
-
-possible_N_values = 1 2 3 4 5 6 7 8 9 10
+max_n = 7
+possible_N_values = $(shell seq 1 ${max_n})
 
 build:
 	make generate
@@ -39,14 +39,14 @@ compute:
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
-	python src/build_sequence.py --max_n 10
-	python src/build_relations.py --max_n 10
-	python verification/raw_dump_relations.py
+	python src/build_sequence.py --max_n $(max_n)
+	python src/build_relations.py --max_n $(max_n)
+	python verification/raw_dump_relations.py $(max_n)
 
 ########################################################################
 
 test:
-	python src/unit_tests.py --max_n 8
+	python src/unit_tests.py --max_n 7
 
 commit:
 	-@make push

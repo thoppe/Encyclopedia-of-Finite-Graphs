@@ -47,6 +47,7 @@
   ],
 
   "special_function_names" : [  
+      "independent_edge_sets",
       "independent_vertex_sets",
       "independent_edge_sets",
       "degree_sequence",
@@ -56,7 +57,7 @@
       "laplacian_polynomial"
   ],
   "ignored_special_function_names" : [
-      "independent_edge_sets"
+
   ],
 
   "distinct_sequences" :       
