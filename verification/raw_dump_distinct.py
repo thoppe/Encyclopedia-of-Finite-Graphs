@@ -29,6 +29,7 @@ for name in distinct_seq_names:
     n_val, seq = zip(*grab_all(conn, cmd))
     if n_val != tuple(range(1,len(n_val)+1)):
         logging.warning("N values are not sequential")
+    seq = str(seq).replace('(','').replace(')','').replace(' ','')
 
-    key = "{} {}".format(name,seq)
+    key = "+ `[{}]` `{}`".format(name,seq)
     print key
