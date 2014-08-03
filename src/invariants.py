@@ -103,6 +103,20 @@ def special_independent_edge_sets(adj,**args):
     independent_sets = [int(line) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
 
+def coeff_list_from_poly(p):
+    coeff_list = []
+    for degree,coeff in enumerate(p[::-1]):
+        if coeff:
+            key = (degree, int(coeff))
+            coeff_list.append(key)
+    return tuple(coeff_list)
+
+def special_characteristic_polynomial(adj,**args):
+    ''' This is the characteristic polynomial of the adjaceny matrix '''
+    A = convert_to_numpy(adj,**args)
+    p = np.round(np.poly(A))   
+    return coeff_list_from_poly(p)
+
 def special_laplacian_polynomial(adj,**args):
     ''' 
     This is the characteristic polynomial of the Laplacian matrix
@@ -114,13 +128,8 @@ def special_laplacian_polynomial(adj,**args):
     L -= A
     p = np.round(np.poly(L))   
 
-    coeff_list = []
-    for degree,coeff in enumerate(p[::-1]):
-        if coeff:
-            key = (degree, int(coeff))
-            coeff_list.append(key)
+    return coeff_list_from_poly(p)
 
-    return tuple(coeff_list)
 
 ######################### REQUIRES [degree_sequence] #################
 
@@ -662,7 +671,8 @@ if __name__ == "__main__":
     g   = nx.petersen_graph()
     adj = convert_nx_to_adj(g)
 
-    print special_laplacian_polynomial(adj, N=10)
+    #print special_laplacian_polynomial(adj, N=10)
+    print special_characteristic_polynomial(adj, N=10)
 
     #T = special_polynomial_tutte(adj, N=10)   
     #for k in xrange(0, 10):

@@ -22,7 +22,7 @@ view_special:
 report_lvl1:
 	python verification/lvl1_report.py > verification/raw_lvl1.md
 
-max_n = 8
+max_n = 10
 possible_N_values = $(shell seq 1 ${max_n})
 
 build:
@@ -34,8 +34,17 @@ generate:
 	$(foreach n,$(possible_N_values),python src/generate_graphs.py $(n);)
 
 compute:
+	make special
+	make distinct
+	make invariants
+
+special:
 	$(foreach n,$(possible_N_values),python src/update_special2.py $(n);)
+
+distinct:
 	$(foreach n,$(possible_N_values),python src/build_distinct_seq.py $(n);)
+
+invariants:
 	$(foreach n,$(possible_N_values),python src/update_invariants.py $(n);)
 
 sequence:
@@ -44,6 +53,9 @@ sequence:
 	python verification/raw_dump_relations.py $(max_n)
 
 ########################################################################
+
+options:
+	emacs templates/ref_invariant_integer.json &
 
 test:
 	python src/unit_tests.py --max_n 7

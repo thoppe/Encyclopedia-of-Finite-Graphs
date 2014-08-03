@@ -54,10 +54,11 @@
       "cycle_basis",
       "tutte_polynomial",
       "fractional_chromatic_number",
-      "laplacian_polynomial"
+      "laplacian_polynomial",
+      "characteristic_polynomial"
   ],
   "ignored_special_function_names" : [
-
+      "independent_edge_sets"
   ],
 
   "distinct_sequences" :       

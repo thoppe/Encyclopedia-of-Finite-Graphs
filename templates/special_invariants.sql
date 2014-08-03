@@ -16,6 +16,12 @@ CREATE TABLE IF NOT EXISTS laplacian_polynomial(
     coeff      BIG INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS characteristic_polynomial(
+    graph_id   INTEGER,
+    x_degree   UNSIGNED INTEGER,
+    coeff      BIG INTEGER
+);
+
 CREATE TABLE IF NOT EXISTS fractional_chromatic_number(
     graph_id   INTEGER,
     a          INTEGER,

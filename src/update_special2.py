@@ -190,6 +190,19 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, x_degree, coeff) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_LAP, cmd_insert)
 
+#########################################################################
+# Now compute the characteristic polynomial of the adj matrix
+
+target_function = "characteristic_polynomial"
+
+def pfunc_CHARPOLY((g_id,adj)):
+    return g_id, invariants.special_characteristic_polynomial(adj, N=N)
+
+cmd_insert    = '''INSERT INTO {} 
+(graph_id, x_degree, coeff) VALUES (?,?,?)'''
+check_computed(target_function, pfunc_CHARPOLY, cmd_insert)
+
+
 # Debug code below
 #cmd_grab = '''SELECT graph_id,adj FROM graph'''
 #g_itr    = select_itr(conn, cmd_grab)
