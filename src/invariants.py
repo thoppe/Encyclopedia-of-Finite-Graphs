@@ -109,17 +109,17 @@ def special_laplacian_polynomial(adj,**args):
     L = A - D
     '''
     A = convert_to_numpy(adj,**args)
-    L = np.zeros(A.shape, dtype=int)
+    L = np.zeros(A.shape)
     np.fill_diagonal(L, A.sum(axis=0))
     L -= A
-    Ls = sympy.Matrix(L)
-    p = Ls.charpoly()
+    p = np.round(np.poly(L))   
 
     coeff_list = []
-    for degree in xrange(args["N"]):
-        coeff = p.nth(degree)
+    for degree,coeff in enumerate(p[::-1]):
         if coeff:
-            coeff_list.append( (degree,coeff) )
+            key = (degree, int(coeff))
+            coeff_list.append(key)
+
     return tuple(coeff_list)
 
 ######################### REQUIRES [degree_sequence] #################
@@ -662,8 +662,7 @@ if __name__ == "__main__":
     g   = nx.petersen_graph()
     adj = convert_nx_to_adj(g)
 
-    special_laplacian_polynomial(adj, N=10)
-    exit()
+    print special_laplacian_polynomial(adj, N=10)
 
     #T = special_polynomial_tutte(adj, N=10)   
     #for k in xrange(0, 10):
