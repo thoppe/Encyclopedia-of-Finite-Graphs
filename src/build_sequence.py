@@ -46,6 +46,22 @@ with open(f_invariant_json,'r') as FIN:
     # These variants will not be used in the powerset construction
     excluded_terms = js["sequence_info"]["excluded_terms"]
 
+# Look for missing values or errors in the database
+cmd_find_NULL = '''
+SELECT COUNT(*) FROM invariant_integer 
+WHERE {} IS NULL'''
+logging.info("Checking database consistency")
+err_msg = "{} at n={} missing {} values"
+missing_err_list = []
+for name in func_names:
+    if name not in excluded_terms:
+        for n,conn in search_conn.items():
+            check = grab_scalar(conn, cmd_find_NULL.format(name))
+            if check:
+                missing_err_list.append(err_msg.format(name,n,check))
+if missing_err_list:
+    raise ValueError('\n'.join(missing_err_list))
+
 # Add the known functions to the reference list
 cmd_insert = '''INSERT OR IGNORE INTO ref_invariant_integer
 (function_name) VALUES (?)'''
@@ -127,23 +143,6 @@ for uid, invar_id, value in grab_all(seq_conn, cmd_find):
         seq_conn.execute(cmd_add, items)
 
 seq_conn.commit()
-
-# Look for missing values or errors in the database
-cmd_find_NULL = '''
-SELECT COUNT(*) FROM invariant_integer 
-WHERE {} IS NULL'''
-logging.info("Checking database consistency")
-err_msg = "{} at n={} missing {} values"
-missing_err_list = []
-for name in func_names:
-    if name not in excluded_terms:
-        for n,conn in search_conn.items():
-            check = grab_scalar(conn, cmd_find_NULL.format(name))
-            if check:
-                missing_err_list.append(err_msg.format(name,n,check))
-if missing_err_list:
-    raise ValueError('\n'.join(missing_err_list))
-
 
 # Compute all level 1 sequences
 cmd_find_remaining = '''

@@ -1,9 +1,6 @@
-import sqlite3, logging, argparse, os, collections, ast
-import subprocess, itertools
+import sqlite3, logging, argparse, os, collections
+import subprocess, itertools, json
 import numpy as np
-from src.helper_functions import load_graph_database
-from src.helper_functions import attach_ref_table, load_sql_script
-from src.helper_functions import attach_table, generate_database_name
 from src.helper_functions import grab_vector, grab_all, grab_scalar
 
 desc   = "Output the computed relations between the invariant sequences"
@@ -14,21 +11,28 @@ cargs = vars(parser.parse_args())
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-#ignored_functions = set([
-#    "automorphism_group_n",
-#    "chromatic_number",
-#])
 ignored_functions = []
 
 # Connect to the database and add structure info
 f_seq_database = "database/sequence.db"
-conn = sqlite3.connect(f_seq_database, check_same_thread=False)
-attach_ref_table(conn)
+seq_conn = sqlite3.connect(f_seq_database, check_same_thread=False)
+
+# Load the list of invariants to compute
+f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
+with open(f_invariant_json,'r') as FIN:
+    js = json.loads(FIN.read())
+    func_names = js["invariant_function_names"]
+
+    # These will use a different operator
+    special_conditionals = js["sequence_info"]["special_conditionals"]
+
+    # These variants will not be used in the powerset construction
+    excluded_terms = js["sequence_info"]["excluded_terms"]
 
 # Build the lookup table
 cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
 ORDER BY invariant_id'''
-ref_lookup = dict(grab_all(conn,cmd) )
+ref_lookup = dict(grab_all(seq_conn,cmd) )
 ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
 func_names = ref_lookup.keys()
 
@@ -37,7 +41,7 @@ cmd = '''
 SELECT sequence_id,invariant_val_id,conditional,value 
 FROM ref_sequence_level1'''
 SEQ_QUERY = {}
-for item in grab_all(conn,cmd):
+for item in grab_all(seq_conn,cmd):
     SEQ_QUERY[item[0]] = item[1:]
 
 def info(seq_id):
@@ -56,7 +60,7 @@ logging.info("Saving relation information to {}".format(f_output))
 cmd = '''
 SELECT relation_id, s1_id,s2_id FROM relations 
 WHERE equal=1'''
-relations_eq = grab_all(conn,cmd)
+relations_eq = grab_all(seq_conn,cmd)
 
 line = "# Equality relations (converse holds)\n"
 msg = "+ `{}{}{}` <-> `{}{}{}`\n"
@@ -81,7 +85,7 @@ for ridx, s1, s2 in relations_eq:
 cmd = '''
 SELECT relation_id, s1_id,s2_id FROM relations 
 WHERE subset=1'''
-relations_subset = grab_all(conn,cmd)
+relations_subset = grab_all(seq_conn,cmd)
 
 line = "\n# Subset relations (converse is not true)\n"
 FOUT.write(line)
@@ -105,7 +109,7 @@ for ridx, s1, s2 in relations_subset:
 cmd = '''
 SELECT relation_id, s1_id,s2_id FROM relations 
 WHERE exclusive=1'''
-relations_ex = grab_all(conn,cmd)
+relations_ex = grab_all(seq_conn,cmd)
 
 line = "\n# Exclusive relations\n"
 msg = "+ `{}{}{}` intersect `{}{}{}` = 0\n"

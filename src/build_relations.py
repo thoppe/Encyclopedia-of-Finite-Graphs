@@ -3,8 +3,6 @@ import subprocess, itertools
 import numpy as np
 import helper_functions
 from helper_functions import load_graph_database
-from helper_functions import load_sql_script
-from helper_functions import attach_table, generate_database_name
 from helper_functions import grab_vector, grab_all, grab_scalar
 
 desc   = "Determine the relations between the invariant sequences"
@@ -70,6 +68,7 @@ cmd = '''SELECT sequence_id,{} FROM sequence WHERE query_level=1'''
 s_list = ["s%i"%k for k in xrange(cargs["min_n"],cargs["max_n"]+1)]
 cmd = cmd.format(','.join(s_list))
 SEQ = {}
+
 for item in grab_all(conn,cmd):
     SEQ[item[0]] = np.array(item[1:], dtype=int)
 

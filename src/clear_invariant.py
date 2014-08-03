@@ -37,5 +37,10 @@ for n,conn in graph_conn.items():
         remove_invariant(function_name, conn)
     conn.commit()
 
+# Remove the sequence database as it may be corrupted (will have to rebuild)
+f_sequence = os.path.join("database","sequence.db")
+if os.path.exists(f_sequence):
+    os.remove(f_sequence)
+    logging.warning("Removed {}. Please rebuild.".format(f_sequence))
 
 
