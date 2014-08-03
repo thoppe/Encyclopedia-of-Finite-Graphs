@@ -7,11 +7,11 @@ from helper_functions import load_sql_script, select_itr
 from helper_functions import attach_table, generate_database_name
 from helper_functions import grab_vector, grab_all, grab_scalar
 
-desc   = "Build sequences from distinct counts (e.g. number of automorhism groups for a given size n."
+desc   = '''
+Build sequences from distinct counts 
+(e.g. number of automorhism groups for a given size n.'''
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
-#parser.add_argument('--max_n',type=int,default=10,
-#                    help="Only compare graph of this order and smaller")
 cargs = vars(parser.parse_args())
 N = cargs["N"]
 
