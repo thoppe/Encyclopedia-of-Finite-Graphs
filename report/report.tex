@@ -263,9 +263,10 @@ Readers are instructed to look to standard references for more comprehensive def
 \subsubsection*{Algebraic Graph Theory}
 
 The \textit{adjacency matrix} $A$ has the value at $A_{ij}$ equal to the number of edges joining vertex $i$ to $j$. 
-For simple graphs, is a $\{0,1\}$ matrix with zeros down the diagonal. 
-The \textit{spectrum}, $\lambda_1, \lambda_2, \ldots$ of a graph are the eigenvalues of $A$. 
-A graph is $integral$ if all the values of the graph spectrum are integral, $\lambda_k \in \mathbb{Z}$. 
+For simple graphs, this is a $\{0,1\}$ matrix with zeros down the diagonal. 
+The \textit{characteristic polynomial} for a matrix is given by its eigenvalues, $\det(\lambda I - A)$.
+A sequence of eigenvalues $\lambda_1, \lambda_2, \ldots$ is called the \textit{spectrum}.
+A graph is $integral$ if all the values of the adjacency spectrum are integral, $\lambda_k \in \mathbb{Z}$. 
 A graph is $real$ if $\lambda_k \in \mathbb{R}$.
 
 An \textit{independent vertex/edge set} is a subset of vertices/edges of a graph such that no two vertices/edges in the subset share an edge/vertex. 
@@ -307,9 +308,6 @@ Let $I(g)$ be the set of all independent vertex sets and $I(g,v)$ be the set of 
 Define a system of non-negative variables $v_i$.
 Now $\VARfractionalchromaticnumber{f}$ is the minimum of $\sum_{I \in I(g)} v_i$ subject to the constraints $\sum_{I \in I(g,x)} v_i \ge 1$ on each $v_i$.
 
-\textit{distance regular} Defined by its automorphism.
-\note{Complete def. here}
-
 \subsubsection*{Topological Graph Theory}
 
 The \textit{crossing number} is the minimum possible number of edge crossings for an embedding of the graph in a plane.
@@ -319,6 +317,14 @@ Due to a lack of freely available algorithms, planarity is the only embedding cu
 
 \subsubsection*{Connectivity, Cycles and Subgraphs}
 
+The \textit{degree} of vertex $k$ is the number of edges incident to the vertex, $d(v_k) = \sum_j A_{k j}$. 
+The \textit{degree sequence} is formed by listing the vertex degrees in descending order, and the number of distinct degree sequences for graphs for simple connected graphs is OEIS \OEIS{A007721}.
+The degree matrix is a diagonal matrix defined by the degree sequence.
+The \textit{Laplacian matrix} is the difference of the diagonal matrix and the adjacency matrix.
+The \textit{Laplacian polynomial} is the characteristic polynomial of the Laplacian matrix.
+For connected graphs, the spectrum of the Laplacian matrix is real and $\lambda_i \le 0, \lambda_0 = 0$.
+The second-largest eigenvalue of is called the \textit{spectral gap}.
+
 Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
 A graph is \textit{connected} if there is a path between all pairs vertices.
 If there is no path between vertices $i$ and $j$, $D_{ij}=\infty$.
@@ -326,10 +332,9 @@ By construction, all distances in connected graphs are finite.
 The \textit{eccentricity} of a vertex $k$ is the maximum value of $D_{k j}$ for all $j$.
 The \textit{radius}/\textit{diameter} is the minimum/maximum value of eccentricity for all vertices.
 
-The \textit{degree} of vertex $k$ is the number of edges incident to the vertex, $d(v_k) = \sum_j A_{k j}$. 
-The \textit{degree sequence} is formed by listing the vertex degrees in descending order, and the number of distinct degree sequences for graphs for simple connected graphs is OEIS \OEIS{A007721}.
 A \textit{$k$-regular graph} is one in which every vertex has degree $k$. 
 A regular graph is \textit{strongly regular}, if in addition there exist $\lambda$ and $\mu$ such that any two adjacent vertices have $\lambda$ neighbors in common and any two non-adjacent vertices have $\mu$ neighbors in common. 
+A graph is \textit{distance regular} if, for all pairs of vertices $v$, $w$ and any pair of integers $i,j = 0,1,\ldots,d$ where $d$ is the graph diameter, the number of vertices from $v$ at a distance $i$ and the number of vertices from $w$ at a distance $j$ depend only on $i, j$ and the distance between $v$ and $w$, independent of the choice of $v$ and $w$\cite{brouwer2012distance}.
 
 A circuit is a path that begins and ends at the same vertex.
 A graph is \textit{Hamiltonian} (\textit{Eulerian}) if there is a circuit that visits each vertex (edge) exactly once.
