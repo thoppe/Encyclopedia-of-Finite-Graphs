@@ -31,7 +31,8 @@
 {\href{https://oeis.org/#1}{\texttt{#1}}}
 
 % Text shortcuts
-\newcommand{\SEQ}{\mathcal{S}}
+\newcommand{\SEQ}{S}
+\newcommand{\QUERY}{\mathcal{Q}}
 \newcommand{\CLASS}{\mathcal{C}}
 \newcommand{\ie}[0]{i.e.\ }
 \newcommand{\eg}[0]{e.g.\ }
@@ -170,15 +171,16 @@ where $\CLASS_n$ contains only graphs of order $n$.
 From here, define an ordered sequence of subsets of the graph class
 %
 \begin{align}
-\SEQ(f, \CLASS) 
+\QUERY(f, \CLASS) 
 &= f(\CLASS_1), f(\CLASS_2), f(\CLASS_3), \ldots
 \end{align}
 %
 where $f$ is some invariant condition that selects from each set $\CLASS_n$.
+Since $\QUERY$ selects from the graphs, we call $\QUERY$ the \textit{query}.
 
 Let 
-$S(f, \CLASS) = |f(\CLASS_1)|, |f(\CLASS_2)|, |f(\CLASS_3)|, \ldots$
-be the sequence of integers defined by $\SEQ(f, \CLASS)$. 
+$\SEQ(f, \CLASS) = |f(\CLASS_1)|, |f(\CLASS_2)|, |f(\CLASS_3)|, \ldots$
+be the sequence of integers defined by $\QUERY(f, \CLASS)$. 
 For example, if $\VARistree$ is the $\{0,1\}$ indicator function that determines if the graph is a tree, and $\CLASS^\prime$ is the set of all simple unlabeled connected graphs, then
 %
 \begin{align}
@@ -191,12 +193,11 @@ We have evaluated a range of invariants, from those that are computable in polyn
 While a few sequences were merely extended, other invariants, such as the the independence number, were hitherto unknown to OEIS and have produced novel sequences (\OEIS{A243781}-\OEIS{A243784}).
 
 In addition to contributing to the OEIS, a secondary goal is to identify relationships between graph invariants.
-Two sequences of the same class are subsets of each other $\SEQ_a(f,\CLASS) \subseteq \SEQ_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
-Equality of two sequences $\SEQ_a = \SEQ_b$, implies $\SEQ_a \subseteq \SEQ_b$ and $\SEQ_b \subseteq \SEQ_a$. 
-\note{ This is confusing because sequences has two meanings, a sequence of sets of graphs, $\SEQ$, and an integer sequence, S. maybe we can call $\SEQ$ a query, since everywhere else in the paper, sequence refers to an integer sequence. }
-We say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\SEQ_a \subseteq_n \SEQ_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
-They are \textit{exclusive} to order $n$, $\SEQ_a \cap_n \SEQ_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
-\note{isn't $\SEQ$ the operator? In other words I don't understand why we need $\SEQ_a$ and $\SEQ_b$. I think it should be ``let $\SEQ_a = \SEQ(f, C)$, and $\SEQ_b = \SEQ(g, C)$''}
+Two queries of the same class are subsets of each other $\QUERY_a(f,\CLASS) \subseteq \QUERY_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
+Equality of two queries $\QUERY_a = \QUERY_b$, implies $\QUERY_a \subseteq \QUERY_b$ and $\QUERY_b \subseteq \QUERY_a$. 
+We say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\QUERY_a \subseteq_n \QUERY_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
+They are \textit{exclusive} to order $n$, $\QUERY_a \cap_n \QUERY_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
+We can quickly filter candidate relations by noting that it is necessary but not sufficient for the same conditions to hold for sequences, \eg $\SEQ_a \ne \SEQ_b \implies  \QUERY_a \ne \QUERY_b$.
 
 We consider a final type of integer sequence, the number of distinct values an invariant could obtain for a given order.
 These sequences are not restricted to integer invariants. 
@@ -250,11 +251,7 @@ Each of these special invariants required their own individualized table.
 For example, the Tutte polynomial was stored as a denormalized table of graph identifiers with a row for each term of the polynomial containing the degree and coefficient.
 Since this specialized database was much larger than the invariant integer database it was not included in the public version.
 
-
-
-
 \note{list some interesting relations}
-
 
 \section{Discussion}
 
@@ -440,7 +437,6 @@ OEIS & Invariant &
 \toprule
 OEIS & Invariant & 
 \multicolumn{10}{l}{Sequence: \ $S_1, S_2, \ldots, S_{10}$} 
-%$S_1$ & $S_2$ & $S_3$ & $S_4$ & $S_5$ & $S_6$ & $S_7$ & $S_8$ & $S_9$ & $S_{10}$
 \\
 \midrule\bottomrule
 \OEIS{A241454} & $\VARautomorphismgroupn =2$ & 0 & 1 & 1 & 2 & 9 & 37 & 317 & 4098 & 84602 & 2933996 \\
