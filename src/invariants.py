@@ -130,6 +130,29 @@ def special_laplacian_polynomial(adj,**args):
 
     return coeff_list_from_poly(p)
 
+def special_chromatic_polynomial(adj,**args):
+    ''' 
+    This is the chromatic polynomial, derived from the Tutte polynomial
+    The chromatic polynomial for a connected graphs evaluates T(x,y)
+    at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*k
+    '''
+    N,T = args["N"], args["tutte_polynomial"]
+    tutte_adjust = [(coeff,xd-1) for xd,yd,coeff in T if yd==1]
+
+    from sympy.abc import x
+    p = 0
+    for (coeff,power) in tutte_adjust: p += coeff*x**power
+    C = (-1)**(N-1)*x*p.subs(x,1-x)
+    C = sympy.poly(C)
+
+    coeff_list = []
+    for degree in xrange(0,N+1):
+        coeff = C.nth(degree)
+        if coeff:
+            key = (degree, int(coeff))
+            coeff_list.append(key)
+
+    return tuple(coeff_list)
 
 ######################### REQUIRES [degree_sequence] #################
 
@@ -672,6 +695,9 @@ if __name__ == "__main__":
     adj = convert_nx_to_adj(g)
 
     #print special_laplacian_polynomial(adj, N=10)
+    p = special_polynomial_tutte(adj, N=10)
+    print special_chromatic_polynomial(adj,N=10,tutte_polynomial=p)
+    exit()
     print special_characteristic_polynomial(adj, N=10)
 
     #T = special_polynomial_tutte(adj, N=10)   

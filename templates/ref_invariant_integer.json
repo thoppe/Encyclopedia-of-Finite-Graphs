@@ -55,7 +55,8 @@
       "tutte_polynomial",
       "fractional_chromatic_number",
       "laplacian_polynomial",
-      "characteristic_polynomial"
+      "characteristic_polynomial",
+      "chromatic_polynomial"
   ],
   "ignored_special_function_names" : [
       "independent_edge_sets"
@@ -67,7 +68,8 @@
           "tutte_polynomial":"x_degree, y_degree, coeff",
           "fractional_chromatic_number":"a,b",
           "laplacian_polynomial" : "x_degree, coeff",
-          "characteristic_polynomial" : "x_degree, coeff"
+          "characteristic_polynomial" : "x_degree, coeff",
+          "chromatic_polynomial" : "x_degree, coeff"
       },
   "sequence_info" : {
       "excluded_terms" : [ 

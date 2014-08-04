@@ -243,9 +243,10 @@ def compute_parallel(
         connection,
         pfunc, cmd_insert, targets,N):
 
+    f_landing_table = generate_landing_table_name(function_name, N)
+
     P = multiprocessing.Pool()
     sol = P.imap(pfunc,targets,chunksize=5)
-    f_landing_table = generate_landing_table_name(function_name, N)
 
     if os.path.exists(f_landing_table):
         err_msg = "{} already exists (it should not)!"

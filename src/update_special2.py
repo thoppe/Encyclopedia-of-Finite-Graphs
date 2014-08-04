@@ -62,10 +62,9 @@ computed_functions = set( grab_vector(sconn,cmd_check) )
 #########################################################################
 # Helper commands
 
-def run_compute(function_name, pfunc, cmd_insert):
+def run_compute(function_name, pfunc, cmd_insert, targets=None):
 
     cmd_insert = cmd_insert.format(function_name)
-
     #cmd_count = '''SELECT COUNT(DISTINCT graph_id) FROM {}'''
     #g_id_n = grab_scalar(sconn, cmd_count.format(function_name))
     #if g_id_n == gn: return True
@@ -77,7 +76,8 @@ def run_compute(function_name, pfunc, cmd_insert):
     cmd_grab_targets = '''SELECT graph_id,adj FROM graph
     WHERE graph_id NOT IN (SELECT graph_id FROM {})'''
     cmd = cmd_grab_targets.format(function_name)
-    targets = select_itr(conn, cmd, chunksize=10000)
+    if targets==None:
+        targets = select_itr(conn, cmd, chunksize=10000)
 
     # Drop an index if it exists
     cmd_drop = '''DROP INDEX IF EXISTS "{}";'''
@@ -202,9 +202,46 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, x_degree, coeff) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_CHARPOLY, cmd_insert)
 
+#########################################################################
+# Now compute the chromatic polynomial, this is special since it needs
+# the previously computed Tutte polynomial as input
+
+target_function = "chromatic_polynomial"
+
+def iterator_tutte_polynomial(func_name):
+
+    cmd_grab_targets = '''SELECT graph_id,adj FROM graph
+    WHERE graph_id NOT IN (SELECT graph_id FROM {})'''.format(func_name)
+
+    g_itr    = select_itr(conn, cmd_grab_targets)
+    cmd = '''SELECT x_degree,y_degree,coeff FROM tutte_polynomial WHERE graph_id=(?)'''
+
+    for g_id, adj, in g_itr:
+        args = {"N":N}
+        args["tutte_polynomial"] = grab_all(sconn,cmd,(g_id,))
+        yield (g_id, adj, args)
+
+def pfunc_CHROMPOLY((g_id,adj,args)):
+    return g_id, invariants.special_chromatic_polynomial(adj,**args)
+
+cmd_insert    = '''INSERT INTO {} 
+(graph_id, x_degree, coeff) VALUES (?,?,?)'''
+
+targets = iterator_tutte_polynomial(target_function)
+
+if (target_function not in computed_functions and 
+    target_function in special_names):
+    run_compute(target_function, pfunc_CHROMPOLY, cmd_insert, targets=targets)
+
+    cmd_mark_computed= '''
+    INSERT OR IGNORE INTO computed (function_name) VALUES (?);'''
+    sconn.execute(cmd_mark_computed, (target_function,))
+    sconn.commit()
 
 # Debug code below
-#cmd_grab = '''SELECT graph_id,adj FROM graph'''
+#for g_id,adj,args in 
+#    print g_id, pfunc_CHROMPOLY((g_id,adj,args))
+# 
 #g_itr    = select_itr(conn, cmd_grab)
 #for g,adj in g_itr:
 #    print pfunc_LAP((g,adj))
