@@ -226,13 +226,10 @@ Internally, we used SQLite3 as the database back end for portability reasons.
 Most of the invariants were stored as integers and compressed, the invariant database is about $850$ MB.
 Some non-integer invariants, such as the Tutte polynomial, were stored in a separate, specialized database.
 
-The database was created by first the full enumeration of the graphs themselves.
-Then all of the invariants found in the invariant reference table were allocated to multiple computers to be calculated.
-The graph invariant values were stored in a normalized table to facilitate the addition of new invariants.
-Even with indexing this arrangement was not optimal for sequence-like queries.
-Hence, we built the sequences themselves in a second, denormalized, database which was created at the end of the invariant calculation.
-In this second database, each graph was stored as a row and each column as an indexed invariant. 
-\note{ I don't think the phrase "indexed invariant" makes sense. I would say "... and each column contained the value of a particular invariant for each graph. We placed an index on each of the invariant columns to allow for fast querying, at the expense of disk space (which was readily available, and cheap).}
+The creation of the database started with the full enumeration of the graphs themselves.
+The calculation of the invariants was an embarrassingly parallel problem, as each graph was independent.
+The invariants were stored in a denormalized database with each graph stored as a row and each column contained the value of a particular invariant for that graph. 
+We placed an index on each of the invariant columns to allow for fast querying at the expense of disk space.
 
 Sequences were constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
 For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group is equal to two, while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater than or equal to three. 
@@ -420,7 +417,7 @@ $\VARfractionaldualitygapvertexchromatic$
 \begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
 \toprule
 OEIS & Invariant & 
-\multicolumn{10}{l}{Sequence: \ $S_1, S_2, \ldots, S_{10}$, terms in $(\cdot)$ were added by this project} 
+\multicolumn{10}{l}{Sequence: \ $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$, terms in $(\cdot)$ were added by this project} 
 \\
 \midrule\bottomrule
 \OEIS{A086216} & $\VARvertexconnectivity > 3$ & 0 & 0 & 0 & 0 & 1 & 4 & 25 & 384 & 14480 & (1211735) \\
@@ -436,7 +433,7 @@ OEIS & Invariant &
 \begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
 \toprule
 OEIS & Invariant & 
-\multicolumn{10}{l}{Sequence: \ $S_1, S_2, \ldots, S_{10}$} 
+\multicolumn{10}{l}{Sequence: \ $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$} 
 \\
 \midrule\bottomrule
 \OEIS{A241454} & $\VARautomorphismgroupn =2$ & 0 & 1 & 1 & 2 & 9 & 37 & 317 & 4098 & 84602 & 2933996 \\
@@ -519,8 +516,7 @@ OEIS & Invariant &
 \begin{longtable}{@{\extracolsep{\fill}} l l l r r r r r r r r r r}
 \toprule
 OEIS & Invariant & & 
-%\multicolumn{10}{l}{Sequence}
-\multicolumn{10}{l}{Sequence: \ $S_1, S_2, \ldots, S_{10}$ }
+\multicolumn{10}{l}{Sequence: \ $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$} 
 \\
 \midrule\bottomrule
 \OEIS{A243270} & $\VARishamiltonian =1$, & $\VARisbipartite =1$ & 1 & 0 & 0 & 1 & 0 & 4 & 0 & 24 & 0 & 473 \\
