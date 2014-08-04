@@ -47,8 +47,10 @@
 \newcommand{\VARmaximalindependentvertexset}{\alpha_V(g)}
 \newcommand{\VARmaximalindependentedgeset}{\alpha_E(g)}
 
-\newcommand{\VARchromaticnumber}{\chi(g)}
-\newcommand{\VARfractionalchromaticnumber}[1]{\chi_{#1}(g)}
+\newcommand{\VARchromatic}{\chi}
+\newcommand{\VARchromaticpolynomial}[1]{P_g(#1)}
+\newcommand{\VARfractionalchromaticnumber}[1]{\VARchromatic_{#1}(g)}
+\newcommand{\VARchromaticnumber}{\VARchromatic(g)}
 
 \newcommand{\VARsubgraph}{s}
 \newcommand{\namedsubgraph}[1]{\VARsubgraph{}(g,#1)}
@@ -287,14 +289,19 @@ The \textit{automorphism group} is formed by all mappings of the vertices onto t
 The cardinality of this group is the \textit{automorphism number}.
 Both \texttt{nauty} and \texttt{BLISS} \cite{junttila2007engineering,mckay2014practical} can compute the automorphism group and the number.
 
-The \textit{Tutte polynomial} is a bivariate polynomial which encodes information about the graph's connectedness \needref. 
-It requires knowledge of the number of connected components of the graph and the number of connected components of every graph formed by the removal of edges. 
-\note{Define the Tutte polynomial, and talk about how polynomials are stored in the database?}
-
-A proper coloring of a graph is an assignment of a color to each vertex so that no two adjacent vertices have the same color. 
-The \textit{chromatic polynomial} is a specialization of the Tutte polynomial formed by taking the second variable to be zero. 
-The chromatic polynomial $P(G,k)$ gives the number of proper $k$-colorings on graph $G$. 
-The \textit{chromatic number} $\VARchromaticnumber$, is the smallest non-zero $k$ such that $P(G,k)>0$.
+The \textit{Tutte polynomial} is a bivariate polynomial which encodes information about the graph's connectedness.
+The polynomial $T_g(x,y)$ is defined via the recurrence relation, $T_g = T_{g-e} + T_{g/e}$ for any edge $e \in E$ that is not a loop or a bridge. 
+Here $g-e$ denotes edge removal, $g / e$ denotes edge contraction and a bridge is an edge whose removal disconnects the graph.
+A graph with only $i$ loops and $j$ bridges has the base case of $T_g(x,y) = x^i y^j$.
+%
+The \textit{chromatic polynomial} is a specialization of the Tutte polynomial 
+\begin{equation}
+\VARchromaticpolynomial{k} = (-1)^{|V|-c}k^{c}T_g(1-k,0)
+\end{equation}
+where $c$ is the number of connected components of the graph.
+The chromatic polynomial $\VARchromaticpolynomial{k}$ gives the number of proper $k$-colorings on graph. 
+A proper $k$-coloring of a graph is an assignment of $k$ colors to each vertex so that no two adjacent vertices have the same color. 
+The \textit{chromatic number} $\VARchromaticnumber$, is the smallest non-zero $k$ such that $\VARchromaticpolynomial{k}>0$.
 
 The \textit{fractional coloring number} is motivated by the chromatic number.
 A graph is \textit{$a:b$ colorable} if each vertex is assigned $b$ colors out of a palette of $a$ total colors such that the coloring of each adjacent vertex is disjoint. 
@@ -405,10 +412,10 @@ $\VARmaximalindependentvertexset, \VARmaximalindependentedgeset$ & size of maxim
 $\namedsubgraph{h}$ & number of subgraphs of $h$ in $g$ \\
 $\VARtree,\VARhamiltonian,\VAReulerian, \VARintegral, \VARrealspectrum$ & 
 properties: tree, Hamiltonian, Eulerian, integral, real \\
-$\VARkregular,\VARstronglyregular,\VARdistanceregular, \VARbipartite, \VARchordal$ & 
-properties: regular, strongly regular, distance regular, bipartite, chordal \\
-$\VARfractionaldualitygapvertexchromatic$ 
-& properties: chromatic gap
+$\VARkregular,\VARstronglyregular,\VARdistanceregular, \VARbipartite$ & 
+properties: regular, strongly regular, distance regular, bipartite \\
+$\VARchordal, \VARfractionaldualitygapvertexchromatic$  &
+properties: chordal, chromatic gap
 \end{longtable}
 
 
