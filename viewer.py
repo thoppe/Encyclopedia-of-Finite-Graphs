@@ -6,7 +6,7 @@ import src.helper_functions as helper_functions
 from src.invariants import graph_tool_representation, convert_to_numpy
 import graph_tool
 
-desc   = "Verify the sequences produced are the correct ones"
+desc   = "Visualize specific graphs"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('--max_n',type=int,default=8,
                     help="Maximum graph size n to compute tests")
