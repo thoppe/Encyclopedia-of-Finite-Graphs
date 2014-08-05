@@ -389,15 +389,18 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 \section{Submitted sequences}
 \label{app:submittedseq}
 
-Primary sequences are those involving a single invariant while secondary sequences involve the union of two invariants.
-The distinct sequences were those formed by considering the number of unique values possible at a fixed order.
+The sequences that were already present in the OEIS, but extended by this project are listed in Section \ref{sec:seq_extended}.
+The distinct sequences were those formed by considering the number of unique values possible at a fixed order and are listed in Section \ref{sec:seq_distinct}.
+Sequences are involving a single invariant, the primary sequences, are listed in Section \ref{sec:seq_primary}.
+The secondary sequences involve the union of two invariants and are listed in Section \ref{sec:seq_secondary}.
+
+We reiterate that all results shown are for simple, connected graphs. 
 Each sequence was hand-checked against the OEIS.
 We validated that either the sequence was unique or the invariant description matched the sequence found.
 For some invariants the definition may be ambiguous for small orders.
 When possible we tried to refer to conventions found in the literature and the OEIS for these cases.
 For brevity the symbols describing the invariants are shown below. 
 
-\newcommand{\VARsubgraphfree}[1]{g)}
 
 \begin{longtable}{@{\extracolsep{\fill}} l l}
 \toprule
@@ -418,8 +421,8 @@ $\VARchordal, \VARfractionaldualitygapvertexchromatic$  &
 properties: chordal, chromatic gap
 \end{longtable}
 
-
 \subsection{Extended sequences}
+\label{sec:seq_extended}
 
 \begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
 \toprule
@@ -435,7 +438,25 @@ OEIS & Invariant &
 \OEIS{A088741} & $\VARstronglyregular(g)=1$ & 	1& 1& 1& 2& 2& 3& 1& 3& 3& (5) \\
 \end{longtable}
 
+\subsection{Distinct sequences}
+\label{sec:seq_distinct}
+
+\begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
+\toprule
+OEIS & Invariant & 
+\multicolumn{10}{l}{Sequence: \ $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$} 
+\\
+\midrule\bottomrule
+\OEIS{A245881} & Tutte poly & 1 & 1 & 2 & 5 & 16 & 73 & 532 & 7245 & 192605 & 9717156 \\
+\OEIS{A245883} & chromatic poly & 1 & 1 & 2 & 5 & 14 & 50 & 231 & 1650 & 21121 & 584432 \\
+\OEIS{A245880} & characteristic poly & 1 & 1 & 2 & 6 & 21 & 111 & 821 & 10423 & 236064 & 10375796 \\
+\OEIS{A245882} & Laplacian poly & 1 & 1 & 2 & 6 & 21 & 110 & 793 & 10251 & 239307 & 10985229 \\
+\OEIS{A245879} & fractional chromatic& 1 & 1 & 2 & 3 & 5 & 7 & 11 & 17 & 29 & 50 \\
+\end{longtable}
+
+
 \subsection{Primary sequences}
+\label{sec:seq_primary}
 
 \begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
 \toprule
@@ -519,6 +540,7 @@ OEIS & Invariant &
 \end{longtable}
 
 \subsection{Secondary sequences}
+\label{sec:seq_secondary}
 
 \begin{longtable}{@{\extracolsep{\fill}} l l l r r r r r r r r r r}
 \toprule
