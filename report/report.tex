@@ -394,14 +394,14 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 \section{Submitted sequences}
 \label{app:submittedseq}
 
-The sequences that were already present in the OEIS, but extended by this project are listed in Section \ref{sec:seq_extended}.
+The sequences that were already present in the OEIS but extended by this project are listed in Section \ref{sec:seq_extended}.
 The distinct sequences were those formed by considering the number of unique values possible at a fixed order and are listed in Section \ref{sec:seq_distinct}.
 Sequences are involving a single invariant, the primary sequences, are listed in Section \ref{sec:seq_primary}.
 The secondary sequences involve the union of two invariants and are listed in Section \ref{sec:seq_secondary}.
 
-We reiterate that all results shown are for simple, connected graphs. 
 Each sequence was hand-checked against the OEIS.
 We validated that either the sequence was unique or the invariant description matched the sequence found.
+We reiterate that all results shown are for simple, connected graphs. 
 For some invariants the definition may be ambiguous for small orders.
 When possible we tried to refer to conventions found in the literature and the OEIS for these cases.
 For brevity the symbols describing the invariants are shown below. 
@@ -426,49 +426,47 @@ $\VARchordal, \VARfractionaldualitygapvertexchromatic$  &
 properties: chordal, chromatic gap
 \end{longtable}
 
+\newenvironment{invariantTable}[2]
+{
+  \begin{longtable}{@{\extracolsep{\fill}} #1}
+    \toprule
+    OEIS & Invariant & #2 \\
+    \midrule\bottomrule
+}
+{
+  \end{longtable}
+}
+
 \subsection{Extended sequences}
 \label{sec:seq_extended}
 
-\begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
-\toprule
-OEIS & Invariant & 
-\multicolumn{10}{l}{Sequence: \ $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$, terms in $(\cdot)$ were added by this project} 
-\\
-\midrule\bottomrule
+\begin{invariantTable}{l l r r r r r r r r r r}
+{\multicolumn{10}{l}{Sequence: $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$, terms in $(\cdot)$ were added by this project}}
 \OEIS{A086216} & $\VARvertexconnectivity > 3$ & 0 & 0 & 0 & 0 & 1 & 4 & 25 & 384 & 14480 & (1211735) \\
 \OEIS{A086217} & $\VARvertexconnectivity > 4$ & 0 & 0 & 0 & 0 & 0 & 1 & 4 & 39 & 1051 & (102630) \\
 \OEIS{A052446} & $\VARedgeconnectivity =2$ & 	0& 1& 1& 3& 10& 52& 351& 3714& 63638& (1912203) \\
 \OEIS{A052447} & $\VARedgeconnectivity =3$ & 0& 0& 1& 2& 8& 41& 352& (4820) & (113256) & (4602039) \\
 \OEIS{A052448} & $\VARedgeconnectivity =4$ & 	0& 0& 0& 1& 2& 15& 121& (2159) & (68715) & (3952378) \\
 \OEIS{A088741} & $\VARstronglyregular(g)=1$ & 	1& 1& 1& 2& 2& 3& 1& 3& 3& (5) \\
-\end{longtable}
+\end{invariantTable}
 
 \subsection{Distinct sequences}
 \label{sec:seq_distinct}
 
-\begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
-\toprule
-OEIS & Invariant & 
-\multicolumn{10}{l}{Sequence: \ $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$} 
-\\
-\midrule\bottomrule
+\begin{invariantTable}{l l r r r r r r r r r r}
+{\multicolumn{10}{l}{Sequence: $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$}}
 \OEIS{A245881} & Tutte poly & 1 & 1 & 2 & 5 & 16 & 73 & 532 & 7245 & 192605 & 9717156 \\
 \OEIS{A245883} & chromatic poly & 1 & 1 & 2 & 5 & 14 & 50 & 231 & 1650 & 21121 & 584432 \\
 \OEIS{A245880} & characteristic poly & 1 & 1 & 2 & 6 & 21 & 111 & 821 & 10423 & 236064 & 10375796 \\
 \OEIS{A245882} & Laplacian poly & 1 & 1 & 2 & 6 & 21 & 110 & 793 & 10251 & 239307 & 10985229 \\
 \OEIS{A245879} & fractional chromatic& 1 & 1 & 2 & 3 & 5 & 7 & 11 & 17 & 29 & 50 \\
-\end{longtable}
-
+\end{invariantTable}
 
 \subsection{Primary sequences}
 \label{sec:seq_primary}
 
-\begin{longtable}{@{\extracolsep{\fill}} l l r r r r r r r r r r}
-\toprule
-OEIS & Invariant & 
-\multicolumn{10}{l}{Sequence: \ $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$} 
-\\
-\midrule\bottomrule
+\begin{invariantTable}{l l r r r r r r r r r r}
+{\multicolumn{10}{l}{Sequence: $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$}}
 \OEIS{A241454} & $\VARautomorphismgroupn =2$ & 0 & 1 & 1 & 2 & 9 & 37 & 317 & 4098 & 84602 & 2933996 \\
 \OEIS{A241455} & $\VARautomorphismgroupn =4$ & 0 & 0 & 0 & 1 & 3 & 28 & 198 & 1971 & 29047 & 672516 \\
 \OEIS{A241456} & $\VARautomorphismgroupn =6$ & 0 & 0 & 1 & 1 & 1 & 7 & 31 & 221 & 3025 & 68033 \\
@@ -506,13 +504,11 @@ OEIS & Invariant &
 \OEIS{A241769} & $\VARnarticulationpoints =3$ & 0 & 0 & 0 & 0 & 1 & 5 & 32 & 242 & 2461 & 35839 \\
 \OEIS{A241770} & $\VARnarticulationpoints =4$ & 0 & 0 & 0 & 0 & 0 & 1 & 7 & 60 & 527 & 6056 \\
 \OEIS{A241771} & $\VARnarticulationpoints =5$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 9 & 97 & 1029 \\
-
 \OEIS{A241782} & $\VARissubgraphfreeKfive =0$ & 1 & 1 & 2 & 6 & 20 & 107 & 802 & 10252 & 232850 & 9905775 \\
 \OEIS{A241784} & $\VARissubgraphfreeCfive =0$ & 1 & 1 & 2 & 6 & 13 & 44 & 144 & 577 & 2457 & 12499 \\
 \OEIS{A242790} & $\VARissubgraphfreediamond =0$ & 1 & 1 & 2 & 4 & 11 & 39 & 165 & 967 & 7684 & 87012 \\
 \OEIS{A242792} & $\VARissubgraphfreebowtie =0$ & 1 & 1 & 2 & 6 & 15 & 60 & 273 & 1769 & 14836 & 174111 \\
 \OEIS{A242791} & $\VARissubgraphfreeopenbowtie =0$ & 1 & 1 & 2 & 6 & 11 & 34 & 98 & 408 & 1957 & 12740 \\
-
 \OEIS{A243243} & $\VARissubgraphfreeCfour >0$ & 0 & 0 & 0 & 3 & 13 & 93 & 796 & 10931 & 260340 & 11713182 \\
 \OEIS{A243246} & $\VARissubgraphfreeCfive >0$ & 0 & 0 & 0 & 0 & 8 & 68 & 709 & 10540 & 258623 & 11704072 \\
 \OEIS{A243245} & $\VARissubgraphfreeKthree >0$ & 0 & 0 & 1 & 3 & 15 & 93 & 794 & 10850 & 259700 & 11706739 \\
@@ -522,7 +518,6 @@ OEIS & Invariant &
 \OEIS{A243248} & $\VARissubgraphfreebull >0$ & 0 & 0 & 0 & 0 & 12 & 86 & 773 & 10777 & 259390 & 11705139 \\
 \OEIS{A243249} & $\VARissubgraphfreebowtie >0$ & 0 & 0 & 0 & 0 & 6 & 52 & 580 & 9348 & 246244 & 11542460 \\
 \OEIS{A243247} & $\VARissubgraphfreeopenbowtie >0$ & 0 & 0 & 0 & 0 & 10 & 78 & 755 & 10709 & 259123 & 11703831 \\
-
 \OEIS{A241814} & $\VARisdistanceregular =1$ & 1 & 1 & 1 & 2 & 2 & 4 & 2 & 5 & 4 & 7 \\
 \OEIS{A241839} & $\VARiskregular =0$ & 1 & 0 & 1 & 4 & 19 & 107 & 849 & 11100 & 261058 & 11716404 \\
 \OEIS{A241840} & $\VARisdistanceregular =0$ & 0 & 0 & 1 & 4 & 19 & 108 & 851 & 11112 & 261076 & 11716564 \\
@@ -532,27 +527,21 @@ OEIS & Invariant &
 \OEIS{A242952} & $\VARisrealspectrum =1$ & 1 & 1 & 1 & 3 & 11 & 54 & 539 & 7319 & 209471 & 10000304 \\
 \OEIS{A242953} & $\VARisrealspectrum =0$ & 0 & 0 & 1 & 3 & 10 & 58 & 314 & 3798 & 51609 & 1716267 \\
 \OEIS{A243241} & $\VARisstronglyregular =0$ & 0 & 0 & 1 & 4 & 19 & 109 & 852 & 11114 & 261077 & 11716566 \\
-
 \OEIS{A243251} & $\VARhasfractionaldualitygapvertexchromatic =1$ & 0 & 0 & 0 & 0 & 1 & 3 & 33 & 496 & 16464 & 969293 \\
 \OEIS{A243252} & $\VARhasfractionaldualitygapvertexchromatic =0$ & 1 & 1 & 2 & 6 & 20 & 109 & 820 & 10621 & 244616 & 10747278 \\
-
 \OEIS{A243781} & $\VARmaximalindependentvertexset =2$ & 0 & 0 & 1 & 4 & 11 & 34 & 103 & 405 & 1892 & 12166 \\
 \OEIS{A243782} & $\VARmaximalindependentvertexset =3$ & 0 & 0 & 0 & 1 & 8 & 63 & 524 & 5863 & 100702 & 2880002 \\
 \OEIS{A243783} & $\VARmaximalindependentvertexset =4$ & 0 & 0 & 0 & 0 & 1 & 13 & 205 & 4308 & 135563 & 7161399 \\
 \OEIS{A243784} & $\VARmaximalindependentvertexset =5$ & 0 & 0 & 0 & 0 & 0 & 1 & 19 & 513 & 21782 & 1576634 \\
 \OEIS{A243800} & $\VARmaximalindependentedgeset =2$ & 0 & 0 & 0 & 5 & 20 & 16 & 22 & 29 & 37 & 46 \\
 \OEIS{A243801} & $\VARmaximalindependentedgeset =3$ & 0 & 0 & 0 & 0 & 0 & 95 & 830 & 790 & 1479 & 2625 \\
-\end{longtable}
+\end{invariantTable}
 
 \subsection{Secondary sequences}
 \label{sec:seq_secondary}
 
-\begin{longtable}{@{\extracolsep{\fill}} l l l r r r r r r r r r r}
-\toprule
-OEIS & Invariant & & 
-\multicolumn{10}{l}{Sequence: \ $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$} 
-\\
-\midrule\bottomrule
+\begin{invariantTable}{l l l r r r r r r r r r r}
+{& \multicolumn{10}{l}{Sequence: $\SEQ_1, \SEQ_2, \ldots, \SEQ_{10}$}}
 \OEIS{A243270} & $\VARishamiltonian =1$, & $\VARisbipartite =1$ & 1 & 0 & 0 & 1 & 0 & 4 & 0 & 24 & 0 & 473 \\
 \OEIS{A243271} & $\VARishamiltonian =1$, & $\VARisdistanceregular =1$ & 1 & 0 & 1 & 2 & 2 & 4 & 2 & 5 & 4 & 6 \\
 \OEIS{A243272} & $\VARishamiltonian =1$, & $\VARiseulerian =1$ & 1 & 0 & 1 & 1 & 2 & 5 & 21 & 120 & 1312 & 26525 \\
@@ -621,7 +610,7 @@ OEIS & Invariant & &
 \OEIS{A243797} & $\VARissubgraphfreebowtie =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 10 & 27 & 70 & 206 & 613 & 1942 \\
 \OEIS{A243798} & $\VARissubgraphfreebull =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 12 & 25 & 55 & 126 & 304 \\
 \OEIS{A243799} & $\VARissubgraphfreeopenbowtie =0$, & $\VARischordal =1$ & 1 & 1 & 2 & 5 & 6 & 13 & 25 & 58 & 130 & 316 \\
-\end{longtable}
+\end{invariantTable}
 
 \end{appendices}
 
