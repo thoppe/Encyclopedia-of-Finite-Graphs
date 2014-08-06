@@ -1,6 +1,7 @@
 Encyclopedia of Finite Graphs
 =============================
-[![DOI](https://zenodo.org/badge/5198/thoppe/Encyclopedia-of-Finite-Graphs.png)](http://dx.doi.org/10.5281/zenodo.10954)
+[![DOI](https://zenodo.org/badge/5198/thoppe/Encyclopedia-of-Finite-Graphs.png)](http://dx.doi.org/10.5281/zenodo.10954) Encyclopedia of Finite Graph code
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11203.png)](http://dx.doi.org/10.5281/zenodo.11203) Simple connected graph invariant database
 
 This project has three major aims, 
 
