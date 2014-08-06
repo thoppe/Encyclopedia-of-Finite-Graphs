@@ -1,18 +1,21 @@
-import sqlite3, logging, argparse, os, collections, ast
-import subprocess
-import numpy as np
-
+import sqlite3, logging, argparse, os, collections
 import src.helper_functions as helper_functions
-from src.invariants import graph_tool_representation, convert_to_numpy
+#from src.invariants import graph_tool_representation, convert_to_numpy
 import graph_tool
 
 desc   = "Visualize specific graphs"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=8,
-                    help="Maximum graph size n to compute tests")
-parser.add_argument('--min_n',type=int,default=2,
-                    help="Minimum graph size n to match tests")
+parser.add_argument('N',type=int,default=5,
+                    help="Graph order (number of vertices) to query)")
+#parser.add_argument('--max_n',type=int,default=8,
+#                    help="Maximum graph size n to compute tests")
+#parser.add_argument('--min_n',type=int,default=2,
+#                    help="Minimum graph size n to match tests")
 cargs = vars(parser.parse_args())
+N = cargs["N"]
+
+print N
+exit()
 
 # Start the logger
 logging.root.setLevel(logging.INFO)
