@@ -25,8 +25,9 @@
 \newcommand{\needref}{\mbox{({\color{blue}\rule{.3cm}{.3cm}} REF)\xspace}}
 
 % Counters for number of edits made to OEIS
-\newcommand{\OEISedits}{XXX\xspace}
-\newcommand{\OEISprimary}{XXX\xspace}
+% Counts of sequences added: Extended (6), Distinct (5), Primaray (68), Secondary (68)
+\newcommand{\OEISeditsMain}{141\xspace}
+\newcommand{\OEISeditsExtended}{6\xspace}
 
 \newcommand{\OEIS}[1]
 {\href{https://oeis.org/#1}{\texttt{#1}}}
@@ -126,7 +127,7 @@
 \begin{abstract}
 We have exhaustively enumerated all simple, connected graphs of a finite order and have computed a selection of invariants over this set.
 Integer sequences were constructed from these invariants and checked against the Online Encyclopedia of Integer Sequences (OEIS).
-\OEISprimary new sequences were added and \OEISedits sequences were appended or corrected.
+\OEISeditsMain new sequences were added and \OEISeditsExtended sequences were appended or corrected.
 From the graph database, we were able to programmatically suggest relationships among the invariants.
 It will be shown that we can readily visualize any sequence of graphs with a given criteria. 
 The code has been released as an open-source framework for further analysis and the database was constructed to be extensible to invariants not considered in this work.
@@ -163,7 +164,7 @@ A given sequence may contain any number of terms, ranging from at least four up 
 Collecting and storing integer sequences in one place allows a researcher, who perhaps comes across the first few values of an unknown sequence, to be able to quickly look up subsequent values. 
 The OEIS not only provides the numerical values but seeks to function as a true encyclopedia, with cross references to related sequences, references to other literature, and formulas when known.
 One of the primary goals of this paper is to systematically expand the sequences involving graph invariants known to the OEIS database.
-Through our exhaustive enumeration of small graphs, we were able to submit \OEISprimary new sequences to the OEIS and extend \OEISedits existing sequences.
+Through our exhaustive enumeration of small graphs, we were able to submit \OEISeditsMain new sequences to the OEIS and extend \OEISeditsExtended existing sequences.
 
 A graph invariant is any property that is preserved under isomorphism. 
 Invariants can be simple binary properties (planarity), integers (automorphism group size), polynomials (chromatic polynomials), rationals (fractional chromatic numbers), complex numbers (adjacency spectra), sets (dominion sets) or even graphs themselves (subgraph and minor matching). 
