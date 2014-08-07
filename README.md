@@ -17,7 +17,19 @@ This project has three major aims,
 + [Travis Hoppe](https://github.com/thoppe)
 + [Anna Petrone](https://github.com/ampetr) 
 
-*Roadmap*:
+*Requirements*: 
+The Encyclopedia calls upon many external libraries to generate the data.
+To fully repopulate the database, it requires 
+[`numpy`](http://www.numpy.org/),
+[`networkx`](https://networkx.github.io/),
+[`graph-tool`](http://graph-tool.skewed.de/),
+[`sympy`](http://sympy.org/en/index.html),
+[`pulp`](http://code.google.com/p/pulp-or/),
+[`nauty`](http://cs.anu.edu.au/~bdm/nauty/)
+
+A standalone version of the database for simple connected graphs can be downloaded here: [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11203.png)](http://dx.doi.org/10.5281/zenodo.11203). 
+
+*Writeup*:
 
 + [Writeup](report/report.tex) for submission to either [Journal of Integer Sequences](https://cs.uwaterloo.ca/journals/JIS/), [Discrete Applied Mathematics](http://www.journals.elsevier.com/discrete-applied-mathematics/), [Experimental Mathematics](http://www.tandfonline.com/loi/uexm20).
 
