@@ -12,10 +12,9 @@ This project has three major aims,
 2. To "mine" this database for sequences not present (or incomplete) in the [OEIS](https://oeis.org/). 
 3. To use these sequences to suggest new mathematical relations between graph invariants.
 
-*Authors*:
-
-+ [Travis Hoppe](https://github.com/thoppe)
-+ [Anna Petrone](https://github.com/ampetr) 
+*Authors*: 
+[**Travis Hoppe**](https://github.com/thoppe) and
+[**Anna Petrone**](https://github.com/ampetr) 
 
 *Requirements*: 
 The Encyclopedia calls upon many external libraries to generate the data.
@@ -24,10 +23,10 @@ To fully repopulate the database, it requires
 [`networkx`](https://networkx.github.io/),
 [`graph-tool`](http://graph-tool.skewed.de/),
 [`sympy`](http://sympy.org/en/index.html),
-[`pulp`](http://code.google.com/p/pulp-or/),
-[`nauty`](http://cs.anu.edu.au/~bdm/nauty/)
+[`pulp`](http://code.google.com/p/pulp-or/) and,
+[`nauty`](http://cs.anu.edu.au/~bdm/nauty/).
 
-A standalone version of the database for simple connected graphs can be downloaded here: [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11203.png)](http://dx.doi.org/10.5281/zenodo.11203). 
+A standalone version of the database for simple connected graphs can be [downloaded](https://zenodo.org/badge/doi/10.5281/zenodo.11203.png)](http://dx.doi.org/10.5281/zenodo.11203). 
 
 *Writeup*:
 
