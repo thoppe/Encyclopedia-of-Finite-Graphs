@@ -119,7 +119,7 @@
 \author[1]{Travis Hoppe}
 \author[2]{Anna Petrone}
 \affil[1]{National Institutes of Health, National Institute of Diabetes and Digestive and Kidney Diseases, Bethesda, Maryland}
-\affil[2]{University of Maryland}
+\affil[2]{University of Maryland, Department of Civil Engineering}
 
 \date{\today}
 \maketitle
@@ -259,9 +259,22 @@ Since this specialized database was much larger than the invariant integer datab
 \note{list some interesting relations}
 
 \section{Discussion}
+The Encyclopedia is novel in that it provides an exhaustive enumeration of all graphs and their invariant values, but for this reason, is limited to small graphs (currently with order up to 10). 
+It would be difficult, but possible, to extend the database to simple connected graphs with 11 or 12 vertices -- 1,006,700,565 and 164,059,830,476 graphs respectively -- but any larger would require the database to have an unreasonable amount of storage space. 
+(There are 50,335,907,869,219 graphs of order 13 and 29,003,487,462,848,061 of order 14. See \OEIS{A001349}.) 
+Other projects like \cite{mckay2014combinatorial,royle2014small}, mentioned earlier, as well as \cite{meringer2014regular} have enumerated graphs of larger order with particular characteristics, such as bipartite, Eulerian, cubic, or certain regular graphs. 
+An extension of the Encyclopedia could incorporate these graphs that others have already computed, so as to form a more complete reference. 
+This would entail loosening our current restriction to simple and connected graphs to wider classes. 
 
-While not explored in this paper, the system of GraPHedron could be combined with our database for stronger conjectures\cite{melot2008facet}.
-\note{Discuss how project can be expanded, new invariants, other graph classes}
+In addition to extending the volume of graphs, we can extend the number of computed invariants. 
+Since the Encyclopedia code is openly available, programs to compute additional invariants can be added by anyone. 
+Large collections of graph invariants have been compiled (though not computed) by \cite{gccat}, which also details extensively the relations among invariants. 
+As previously mentioned, the GraPHedron project aims to discover relationships among invariants using linear programming techniques. 
+The Encyclopedia, with a greater number of (small) graphs and invariants, could be employed to extend their results. 
+
+Being restricted to graphs of small order, the Encyclopedia's contribution is the compilation of graphs and their invariants into a queryable SQL database that is open-sourced and readily extensible. 
+As a further project, we could create a web application that would allow users to query graphs based on invariants or their names (e.g. ``Peterson graph"), and download the results to a file. 
+The application would also have the ability to display drawings of the graphs. 
 
 \bibliographystyle{unsrt}
 \bibliography{refs}
