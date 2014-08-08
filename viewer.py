@@ -1,83 +1,93 @@
-import sqlite3, logging, argparse, os, collections, ast
-import subprocess
-import numpy as np
-
+import sqlite3, logging, argparse, os, collections, json
 import src.helper_functions as helper_functions
-from src.invariants import graph_tool_representation, convert_to_numpy
-import graph_tool
+import numpy as np
+from src.helper_functions import grab_vector
+from src.invariants import convert_to_numpy
+import graph_tool as gt
+import graph_tool.draw
 
-desc   = "Verify the sequences produced are the correct ones"
+desc   = '''
+Visualize specific graphs, for a three-graph example:
+python viewer.py 10 -i is_bipartite 1 -i is_integral 1 -i is_eulerian 1
+'''
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('--max_n',type=int,default=8,
-                    help="Maximum graph size n to compute tests")
-parser.add_argument('--min_n',type=int,default=2,
-                    help="Minimum graph size n to match tests")
+parser.add_argument('N',type=int,default=5,
+                    help="Graph order (number of vertices) to query)")
+parser.add_argument('--limit',type=int,default=15,
+                    help="Max number of graphs to draw")
+parser.add_argument('--cooling_step',type=float,default=.99,
+                    help="Cooling step for the sfdp_layout")
+parser.add_argument('--output',type=str,default=None,
+                    help="If given, saves the image to this file")
+parser.add_argument('-i','--invariant_query',nargs=2, action='append', required=False,
+                    help="Invariant to query (can be repeated)")
 cargs = vars(parser.parse_args())
+N = cargs["N"]
 
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-# Connect to the database and add structure info
-f_database = "database/sequence.db"
-conn = sqlite3.connect(f_database, check_same_thread=False)
+# Connect to the database
+conn = helper_functions.load_graph_database(N)
 
-graph_conn = collections.OrderedDict()
-for n in range(1, cargs["max_n"]+1):
-    graph_conn[n] = helper_functions.load_graph_database(n)
+# Load the list of invariants to compute
+f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
+with open(f_invariant_json,'r') as FIN:
+    invariant_names = json.loads(FIN.read())["invariant_function_names"]
 
-def grab_vector(connection, cmd):
-    return [x[0] for x in connection.execute(cmd).fetchall()]
+# Check the inputs to see if they are valid queries
+for func_name, val in cargs["invariant_query"]:
+    if func_name not in invariant_names:
+        err = "{} not a known invariant".format(func_name)
+        raise KeyError(err)
 
-def grab_scalar(connection, cmd):
-    return [x[0] for x in connection.execute(cmd).fetchall()][0]
+    try: int(val)
+    except Exception as ex:
+        err = "{}={} is {}".format(func_name, val, ex)
+        raise ValueError(err)
 
-cmd_graphs = '''
-SELECT c.adj FROM invariant_integer as a 
-LEFT JOIN ref_invariant_integer as b
-ON  a.invariant_id  = b.invariant_id 
-LEFT JOIN graph as c
-ON  a.graph_id = c.graph_id
-WHERE b.function_name = "{function_name}"
-AND   a.value {conditional} {value}
-'''
+cmd_search = '''
+SELECT adj FROM invariant_integer AS A 
+JOIN graph AS B ON A.graph_id = B.graph_id'''
+constraints = ["{}={}".format(*items) for items in cargs["invariant_query"]]
+if constraints: 
+    cmd_search += ' WHERE ' + ' AND '.join(constraints)
+cmd_search += " LIMIT {limit} ".format(**cargs)
 
-N = 6
-args = {"N":N}
+# Add limit at some point
+ADJ = grab_vector(conn, cmd_search)
+logging.info("Found at least {} graphs matching the criteria".format(len(ADJ)))
 
-cmd = cmd_graphs.format(function_name = "automorphism_group_n",
-                        conditional   = "=",
-                        value = 1)
+#######################################################################################
 
+def disjoint_graph_add(adj_list,N):
+    # Disjoint union of many graphs, assumes graphs are all size N
 
+    total_vertex = N*len(adj_list)
 
+    G = gt.Graph(directed=False)
+    G.add_vertex(total_vertex)
 
-for adj in grab_vector(graph_conn[N], cmd):
-    g = graph_tool_representation(adj,**args)
+    for k,adj in enumerate(adj_list):
+        A = convert_to_numpy(adj,N=N)
+        for (i,j) in zip(*np.where(A)):
+            if i>=j:
+                G.add_edge(i+N*k,j+N*k)
+    return G
 
-    A = convert_to_numpy(adj,**args)
-    edges = np.where(A)
-
-    s = ["p edge {N} {}".format(A.sum()/2,**args)]
-    for i,j in zip(*edges):
-        if i>=j:
-            s.append("e {} {}".format(i+1,j+1))
-
-    f_save = "test_{}.txt".format(adj)
-    #with open(f_save,'w') as FOUT:
-    #    for line in s:
-    #        FOUT.write("%s\n"%line)
-         
-    s_echo = '"%s"'%('\n'.join(s))
-    cmd = "echo %s | src/bliss/bliss" % s_echo
-
-    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
-    for line in proc.stdout:
-        #print line.strip()
-        if "|Aut|" in line:
-            print int(line.split()[-1])
+def viz_graph(g,**kwargs):
+    pos = gt.draw.sfdp_layout(g,
+                              p=3.5,
+                              cooling_step=cargs["cooling_step"])
+    gt.draw.graph_draw(g,pos,
+                       **kwargs)
 
 
-    pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
-    graph_tool.draw.graph_draw(g,pos)
+G = disjoint_graph_add(ADJ,N)
 
+if not cargs["output"]:
+    viz_graph(G,vertex_size=10)
+
+else:
+    viz_graph(G,vertex_size=10,output=cargs["output"])
 

@@ -121,7 +121,7 @@ def grouper(iterable, n):
 def parallel_compute(itr, func, callback=None, **cargs):
     ''' 
     Helper to compute a function over the graphs in parallel. Uses a 
-    grouper to prevent loading too much into memeory at one time.
+    grouper to prevent loading too much into memory at one time.
     Returns True/False if any exceptions have been called.
     '''
 
@@ -220,8 +220,8 @@ def csv_validator(contents, cmd_insert):
     # Check for the extra bit written at the end
     expected_args = len([x for x in cmd_insert if x=="?"]) + 1
     for k,item in enumerate(contents):
-        #msg = "Inserting from landing table {}".format(k)
-        #if k and k%100000==0: logging.info(msg)
+        msg = "Inserting from landing table {}".format(k)
+        if k and k%10000==0: logging.info(msg)
         if len(item) == expected_args:
             yield item[:-1]
     
@@ -248,9 +248,9 @@ def compute_parallel(
     P = multiprocessing.Pool()
     sol = P.imap(pfunc,targets,chunksize=5)
 
-    if os.path.exists(f_landing_table):
-        err_msg = "{} already exists (it should not)!"
-        raise ValueError(err_msg.format(f_landing_table))
+    #if os.path.exists(f_landing_table):
+    #    err_msg = "{} already exists (it should not)!"
+    #    raise ValueError(err_msg.format(f_landing_table))
 
     cmd_insert = cmd_insert.format(function_name)
     FOUT = open(f_landing_table,'w')
