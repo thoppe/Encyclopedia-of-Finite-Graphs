@@ -1,6 +1,6 @@
 # Debugging/Testing commands
 
-test_N = 5
+test_N = 9
 all:
 	python src/generate_graphs.py $(test_N)
 	python src/update_special2.py $(test_N)
