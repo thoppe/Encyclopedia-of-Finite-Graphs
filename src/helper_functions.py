@@ -1,4 +1,4 @@
-import sqlite3, gc, csv, os, errno
+import sqlite3, gc, csv, os, errno, json
 import itertools, os, logging, multiprocessing
 
 def mkdir_p(path):
@@ -8,6 +8,22 @@ def mkdir_p(path):
         if exc.errno == errno.EEXIST and os.path.isdir(path):
             pass
         else: raise
+
+def load_options(f_option_file="options_simple_connected.json"):   
+    # Load the file into a string
+    try:
+        with open(f_option_file) as FIN:
+            raw_text = FIN.read()
+    except:
+        msg = "Couldn't find option file {}".format(f_option_file)
+        raise IOError(msg)
+
+    # Parse the text as json
+    try:
+        return json.loads(raw_text)
+    except Exception as Ex:
+        msg = "Couldn't parse JSON file {}, {}".format(f_option_file, Ex)
+        raise IOError(msg)
 
 def generate_database_name(N):
     return os.path.join("database", "graph{}.db".format(N))  

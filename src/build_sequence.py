@@ -2,7 +2,7 @@ import sqlite3, logging, argparse, os, collections, ast, sys
 import subprocess, itertools, json
 import numpy as np
 from helper_functions import grab_vector, grab_all, grab_scalar
-from helper_functions import load_graph_database
+from helper_functions import load_graph_database, load_options
 
 desc   = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
@@ -35,16 +35,14 @@ for n in range(1, cargs["max_n"]+1):
     search_conn[n]  = load_graph_database(n)
 
 # Load the list of invariants to compute
-f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
-with open(f_invariant_json,'r') as FIN:
-    js = json.loads(FIN.read())
-    func_names = js["invariant_function_names"]
+options = load_options()
+func_names = options["invariant_function_names"]
 
-    # These will use a different operator
-    special_conditionals = js["sequence_info"]["special_conditionals"]
+# These will use a different operator
+special_conditionals = options["sequence_info"]["special_conditionals"]
 
-    # These variants will not be used in the powerset construction
-    excluded_terms = js["sequence_info"]["excluded_terms"]
+# These variants will not be used in the powerset construction
+excluded_terms = options["sequence_info"]["excluded_terms"]
 
 # Look for missing values or errors in the database
 cmd_find_NULL = '''

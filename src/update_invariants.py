@@ -2,7 +2,7 @@ import numpy as np
 import logging, argparse, inspect, os, collections, json
 from helper_functions import load_graph_database, select_itr
 from helper_functions import grab_vector, grab_all, import_csv_to_table
-from helper_functions import compute_parallel, grab_col_names
+from helper_functions import compute_parallel, grab_col_names, load_options
 
 desc   = "Updates the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -26,10 +26,8 @@ sconn = load_graph_database(cargs["N"], special=True)
 
 logging.info("Starting invariant calculation for {N}".format(**cargs))
 
-# Load the list of invariants to compute
-f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
-with open(f_invariant_json,'r') as FIN:
-    invariant_names = json.loads(FIN.read())["invariant_function_names"]
+options = load_options()
+invariant_names = options["invariant_function_names"]
 
 # Create a mapping to all the known invariant functions
 import invariants

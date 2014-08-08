@@ -1,6 +1,6 @@
 # Debugging/Testing commands
 
-test_N = 9
+test_N = 5
 all:
 	python src/generate_graphs.py $(test_N)
 	python src/update_special2.py $(test_N)
@@ -58,8 +58,9 @@ package:
 	tar -cvf simple_connected_graphs_n10.tar database/* --exclude database/special
 	pbzip2 simple_connected_graphs_n10.tar
 
+option_file = "options_simple_connected.json"
 options:
-	emacs templates/ref_invariant_integer.json &
+	emacs $(option_file) &
 
 test:
 	python src/unit_tests.py --max_n 7

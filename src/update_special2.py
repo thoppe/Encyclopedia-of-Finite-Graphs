@@ -2,7 +2,7 @@ import numpy as np
 import logging, argparse, gc, inspect, os, csv
 import multiprocessing, sys, json
 
-from helper_functions import load_graph_database, select_itr
+from helper_functions import load_graph_database, select_itr, load_options
 from helper_functions import attach_table, generate_special_database_name
 from helper_functions import grab_scalar, grab_vector, grab_all
 import invariants
@@ -40,18 +40,14 @@ with open(f_graph_template) as FIN:
 attach_table(conn, generate_special_database_name(N),"sconn")
 
 # Load the list of invariants to compute
-f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
-with open(f_invariant_json,'r') as FIN:
-    js = json.loads(FIN.read())
-    special_names = js["special_function_names"]
-    ignored = js["ignored_special_function_names"]
-    special_names = [x for x in special_names if x not in ignored]
+options = load_options()
+special_names = options["special_function_names"]
+ignored = options["ignored_special_function_names"]
+special_names = [x for x in special_names if x not in ignored]
 
 # Find out which variables have been computed
 cmd_check = '''SELECT function_name FROM computed'''
 computed_functions = set( grab_vector(sconn,cmd_check) )
-
-#logging.info("Previously computed special invariants {}".format(computed_functions))
 
 #########################################################################
 # Count the total number of graphs

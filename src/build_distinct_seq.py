@@ -3,7 +3,7 @@ import subprocess, itertools, multiprocessing, json
 import numpy as np
 import helper_functions
 from helper_functions import load_graph_database, load_distinct_database
-from helper_functions import load_sql_script, select_itr
+from helper_functions import load_sql_script, select_itr, load_options
 from helper_functions import grab_vector, grab_all, grab_scalar
 
 desc   = '''
@@ -19,9 +19,7 @@ N = cargs["N"]
 logging.root.setLevel(logging.INFO)
 
 # Load the list of invariants to compute
-f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
-with open(f_invariant_json,'r') as FIN:
-    distinct_seq_names = json.loads(FIN.read())["distinct_sequences"]
+distinct_seq_names = load_options()["distinct_sequences"]
 
 ##########################################################################
 
