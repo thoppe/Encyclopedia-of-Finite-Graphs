@@ -2,6 +2,7 @@ import sqlite3, logging, argparse, os, collections
 import subprocess, itertools, json
 import numpy as np
 from src.helper_functions import grab_vector, grab_all, grab_scalar
+from src.helper_functions import load_options
 
 desc   = "Output the computed relations between the invariant sequences"
 parser = argparse.ArgumentParser(description=desc)
@@ -18,16 +19,14 @@ f_seq_database = "database/sequence.db"
 seq_conn = sqlite3.connect(f_seq_database, check_same_thread=False)
 
 # Load the list of invariants to compute
-f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
-with open(f_invariant_json,'r') as FIN:
-    js = json.loads(FIN.read())
-    func_names = js["invariant_function_names"]
+options = load_options()
+func_names = options["invariant_function_names"]
 
-    # These will use a different operator
-    special_conditionals = js["sequence_info"]["special_conditionals"]
+# These will use a different operator
+special_conditionals = options["sequence_info"]["special_conditionals"]
 
-    # These variants will not be used in the powerset construction
-    excluded_terms = js["sequence_info"]["excluded_terms"]
+# These variants will not be used in the powerset construction
+excluded_terms = options["sequence_info"]["excluded_terms"]
 
 # Build the lookup table
 cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 

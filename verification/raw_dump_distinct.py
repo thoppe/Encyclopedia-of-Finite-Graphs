@@ -1,6 +1,7 @@
 import sqlite3, logging, argparse, os, collections, json
 import numpy as np
 from src.helper_functions import grab_vector, grab_all, grab_scalar
+from src.helper_functions import load_options
 
 desc   = "Make a report of the distinct sequences"
 parser = argparse.ArgumentParser(description=desc)
@@ -14,10 +15,8 @@ f_distinct_database = "database/distinct_seq.db"
 conn = sqlite3.connect(f_distinct_database)
 
 # Load the list of distinct invariants
-f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
-with open(f_invariant_json,'r') as FIN:
-    distinct_seq_names = json.loads(FIN.read())["distinct_sequences"]
-
+options = load_options()
+distinct_seq_names = options["distinct_sequences"]
 
 cmd_build_seq = '''
 SELECT N,coeff FROM distinct_sequence 
