@@ -50,7 +50,7 @@ invariants:
 sequence:
 	python src/build_sequence.py --max_n $(max_n)
 	python src/build_relations.py --max_n $(max_n)
-	python verification/raw_dump_relations.py $(max_n)
+	python verification/raw_dump_relations.py 
 
 ########################################################################
 
