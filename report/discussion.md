@@ -1,9 +1,9 @@
 ## Discussion
-===========
+
 
 This is good, and says pretty much what I'd like to cover. Work it up into a few paragraphs and submit it. I've left my comments below.
 
-## Other graph databases exist with better "mathematical" abilities than ours 
++ Other graph databases exist with better "mathematical" abilities than ours 
 
 + GraPHedron - makes sense of invariant constraints better; 
 + We could expand the number of invariants used in the GraPHedron project. (I think they just have 3). Or let them do it using our data 
@@ -16,15 +16,15 @@ Good ref, add it part where refs 2,3 are.
 
 + [http://staffhome.ecm.uwa.edu.au/~00013890/remote/graphs/](http://staffhome.ecm.uwa.edu.au/~00013890/remote/graphs/)  `*`
 
-This one doesn't load for me...
+This one doesn't load for me... *hmm, it loads for me..*
 
 + [http://www.mathe2.uni-bayreuth.de/markus/reggraphs.html](http://www.mathe2.uni-bayreuth.de/markus/reggraphs.html)   `*`
 
-I think I ref. a paper that generates this, if not add it part where refs 2,3 are.
+I think I ref. a paper that generates this, if not add it part where refs 2,3 are. *Yep, you're right, looks like it's brinkmann1996fast*
 
 + [http://mathematica.stackexchange.com/questions/17775/how-to-view-all-graphs-available-in-graphdata](http://mathematica.stackexchange.com/questions/17775/how-to-view-all-graphs-available-in-graphdata)
 
-You want to add mathematica as a public database? It is commerical software so I'm not inclinded to use it.
+You want to add mathematica as a public database? It is commercial software so I'm not inclined to use it. *My point with these references is to show that if one wanted a list of graphs, there are better options than our encyclopedia*
 
 + [http://cs.anu.edu.au/~bdm/data/graphs.html](http://cs.anu.edu.au/~bdm/data/graphs.html)
 
@@ -36,7 +36,7 @@ Yes, see if you can work this ref. into the intro paragraph.
 
 + We should make the database public and have users be able to submit graphs and perform queries online and download the results as text, images. eg, query by an invariant value, search by graph name, etc. 
 
-Database _is_ public, there will be a DOI for the code and a DOI for the database. This is one of our key features!
+Database _is_ public, there will be a DOI for the code and a DOI for the database. This is one of our key features! *Oops, by "public" I meant to say online/live, going along with my next comment*
 
 + Users should be able to submit new graphs --> our db computes invariants (should have some sort of trigger event in the db to call python scripts)
 
@@ -59,27 +59,24 @@ Maybe, that isn't a bad idea for named graphs. But this is a future project. Goo
 
 + Have an indicator for which n are "completed" (contains all`****` graphs) 
 
-Not really needed? Each n is stored in a separate file.
+That could be handled in the graph "class" designation. For example, we could make a new class that only includes trees, or forests, or regular graphs, etc... The DB would contain "all" graphs of that class.
 
 + This project lists a ton of graph invariants. We could add as many as we can [http://www.emn.fr/z-info/sdemasse/gccat/sec4.3.4.html](http://www.emn.fr/z-info/sdemasse/gccat/sec4.3.4.html), This catalog seems to give all/lots of the "forcing relations"! http://www.emn.fr/z-info/sdemasse/gccat/sec4.3.4.2.html
 
 Yes, this is good. When we mention GraPHedron we can also mention this. There should be a paper ref. this project too.
 
-+ can maybe use maple to compute some invariants, see "gpval module" and "cce module" http://www.msci.memphis.edu/~speeds/idxcasgp.html
++ can maybe use maple to compute some invariants, see "gpval module" and "cce module" [http://www.msci.memphis.edu/~speeds/idxcasgp.html](http://www.msci.memphis.edu/~speeds/idxcasgp.html)
 
 I'm still against using closed source software, of which MAPLE is. SAGE however could be mentioned.
 
-+ `*` cited by [house of graphs](http://www.sciencedirect.com.proxy-um.researchport.umd.edu/science/article/pii/S0166218X12002831#)
++ `*` cited by [house of graphs](http://arxiv.org/abs/1204.3549)
 
-I can't see this refernece on my side.
+
 
 + `**` Look into adopting [this](http://cs.anu.edu.au/~bdm/data/formats.html) [format](http://cs.anu.edu.au/~bdm/data/formats.txt) for representing graphs.  Allows for accommodation of large graphs, and seems to be more commonly used, so would be easier to accept submissions. 
 
-This is simliar to what we do, however if we restrict to order n=11 or less we can store the adj as a 64-bit integer.
+This is similar to what we do, however if we restrict to order n=11 or less we can store the adj as a 64-bit integer.
 
-+ `****` Of course, need to define "all." ie n=1..10 for simple connected graphs is completed, so users know if they are getting everything or just what is available 
-
-Where are we not clear about "all"? If there is a spot where it is ambigous, I agree we need to fix it. 
 
 
 
