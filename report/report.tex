@@ -142,7 +142,7 @@ Due to the rapid growth in the number of unique isomorphic graphs, the currently
 a judicious choice often restricts the study to an interesting and more manageable subset.
 
 We proceed with the assumption however, that \textit{a priori} all graphs could be interesting given the right question.
-This is similar to the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bound by an inequality or constraint.
+This is similar to the GraPHedron project\cite{melot2008facet}, which attempts to formulate conjectures by searching for graphs bounded by an inequality or constraint.
 Our objective is more elementary. We aim to compute a large, comprehensive database of graphs and their respective invariants. 
 Such a database will allow new forms of discovery, some of which will be directly explored in this paper.
 For example, the integer sequences formed by the invariants can be systematically explored and compared to those already known.
@@ -152,7 +152,7 @@ Additionally, the creation of a large, centralized database will serve as a usef
 Finally, a comprehensive database provides pedagogic value, as representative graphs from any considered sequence can be rapidly visualized.
 
 To this end, we have created the \textit{Encyclopedia of Finite Graphs} (henceforth Encyclopedia), a database of invariants\cite{Travis2014SimpleConnectedGraphs} and the software to fully populate it\cite{Travis2014Encyclopdia}. 
-The code and the database has been released under an open source license.
+The code and the database have been released under an open source license.
 The intention is for new invariants to be an added to the project as various algorithms become available.
 
 Once built, the Encyclopedia readily yields integer sequences formed by matching the number of graphs to an invariant constraint at each order.
@@ -198,7 +198,7 @@ S(\VARistree=1, \CLASS^\prime) = 1, 1, 1, 1, 2, 3, 6, 11, 23, \ldots
 which is sequence \OEIS{A000055} in the OEIS.
 This particular sequence is well-known and easily computable.
 We have evaluated a range of invariants, from those that are computable in polynomial time, to some that are known to be $\mathcal{\#P}$-complete.
-While a few sequences were merely extended, other invariants, such as the the independence number, were hitherto unknown to OEIS and have produced novel sequences (\OEIS{A243781}-\OEIS{A243784}).
+While a few sequences were merely extended, other invariants, such as the independence number, were hitherto unknown to OEIS and have produced novel sequences (\OEIS{A243781}-\OEIS{A243784}).
 
 In addition to contributing to the OEIS, a secondary goal is to identify relationships between graph invariants.
 Two queries of the same class are subsets of each other $\QUERY_a(f,\CLASS) \subseteq \QUERY_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
@@ -236,7 +236,7 @@ Some non-integer invariants, such as the Tutte polynomial, were stored in a sepa
 
 The creation of the database started with the full enumeration of the graphs themselves.
 The calculation of the invariants was an embarrassingly parallel problem, as each graph was independent.
-The invariants were stored in a denormalized database with each graph stored as a row and each column contained the value of a particular invariant for that graph. 
+The invariants were stored in a denormalized database with each graph stored as a row and each column containing the value of a particular invariant for that graph. 
 We placed an index on each of the invariant columns to allow for fast querying at the expense of disk space.
 
 Sequences were constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
@@ -251,7 +251,7 @@ In addition to providing useful information, some of these relations provided a 
 For example, one of the equality relations states that: a graph is a tree $\Leftrightarrow$ a graph has infinite girth.
 This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinite for graphs without cycles). 
 
-The distinct sequences involved the creation of an additional database to store the non-integer invariants. 
+The sequences counting distinct invariant values involved the creation of an additional database to store the non-integer invariants. 
 Each of these special invariants required their own individualized table.
 For example, the Tutte polynomial was stored as a denormalized table of graph identifiers with a row for each term of the polynomial containing the degree and coefficient.
 Since this specialized database was much larger than the invariant integer database it was not included in the public version.
@@ -268,7 +268,7 @@ This would entail loosening our current restriction to simple and connected grap
 
 In addition to extending the volume of graphs, we can extend the number of computed invariants. 
 Since the Encyclopedia code is openly available, programs to compute additional invariants can be added by anyone. 
-Large collections of graph invariants have been compiled (though not computed) by \cite{gccat}, which also details extensively the relations among invariants. 
+Large collections of graph invariants have been compiled (though not computed) by \cite{gccat}, which also extensively details the relations among invariants. 
 As previously mentioned, the GraPHedron project aims to discover relationships among invariants using linear programming techniques. 
 The Encyclopedia, with a greater number of (small) graphs and invariants, could be employed to extend their results. 
 
@@ -318,7 +318,7 @@ The \textit{chromatic polynomial} is a specialization of the Tutte polynomial
 \VARchromaticpolynomial{k} = (-1)^{|V|-c}k^{c}T_g(1-k,0)
 \end{equation}
 where $c$ is the number of connected components of the graph.
-The chromatic polynomial $\VARchromaticpolynomial{k}$ gives the number of proper $k$-colorings on graph. 
+The chromatic polynomial $\VARchromaticpolynomial{k}$ gives the number of proper $k$-colorings on a graph. 
 A proper $k$-coloring of a graph is an assignment of $k$ colors to each vertex so that no two adjacent vertices have the same color. 
 The \textit{chromatic number} $\VARchromaticnumber$, is the smallest non-zero $k$ such that $\VARchromaticpolynomial{k}>0$.
 
@@ -332,7 +332,7 @@ The fractional coloring number is defined to be
 \lim_{b \rightarrow \infty} \frac{\VARfractionalchromaticnumber{b}}{b} = 
 \inf _ {b} \frac{\VARfractionalchromaticnumber{b}}{b} 
 \end{equation}
-Not only does the limit exists but $\VARfractionalchromaticnumber{f} \in \mathbb{Q}$\cite{scheinerman2011fractional}.
+Not only does the limit exist, but $\VARfractionalchromaticnumber{f} \in \mathbb{Q}$\cite{scheinerman2011fractional}.
 The integral chromatic number need not be equal to its fractional counter part, in fact 
 $\VARfractionalchromaticnumber{f} \le \VARchromaticnumber$.
 If the equality does not hold, we say the graph has a \textit{fractional chromatic gap}.
@@ -360,7 +360,7 @@ For connected graphs the spectrum of the Laplacian matrix is real and $\lambda_i
 The second-largest eigenvalue is called the \textit{spectral gap}.
 
 Let $D$ denote the graph distance matrix, where $D_{ij}$ is the shortest path (geodesic) from vertex $i$ to $j$.
-A graph is \textit{connected} if there is a path between all pairs vertices.
+A graph is \textit{connected} if there is a path between all pairs of vertices.
 If there is no path between vertices $i$ and $j$, $D_{ij}=\infty$.
 By construction, all distances in connected graphs are finite.
 The \textit{eccentricity} of a vertex $k$ is the maximum value of $D_{k j}$ for all $j$.
@@ -372,8 +372,8 @@ A graph is \textit{distance regular} if two conditions are met.
 First, for all pairs of vertices $v, w$ and any pair of integers $i,j = 0,1,\ldots,d$ where $d$ is the graph diameter, the number of vertices from $v$ at a distance $i$ and the number of vertices from $w$ at a distance $j$ depend only on $i, j$.
 Secondly, if the distance between $v$ and $w$ is independent of the choice of $v$ and $w$\cite{brouwer2012distance}.
 
-A circuit is a path that begins and ends at the same vertex.
-A graph is \textit{Hamiltonian} (\textit{Eulerian}) if there is a circuit that visits each vertex (edge) exactly once.
+A \textit{circuit} is a path that begins and ends at the same vertex.
+A graph is \textit{Hamiltonian}/\textit{Eulerian} if there is a circuit that visits each vertex/edge exactly once.
 
 A vertex is an \textit{articulation point} if its removal disconnects the graph. 
 The \textit{vertex/edge connectivity} of a graph is the minimum number of vertices/edges needed to disconnect the graph.
@@ -385,17 +385,19 @@ The length of the shortest/longest cycle in a graph is its \textit{girth}/\texti
 Trees are defined to have infinite girth and circumference.
 Due to technical limitations we record this value as a zero which is unambiguous for connected loopless graphs.
 A \textit{chord} of a cycle is an edge with one vertex belonging to the cycle and one edge outside of the cycle.
-In a \textit{chordal graph} all cycles of order four or more have a cycle chord.   
+In a \textit{chordal graph}, all cycles of order four or more have a cycle chord.   
  
-A \textit{vertex subgraph} or simply a subgraph is a subset of vertices and the edges which are common to all members of this subset. 
+A \textit{vertex subgraph} or simply a subgraph, is a subset of vertices and the edges which are common to all members of this subset. 
 Let $\VARsubgraph(g,h)$ equal the number of vertex sets that form subgraphs of $h$ in $g$.
 The \textit{maximum clique number} is the largest non-zero value of $\VARsubgraph(g, K_n)$, where $K_n$ is the complete graph on $n$ vertices. 
-A graph is \textit{triangle free} or \textit{square free} if $\VARsubgraph(g,C_3)=0$ or $\VARsubgraph(g,C_4)=0$ respectively where $C_n$ is the cycle graph on $n$ vertices.
-In addition we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and the following named graphs: the diamond graph $\subgraphDIAMOND{}$, the bull graph $\subgraphBULL{}$, the bowtie graph $\subgraphBOWTIE{}$, and the open-bowtie graph $\subgraphOPENBOWTIE{}$.
+A graph is \textit{triangle free} or \textit{square free} if $\VARsubgraph(g,C_3)=0$ or $\VARsubgraph(g,C_4)=0$ respectively, where $C_n$ is the cycle graph on $n$ vertices.
+In addition, we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and the following named graphs: the diamond graph $\subgraphDIAMOND{}$, the bull graph $\subgraphBULL{}$, the bowtie graph $\subgraphBOWTIE{}$, and the open-bowtie graph $\subgraphOPENBOWTIE{}$.
 The named graphs are illustrated in Figure \ref{fig:namedgraphs}. 
 
 \begin{figure}[h]
+\begin{center}
   \includegraphics[width=0.5\textwidth]{simple_drawings/combined_subgraphs.png}
+\end{center}
   \caption{Visual depiction of the named graphs used in the vertex subgraphs invariant calculation.
     Left to right:
     the bull graph $\subgraphBULL{}$,
@@ -410,14 +412,14 @@ The named graphs are illustrated in Figure \ref{fig:namedgraphs}.
 
 The sequences that were already present in the OEIS but extended by this project are listed in Section \ref{sec:seq_extended}.
 The distinct sequences were those formed by considering the number of unique values possible at a fixed order and are listed in Section \ref{sec:seq_distinct}.
-Sequences are involving a single invariant, the primary sequences, are listed in Section \ref{sec:seq_primary}.
-The secondary sequences involve the union of two invariants and are listed in Section \ref{sec:seq_secondary}.
+Sequences involving a single invariant, the primary sequences, are listed in Section \ref{sec:seq_primary}.
+The secondary sequences involve two invariants and are listed in Section \ref{sec:seq_secondary}.
 
 Each sequence was hand-checked against the OEIS.
 We validated that either the sequence was unique or the invariant description matched the sequence found.
 We reiterate that all results shown are for simple, connected graphs. 
 For some invariants the definition may be ambiguous for small orders.
-When possible we tried to refer to conventions found in the literature and the OEIS for these cases.
+When possible, we tried to refer to conventions found in the literature and the OEIS for these cases.
 For brevity the symbols describing the invariants are shown below. 
 
 
