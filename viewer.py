@@ -1,7 +1,7 @@
 import sqlite3, logging, argparse, os, collections, json
 import src.helper_functions as helper_functions
 import numpy as np
-from src.helper_functions import grab_vector
+from src.helper_functions import grab_vector, load_options
 from src.invariants import convert_to_numpy
 import graph_tool as gt
 import graph_tool.draw
@@ -31,9 +31,8 @@ logging.root.setLevel(logging.INFO)
 conn = helper_functions.load_graph_database(N)
 
 # Load the list of invariants to compute
-f_invariant_json = os.path.join("templates","ref_invariant_integer.json")
-with open(f_invariant_json,'r') as FIN:
-    invariant_names = json.loads(FIN.read())["invariant_function_names"]
+options = load_options()
+invariant_names = options["invariant_function_names"]
 
 # Check the inputs to see if they are valid queries
 for func_name, val in cargs["invariant_query"]:
