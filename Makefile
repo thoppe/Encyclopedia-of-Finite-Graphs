@@ -63,7 +63,7 @@ options:
 	emacs $(option_file) &
 
 test:
-	python src/unit_tests.py --max_n 7
+	python src/unit_tests.py
 
 commit:
 	-@make push
