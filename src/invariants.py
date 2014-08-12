@@ -686,72 +686,84 @@ def convert_nx_to_adj(g):
     return int_index
     
 if __name__ == "__main__":
+    import logging
 
-    #g = _complete_graphs[4]
-    #h = _cycle_graphs[4]
-    #viz_graph(g)
-    #viz_graph(h)
+    # Start the logger
+    logging.root.setLevel(logging.INFO)
+    logging.info("Testing the Petersen graph for all the invariants")
+
+    logging.info("Creating the graph.")
     g   = nx.petersen_graph()
+
+    logging.info("Converting to adj. format")
     adj = convert_nx_to_adj(g)
 
-    #print special_laplacian_polynomial(adj, N=10)
-    p = special_polynomial_tutte(adj, N=10)
-    print special_chromatic_polynomial(adj,N=10,tutte_polynomial=p)
-    exit()
-    print special_characteristic_polynomial(adj, N=10)
-
-    #T = special_polynomial_tutte(adj, N=10)   
-    #for k in xrange(0, 10):
-    #    print k, eval_chromatic_from_tutte(k,10,T)
-    #print chromatic_number(adj,N=10,**{"tutte_polynomial":T})
-
-    exit()
-    
-
-    # Function testing here
-
-    N = 7
-    adj = 14781504
-
-    #N = 10
-    #adj = 17996771828415962
-
+    N = 10
     args= {"N":N}
 
+    logging.info("Converting to numpy format")
     A  = convert_to_numpy(adj,**args) 
+
+    logging.info("Converting to networkx format")
     gx = networkx_representation(adj,**args)
+
+    logging.info("Converting to graph-tool format")
     gt = graph_tool_representation(adj,**args)
 
+    logging.info("Computing the Tutte polynomial")
     p = special_polynomial_tutte(adj, **args)
-    args["special_polynomial_tutte"] = p
-    print "Chromatic number: ", chromatic_number(adj, **args)
-    print "Fractional chromatic number: ", \
-        fractional_chromatic_number(adj,**args)
-    print "has_fractional_duality_gap_vertex_chromatic: ", \
-        has_fractional_duality_gap_vertex_chromatic(adj,**args)
+    args["tutte_polynomial"] = p
+    print p
 
-    print "is_hamiltonian:", is_hamiltonian(adj, **args)
-    print "is_integral:", is_integral(adj, **args)
-    print "is_rational_spectrum:", is_rational_spectrum(adj, **args)
-    print "is_real_spectrum:", is_real_spectrum(adj, **args)
+    logging.info("Computing the chromatic polynomial")
+    p = special_chromatic_polynomial(adj, **args)
+    args["chromatic_polynomial"] = p
+    print p
 
-    args["special_cycle_basis"] = special_cycle_basis(adj,**args)
-    print "n_cycle_basis:",n_cycle_basis(adj,**args)
-    print "Girth: ", girth(adj, **args)
-    print "Circumference: ", circumference(adj, **args)
+    logging.info("Computing the degree sequence")
+    p = special_degree_sequence(adj, **args)
+    args["degree_sequence"] = np.array(p).ravel()
 
-    print "k_max_clique: ", k_max_clique(adj, **args)
+    logging.info("Computing the fractional chromatic number")
+    p = fractional_chromatic_number(adj, **args)
+    args["fractional_chromatic_number"] = p[0]
+    print p
 
-    print "Vertex connectivity: ", vertex_connectivity(adj, **args)
-    print "Edge   connectivity: ", edge_connectivity(adj, **args)
+    logging.info("Computing the characteristic polynomial")
+    p = special_characteristic_polynomial(adj, **args)
+    args["characteristic_polynomial"] = p
+    print p
 
-    print "is_strongly_regular: ", is_strongly_regular(adj, **args)
-    print "is_integral:", is_integral(adj, **args)
-    print "AUT: ", automorphism_group_n(adj,**args)
-    print "is_integral: ", is_integral(adj, **args)
+    logging.info("Computing the laplacian polynomial")
+    p = special_laplacian_polynomial(adj, **args)
+    args["laplacian_polynomial"] = p
+    print p
 
-    print "is_planar",is_planar(adj,**args), is_bipartite(adj,**args)
-    print "n_articulation_points",n_articulation_points(adj,**args)
+    logging.info("Computing the independent vertex sets")
+    p = special_independent_vertex_sets(adj, **args)
+    args["independent_vertex_sets"] = p
+    print p
+
+    logging.info("Computing the independent edge sets")
+    p = special_independent_edge_sets(adj, **args)
+    args["independent_edge_sets"] = p
+    print p
+
+    logging.info("Computing the cycle basis")
+    import collections
+    p = special_cycle_basis(adj, **args)
+    cb = collections.defaultdict(list)
+    for cycle_k, idx in p:
+        cb[cycle_k].append(idx)
+    args["cycle_basis"] = cb.values()
+
+    from helper_functions import load_options
+    options = load_options()
+
+    for func in options["invariant_function_names"]:
+        logging.info("Computing {}".format(func))
+        x = eval(func)(adj, **args)
+        print x
   
     viz_graph(gt)
 
