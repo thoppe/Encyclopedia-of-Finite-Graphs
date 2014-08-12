@@ -4,7 +4,6 @@ import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
 
-import connectivity.connectivity as nx_extra
 import numpy as np
 import sympy
 import pulp
@@ -323,11 +322,11 @@ def n_articulation_points(adj,**args):
 
 def vertex_connectivity(adj,**args):
     g = networkx_representation(adj,**args)
-    return nx_extra.global_vertex_connectivity(g)
+    return nx.node_connectivity(g)
 
 def edge_connectivity(adj,**args):
     g = networkx_representation(adj,**args)
-    return nx_extra.global_edge_connectivity(g)
+    return nx.edge_connectivity(g)
 
 def _poly_factorable_over_field(p,domain):
     # Factor the char poly over the integers
