@@ -446,3 +446,4 @@
 |vertex_connectivity|>|3| is exclusive to |n_independent_edge_sets|=|124||
 |vertex_connectivity|>|3| is exclusive to |n_independent_edge_sets|=|132||
 |vertex_connectivity|>|3| is exclusive to |n_independent_edge_sets|=|136||
++---------------+----------+-----------------+--------+----------------+----------+------------------|
