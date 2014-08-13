@@ -3,7 +3,7 @@ Encyclopedia of Finite Graphs
 [![DOI](https://zenodo.org/badge/5198/thoppe/Encyclopedia-of-Finite-Graphs.png)](http://dx.doi.org/10.5281/zenodo.10954) 
 _Encyclopedia of Finite Graphs code_
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11238.png)](http://dx.doi.org/10.5281/zenodo.11238)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.11280.png)](http://dx.doi.org/10.5281/zenodo.11280)
 _Simple Connected Graph Invariant database_
 
 This project has three major aims, 
