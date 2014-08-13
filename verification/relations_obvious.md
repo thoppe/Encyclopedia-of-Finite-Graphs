@@ -1,4 +1,4 @@
-| `a_invariant_name a_operator a_invariant_value` | relation | `b_invariant_name b_operator b_invariant_value` |
+| First invariant condition | _relation_ | Second invariant condition |
 |---------------------------------------------------|----------|-------------------------------------------------|
 | `chromatic_number = 2` | <-> | `is_bipartite = 1` |
 | `diameter = 1` | <-> | `maximal_independent_vertex_set = 1` |
