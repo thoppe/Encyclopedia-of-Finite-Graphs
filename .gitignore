@@ -19,6 +19,7 @@ src/bliss/*
 .\#*
 *.bz2
 sequence.db
+*.bak
 
 # C extensions
 *.so

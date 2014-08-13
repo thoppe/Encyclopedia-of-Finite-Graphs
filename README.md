@@ -71,8 +71,9 @@ You can automatically download an [updated copy of the database](https://github.
 
     git submodule add https://github.com/thoppe/Simple-connected-graph-invariant-database.git database
 
-Note we are unable to store the special invariants for larger graphs due to size constraints, they will have to be recomputed for `n>6`.
-We reccomnded rebuilding portions of the database as a consistancy check, and as a learning tool to add additional invariants. 
+Note that we are unable to store the special invariants for larger graphs due to size constraints; these larger special invariants will have to be recomputed for `n>6`.
+We recommend rebuilding portions of the database as a consistency check and as a learning tool if you are considering adding additional invariants. 
+
 If the database has been updated, you can grab a new copy by running:
 
     git submodule foreach git pull origin master
