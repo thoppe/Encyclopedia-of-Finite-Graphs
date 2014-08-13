@@ -65,6 +65,15 @@ First compile the invariant calculations, and run the unit test on the Petersen 
     make compile
     make test
 
+*Database*
+
+You can automatically download an [updated copy of the database](https://github.com/thoppe/Simple-connected-graph-invariant-database) by running this in the Encyclopedia directory:
+
+    git submodule add https://github.com/thoppe/Simple-connected-graph-invariant-database.git database
+
+Note we are unable to store the special invariants for larger graphs due to size constraints, they will have to be recomputed for `n>6`.
+We reccomnded rebuilding portions of the database as a consistancy check, and as a learning tool to add additional invariants.
+
 ## Calculated Invariants
 
 + [`diameter`](http://mathworld.wolfram.com/GraphDiameter.html), [`radius`](http://mathworld.wolfram.com/GraphRadius.html) (networkx)
