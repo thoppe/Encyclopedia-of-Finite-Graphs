@@ -233,7 +233,7 @@ The invariants were stored in a denormalized database with each graph stored as 
 We placed an index on each of the invariant columns to allow for fast querying at the expense of disk space.
 
 Sequences were constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
-For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group is equal to two, while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater than or equal to three. 
+For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group has cardinality equal to two, while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater than or equal to three. 
 Sequences can involve more than one invariant condition.
 A sequence with only a single invariant condition is called a primary sequence, while a sequence involving two or more invariant conditions is called a secondary sequence.
 For a sequence to be considered for submission to the OEIS, it must have at least four non-zero entries. 
@@ -250,11 +250,11 @@ This eventually breaks down, in fact for a large enough $n$ there exists a graph
 The sequences counting distinct invariant values involved the creation of an additional database to store the non-integer invariants. 
 Each of these special invariants required their own individualized table.
 For example, the Tutte polynomial was stored as a denormalized table of graph identifiers with a row for each term of the polynomial containing the degree and coefficient.
-Since this specialized database was much larger than the invariant integer database it was not included in the public version.
+Since this specialized database was much larger than the invariant integer database, it was not included in the public version.
 
 \section{Discussion}
 
-We have computed the Encyclopedia of Finite Graphs, a exhaustive enumeration of all simple connected graphs and their invariant values for graphs of order ten or less.
+We have computed the Encyclopedia of Finite Graphs, an exhaustive enumeration of all simple connected graphs and their invariant values for graphs of order ten or less.
 This database was utilized to investigate integer sequences among the invariants and supplement the OEIS.
 While fully functional, there are several immediate extensions to the project that we aim to implement in the future.
 
@@ -269,7 +269,7 @@ An extension of the Encyclopedia could incorporate graphs that others have alrea
 
 In addition to expanding the volume of graphs considered, we can extend the number of computed invariants. 
 Since the Encyclopedia code is openly available\cite{Travis2014Encyclopdia}, programs to compute additional invariants can be added by anyone. 
-Large collections of graph invariants have been compiled (though not computed) under the Global Constraint Catalog which also extensively details the relations among invariants\cite{beldiceanu2005global}.
+Large collections of graph invariants have been compiled (though not computed) under the Global Constraint Catalog, which also extensively details the relations among invariants\cite{beldiceanu2005global}.
 As previously mentioned, the GraPHedron project aims to discover relationships among invariants using linear programming techniques. 
 The Encyclopedia, with a greater number of graphs and invariants, could be employed to extend their results. 
 
