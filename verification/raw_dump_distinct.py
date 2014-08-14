@@ -1,7 +1,9 @@
-import sqlite3, logging, argparse
+import sqlite3
+import logging
+import argparse
 from src.helper_functions import grab_all, load_options
 
-desc   = "Make a report of the distinct sequences"
+desc = "Make a report of the distinct sequences"
 parser = argparse.ArgumentParser(description=desc)
 cargs = vars(parser.parse_args())
 
@@ -17,16 +19,16 @@ options = load_options()
 distinct_seq_names = options["distinct_sequences"]
 
 cmd_build_seq = '''
-SELECT N,coeff FROM distinct_sequence 
+SELECT N,coeff FROM distinct_sequence
 WHERE function_name = "{}" ORDER BY N
 '''
 
 for name in distinct_seq_names:
     cmd = cmd_build_seq.format(name)
     n_val, seq = zip(*grab_all(conn, cmd))
-    if n_val != tuple(range(1,len(n_val)+1)):
+    if n_val != tuple(range(1, len(n_val) + 1)):
         logging.warning("N values are not sequential")
-    seq = str(seq).replace('(','').replace(')','').replace(' ','')
+    seq = str(seq).replace('(', '').replace(')', '').replace(' ', '')
 
-    key = "+ `[{}]` `{}`".format(name,seq)
+    key = "+ `[{}]` `{}`".format(name, seq)
     print key

@@ -1,4 +1,7 @@
-import itertools, os, fractions, subprocess
+import itertools
+import os
+import fractions
+import subprocess
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
@@ -9,72 +12,80 @@ import pulp
 
 __script_dir = os.path.dirname(os.path.realpath(__file__))
 
-######################### Conversion code ######################### 
+######################### Conversion code #########################
 
-def viz_graph(g,pos=None,**kwargs):
-    if pos == None:
+
+def viz_graph(g, pos=None, **kwargs):
+    if pos is None:
         pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
-    graph_tool.draw.graph_draw(g,pos,**kwargs)
+    graph_tool.draw.graph_draw(g, pos, **kwargs)
 
-def convert_to_numpy(adj,**args):
+
+def convert_to_numpy(adj, **args):
     N = args["N"]
 
-    possible_edges = (N*(N+1))/2
+    possible_edges = (N * (N + 1)) / 2
     edge_map = np.binary_repr(adj, possible_edges)
     edge_int = map(int, edge_map)
 
     idx = np.triu_indices(N)
-    A = np.zeros((N,N),dtype=np.int)
-    
+    A = np.zeros((N, N), dtype=np.int)
+
     A[idx] = edge_int
 
     # Works for loopless graphs only
     A += A.T
     return A
 
+
 def graph_tool_representation(adj, **args):
-    A = convert_to_numpy(adj,**args)
+    A = convert_to_numpy(adj, **args)
     g = graph_tool.Graph(directed=False)
     g.add_vertex(args["N"])
     for edge in zip(*np.where(A)):
         n0, n1 = edge
-        if n0>n1:
-            g.add_edge(n0,n1)
+        if n0 > n1:
+            g.add_edge(n0, n1)
     return g
 
+
 def networkx_representation(adj, **args):
-    A = convert_to_numpy(adj,**args)
+    A = convert_to_numpy(adj, **args)
     return nx.from_numpy_matrix(A)
 
 ######################### Special invariant code #################
 
-def compress_input(val):
-    return str(val).replace(' ','')
 
-def special_cycle_basis(adj,**args):
-    g = networkx_representation(adj,**args)
+def compress_input(val):
+    return str(val).replace(' ', '')
+
+
+def special_cycle_basis(adj, **args):
+    g = networkx_representation(adj, **args)
     cycles = nx.cycle_basis(g)
     sorted_cycles = tuple(sorted([tuple(sorted(c)) for c in cycles]))
 
     terms = []
     for cycle_k in range(len(sorted_cycles)):
         for idx in sorted_cycles[cycle_k]:
-            terms.append( (cycle_k, idx) )
-    if not terms: return ((None,None),)
+            terms.append((cycle_k, idx))
+    if not terms:
+        return ((None, None),)
     return tuple(terms)
 
-def special_degree_sequence(adj,**args):
-    A = convert_to_numpy(adj,**args)
-    deg = A.sum(axis=0)
-    deg.sort()
+
+def special_degree_sequence(adj, **args):
+    A = convert_to_numpy(adj, **args)
+    deg = sorted(A.sum(axis=0))
     return tuple([(x,) for x in deg])
 
-def special_polynomial_tutte(adj,**args):
-    A = convert_to_numpy(adj,**args)
-    cmd = os.path.join(__script_dir,'tutte','tutte_bhkk')
-    tutte_args = ' '.join(map(str, [args["N"],] + A.ravel().tolist()))
+
+def special_polynomial_tutte(adj, **args):
+    A = convert_to_numpy(adj, **args)
+    cmd = os.path.join(__script_dir, 'tutte', 'tutte_bhkk')
+    tutte_args = ' '.join(map(str, [args["N"], ] + A.ravel().tolist()))
     cmd += ' ' + tutte_args
-    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     sval = [[int(x) for x in line.split()] for line in proc.stdout]
 
     terms = []
@@ -82,69 +93,76 @@ def special_polynomial_tutte(adj,**args):
         for yi in range(len(sval[xi])):
             val = sval[xi][yi]
             if val:
-                terms.append( (xi+1,yi+1, val) )
+                terms.append((xi + 1, yi + 1, val))
     return tuple(terms)
 
-def special_independent_vertex_sets(adj,**args):
+
+def special_independent_vertex_sets(adj, **args):
     cmd_idep = "main {N} {adj}".format(adj=adj, **args)
-    cmd = os.path.join(__script_dir,'independent_vertex_sets',cmd_idep)
-    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    cmd = os.path.join(__script_dir, 'independent_vertex_sets', cmd_idep)
+    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     # Convert to two's representation
-    independent_sets = [int(line,2) for line in proc.stdout]
+    independent_sets = [int(line, 2) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
 
-def special_independent_edge_sets(adj,**args):
+
+def special_independent_edge_sets(adj, **args):
     cmd_idep = "main {N} {adj}".format(adj=adj, **args)
-    cmd = os.path.join(__script_dir,'independent_edge_sets',cmd_idep)
-    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    cmd = os.path.join(__script_dir, 'independent_edge_sets', cmd_idep)
+    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     # Already in two's representation
     independent_sets = [int(line) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
 
+
 def coeff_list_from_poly(p):
     coeff_list = []
-    for degree,coeff in enumerate(p[::-1]):
+    for degree, coeff in enumerate(p[::-1]):
         if coeff:
             key = (degree, int(coeff))
             coeff_list.append(key)
     return tuple(coeff_list)
 
-def special_characteristic_polynomial(adj,**args):
+
+def special_characteristic_polynomial(adj, **args):
     ''' This is the characteristic polynomial of the adjaceny matrix '''
-    A = convert_to_numpy(adj,**args)
-    p = np.round(np.poly(A))   
+    A = convert_to_numpy(adj, **args)
+    p = np.round(np.poly(A))
     return coeff_list_from_poly(p)
 
-def special_laplacian_polynomial(adj,**args):
-    ''' 
+
+def special_laplacian_polynomial(adj, **args):
+    '''
     This is the characteristic polynomial of the Laplacian matrix
     L = A - D
     '''
-    A = convert_to_numpy(adj,**args)
+    A = convert_to_numpy(adj, **args)
     L = np.zeros(A.shape)
     np.fill_diagonal(L, A.sum(axis=0))
     L -= A
-    p = np.round(np.poly(L))   
+    p = np.round(np.poly(L))
 
     return coeff_list_from_poly(p)
 
-def special_chromatic_polynomial(adj,**args):
-    ''' 
+
+def special_chromatic_polynomial(adj, **args):
+    '''
     This is the chromatic polynomial, derived from the Tutte polynomial
     The chromatic polynomial for a connected graphs evaluates T(x,y)
     at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*k
     '''
-    N,T = args["N"], args["tutte_polynomial"]
-    tutte_adjust = [(coeff,xd-1) for xd,yd,coeff in T if yd==1]
+    N, T = args["N"], args["tutte_polynomial"]
+    tutte_adjust = [(coeff, xd - 1) for xd, yd, coeff in T if yd == 1]
 
     from sympy.abc import x
     p = 0
-    for (coeff,power) in tutte_adjust: p += coeff*x**power
-    C = (-1)**(N-1)*x*p.subs(x,1-x)
+    for (coeff, power) in tutte_adjust:
+        p += coeff * x ** power
+    C = (-1) ** (N - 1) * x * p.subs(x, 1 - x)
     C = sympy.poly(C)
 
     coeff_list = []
-    for degree in xrange(0,N+1):
+    for degree in xrange(0, N + 1):
         coeff = C.nth(degree)
         if coeff:
             key = (degree, int(coeff))
@@ -154,15 +172,18 @@ def special_chromatic_polynomial(adj,**args):
 
 ######################### REQUIRES [degree_sequence] #################
 
-def n_edge(adj,**args):
+
+def n_edge(adj, **args):
     # Defined this way for loopless simple graphs
     deg = args["degree_sequence"]
     return sum(deg) / 2
 
-def n_endpoints(adj,**args):
+
+def n_endpoints(adj, **args):
     # Defined this way for loopless simple graphs
     deg = args["degree_sequence"]
-    return sum([True for d in deg if d==1])
+    return sum([True for d in deg if d == 1])
+
 
 def is_k_regular(adj, **args):
     # Returns the value of k if it is k regular, otherwise 0
@@ -177,45 +198,53 @@ def is_k_regular(adj, **args):
 
 ######################### REQUIRES [cycle_basis] #################
 
+
 def n_cycle_basis(adj, **args):
     cycle_b = args["cycle_basis"]
     return len(cycle_b)
 
+
 def is_tree(adj, **args):
     # Trees have no cycles
     cycle_b = args["cycle_basis"]
-    return int( len(cycle_b)==0 )
+    return int(len(cycle_b) == 0)
 
-def girth(adj,**args):
+
+def girth(adj, **args):
     # Since the cycle basis is the minimal set of fundemental cycles
     # the girth has to be the length of the smallest of these cycles
     # Graphs with no cycles have girth=0 (defined) as placeholder for infinity
     cycle_b = args["cycle_basis"]
-    if not cycle_b: return 0
+    if not cycle_b:
+        return 0
 
-    return min(map(len,cycle_b))
+    return min(map(len, cycle_b))
 
-def circumference(adj,**args):
-    # The circumference is found from the cycle_basis be the largest 
-    # direct combination of terms 
+
+def circumference(adj, **args):
+    # The circumference is found from the cycle_basis be the largest
+    # direct combination of terms
     # Graphs with no cycles have cir=0 (defined) as placeholder for infinity
     cycle_b = args["cycle_basis"]
-    if not cycle_b: return 0
+    if not cycle_b:
+        return 0
 
     N = args["N"]
 
     def combine_cycle(C):
-        idx = np.zeros(N,dtype=int)
-        for c in C: idx[c] = 1
+        idx = np.zeros(N, dtype=int)
+        for c in C:
+            idx[c] = 1
         return np.where(idx)[0].tolist()
-    
+
     return len(combine_cycle(cycle_b))
 
 ######################### REQUIRES [polynomial_tutte] #################
 
+
 def eval_chromatic_from_tutte(z, N, tutte_poly):
     # First adjust the indices, and remove those where k>0 in y**k
-    tutte_adjust = [(coeff,xd-1) for xd,yd,coeff in tutte_poly if yd==1]
+    tutte_adjust = [(coeff, xd - 1) for xd, yd, coeff in tutte_poly if yd == 1]
 
     # The chromatic polynomial for a connected graphs evaluates T(x,y)
     # at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*k
@@ -230,27 +259,31 @@ def eval_chromatic_from_tutte(z, N, tutte_poly):
     print C.subs(x,z)
     '''
 
-    terms = [coeff*(1-z)**xd for coeff,xd in tutte_adjust]
-    chi   = sum(terms)*((-1)**(N-1))*z
+    terms = [coeff * (1 - z) ** xd for coeff, xd in tutte_adjust]
+    chi = sum(terms) * ((-1) ** (N - 1)) * z
 
     return chi
 
-def chromatic_number(adj,**args):
-    # Return 0 for the singleton graph (it's really infinity)
-    N,T = args["N"], args["tutte_polynomial"]
-    if N==1: return 0
 
-    for k in range(1,N+1):
-        if eval_chromatic_from_tutte(k,N,T) != 0:
+def chromatic_number(adj, **args):
+    # Return 0 for the singleton graph (it's really infinity)
+    N, T = args["N"], args["tutte_polynomial"]
+    if N == 1:
+        return 0
+
+    for k in range(1, N + 1):
+        if eval_chromatic_from_tutte(k, N, T) != 0:
             return k
 
     msg = "Should have exited by now"
     raise ValueError(msg)
 
-######################### Invariant code ######################### 
+######################### Invariant code #########################
 
-def n_vertex(adj,**args):
+
+def n_vertex(adj, **args):
     return args["N"]
+
 
 def is_strongly_regular(adj, **args):
     # Check with http://oeis.org/A088741
@@ -258,146 +291,175 @@ def is_strongly_regular(adj, **args):
     # Strongly regular graphs satisfy AJ = kJ, where J is a ones matrix
     # Assume that N=1,2 is are strongly regular to match with OEIS
     N = args["N"]
-    if N<=2: return 1
-    
-    A = convert_to_numpy(adj,**args)
+    if N <= 2:
+        return 1
+
+    A = convert_to_numpy(adj, **args)
     K = A.sum(axis=0)
 
     if len(set(K)) != 1:
         return False
 
     L, V = None, None
-   
-    for v0,v1 in itertools.combinations(range(N),2):
+
+    for v0, v1 in itertools.combinations(range(N), 2):
         common = (A[v0] * A[v1]).sum()
-        if A[v0,v1]:
-            if L == None: L = common
-            if L and common != L: return False
-        if not A[v0,v1]:
-            if V == None: V = common
-            if V and common != V: return False
+        if A[v0, v1]:
+            if L is None:
+                L = common
+            if L and common != L:
+                return False
+        if not A[v0, v1]:
+            if V is None:
+                V = common
+            if V and common != V:
+                return False
     return True
 
-def diameter(adj,**args):
-    if args["N"]==1: return 0
-    g = networkx_representation(adj,**args)
+
+def diameter(adj, **args):
+    if args["N"] == 1:
+        return 0
+    g = networkx_representation(adj, **args)
     return nx.diameter(g)
 
-def radius(adj,**args):
-    if args["N"]==1: return 0
-    g = networkx_representation(adj,**args)
+
+def radius(adj, **args):
+    if args["N"] == 1:
+        return 0
+    g = networkx_representation(adj, **args)
     return nx.radius(g)
 
+
 def k_max_clique(adj, **args):
-    g = networkx_representation(adj,**args)
+    g = networkx_representation(adj, **args)
     return nx.graph_clique_number(g)
 
-def is_chordal(adj,**args):
-    g = networkx_representation(adj,**args)
+
+def is_chordal(adj, **args):
+    g = networkx_representation(adj, **args)
     return nx.is_chordal(g)
 
-def is_eulerian(adj,**args):
-    g = networkx_representation(adj,**args)
+
+def is_eulerian(adj, **args):
+    g = networkx_representation(adj, **args)
     return nx.is_eulerian(g)
 
-def is_distance_regular(adj,**args):
-    g = networkx_representation(adj,**args)
+
+def is_distance_regular(adj, **args):
+    g = networkx_representation(adj, **args)
     return nx.is_distance_regular(g)
 
-def is_planar(adj,**args):
-    g = graph_tool_representation(adj,**args)
+
+def is_planar(adj, **args):
+    g = graph_tool_representation(adj, **args)
     return graph_tool.topology.is_planar(g)
 
-def is_bipartite(adj,**args):
-    g = graph_tool_representation(adj,**args)
+
+def is_bipartite(adj, **args):
+    g = graph_tool_representation(adj, **args)
     return graph_tool.topology.is_bipartite(g)
 
-def n_articulation_points(adj,**args):
-    g = graph_tool_representation(adj,**args)
+
+def n_articulation_points(adj, **args):
+    g = graph_tool_representation(adj, **args)
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
 
-def vertex_connectivity(adj,**args):
-    g = networkx_representation(adj,**args)
+
+def vertex_connectivity(adj, **args):
+    g = networkx_representation(adj, **args)
     return nx.node_connectivity(g)
 
-def edge_connectivity(adj,**args):
-    g = networkx_representation(adj,**args)
+
+def edge_connectivity(adj, **args):
+    g = networkx_representation(adj, **args)
     return nx.edge_connectivity(g)
 
-def _poly_factorable_over_field(p,domain):
+
+def _poly_factorable_over_field(p, domain):
     # Factor the char poly over the integers
-    pz = sympy.factor(p,domain=domain)
+    pz = sympy.factor(p, domain=domain)
 
     # Change expression like (a+b)**n -> (a+b)
     def reduce_power(fp):
-        try:     return fp.base
-        except:  return fp
+        try:
+            return fp.base
+        except:
+            return fp
 
     # Loop over the factors
     for term in pz.as_ordered_factors():
         term_poly = sympy.poly(reduce_power(term))
-        # Check if the base factors are not linear 
+        # Check if the base factors are not linear
         # indicates can't be factored over choosen domain
-        if term_poly.degree() > 1: return False
+        if term_poly.degree() > 1:
+            return False
     return True
+
 
 def is_integral(adj, **args):
     # Check with http://oeis.org/A064731
     # Symbolically determine if char poly factors over Z
 
-    A = convert_to_numpy(adj,**args)
+    A = convert_to_numpy(adj, **args)
     M = sympy.Matrix(A)
     p = M.charpoly()
     return _poly_factorable_over_field(p, "ZZ")
 
+
 def is_rational_spectrum(adj, **args):
     # Like is_integral, checks if the char. poly factors over Q instead of Z
-    # 
-    A = convert_to_numpy(adj,**args)
+    #
+    A = convert_to_numpy(adj, **args)
     M = sympy.Matrix(A)
     p = M.charpoly()
     return _poly_factorable_over_field(p, "QQ")
 
+
 def is_real_spectrum(adj, **args):
     # Like is_integral, checks if the char. poly factors over R instead of Z
 
-    A = convert_to_numpy(adj,**args)
+    A = convert_to_numpy(adj, **args)
     N = args["N"]
     M = sympy.Matrix(A)
     p = M.charpoly()
-    
+
     return p.rep.count_real_roots() == N
 
-######################### Subgraph code ######################### 
+######################### Subgraph code #########################
+
 
 def __generate_KN(n):
     g = graph_tool.Graph(directed=False)
     g.add_vertex(n)
-    for i,j in itertools.combinations(range(n),2):
-        g.add_edge(i,j)
+    for i, j in itertools.combinations(range(n), 2):
+        g.add_edge(i, j)
     return g
+
 
 def __generate_CN(n):
     g = graph_tool.Graph(directed=False)
     g.add_vertex(n)
     labels = range(n)
-    for i in range(-1,n-1):
-        g.add_edge(labels[i],labels[i+1])
+    for i in range(-1, n - 1):
+        g.add_edge(labels[i], labels[i + 1])
     return g
 
 _complete_graphs = [__generate_KN(n) for n in xrange(0, 15)]
-_cycle_graphs    = [__generate_CN(n) for n in xrange(0, 15)]
+_cycle_graphs = [__generate_CN(n) for n in xrange(0, 15)]
 _has_subgraph = graph_tool.topology.subgraph_isomorphism
+
 
 def _is_subgraph_free(subg):
     subg_n = len([x for x in subg.vertices()])
-    
-    def f(adj,**args):
+
+    def f(adj, **args):
         # Early breakout if input graph is too small
-        if args["N"] < subg_n: return 1
-        g = graph_tool_representation(adj,**args)
-        return len(_has_subgraph(subg,g,max_n=1)[0])==0
+        if args["N"] < subg_n:
+            return 1
+        g = graph_tool_representation(adj, **args)
+        return len(_has_subgraph(subg, g, max_n=1)[0]) == 0
     return f
 
 # is_subgraph_free_K3=1, OEIS:A024607
@@ -413,7 +475,7 @@ is_subgraph_free_C6 = _is_subgraph_free(_cycle_graphs[6])
 is_subgraph_free_C7 = _is_subgraph_free(_cycle_graphs[7])
 is_subgraph_free_C8 = _is_subgraph_free(_cycle_graphs[8])
 is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
-is_subgraph_free_C10= _is_subgraph_free(_cycle_graphs[10])
+is_subgraph_free_C10 = _is_subgraph_free(_cycle_graphs[10])
 
 _bull_graph = _cycle_graphs[3].copy()
 _bull_graph_v1 = _bull_graph.add_vertex()
@@ -425,9 +487,9 @@ is_subgraph_free_bull = _is_subgraph_free(_bull_graph)
 _open_bowtie_graph = _cycle_graphs[3].copy()
 _open_bowtie_graph_v1 = _open_bowtie_graph.add_vertex()
 _open_bowtie_graph_v2 = _open_bowtie_graph.add_vertex()
-_open_bowtie_graph.add_edge(_open_bowtie_graph_v1, 
+_open_bowtie_graph.add_edge(_open_bowtie_graph_v1,
                             _open_bowtie_graph.vertex(0))
-_open_bowtie_graph.add_edge(_open_bowtie_graph_v2, 
+_open_bowtie_graph.add_edge(_open_bowtie_graph_v2,
                             _open_bowtie_graph.vertex(0))
 is_subgraph_free_open_bowtie = _is_subgraph_free(_open_bowtie_graph)
 
@@ -453,32 +515,33 @@ _banner_graph_v1 = _banner_graph.add_vertex()
 _banner_graph.add_edge(_banner_graph_v1, _banner_graph.vertex(0))
 is_subgraph_free_banner = _is_subgraph_free(_banner_graph)
 
-######################### Bliss code ######################### 
+######################### Bliss code #########################
 
-def automorphism_group_n(adj,**args):
+
+def automorphism_group_n(adj, **args):
     ''' Calls the BLISS program from the command line '''
 
-    A = convert_to_numpy(adj,**args)
+    A = convert_to_numpy(adj, **args)
     edges = np.where(A)
-    s = ["p edge {N} {}".format(A.sum()/2,**args)]
-    for i,j in zip(*edges):
-        if i<=j:
-            s.append("e {} {}".format(i+1,j+1))
-    s_echo = '"%s"'%('\n'.join(s))
-    bliss_exec = os.path.join(__script_dir,'bliss','bliss')
+    s = ["p edge {N} {}".format(A.sum() / 2, **args)]
+    for i, j in zip(*edges):
+        if i <= j:
+            s.append("e {} {}".format(i + 1, j + 1))
+    s_echo = '"%s"' % ('\n'.join(s))
+    bliss_exec = os.path.join(__script_dir, 'bliss', 'bliss')
 
     cmd = "echo %s | %s" % (s_echo, bliss_exec)
 
-    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     for line in proc.stdout:
         if "|Aut|" in line:
             return int(line.split()[-1])
-    
 
-    err = "BLISS failed with adj: "+adj
+    err = "BLISS failed with adj: " + adj
     raise ValueError(err)
 
 ######################### PuLP code (Integer programming) ###
+
 
 def _is_connected_edge_list(prob, N):
     # Checks if an edge_solution from PuLP is connected
@@ -487,38 +550,39 @@ def _is_connected_edge_list(prob, N):
     g_sol = graph_tool.Graph(directed=False)
     g_sol.add_vertex(N)
     for edge in edge_solution:
-        _,e0,e1 = edge.name.split('_')
+        _, e0, e1 = edge.name.split('_')
         e0 = int(e0[1:-1])
         e1 = int(e1[:-1])
-        g_sol.add_edge(e0,e1)
+        g_sol.add_edge(e0, e1)
 
     conn = graph_tool.topology.label_largest_component(g_sol)
-    return conn.a.all() 
+    return conn.a.all()
 
- 
-def is_hamiltonian(adj,**args):
+
+def is_hamiltonian(adj, **args):
     N = args["N"]
-    if N==1: return True
-   
-    A = convert_to_numpy(adj,**args)
-    edges = zip(*np.where(A))
-    edges = set([edge for edge in edges if edge[0]>=edge[1]])
+    if N == 1:
+        return True
 
-    prob = pulp.LpProblem("hamiltonian_cycle", 
+    A = convert_to_numpy(adj, **args)
+    edges = zip(*np.where(A))
+    edges = set([edge for edge in edges if edge[0] >= edge[1]])
+
+    prob = pulp.LpProblem("hamiltonian_cycle",
                           pulp.LpMinimize)
-    
-    # For each edge, create a binary variable. 
+
+    # For each edge, create a binary variable.
     # If it is part of the path/cycle then it will be 1
-    edge_strings = [(e0,e1) for e0,e1 in edges]
-    e_vars = pulp.LpVariable.dicts("edge", (edge_strings,), 
+    edge_strings = [(e0, e1) for e0, e1 in edges]
+    e_vars = pulp.LpVariable.dicts("edge", (edge_strings,),
                                    0, 1, pulp.LpInteger)
 
     # Arbitrary objective function (since we are trying to uniquely find sol)
     prob += pulp.lpSum(e_vars), "TSP objective"
-    
+
     # Find unique vertices
     verts = set()
-    for e0,e1 in edges:
+    for e0, e1 in edges:
         verts.add(e0)
         verts.add(e1)
 
@@ -529,32 +593,35 @@ def is_hamiltonian(adj,**args):
         # Find all edges that contain this vert
         edge_match = []
         for e in e_vars:
-            if v in e: edge_match.append(e)
+            if v in e:
+                edge_match.append(e)
 
         prob += pulp.lpSum([e_vars[x] for x in edge_match]) == 2, ""
-    
+
     # Add the constaint the exactly n edges must be selected
     prob += pulp.lpSum([e_vars[x] for x in e_vars]) == N, "total_edges"
 
     sol = prob.solve()
 
     # PuLP returns -1 if solution is infeasible
-    if sol== -1 or sol== -3: return False
+    if sol == -1 or sol == -3:
+        return False
 
     if sol != 1:
         print "PuLP failed with", sol, pulp.LpStatus[prob.status]
         print prob.writeLP("debug_save.lp")
 
     # If there is cycle, make sure it is connected
-    while not _is_connected_edge_list(prob,N):
+    while not _is_connected_edge_list(prob, N):
 
         # A disjoint solution was found, add it to the list of constaints
         edge_solution = [e for e in prob.variables() if e.varValue]
-        prob += pulp.lpSum(edge_solution) <= N-1,""
+        prob += pulp.lpSum(edge_solution) <= N - 1, ""
         sol = prob.solve()
-        
+
         # No solution possible
-        if sol == -1 or sol==-3: return False
+        if sol == -1 or sol == -3:
+            return False
 
     if sol != 1:
         print "PuLP failed with", sol, pulp.LpStatus[prob.status]
@@ -600,83 +667,89 @@ def fractional_chromatic_number(adj, **args):
     N = args["N"]
 
     cmd_idep = "src/independent_vertex_sets/main {N} {adj}"
-    cmd = cmd_idep.format(N=N,adj=adj)
-    proc = subprocess.Popen([cmd],stdout=subprocess.PIPE,shell=True)
+    cmd = cmd_idep.format(N=N, adj=adj)
+    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     independent_sets = [line.strip() for line in proc.stdout]
 
-    prob = pulp.LpProblem("fractional_chrom", 
+    prob = pulp.LpProblem("fractional_chrom",
                           pulp.LpMinimize)
 
     K = len(independent_sets)
 
-    iset_vars = pulp.LpVariable.dicts("iset", range(K), 
-                                     lowBound=0)
-    
+    iset_vars = pulp.LpVariable.dicts("iset", range(K),
+                                      lowBound=0)
+
     prob += pulp.lpSum(iset_vars), "Objective"
 
     for idx in xrange(N):
         isets_with_vertex = [iset_vars[k] for k in xrange(K)
-                             if independent_sets[k][idx]=="1"]
+                             if independent_sets[k][idx] == "1"]
         prob += pulp.lpSum(isets_with_vertex) >= 1
 
     status = prob.solve()
 
     if status == 1:
         sol = [x.value() for x in prob.variables()]
-        f_sol = map(fractions.Fraction,sol)
-        sol = sum([x.limit_denominator(20*N*K) for x in f_sol])
-        a,b = sol.numerator, sol.denominator
-        return ((a,b),)
-    else: 
+        f_sol = map(fractions.Fraction, sol)
+        sol = sum([x.limit_denominator(20 * N * K) for x in f_sol])
+        a, b = sol.numerator, sol.denominator
+        return ((a, b),)
+    else:
         print "ERROR IN FRACTIONAL CHROMATIC!", adj
         return -1
 
     print status
 
-def has_fractional_duality_gap_vertex_chromatic(adj,**args):
-    chi = chromatic_number(adj,**args)
-    a,b = args["fractional_chromatic_number"]
-    chi_f = fractions.Fraction(a,b)
+
+def has_fractional_duality_gap_vertex_chromatic(adj, **args):
+    chi = chromatic_number(adj, **args)
+    a, b = args["fractional_chromatic_number"]
+    chi_f = fractions.Fraction(a, b)
     return chi != chi_f
+
 
 def n_independent_vertex_sets(adj, **args):
     IVS = args["independent_vertex_sets"]
     return len(IVS)
+
 
 def maximal_independent_vertex_set(adj, **args):
     IVS = args["independent_vertex_sets"]
     active = [bin(x[0]).count('1') for x in IVS]
     return max(active)
 
+
 def n_independent_edge_sets(adj, **args):
     IES = args["independent_edge_sets"]
     return len(IES)
+
 
 def maximal_independent_edge_set(adj, **args):
     IES = args["independent_edge_sets"]
     active = [bin(x[0]).count('1') for x in IES]
     return max(active)
-    
-######################### Test code ######################### 
+
+######################### Test code #########################
+
 
 def convert_nx_to_adj(g):
     edges = g.edges()
-    N     = len(g.nodes())
-    idx   = zip(*edges)
-    
+    N = len(g.nodes())
+    idx = zip(*edges)
+
     # Since graph in undirected assign both sides
-    A = np.zeros((N,N),dtype=int)
-    A[idx[0],idx[1]] = 1
-    
+    A = np.zeros((N, N), dtype=int)
+    A[idx[0], idx[1]] = 1
+
     __upper_matrix_index = np.triu_indices(N)
     # The string representation of the upper triangular adj matrix
-    au = ''.join(map(str,A[__upper_matrix_index]))
-    
+    au = ''.join(map(str, A[__upper_matrix_index]))
+
     # Convert the binary string to an int
-    int_index = int(au,2)
+    int_index = int(au, 2)
 
     return int_index
-    
+
 if __name__ == "__main__":
     import logging
 
@@ -685,22 +758,22 @@ if __name__ == "__main__":
     logging.info("Testing the Petersen graph for all the invariants")
 
     logging.info("Creating the graph.")
-    g   = nx.petersen_graph()
+    g = nx.petersen_graph()
 
     logging.info("Converting to adj. format")
     adj = convert_nx_to_adj(g)
 
     N = 10
-    args= {"N":N}
+    args = {"N": N}
 
     logging.info("Converting to numpy format")
-    A  = convert_to_numpy(adj,**args) 
+    A = convert_to_numpy(adj, **args)
 
     logging.info("Converting to networkx format")
-    gx = networkx_representation(adj,**args)
+    gx = networkx_representation(adj, **args)
 
     logging.info("Converting to graph-tool format")
-    gt = graph_tool_representation(adj,**args)
+    gt = graph_tool_representation(adj, **args)
 
     logging.info("Computing the Tutte polynomial")
     p = special_polynomial_tutte(adj, **args)
@@ -756,8 +829,5 @@ if __name__ == "__main__":
         logging.info("Computing {}".format(func))
         x = eval(func)(adj, **args)
         print x
-  
+
     viz_graph(gt)
-
-
-

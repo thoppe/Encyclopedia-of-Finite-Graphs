@@ -1,4 +1,5 @@
-import logging, argparse
+import logging
+import argparse
 
 from helper_functions import load_graph_database, select_itr, load_options
 from helper_functions import attach_table, generate_special_database_name
@@ -6,7 +7,7 @@ from helper_functions import grab_vector, grab_all
 from helper_functions import compute_parallel
 import invariants
 
-desc   = "Updates the special invariants for fixed N"
+desc = "Updates the special invariants for fixed N"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
 cargs = vars(parser.parse_args())
@@ -21,12 +22,12 @@ logging.info("Starting special invariant calculation for {N}".format(**cargs))
 
 #########################################################################
 
-# Create the special invariant table 
+# Create the special invariant table
 f_graph_template = "templates/special_invariants.sql"
-logging.info("Templating database via %s"%f_graph_template)
+logging.info("Templating database via %s" % f_graph_template)
 
 # The special database
-sconn = load_graph_database(N,check_exist=False, special=True,timeout=20)
+sconn = load_graph_database(N, check_exist=False, special=True, timeout=20)
 
 # The normal database
 conn = load_graph_database(N)
@@ -36,7 +37,7 @@ with open(f_graph_template) as FIN:
     script = FIN.read()
     sconn.executescript(script)
 
-attach_table(conn, generate_special_database_name(N),"sconn")
+attach_table(conn, generate_special_database_name(N), "sconn")
 
 # Load the list of invariants to compute
 options = load_options()
@@ -46,7 +47,7 @@ special_names = [x for x in special_names if x not in ignored]
 
 # Find out which variables have been computed
 cmd_check = '''SELECT function_name FROM computed'''
-computed_functions = set( grab_vector(sconn,cmd_check) )
+computed_functions = set(grab_vector(sconn, cmd_check))
 
 #########################################################################
 # Count the total number of graphs
@@ -57,12 +58,13 @@ computed_functions = set( grab_vector(sconn,cmd_check) )
 #########################################################################
 # Helper commands
 
+
 def run_compute(function_name, pfunc, cmd_insert, targets=None):
 
     cmd_insert = cmd_insert.format(function_name)
     #cmd_count = '''SELECT COUNT(DISTINCT graph_id) FROM {}'''
     #g_id_n = grab_scalar(sconn, cmd_count.format(function_name))
-    #if g_id_n == gn: return True
+    # if g_id_n == gn: return True
 
     #msg = "Computing {} ({}/{})"
     #logging.info(msg.format(function_name, gn-g_id_n,gn))
@@ -71,41 +73,43 @@ def run_compute(function_name, pfunc, cmd_insert, targets=None):
     cmd_grab_targets = '''SELECT graph_id,adj FROM graph
     WHERE graph_id NOT IN (SELECT graph_id FROM {})'''
     cmd = cmd_grab_targets.format(function_name)
-    if targets==None:
+    if targets is None:
         targets = select_itr(conn, cmd, chunksize=10000)
 
     # Drop an index if it exists
     cmd_drop = '''DROP INDEX IF EXISTS "{}";'''
     sconn.execute(cmd_drop.format(index_name))
 
-    compute_parallel(function_name, sconn, pfunc, cmd_insert,targets,N)
+    compute_parallel(function_name, sconn, pfunc, cmd_insert, targets, N)
 
     # Create an index once complete
     cmd_create = '''CREATE INDEX IF NOT EXISTS "{}" ON "{}" ("graph_id");'''
-    sconn.execute(cmd_create.format(index_name,function_name))
+    sconn.execute(cmd_create.format(index_name, function_name))
 
 
 def check_computed(target_function, pfunc, cmd_custom_insert):
-    if (target_function not in computed_functions and 
-        target_function in special_names):
+    if (target_function not in computed_functions and
+            target_function in special_names):
 
         msg = "Computing {}"
         logging.info(msg.format(target_function))
 
         run_compute(target_function, pfunc, cmd_custom_insert)
 
-        cmd_mark_computed= '''
+        cmd_mark_computed = '''
         INSERT OR IGNORE INTO computed (function_name) VALUES (?);'''
         sconn.execute(cmd_mark_computed, (target_function,))
         sconn.commit()
-    
+
 #########################################################################
 # First compute the degree sequence
 
 target_function = "degree_sequence"
 
-def pfunc_degree((g_id,adj)):
-    return g_id, invariants.special_degree_sequence(adj, N=N)    
+
+def pfunc_degree(xxx_todo_changeme):
+    (g_id, adj) = xxx_todo_changeme
+    return g_id, invariants.special_degree_sequence(adj, N=N)
 
 cmd_insert = '''INSERT INTO {} (graph_id, degree) VALUES (?,?)'''
 check_computed(target_function, pfunc_degree, cmd_insert)
@@ -115,8 +119,10 @@ check_computed(target_function, pfunc_degree, cmd_insert)
 
 target_function = "fractional_chromatic_number"
 
-def pfunc_frac_chrom((g_id,adj)):
-    return g_id, invariants.fractional_chromatic_number(adj, N=N)    
+
+def pfunc_frac_chrom(xxx_todo_changeme1):
+    (g_id, adj) = xxx_todo_changeme1
+    return g_id, invariants.fractional_chromatic_number(adj, N=N)
 
 cmd_insert = '''INSERT INTO {} (graph_id, a, b) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_frac_chrom, cmd_insert)
@@ -126,10 +132,12 @@ check_computed(target_function, pfunc_frac_chrom, cmd_insert)
 
 target_function = "tutte_polynomial"
 
-def pfunc_tutte((g_id,adj)):
-    return g_id, invariants.special_polynomial_tutte(adj, N=N)    
 
-cmd_insert    = '''INSERT INTO {} 
+def pfunc_tutte(xxx_todo_changeme2):
+    (g_id, adj) = xxx_todo_changeme2
+    return g_id, invariants.special_polynomial_tutte(adj, N=N)
+
+cmd_insert    = '''INSERT INTO {}
 (graph_id, x_degree, y_degree, coeff) VALUES (?,?,?,?)'''
 check_computed(target_function, pfunc_tutte, cmd_insert)
 
@@ -138,10 +146,12 @@ check_computed(target_function, pfunc_tutte, cmd_insert)
 
 target_function = "cycle_basis"
 
-def pfunc_cycle_basis((g_id,adj)):
+
+def pfunc_cycle_basis(xxx_todo_changeme3):
+    (g_id, adj) = xxx_todo_changeme3
     return g_id, invariants.special_cycle_basis(adj, N=N)
 
-cmd_insert    = '''INSERT INTO {} 
+cmd_insert    = '''INSERT INTO {}
 (graph_id, cycle_k, idx) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_cycle_basis, cmd_insert)
 
@@ -150,10 +160,12 @@ check_computed(target_function, pfunc_cycle_basis, cmd_insert)
 
 target_function = "independent_vertex_sets"
 
-def pfunc_IVS((g_id,adj)):
+
+def pfunc_IVS(xxx_todo_changeme4):
+    (g_id, adj) = xxx_todo_changeme4
     return g_id, invariants.special_independent_vertex_sets(adj, N=N)
 
-cmd_insert    = '''INSERT INTO {} 
+cmd_insert    = '''INSERT INTO {}
 (graph_id, vertex_map) VALUES (?,?)'''
 check_computed(target_function, pfunc_IVS, cmd_insert)
 
@@ -162,10 +174,12 @@ check_computed(target_function, pfunc_IVS, cmd_insert)
 
 target_function = "independent_edge_sets"
 
-def pfunc_IES((g_id,adj)):
+
+def pfunc_IES(xxx_todo_changeme5):
+    (g_id, adj) = xxx_todo_changeme5
     return g_id, invariants.special_independent_edge_sets(adj, N=N)
 
-cmd_insert    = '''INSERT INTO {} 
+cmd_insert    = '''INSERT INTO {}
 (graph_id, edge_map) VALUES (?,?)'''
 check_computed(target_function, pfunc_IES, cmd_insert)
 
@@ -174,10 +188,12 @@ check_computed(target_function, pfunc_IES, cmd_insert)
 
 target_function = "laplacian_polynomial"
 
-def pfunc_LAP((g_id,adj)):
+
+def pfunc_LAP(xxx_todo_changeme6):
+    (g_id, adj) = xxx_todo_changeme6
     return g_id, invariants.special_laplacian_polynomial(adj, N=N)
 
-cmd_insert    = '''INSERT INTO {} 
+cmd_insert    = '''INSERT INTO {}
 (graph_id, x_degree, coeff) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_LAP, cmd_insert)
 
@@ -186,10 +202,12 @@ check_computed(target_function, pfunc_LAP, cmd_insert)
 
 target_function = "characteristic_polynomial"
 
-def pfunc_CHARPOLY((g_id,adj)):
+
+def pfunc_CHARPOLY(xxx_todo_changeme7):
+    (g_id, adj) = xxx_todo_changeme7
     return g_id, invariants.special_characteristic_polynomial(adj, N=N)
 
-cmd_insert    = '''INSERT INTO {} 
+cmd_insert    = '''INSERT INTO {}
 (graph_id, x_degree, coeff) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_CHARPOLY, cmd_insert)
 
@@ -199,40 +217,43 @@ check_computed(target_function, pfunc_CHARPOLY, cmd_insert)
 
 target_function = "chromatic_polynomial"
 
+
 def iterator_tutte_polynomial(func_name):
 
     cmd_grab_targets = '''SELECT graph_id,adj FROM graph
     WHERE graph_id NOT IN (SELECT graph_id FROM {})'''.format(func_name)
 
-    g_itr    = select_itr(conn, cmd_grab_targets)
+    g_itr = select_itr(conn, cmd_grab_targets)
     cmd = '''SELECT x_degree,y_degree,coeff FROM tutte_polynomial WHERE graph_id=(?)'''
 
     for g_id, adj, in g_itr:
-        args = {"N":N}
-        args["tutte_polynomial"] = grab_all(sconn,cmd,(g_id,))
+        args = {"N": N}
+        args["tutte_polynomial"] = grab_all(sconn, cmd, (g_id,))
         yield (g_id, adj, args)
 
-def pfunc_CHROMPOLY((g_id,adj,args)):
-    return g_id, invariants.special_chromatic_polynomial(adj,**args)
 
-cmd_insert    = '''INSERT INTO {} 
+def pfunc_CHROMPOLY(xxx_todo_changeme8):
+    (g_id, adj, args) = xxx_todo_changeme8
+    return g_id, invariants.special_chromatic_polynomial(adj, **args)
+
+cmd_insert    = '''INSERT INTO {}
 (graph_id, x_degree, coeff) VALUES (?,?,?)'''
 
 targets = iterator_tutte_polynomial(target_function)
 
-if (target_function not in computed_functions and 
-    target_function in special_names):
+if (target_function not in computed_functions and
+        target_function in special_names):
     run_compute(target_function, pfunc_CHROMPOLY, cmd_insert, targets=targets)
 
-    cmd_mark_computed= '''
+    cmd_mark_computed = '''
     INSERT OR IGNORE INTO computed (function_name) VALUES (?);'''
     sconn.execute(cmd_mark_computed, (target_function,))
     sconn.commit()
 
 # Debug code below
-#for g_id,adj,args in 
+# for g_id,adj,args in
 #    print g_id, pfunc_CHROMPOLY((g_id,adj,args))
-# 
+#
 #g_itr    = select_itr(conn, cmd_grab)
-#for g,adj in g_itr:
+# for g,adj in g_itr:
 #    print pfunc_LAP((g,adj))

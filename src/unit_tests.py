@@ -4,45 +4,45 @@ import networkx as nx
 import numpy as np
 
 petersen_prop = {
-    "n_vertex" : 10,
-    "n_edge"   : 15,
-    "automorphism_group_n" : 120,
-    "radius":2,
-    "diameter":2,
-    "girth":5,
-    "chromatic_number":3,
-    "k_max_clique":2,
-    "is_eulerian":False,
-    "is_hamiltonian":False,
-    "is_integral":True,
-    "maximal_independent_vertex_set":4,
-    "is_k_regular":3,
-    "is_strongly_regular":True,
-    "is_distance_regular":True,
-    "is_planar":False,
-    "is_subgraph_free_K3":True,
-    "is_subgraph_free_C4":True,                           
-    "vertex_connectivity":3,
-    "edge_connectivity":3,
-    "n_endpoints":0,
-    "is_tree":False,
-    "is_chordal":False,
+    "n_vertex": 10,
+    "n_edge": 15,
+    "automorphism_group_n": 120,
+    "radius": 2,
+    "diameter": 2,
+    "girth": 5,
+    "chromatic_number": 3,
+    "k_max_clique": 2,
+    "is_eulerian": False,
+    "is_hamiltonian": False,
+    "is_integral": True,
+    "maximal_independent_vertex_set": 4,
+    "is_k_regular": 3,
+    "is_strongly_regular": True,
+    "is_distance_regular": True,
+    "is_planar": False,
+    "is_subgraph_free_K3": True,
+    "is_subgraph_free_C4": True,
+    "vertex_connectivity": 3,
+    "edge_connectivity": 3,
+    "n_endpoints": 0,
+    "is_tree": False,
+    "is_chordal": False,
 }
 
 import logging
 # Start the logger
 
-#logging.root.setLevel(logging.INFO)
+# logging.root.setLevel(logging.INFO)
 logging.info("Testing the Petersen graph for all the invariants")
 
 logging.info("Creating the graph.")
-g   = nx.petersen_graph()
+g = nx.petersen_graph()
 
 logging.info("Converting to adj. format")
 adj = invariants.convert_nx_to_adj(g)
 
 N = 10
-args= {"N":N}
+args = {"N": N}
 
 logging.info("Computing the Tutte polynomial")
 p = invariants.special_polynomial_tutte(adj, **args)
@@ -85,7 +85,10 @@ for cycle_k, idx in p:
 args["cycle_basis"] = cb.values()
 
 ''' TestMaker from StackOverflow: http://stackoverflow.com/a/25267641/249341 '''
+
+
 class TestMaker(type):
+
     def __new__(cls, clsname, bases, dct):
         # Add a method to the class' __dict__ for every key in
         # the petersen_prop dict.
@@ -104,12 +107,13 @@ class TestMaker(type):
                              petersen_prop[prop])
         return test_wrap
 
-class PetersenGraph(unittest.TestCase):
-   __metaclass__ = TestMaker
 
-   def setUp(self):
-       self.args = args
-       self.adj = adj
+class PetersenGraph(unittest.TestCase):
+    __metaclass__ = TestMaker
+
+    def setUp(self):
+        self.args = args
+        self.adj = adj
 
 
 unittest.main(verbosity=2)

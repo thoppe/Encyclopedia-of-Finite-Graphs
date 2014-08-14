@@ -1,9 +1,11 @@
-import sqlite3, logging, argparse
+import sqlite3
+import logging
+import argparse
 from src.helper_functions import grab_all, load_options
 
-desc   = "Output the computed relations between the invariant sequences"
+desc = "Output the computed relations between the invariant sequences"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('-f','--force',default=False,action='store_true')
+parser.add_argument('-f', '--force', default=False, action='store_true')
 cargs = vars(parser.parse_args())
 
 # Start the logger
@@ -26,19 +28,20 @@ special_conditionals = options["sequence_info"]["special_conditionals"]
 excluded_terms = options["sequence_info"]["excluded_terms"]
 
 # Build the lookup table
-cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
+cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer
 ORDER BY invariant_id'''
-ref_lookup = dict(grab_all(seq_conn,cmd) )
-ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
+ref_lookup = dict(grab_all(seq_conn, cmd))
+ref_lookup_inv = {v: k for k, v in ref_lookup.items()}
 func_names = ref_lookup.keys()
 
 # Grab the ref_sequence_level1 data
 cmd = '''
-SELECT sequence_id,invariant_val_id,conditional,value 
+SELECT sequence_id,invariant_val_id,conditional,value
 FROM ref_sequence_level1'''
 SEQ_QUERY = {}
-for item in grab_all(seq_conn,cmd):
+for item in grab_all(seq_conn, cmd):
     SEQ_QUERY[item[0]] = item[1:]
+
 
 def info(seq_id):
     i_id, conditional, value = SEQ_QUERY[seq_id]
@@ -46,7 +49,7 @@ def info(seq_id):
     return func_name, conditional, value
 
 f_output = "verification/relations.md"
-FOUT = open(f_output,'w')
+FOUT = open(f_output, 'w')
 
 logging.info("Saving relation information to {}".format(f_output))
 
@@ -54,9 +57,9 @@ logging.info("Saving relation information to {}".format(f_output))
 
 # Find the relations with equality
 cmd = '''
-SELECT relation_id, s1_id,s2_id FROM relations 
+SELECT relation_id, s1_id,s2_id FROM relations
 WHERE equal=1'''
-relations_eq = grab_all(seq_conn,cmd)
+relations_eq = grab_all(seq_conn, cmd)
 
 line = "# Equality relations (converse holds)\n"
 msg = "+ `{}{}{}` <-> `{}{}{}`\n"
@@ -65,23 +68,23 @@ FOUT.write(line)
 EQ_SET = set()
 
 for ridx, s1, s2 in relations_eq:
-    EQ_SET.add((s1,s2))
-    EQ_SET.add((s2,s1))
+    EQ_SET.add((s1, s2))
+    EQ_SET.add((s2, s1))
 
     f1, c1, v1 = info(s1)
     f2, c2, v2 = info(s2)
 
-    vals = (f1, c1,v1, f2, c2, v2)
+    vals = (f1, c1, v1, f2, c2, v2)
     if f1 not in ignored_functions and f2 not in ignored_functions:
-        FOUT.write( msg.format(*vals) )
+        FOUT.write(msg.format(*vals))
 
 #######################################################################
 
 # Find the relations that are subsets (and not equalities)
 cmd = '''
-SELECT relation_id, s1_id,s2_id FROM relations 
+SELECT relation_id, s1_id,s2_id FROM relations
 WHERE subset=1'''
-relations_subset = grab_all(seq_conn,cmd)
+relations_subset = grab_all(seq_conn, cmd)
 
 line = "\n# Subset relations (converse is not true)\n"
 FOUT.write(line)
@@ -93,19 +96,19 @@ for ridx, s1, s2 in relations_subset:
     f1, c1, v1 = info(s2)
     f2, c2, v2 = info(s1)
 
-    vals = (f1, c1,v1, f2, c2, v2)
+    vals = (f1, c1, v1, f2, c2, v2)
     if f1 not in ignored_functions and f2 not in ignored_functions:
 
-        if (s1,s2) not in EQ_SET:
-            FOUT.write( msg.format(*vals) )
+        if (s1, s2) not in EQ_SET:
+            FOUT.write(msg.format(*vals))
 
 #######################################################################
 
 # Find the relations that are exclusive
 cmd = '''
-SELECT relation_id, s1_id,s2_id FROM relations 
+SELECT relation_id, s1_id,s2_id FROM relations
 WHERE exclusive=1'''
-relations_ex = grab_all(seq_conn,cmd)
+relations_ex = grab_all(seq_conn, cmd)
 
 line = "\n# Exclusive relations\n"
 msg = "+ `{}{}{}` intersect `{}{}{}` = 0\n"
@@ -115,8 +118,6 @@ for ridx, s1, s2 in relations_ex:
     f1, c1, v1 = info(s1)
     f2, c2, v2 = info(s2)
 
-    vals = (f1, c1,v1, f2, c2, v2)
+    vals = (f1, c1, v1, f2, c2, v2)
     if f1 not in ignored_functions and f2 not in ignored_functions:
-        FOUT.write( msg.format(*vals) )   
-
-
+        FOUT.write(msg.format(*vals))

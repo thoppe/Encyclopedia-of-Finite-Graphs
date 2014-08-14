@@ -1,9 +1,12 @@
-import sqlite3, logging, argparse, collections 
+import sqlite3
+import logging
+import argparse
+import collections
 from src.helper_functions import grab_vector, grab_all
 
-desc   = "Make a report of level 1 sequences"
+desc = "Make a report of level 1 sequences"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('-f','--force',default=False,action='store_true')
+parser.add_argument('-f', '--force', default=False, action='store_true')
 cargs = vars(parser.parse_args())
 
 # Start the logger
@@ -19,10 +22,10 @@ WHERE query_level=1 AND non_zero_terms>=4'''
 SID = grab_vector(seq_conn, cmd_search)
 
 # Build the lookup table
-cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer 
+cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer
 ORDER BY invariant_id'''
-ref_lookup = dict( grab_all(seq_conn,cmd) )
-ref_lookup_inv = {v:k for k, v in ref_lookup.items()}
+ref_lookup = dict(grab_all(seq_conn, cmd))
+ref_lookup_inv = {v: k for k, v in ref_lookup.items()}
 func_names = ref_lookup.keys()
 
 logging.info("Loading level 1 sequences")
@@ -39,6 +42,7 @@ WHERE query_level = 1
 ORDER BY a.sequence_id
 '''
 
+
 def is_trivial(seq):
     # Check if seq is all ones or zeros
     return len(set(seq)) <= 2
@@ -49,10 +53,9 @@ for items in grab_all(seq_conn, cmd_grab_all):
     q_level = items[1]
     seq = items[2:12]
 
-    
     if s_id in SID and not is_trivial(seq):
         conditional, invar_val, value = items[-3:]
         function_name = ref_lookup_inv[invar_val]
-        key = "{}{}{}".format(function_name,conditional,value)
+        key = "{}{}{}".format(function_name, conditional, value)
         SEQS[key] = seq
         print key, seq
