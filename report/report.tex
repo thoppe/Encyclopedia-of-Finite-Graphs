@@ -1,14 +1,14 @@
 \documentclass[12pt]{article}
 \usepackage{amsmath}
-\usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{slashed}
 \usepackage{hyperref}
 \usepackage{fullpage}
 \usepackage{booktabs}
 \usepackage{xspace}
 \usepackage{longtable}
 \usepackage{authblk}
+\usepackage{xcolor}
+\usepackage{graphicx}
 \usepackage[toc,page]{appendix}
 
 % Much nicer visual links
@@ -19,16 +19,12 @@
     urlcolor={blue!80!black}
 }
 
-% To do note packages. Remove when complete.
-\usepackage{todonotes}
-\newcommand{\note}[1]{\todo[inline]{#1}}
-\newcommand{\needref}{\mbox{({\color{blue}\rule{.3cm}{.3cm}} REF)\xspace}}
-
 % Counters for number of edits made to OEIS
 % Counts of sequences added: Extended (6), Distinct (5), Primaray (68), Secondary (68)
 \newcommand{\OEISeditsMain}{141\xspace}
 \newcommand{\OEISeditsExtended}{6\xspace}
 
+% Helper command to link to the OEIS
 \newcommand{\OEIS}[1]
 {\href{https://oeis.org/#1}{\texttt{#1}}}
 
@@ -71,8 +67,6 @@
 \newcommand{\VARissubgraphfreeopenbowtie}{\namedsubgraph{\subgraphBOWTIE}}
 \newcommand{\VARissubgraphfreebowtie}{\namedsubgraph{\subgraphOPENBOWTIE}}
 
-\newcommand{\indicatorfunctionX}[1]{{#1}(g)}
-
 \newcommand{\VARfractionaldualitygapvertexchromatic}{X}
 \newcommand{\VARdistanceregular}{D}
 \newcommand{\VARhamiltonian}{H}
@@ -86,6 +80,7 @@
 \newcommand{\VARintegral}{I}
 \newcommand{\VARrealspectrum}{I^*}
 
+\newcommand{\indicatorfunctionX}[1]{{#1}(g)}
 \newcommand{\VARhasfractionaldualitygapvertexchromatic}
 {\indicatorfunctionX{\VARfractionaldualitygapvertexchromatic}}
 \newcommand{\VARisdistanceregular}
@@ -110,8 +105,6 @@
 {\indicatorfunctionX{\VARintegral}}
 \newcommand{\VARisrealspectrum}
 {\indicatorfunctionX{\VARrealspectrum}}
-
-\setlength{\parindent}{.35cm}
 
 \begin{document}
 
@@ -249,14 +242,15 @@ The suggestive relations described in the previous section were built in a simil
 For each pair of invariants conditions, the sets of graphs related to the sequences were compared for set equality, exclusivity, or as subsets.
 In addition to providing useful information, some of these relations provided a check on the accuracy of the algorithms.
 For example, one of the equality relations states that: a graph is a tree $\Leftrightarrow$ a graph has infinite girth.
-This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinite for graphs without cycles). 
+This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinite for graphs without cycles).
+Other examples are less trivial and hint at classic proofs.
+For all simple connected graphs of order $n\le10$, it is true (and thus suggestive) that: a graph has a girth of five $\rightarrow$ a graph has chromatic number three. 
+This eventually breaks down, in fact, for a large enough $n$ there exists a graph for any given girth and chromatic number\cite{erdos1959graph}.
 
 The sequences counting distinct invariant values involved the creation of an additional database to store the non-integer invariants. 
 Each of these special invariants required their own individualized table.
 For example, the Tutte polynomial was stored as a denormalized table of graph identifiers with a row for each term of the polynomial containing the degree and coefficient.
 Since this specialized database was much larger than the invariant integer database it was not included in the public version.
-
-\note{list some interesting relations}
 
 \section{Discussion}
 
