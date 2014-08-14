@@ -1,7 +1,5 @@
-import sqlite3, logging, argparse, os, collections, ast
-import subprocess, itertools
-import numpy as np
-from src.helper_functions import grab_vector, grab_all, grab_scalar
+import sqlite3, logging, argparse, collections
+from src.helper_functions import grab_vector, grab_all
 
 desc   = "Make a report of level 2 sequences"
 parser = argparse.ArgumentParser(description=desc)
@@ -40,12 +38,6 @@ ORDER BY a.sequence_id
 def is_trivial(seq):
     # Check if seq is all ones or zeros
     return len(set(seq)) <= 2
-
-def check_positivity(func_name_list, val_list):
-    for fname,v in zip(func_name_list, val_list):
-        if fname in positivity_invariants and v==0:
-            return False
-    return True
 
 SEQS = collections.OrderedDict()
 for items in grab_all(seq_conn, cmd_grab_all):

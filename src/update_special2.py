@@ -1,10 +1,9 @@
-import numpy as np
-import logging, argparse, gc, inspect, os, csv
-import multiprocessing, sys, json
+import logging, argparse
 
 from helper_functions import load_graph_database, select_itr, load_options
 from helper_functions import attach_table, generate_special_database_name
-from helper_functions import grab_scalar, grab_vector, grab_all
+from helper_functions import grab_vector, grab_all
+from helper_functions import compute_parallel
 import invariants
 
 desc   = "Updates the special invariants for fixed N"
@@ -100,10 +99,6 @@ def check_computed(target_function, pfunc, cmd_custom_insert):
         sconn.execute(cmd_mark_computed, (target_function,))
         sconn.commit()
     
-
-from helper_functions import csv_validator, import_csv_to_table
-from helper_functions import compute_parallel
-
 #########################################################################
 # First compute the degree sequence
 

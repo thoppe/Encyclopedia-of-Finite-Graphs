@@ -1,7 +1,5 @@
-import sqlite3, logging, argparse, os, collections, ast
-import subprocess, itertools
-import numpy as np
-from src.helper_functions import grab_vector, grab_all, grab_scalar
+import sqlite3, logging, argparse, collections 
+from src.helper_functions import grab_vector, grab_all
 
 desc   = "Make a report of level 1 sequences"
 parser = argparse.ArgumentParser(description=desc)

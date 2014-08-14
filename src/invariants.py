@@ -1,5 +1,4 @@
-import ast,itertools, os, fractions
-import subprocess, fractions
+import itertools, os, fractions, subprocess
 import networkx as nx
 import graph_tool.topology
 import graph_tool.draw
@@ -262,8 +261,6 @@ def is_strongly_regular(adj, **args):
     if N<=2: return 1
     
     A = convert_to_numpy(adj,**args)
-    connections = zip(*np.triu_indices(N,1))
-
     K = A.sum(axis=0)
 
     if len(set(K)) != 1:
@@ -350,7 +347,6 @@ def is_integral(adj, **args):
     # Symbolically determine if char poly factors over Z
 
     A = convert_to_numpy(adj,**args)
-    N = args["N"]
     M = sympy.Matrix(A)
     p = M.charpoly()
     return _poly_factorable_over_field(p, "ZZ")
@@ -359,7 +355,6 @@ def is_rational_spectrum(adj, **args):
     # Like is_integral, checks if the char. poly factors over Q instead of Z
     # 
     A = convert_to_numpy(adj,**args)
-    N = args["N"]
     M = sympy.Matrix(A)
     p = M.charpoly()
     return _poly_factorable_over_field(p, "QQ")
@@ -545,7 +540,6 @@ def is_hamiltonian(adj,**args):
 
     # PuLP returns -1 if solution is infeasible
     if sol== -1 or sol== -3: return False
-    is_hamiltonian_match = False
 
     if sol != 1:
         print "PuLP failed with", sol, pulp.LpStatus[prob.status]
@@ -615,7 +609,6 @@ def fractional_chromatic_number(adj, **args):
 
     K = len(independent_sets)
 
-    iset_strings = [k for k in xrange(K)]
     iset_vars = pulp.LpVariable.dicts("iset", range(K), 
                                      lowBound=0)
     

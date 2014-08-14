@@ -1,5 +1,5 @@
 import sqlite3, gc, csv, os, errno, json
-import itertools, os, logging, multiprocessing
+import itertools, logging, multiprocessing
 
 def mkdir_p(path):
     try:
@@ -272,7 +272,7 @@ def compute_parallel(
     FOUT = open(f_landing_table,'w')
 
     for k, (g_id, terms) in enumerate(sol):
-        cmd = cmd_insert.format(function_name, g_id)
+
         for item in terms:
             s  = ','.join(["{}"]*(len(item) + 1))
             s  = s.format(g_id, *item)

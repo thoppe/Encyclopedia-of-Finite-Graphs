@@ -1,10 +1,9 @@
-import sqlite3, logging, argparse, os, collections, json
+import logging, argparse
 import src.helper_functions as helper_functions
 import numpy as np
 from src.helper_functions import grab_vector, load_options
 from src.invariants import convert_to_numpy
 import graph_tool as gt
-import graph_tool.draw
 
 desc   = '''
 Visualize specific graphs, for a three-graph example:

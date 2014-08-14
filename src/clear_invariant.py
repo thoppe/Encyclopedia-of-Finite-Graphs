@@ -1,8 +1,5 @@
-import sqlite3, logging, argparse, os, collections, ast
-import subprocess
-import numpy as np
-import helper_functions
-from helper_functions import load_graph_database, grab_scalar
+import logging, argparse, os, collections
+from helper_functions import load_graph_database
 
 desc   = "Remove an invariant calculation from the databases"
 parser = argparse.ArgumentParser(description=desc)

@@ -1,7 +1,5 @@
-import sqlite3, logging, argparse, os, collections, json
-import numpy as np
-from src.helper_functions import grab_vector, grab_all, grab_scalar
-from src.helper_functions import load_options
+import sqlite3, logging, argparse
+from src.helper_functions import grab_all, load_options
 
 desc   = "Make a report of the distinct sequences"
 parser = argparse.ArgumentParser(description=desc)

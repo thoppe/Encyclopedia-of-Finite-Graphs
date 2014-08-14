@@ -1,10 +1,8 @@
-import sqlite3, logging, argparse, os
-import subprocess, itertools, multiprocessing, json
-import numpy as np
-import helper_functions
+import logging, argparse, os
+import subprocess
 from helper_functions import load_graph_database, load_distinct_database
 from helper_functions import load_sql_script, select_itr, load_options
-from helper_functions import grab_vector, grab_all, grab_scalar
+from helper_functions import grab_vector, grab_all
 
 desc   = '''
 Build sequences from distinct counts 

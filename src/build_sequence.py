@@ -1,6 +1,4 @@
-import sqlite3, logging, argparse, os, collections, ast, sys
-import subprocess, itertools, json
-import numpy as np
+import sqlite3, logging, argparse, os, collections, itertools
 from helper_functions import grab_vector, grab_all, grab_scalar
 from helper_functions import load_graph_database, load_options
 

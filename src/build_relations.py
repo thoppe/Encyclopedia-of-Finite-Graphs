@@ -1,9 +1,7 @@
-import sqlite3, logging, argparse, os, collections, ast
-import subprocess, itertools
+import sqlite3, logging, argparse, collections, itertools
+from helper_functions import load_graph_database
+from helper_functions import grab_vector, grab_all
 import numpy as np
-import helper_functions
-from helper_functions import load_graph_database, load_options
-from helper_functions import grab_vector, grab_all, grab_scalar
 
 desc   = "Determine the relations between the invariant sequences"
 parser = argparse.ArgumentParser(description=desc)
