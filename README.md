@@ -25,13 +25,12 @@ To fully repopulate the database, it requires
 [`sympy`](http://sympy.org/en/index.html),
 [`pulp`](http://code.google.com/p/pulp-or/) and,
 [`nauty`](http://cs.anu.edu.au/~bdm/nauty/).
-
-A standalone version of the database for simple connected graphs can be [downloaded](http://dx.doi.org/10.5281/zenodo.11203). 
+As an alternative, there is a standalone version of of the simple connected graph database for [downloaded](http://dx.doi.org/10.5281/zenodo.11203). 
 
 *Writeup*: 
 [_Integer sequence discovery from small graphs_](report/report.tex) for submission to either [Journal of Integer Sequences](https://cs.uwaterloo.ca/journals/JIS/), [Discrete Applied Mathematics](http://www.journals.elsevier.com/discrete-applied-mathematics/), [Experimental Mathematics](http://www.tandfonline.com/loi/uexm20).
 
-## Integer Sequences
+## Integer Sequences Discovered
 
 A catalog of all the sequences discovered and submitted to the OEIS.
 
