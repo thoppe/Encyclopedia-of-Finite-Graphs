@@ -1,4 +1,4 @@
-## Completed(5)
+## Completed (5)
 
 + [`A245879`](https://oeis.org/A245879) `[fractional_chromatic_number]` `1,1,2,3,5,7,11,17,29,50`
 + [`A245880`](https://oeis.org/A245880) `[characteristic_polynomial]` `1,1,2,6,21,111,821,10423,236064,10375796`

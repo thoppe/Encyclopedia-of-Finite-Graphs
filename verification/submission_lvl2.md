@@ -1,5 +1,7 @@
 ## Completed (68)
 
+The following secondary sequences have been added to the OEIS:
+
 + [`A243270`](https://oeis.org/A243270) *`is_hamiltonian=1 AND is_bipartite=1`*, `1,0,0,1,0,4,0,24,0,473`
 + [`A243271`](https://oeis.org/A243271) *`is_hamiltonian=1 AND is_distance_regular=1`*, `1,0,1,2,2,4,2,5,4,6`
 + [`A243272`](https://oeis.org/A243272) *`is_hamiltonian=1 AND is_eulerian=1`*, `1,0,1,1,2,5,21,120,1312,26525`

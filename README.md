@@ -67,12 +67,12 @@ First compile the invariant calculations, and run the unit test on the Petersen 
 
 *Database*
 
-You can automatically download an [updated copy of the database](https://github.com/thoppe/Simple-connected-graph-invariant-database) by running this in the Encyclopedia directory:
+You can automatically download an [updated copy of the database](https://github.com/thoppe/Simple-connected-graph-invariant-database) by cloning the database repository in the Encyclopedia directory:
 
     git submodule add https://github.com/thoppe/Simple-connected-graph-invariant-database.git database
 
 Note that we are unable to store the special invariants for larger graphs due to size constraints; these larger special invariants will have to be recomputed for `n>6`.
-We recommend rebuilding portions of the database as a consistency check and as a learning tool if you are considering adding additional invariants. 
+We recommend rebuilding portions of the database as both a consistency check and a learning tool if you are considering adding additional invariants. 
 
 If the database has been updated, you can grab a new copy by running:
 
@@ -121,7 +121,7 @@ Trivial invariants
 + [`n_edges`](http://mathworld.wolfram.com/EdgeCount.html)
 + [`n_vertex`](http://mathworld.wolfram.com/VertexCount.html)
 
-## Proposed Invariants
+## Future Invariants
 
 + [`n_hamiltonian_cycles`](http://mathworld.wolfram.com/HamiltonianCycle.html) [`n_hamiltonian_paths`](http://mathworld.wolfram.com/HamiltonianPath.html)
 + [`is_perfect`](http://mathworld.wolfram.com/PerfectGraph.html) (SAGE)
