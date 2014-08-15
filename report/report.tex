@@ -9,6 +9,7 @@
 \usepackage{authblk}
 \usepackage{xcolor}
 \usepackage{graphicx}
+\usepackage{microtype}
 \usepackage[toc,page]{appendix}
 
 % Much nicer visual links
@@ -245,7 +246,7 @@ For example, one of the equality relations states that: a graph is a tree $\Left
 This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinite for graphs without cycles).
 Other examples are less trivial and hint at classic proofs.
 For all simple connected graphs of order $n\le10$, it is true (and thus suggestive) that: a graph has a girth of five $\rightarrow$ a graph has chromatic number three. 
-This eventually breaks down, in fact for a large enough $n$ there exists a graph for any given girth and chromatic number\cite{erdos1959graph}.
+This eventually breaks down, in fact for a large enough $n$ there exists a graph for any given minimal girth and chromatic number\cite{erdos1959graph}.
 
 The sequences counting distinct invariant values involved the creation of an additional database to store the non-integer invariants. 
 Each of these special invariants required their own individualized table.
@@ -280,7 +281,7 @@ These graphs are illustrated in Figure \ref{fig:examplequery}.
 As the Encyclopedia grows however, the published static database will be insufficient to handle these extensions.
 We plan to create a web interface that would allow users to query graphs based on their name their names (e.g. ``Peterson graph") or their invariant conditions.
 
-\begin{figure}[t]
+\begin{figure}[p]
 \begin{center}
   \includegraphics[width=0.75\textwidth]{simple_drawings/ex_query.png}
 \end{center}
@@ -291,6 +292,8 @@ We plan to create a web interface that would allow users to query graphs based o
   \label{fig:examplequery}
 \end{figure}
 
+
+\clearpage % New page added for each appendix for clarity
 
 \bibliographystyle{unsrt}
 \bibliography{refs}
