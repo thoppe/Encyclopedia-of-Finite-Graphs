@@ -31,7 +31,10 @@ bool check_vertex_set(const boost::dynamic_bitset<> &verts,
 
 void report_vertex_set(boost::dynamic_bitset<> &vertex_set) {
   //cout << vertex_set.to_ulong() << endl;
-  cout << vertex_set << endl;
+  //cout << vertex_set << endl;
+  for(int i=0;i<vertex_set.size();i++) 
+    cout << vertex_set[i];
+  cout << endl;
 }
 
 
