@@ -28,7 +28,9 @@ To fully repopulate the database, it requires
 As an alternative, there is a standalone version of of the simple connected graph database for [downloaded](http://dx.doi.org/10.5281/zenodo.11203). 
 
 *Writeup*: 
-[_Integer sequence discovery from small graphs_](report/report.tex) for submission to either [Journal of Integer Sequences](https://cs.uwaterloo.ca/journals/JIS/), [Discrete Applied Mathematics](http://www.journals.elsevier.com/discrete-applied-mathematics/), [Experimental Mathematics](http://www.tandfonline.com/loi/uexm20).
+[_Integer sequence discovery from small graphs_](http://arxiv-web3.library.cornell.edu/abs/1408.3644)
+
+In preparation for submission to either [Journal of Integer Sequences](https://cs.uwaterloo.ca/journals/JIS/), [Discrete Applied Mathematics](http://www.journals.elsevier.com/discrete-applied-mathematics/), [Experimental Mathematics](http://www.tandfonline.com/loi/uexm20).
 
 ## Integer Sequences Discovered
 
