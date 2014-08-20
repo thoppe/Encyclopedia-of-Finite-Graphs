@@ -1,5 +1,6 @@
 Encyclopedia of Finite Graphs
 =============================
+| |
 --------------------------------------------------|-----------------------
 [![zenodo.11304.png](https://zenodo.org/badge/doi/10.5281/zenodo.11304.png)](http://dx.doi.org/10.5281/zenodo.11304) | _Encyclopedia of Finite Graphs code_
 [![zenodo.11280.png](https://zenodo.org/badge/doi/10.5281/zenodo.11280.png)](http://dx.doi.org/10.5281/zenodo.11280) | _Simple Connected Graph Invariant database_
