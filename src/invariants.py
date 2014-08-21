@@ -10,6 +10,8 @@ import numpy as np
 import sympy
 import pulp
 
+from helper_functions import require_arguments
+
 __script_dir = os.path.dirname(os.path.realpath(__file__))
 
 ######################### Conversion code #########################
@@ -20,9 +22,8 @@ def viz_graph(g, pos=None, **kwargs):
         pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
     graph_tool.draw.graph_draw(g, pos, **kwargs)
 
-
-def convert_to_numpy(adj, **args):
-    N = args["N"]
+@require_arguments("N")
+def convert_to_numpy(adj, N=None, **kwargs):
 
     possible_edges = (N * (N + 1)) / 2
     edge_map = np.binary_repr(adj, possible_edges)
@@ -37,31 +38,25 @@ def convert_to_numpy(adj, **args):
     A += A.T
     return A
 
-
-def graph_tool_representation(adj, **args):
-    A = convert_to_numpy(adj, **args)
+@require_arguments("N")
+def graph_tool_representation(adj, N=None, **kwargs):
+    A = convert_to_numpy(adj, N=N, **kwargs)
     g = graph_tool.Graph(directed=False)
-    g.add_vertex(args["N"])
+    g.add_vertex(N)
     for edge in zip(*np.where(A)):
         n0, n1 = edge
         if n0 > n1:
             g.add_edge(n0, n1)
     return g
 
-
-def networkx_representation(adj, **args):
-    A = convert_to_numpy(adj, **args)
+def networkx_representation(adj, **kwargs):
+    A = convert_to_numpy(adj, **kwargs)
     return nx.from_numpy_matrix(A)
 
 ######################### Special invariant code #################
 
-
-def compress_input(val):
-    return str(val).replace(' ', '')
-
-
-def special_cycle_basis(adj, **args):
-    g = networkx_representation(adj, **args)
+def special_cycle_basis(adj, **kwargs):
+    g = networkx_representation(adj, **kwargs)
     cycles = nx.cycle_basis(g)
     sorted_cycles = tuple(sorted([tuple(sorted(c)) for c in cycles]))
 
@@ -74,16 +69,16 @@ def special_cycle_basis(adj, **args):
     return tuple(terms)
 
 
-def special_degree_sequence(adj, **args):
-    A = convert_to_numpy(adj, **args)
+def special_degree_sequence(adj, **kwargs):
+    A = convert_to_numpy(adj, **kwargs)
     deg = sorted(A.sum(axis=0))
     return tuple([(x,) for x in deg])
 
-
-def special_polynomial_tutte(adj, **args):
-    A = convert_to_numpy(adj, **args)
+@require_arguments("N")
+def special_polynomial_tutte(adj, N=None, **kwargs):
+    A = convert_to_numpy(adj, N=N, **kwargs)
     cmd = os.path.join(__script_dir, 'tutte', 'tutte_bhkk')
-    tutte_args = ' '.join(map(str, [args["N"], ] + A.ravel().tolist()))
+    tutte_args = ' '.join(map(str, [N,] + A.ravel().tolist()))
     cmd += ' ' + tutte_args
     proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     sval = [[int(x) for x in line.split()] for line in proc.stdout]
@@ -96,18 +91,18 @@ def special_polynomial_tutte(adj, **args):
                 terms.append((xi + 1, yi + 1, val))
     return tuple(terms)
 
-
-def special_independent_vertex_sets(adj, **args):
-    cmd_idep = "main {N} {adj}".format(adj=adj, **args)
+@require_arguments("N")
+def special_independent_vertex_sets(adj, **kwargs):
+    cmd_idep = "main {N} {adj}".format(adj=adj, **kwargs)
     cmd = os.path.join(__script_dir, 'independent_vertex_sets', cmd_idep)
     proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     # Convert to two's representation
     independent_sets = [int(line, 2) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
 
-
-def special_independent_edge_sets(adj, **args):
-    cmd_idep = "main {N} {adj}".format(adj=adj, **args)
+@require_arguments("N")
+def special_independent_edge_sets(adj, **kwargs):
+    cmd_idep = "main {N} {adj}".format(adj=adj, **kwargs)
     cmd = os.path.join(__script_dir, 'independent_edge_sets', cmd_idep)
     proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     # Already in two's representation
@@ -124,19 +119,19 @@ def coeff_list_from_poly(p):
     return tuple(coeff_list)
 
 
-def special_characteristic_polynomial(adj, **args):
+def special_characteristic_polynomial(adj, **kwargs):
     ''' This is the characteristic polynomial of the adjaceny matrix '''
-    A = convert_to_numpy(adj, **args)
+    A = convert_to_numpy(adj, **kwargs)
     p = np.round(np.poly(A))
     return coeff_list_from_poly(p)
 
 
-def special_laplacian_polynomial(adj, **args):
+def special_laplacian_polynomial(adj, **kwargs):
     '''
     This is the characteristic polynomial of the Laplacian matrix
     L = A - D
     '''
-    A = convert_to_numpy(adj, **args)
+    A = convert_to_numpy(adj, **kwargs)
     L = np.zeros(A.shape)
     np.fill_diagonal(L, A.sum(axis=0))
     L -= A
@@ -144,15 +139,17 @@ def special_laplacian_polynomial(adj, **args):
 
     return coeff_list_from_poly(p)
 
-
-def special_chromatic_polynomial(adj, **args):
+@require_arguments("N", "tutte_polynomial")
+def special_chromatic_polynomial(adj, N=None, 
+                                 tutte_polynomial=None,
+                                 **kwargs):
     '''
     This is the chromatic polynomial, derived from the Tutte polynomial
     The chromatic polynomial for a connected graphs evaluates T(x,y)
-    at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*k
+    at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*N
     '''
-    N, T = args["N"], args["tutte_polynomial"]
-    tutte_adjust = [(coeff, xd - 1) for xd, yd, coeff in T if yd == 1]
+    tutte_adjust = [(coeff, xd - 1) for xd, yd, coeff 
+                    in tutte_polynomial if yd == 1]
 
     from sympy.abc import x
     p = 0
@@ -172,64 +169,56 @@ def special_chromatic_polynomial(adj, **args):
 
 ######################### REQUIRES [degree_sequence] #################
 
-
-def n_edge(adj, **args):
+@require_arguments("degree_sequence")
+def n_edge(adj, degree_sequence=None, **kwargs):
     # Defined this way for loopless simple graphs
-    deg = args["degree_sequence"]
-    return sum(deg) / 2
+    return sum(degree_sequence) / 2
 
-
-def n_endpoints(adj, **args):
+@require_arguments("degree_sequence")
+def n_endpoints(adj, degree_sequence=None, **kwargs):
     # Defined this way for loopless simple graphs
-    deg = args["degree_sequence"]
-    return sum([True for d in deg if d == 1])
+    return sum([True for d in degree_sequence if d == 1])
 
-
-def is_k_regular(adj, **args):
+@require_arguments("degree_sequence")
+def is_k_regular(adj, degree_sequence=None, **kwargs):
     # Returns the value of k if it is k regular, otherwise 0
     # Note that the singular graph is 0_regular
     # Cubic graphs are related to http://oeis.org/A002851
-    deg = args["degree_sequence"]
 
-    if len(set(deg)) == 1:
-        return deg[0]
+    if len(set(degree_sequence)) == 1:
+        return degree_sequence[0]
     else:
         return 0
 
 ######################### REQUIRES [cycle_basis] #################
 
+@require_arguments("cycle_basis")
+def n_cycle_basis(adj, cycle_basis=None, **kwargs):
+    return len(cycle_basis)
 
-def n_cycle_basis(adj, **args):
-    cycle_b = args["cycle_basis"]
-    return len(cycle_b)
-
-
-def is_tree(adj, **args):
+@require_arguments("cycle_basis")
+def is_tree(adj, cycle_basis=None, **kwargs):
     # Trees have no cycles
-    cycle_b = args["cycle_basis"]
-    return int(len(cycle_b) == 0)
+    return int(len(cycle_basis) == 0)
 
-
-def girth(adj, **args):
+@require_arguments("cycle_basis")
+def girth(adj, cycle_basis=None, **kwargs):
     # Since the cycle basis is the minimal set of fundemental cycles
     # the girth has to be the length of the smallest of these cycles
     # Graphs with no cycles have girth=0 (defined) as placeholder for infinity
-    cycle_b = args["cycle_basis"]
-    if not cycle_b:
+    if not cycle_basis:
         return 0
 
-    return min(map(len, cycle_b))
+    return min(map(len, cycle_basis))
 
-
-def circumference(adj, **args):
+@require_arguments("N", "cycle_basis")
+def circumference(adj, cycle_basis=None, N=None, **kwargs):
     # The circumference is found from the cycle_basis be the largest
     # direct combination of terms
     # Graphs with no cycles have cir=0 (defined) as placeholder for infinity
-    cycle_b = args["cycle_basis"]
-    if not cycle_b:
-        return 0
 
-    N = args["N"]
+    if not cycle_basis:
+        return 0
 
     def combine_cycle(C):
         idx = np.zeros(N, dtype=int)
@@ -237,7 +226,7 @@ def circumference(adj, **args):
             idx[c] = 1
         return np.where(idx)[0].tolist()
 
-    return len(combine_cycle(cycle_b))
+    return len(combine_cycle(cycle_basis))
 
 ######################### REQUIRES [polynomial_tutte] #################
 
@@ -264,15 +253,14 @@ def eval_chromatic_from_tutte(z, N, tutte_poly):
 
     return chi
 
-
-def chromatic_number(adj, **args):
+@require_arguments("N", "tutte_polynomial")
+def chromatic_number(adj, N=None, tutte_polynomial=None, **kwargs):
     # Return 0 for the singleton graph (it's really infinity)
-    N, T = args["N"], args["tutte_polynomial"]
     if N == 1:
         return 0
 
     for k in range(1, N + 1):
-        if eval_chromatic_from_tutte(k, N, T) != 0:
+        if eval_chromatic_from_tutte(k, N, tutte_polynomial) != 0:
             return k
 
     msg = "Should have exited by now"

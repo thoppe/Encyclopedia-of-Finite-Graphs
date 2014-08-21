@@ -9,6 +9,18 @@ import logging
 import multiprocessing
 
 
+def require_arguments(*reqargs):
+    ''' Decorator to check for optional arguments of a function '''
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            err_msg = "{} requires argument {}"
+            for arg in reqargs:
+                if not arg in kwargs:
+                    raise TypeError(err_msg.format(func,arg))
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
 def mkdir_p(path):
     try:
         os.makedirs(path)
