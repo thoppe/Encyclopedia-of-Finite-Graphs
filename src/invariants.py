@@ -10,12 +10,12 @@ import numpy as np
 import sympy
 import pulp
 
+from functools import wraps
 from helper_functions import require_arguments
 
 __script_dir = os.path.dirname(os.path.realpath(__file__))
 
 ######################### Conversion code #########################
-
 
 def viz_graph(g, pos=None, **kwargs):
     if pos is None:
@@ -23,7 +23,6 @@ def viz_graph(g, pos=None, **kwargs):
     graph_tool.draw.graph_draw(g, pos, **kwargs)
 
 def convert_to_numpy(adj, N, **kwargs):
-
     possible_edges = (N * (N + 1)) / 2
     edge_map = np.binary_repr(adj, possible_edges)
     edge_int = map(int, edge_map)
@@ -48,14 +47,39 @@ def graph_tool_representation(adj, N, **kwargs):
             g.add_edge(n0, n1)
     return g
 
-def networkx_representation(adj, **kwargs):
-    A = convert_to_numpy(adj, **kwargs)
+@require_arguments("N")
+def networkx_representation(adj, N, **kwargs):
+    A = convert_to_numpy(adj, N)
     return nx.from_numpy_matrix(A)
+
+def build_representation(graph_type):
+    ''' From the adj int, builds a graph using the requested library '''
+    def decorator(func):
+        @wraps(func)
+        def wrapper(g_rep, *args, **kwargs):
+            
+            # If the input representation is an integer, 
+            # convert to requested type
+            if type(g_rep) == int:
+                adj = g_rep
+                if graph_type == "graph_tool":
+                    g_rep = graph_tool_representation(adj,**kwargs)
+                elif graph_type == "networkx":
+                    g_rep  = networkx_representation(adj, **kwargs)
+                elif graph_type == "numpy":
+                    g_rep  = convert_to_numpy(adj, **kwargs)
+            else:
+                msg = "Unknown representation {}".format(graph_type)
+                raise SyntaxError(msg)
+
+            return func(g_rep, *args, **kwargs)
+        return wrapper
+    return decorator
 
 ######################### Special invariant code #################
 
-def special_cycle_basis(adj, **kwargs):
-    g = networkx_representation(adj, **kwargs)
+@build_representation("networkx")
+def special_cycle_basis(g, **kwargs):
     cycles = nx.cycle_basis(g)
     sorted_cycles = tuple(sorted([tuple(sorted(c)) for c in cycles]))
 
@@ -67,15 +91,15 @@ def special_cycle_basis(adj, **kwargs):
         return ((None, None),)
     return tuple(terms)
 
-
-def special_degree_sequence(adj, **kwargs):
-    A = convert_to_numpy(adj, **kwargs)
+@build_representation("numpy")
+def special_degree_sequence(A, **kwargs):
     deg = sorted(A.sum(axis=0))
     return tuple([(x,) for x in deg])
 
 @require_arguments("N")
-def special_polynomial_tutte(adj, N, **kwargs):
-    A = convert_to_numpy(adj, N)
+@build_representation("numpy")
+def special_polynomial_tutte(A, N, **kwargs):
+
     cmd = os.path.join(__script_dir, 'tutte', 'tutte_bhkk')
     tutte_args = ' '.join(map(str, [N,] + A.ravel().tolist()))
     cmd += ' ' + tutte_args
@@ -117,20 +141,18 @@ def coeff_list_from_poly(p):
             coeff_list.append(key)
     return tuple(coeff_list)
 
-
-def special_characteristic_polynomial(adj, **kwargs):
+@build_representation("numpy")
+def special_characteristic_polynomial(A, **kwargs):
     ''' This is the characteristic polynomial of the adjaceny matrix '''
-    A = convert_to_numpy(adj, **kwargs)
     p = np.round(np.poly(A))
     return coeff_list_from_poly(p)
 
-
-def special_laplacian_polynomial(adj, **kwargs):
+@build_representation("numpy")
+def special_laplacian_polynomial(A, **kwargs):
     '''
     This is the characteristic polynomial of the Laplacian matrix
     L = A - D
     '''
-    A = convert_to_numpy(adj, **kwargs)
     L = np.zeros(A.shape)
     np.fill_diagonal(L, A.sum(axis=0))
     L -= A
@@ -271,7 +293,8 @@ def n_vertex(adj, N, **kwargs):
     return N
 
 @require_arguments("N")
-def is_strongly_regular(adj, N, **kwargs):
+@build_representation("numpy")
+def is_strongly_regular(A, N, **kwargs):
     # Check with http://oeis.org/A088741
     # Returns the value of k if it is k strongly regular, otherwise 0
     # Strongly regular graphs satisfy AJ = kJ, where J is a ones matrix
@@ -279,7 +302,6 @@ def is_strongly_regular(adj, N, **kwargs):
     if N <= 2:
         return 1
 
-    A = convert_to_numpy(adj, N)
     K = A.sum(axis=0)
 
     if len(set(K)) != 1:
@@ -302,57 +324,53 @@ def is_strongly_regular(adj, N, **kwargs):
     return True
 
 @require_arguments("N")
-def diameter(adj, N, **kwargs):
-    if N == 1:
-        return 0
-    g = networkx_representation(adj, N=N, **kwargs)
+@build_representation("networkx")
+def diameter(g, N, **kwargs):
+    if N == 1: return 0
     return nx.diameter(g)
 
 @require_arguments("N")
-def radius(adj, N, **kwargs):
-    if N == 1:
-        return 0
-    g = networkx_representation(adj, N=N, **kwargs)
+@build_representation("networkx")
+def radius(g, N, **kwargs):
+    if N == 1: return 0
     return nx.radius(g)
 
-def k_max_clique(adj, **kwargs):
-    g = networkx_representation(adj, **kwargs)
+@build_representation("networkx")
+def k_max_clique(g, **kwargs):
     return nx.graph_clique_number(g)
 
-def is_chordal(adj, **kwargs):
-    g = networkx_representation(adj, **kwargs)
+@build_representation("networkx")
+def is_chordal(g, **kwargs):
     return nx.is_chordal(g)
 
-def is_eulerian(adj, **kwargs):
-    g = networkx_representation(adj, **kwargs)
+@build_representation("networkx")
+def is_eulerian(g, **kwargs):
     return nx.is_eulerian(g)
 
-def is_distance_regular(adj, **kwargs):
-    g = networkx_representation(adj, **kwargs)
+@build_representation("networkx")
+def is_distance_regular(g, **kwargs):
     return nx.is_distance_regular(g)
 
-def is_planar(adj, **kwargs):
-    g = graph_tool_representation(adj, **kwargs)
+@build_representation("graph_tool")
+def is_planar(g, **kwargs):
     return graph_tool.topology.is_planar(g)
 
-
-def is_bipartite(adj, **kwargs):
-    g = graph_tool_representation(adj, **kwargs)
+@build_representation("graph_tool")
+def is_bipartite(g, **kwargs):
     return graph_tool.topology.is_bipartite(g)
 
-def n_articulation_points(adj, **kwargs):
-    g = graph_tool_representation(adj, **kwargs)
+@build_representation("graph_tool")
+def n_articulation_points(g, **kwargs):
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
 
-def vertex_connectivity(adj, **kwargs):
-    g = networkx_representation(adj, **kwargs)
+@build_representation("networkx")
+def vertex_connectivity(g, **kwargs):
     return nx.node_connectivity(g)
 
-def edge_connectivity(adj, **kwargs):
-    g = networkx_representation(adj, **kwargs)
+@build_representation("networkx")
+def edge_connectivity(g, **kwargs):
     return nx.edge_connectivity(g)
-
 
 def _poly_factorable_over_field(p, domain):
     # Factor the char poly over the integers
@@ -374,29 +392,25 @@ def _poly_factorable_over_field(p, domain):
             return False
     return True
 
-
-def is_integral(adj, **kwargs):
+@build_representation("numpy")
+def is_integral(A, **kwargs):
     # Check with http://oeis.org/A064731
     # Symbolically determine if char poly factors over Z
-
-    A = convert_to_numpy(adj, **kwargs)
     M = sympy.Matrix(A)
     p = M.charpoly()
     return _poly_factorable_over_field(p, "ZZ")
 
-
-def is_rational_spectrum(adj, **kwargs):
+@build_representation("numpy")
+def is_rational_spectrum(A, **kwargs):
     # Like is_integral, checks if the char. poly factors over Q instead of Z
-    A = convert_to_numpy(adj, **kwargs)
     M = sympy.Matrix(A)
     p = M.charpoly()
     return _poly_factorable_over_field(p, "QQ")
 
 @require_arguments("N")
-def is_real_spectrum(adj, N, **kwargs):
+@build_representation("numpy")
+def is_real_spectrum(A, N, **kwargs):
     # Like is_integral, checks if the char. poly factors over R instead of Z
-
-    A = convert_to_numpy(adj, N)
     M = sympy.Matrix(A)
     p = M.charpoly()
 
@@ -493,10 +507,9 @@ is_subgraph_free_banner = _is_subgraph_free(_banner_graph)
 ######################### Bliss code #########################
 
 @require_arguments("N")
-def automorphism_group_n(adj, N, **kwargs):
+@build_representation("numpy")
+def automorphism_group_n(A, N, **kwargs):
     ''' Calls the BLISS program from the command line '''
-
-    A = convert_to_numpy(adj, N)
     edges = np.where(A)
     s = ["p edge {} {}".format(N, A.sum() / 2, **kwargs)]
     for i, j in zip(*edges):
@@ -533,12 +546,12 @@ def _is_connected_edge_list(prob, N):
     return conn.a.all()
 
 @require_arguments("N")
-def is_hamiltonian(adj, N, **kwargs):
+@build_representation("numpy")
+def is_hamiltonian(A, N, **kwargs):
 
     if N == 1:
         return True
 
-    A = convert_to_numpy(adj, N)
     edges = zip(*np.where(A))
     edges = set([edge for edge in edges if edge[0] >= edge[1]])
 
@@ -602,37 +615,6 @@ def is_hamiltonian(adj, N, **kwargs):
         print prob.writeLP("debug_save.lp")
 
     return True
-
-    '''
-    # Old drawing code
-    if is_hamiltonian_match:
-        edge_solution = [e for e in prob.variables() if e.varValue]
-
-        gt = graph_tool_representation(adj,**kwargs)
-        pos = graph_tool.draw.sfdp_layout(gt, cooling_step=0.99)
-        import random
-        s_file = "graph_%i.png"%random.randint(0,10000)
-
-        w = gt.new_edge_property("double")
-        for ex in gt.edges(): w[ex] = 10.
-
-        for edge in edge_solution:
-
-            if "edge" in edge.name:
-                _,e0,e1 = edge.name.split('_')
-                e0 = int(e0[1:-1])
-                e1 = int(e1[:-1])
-                es = "(%i, %i)"%(e0,e1)
-                es2 = "(%i, %i)"%(e1,e0)
-          
-                for ex in gt.edges():
-                    if str(ex)==es or str(ex)==es2:
-                        w[ex] = 6.0
-
-        print s_file, edge_solution, len(edge_solution), sol
-        graph_tool.draw.graphviz_draw(gt,pos,penwidth=w,output=s_file )
-    '''
-
 
 ########## Independent set iterator/Fractional programs #################
 
@@ -737,6 +719,9 @@ if __name__ == "__main__":
 
     N = 10
     args = {"N": N}
+
+    is_planar(adj, **args)
+    exit()
 
     logging.info("Converting to numpy format")
     A = convert_to_numpy(adj, **args)
