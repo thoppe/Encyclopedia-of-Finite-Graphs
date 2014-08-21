@@ -22,8 +22,7 @@ def viz_graph(g, pos=None, **kwargs):
         pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
     graph_tool.draw.graph_draw(g, pos, **kwargs)
 
-@require_arguments("N")
-def convert_to_numpy(adj, N=None, **kwargs):
+def convert_to_numpy(adj, N, **kwargs):
 
     possible_edges = (N * (N + 1)) / 2
     edge_map = np.binary_repr(adj, possible_edges)
@@ -39,8 +38,8 @@ def convert_to_numpy(adj, N=None, **kwargs):
     return A
 
 @require_arguments("N")
-def graph_tool_representation(adj, N=None, **kwargs):
-    A = convert_to_numpy(adj, N=N, **kwargs)
+def graph_tool_representation(adj, N, **kwargs):
+    A = convert_to_numpy(adj, N)
     g = graph_tool.Graph(directed=False)
     g.add_vertex(N)
     for edge in zip(*np.where(A)):
@@ -75,8 +74,8 @@ def special_degree_sequence(adj, **kwargs):
     return tuple([(x,) for x in deg])
 
 @require_arguments("N")
-def special_polynomial_tutte(adj, N=None, **kwargs):
-    A = convert_to_numpy(adj, N=N, **kwargs)
+def special_polynomial_tutte(adj, N, **kwargs):
+    A = convert_to_numpy(adj, N)
     cmd = os.path.join(__script_dir, 'tutte', 'tutte_bhkk')
     tutte_args = ' '.join(map(str, [N,] + A.ravel().tolist()))
     cmd += ' ' + tutte_args
@@ -140,8 +139,7 @@ def special_laplacian_polynomial(adj, **kwargs):
     return coeff_list_from_poly(p)
 
 @require_arguments("N", "tutte_polynomial")
-def special_chromatic_polynomial(adj, N=None, 
-                                 tutte_polynomial=None,
+def special_chromatic_polynomial(adj, N, tutte_polynomial,
                                  **kwargs):
     '''
     This is the chromatic polynomial, derived from the Tutte polynomial
@@ -170,17 +168,17 @@ def special_chromatic_polynomial(adj, N=None,
 ######################### REQUIRES [degree_sequence] #################
 
 @require_arguments("degree_sequence")
-def n_edge(adj, degree_sequence=None, **kwargs):
+def n_edge(adj, degree_sequence, **kwargs):
     # Defined this way for loopless simple graphs
     return sum(degree_sequence) / 2
 
 @require_arguments("degree_sequence")
-def n_endpoints(adj, degree_sequence=None, **kwargs):
+def n_endpoints(adj, degree_sequence, **kwargs):
     # Defined this way for loopless simple graphs
     return sum([True for d in degree_sequence if d == 1])
 
 @require_arguments("degree_sequence")
-def is_k_regular(adj, degree_sequence=None, **kwargs):
+def is_k_regular(adj, degree_sequence, **kwargs):
     # Returns the value of k if it is k regular, otherwise 0
     # Note that the singular graph is 0_regular
     # Cubic graphs are related to http://oeis.org/A002851
@@ -193,16 +191,16 @@ def is_k_regular(adj, degree_sequence=None, **kwargs):
 ######################### REQUIRES [cycle_basis] #################
 
 @require_arguments("cycle_basis")
-def n_cycle_basis(adj, cycle_basis=None, **kwargs):
+def n_cycle_basis(adj, cycle_basis, **kwargs):
     return len(cycle_basis)
 
 @require_arguments("cycle_basis")
-def is_tree(adj, cycle_basis=None, **kwargs):
+def is_tree(adj, cycle_basis, **kwargs):
     # Trees have no cycles
     return int(len(cycle_basis) == 0)
 
 @require_arguments("cycle_basis")
-def girth(adj, cycle_basis=None, **kwargs):
+def girth(adj, cycle_basis, **kwargs):
     # Since the cycle basis is the minimal set of fundemental cycles
     # the girth has to be the length of the smallest of these cycles
     # Graphs with no cycles have girth=0 (defined) as placeholder for infinity
@@ -212,7 +210,7 @@ def girth(adj, cycle_basis=None, **kwargs):
     return min(map(len, cycle_basis))
 
 @require_arguments("N", "cycle_basis")
-def circumference(adj, cycle_basis=None, N=None, **kwargs):
+def circumference(adj, cycle_basis, N, **kwargs):
     # The circumference is found from the cycle_basis be the largest
     # direct combination of terms
     # Graphs with no cycles have cir=0 (defined) as placeholder for infinity
@@ -254,7 +252,7 @@ def eval_chromatic_from_tutte(z, N, tutte_poly):
     return chi
 
 @require_arguments("N", "tutte_polynomial")
-def chromatic_number(adj, N=None, tutte_polynomial=None, **kwargs):
+def chromatic_number(adj, N, tutte_polynomial, **kwargs):
     # Return 0 for the singleton graph (it's really infinity)
     if N == 1:
         return 0
@@ -268,21 +266,20 @@ def chromatic_number(adj, N=None, tutte_polynomial=None, **kwargs):
 
 ######################### Invariant code #########################
 
+@require_arguments("N")
+def n_vertex(adj, N, **kwargs):
+    return N
 
-def n_vertex(adj, **args):
-    return args["N"]
-
-
-def is_strongly_regular(adj, **args):
+@require_arguments("N")
+def is_strongly_regular(adj, N, **kwargs):
     # Check with http://oeis.org/A088741
     # Returns the value of k if it is k strongly regular, otherwise 0
     # Strongly regular graphs satisfy AJ = kJ, where J is a ones matrix
     # Assume that N=1,2 is are strongly regular to match with OEIS
-    N = args["N"]
     if N <= 2:
         return 1
 
-    A = convert_to_numpy(adj, **args)
+    A = convert_to_numpy(adj, N)
     K = A.sum(axis=0)
 
     if len(set(K)) != 1:
@@ -304,64 +301,56 @@ def is_strongly_regular(adj, **args):
                 return False
     return True
 
-
-def diameter(adj, **args):
-    if args["N"] == 1:
+@require_arguments("N")
+def diameter(adj, N, **kwargs):
+    if N == 1:
         return 0
-    g = networkx_representation(adj, **args)
+    g = networkx_representation(adj, N=N, **kwargs)
     return nx.diameter(g)
 
-
-def radius(adj, **args):
-    if args["N"] == 1:
+@require_arguments("N")
+def radius(adj, N, **kwargs):
+    if N == 1:
         return 0
-    g = networkx_representation(adj, **args)
+    g = networkx_representation(adj, N=N, **kwargs)
     return nx.radius(g)
 
-
-def k_max_clique(adj, **args):
-    g = networkx_representation(adj, **args)
+def k_max_clique(adj, **kwargs):
+    g = networkx_representation(adj, **kwargs)
     return nx.graph_clique_number(g)
 
-
-def is_chordal(adj, **args):
-    g = networkx_representation(adj, **args)
+def is_chordal(adj, **kwargs):
+    g = networkx_representation(adj, **kwargs)
     return nx.is_chordal(g)
 
-
-def is_eulerian(adj, **args):
-    g = networkx_representation(adj, **args)
+def is_eulerian(adj, **kwargs):
+    g = networkx_representation(adj, **kwargs)
     return nx.is_eulerian(g)
 
-
-def is_distance_regular(adj, **args):
-    g = networkx_representation(adj, **args)
+def is_distance_regular(adj, **kwargs):
+    g = networkx_representation(adj, **kwargs)
     return nx.is_distance_regular(g)
 
-
-def is_planar(adj, **args):
-    g = graph_tool_representation(adj, **args)
+def is_planar(adj, **kwargs):
+    g = graph_tool_representation(adj, **kwargs)
     return graph_tool.topology.is_planar(g)
 
 
-def is_bipartite(adj, **args):
-    g = graph_tool_representation(adj, **args)
+def is_bipartite(adj, **kwargs):
+    g = graph_tool_representation(adj, **kwargs)
     return graph_tool.topology.is_bipartite(g)
 
-
-def n_articulation_points(adj, **args):
-    g = graph_tool_representation(adj, **args)
+def n_articulation_points(adj, **kwargs):
+    g = graph_tool_representation(adj, **kwargs)
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
 
-
-def vertex_connectivity(adj, **args):
-    g = networkx_representation(adj, **args)
+def vertex_connectivity(adj, **kwargs):
+    g = networkx_representation(adj, **kwargs)
     return nx.node_connectivity(g)
 
-
-def edge_connectivity(adj, **args):
-    g = networkx_representation(adj, **args)
+def edge_connectivity(adj, **kwargs):
+    g = networkx_representation(adj, **kwargs)
     return nx.edge_connectivity(g)
 
 
@@ -386,30 +375,28 @@ def _poly_factorable_over_field(p, domain):
     return True
 
 
-def is_integral(adj, **args):
+def is_integral(adj, **kwargs):
     # Check with http://oeis.org/A064731
     # Symbolically determine if char poly factors over Z
 
-    A = convert_to_numpy(adj, **args)
+    A = convert_to_numpy(adj, **kwargs)
     M = sympy.Matrix(A)
     p = M.charpoly()
     return _poly_factorable_over_field(p, "ZZ")
 
 
-def is_rational_spectrum(adj, **args):
+def is_rational_spectrum(adj, **kwargs):
     # Like is_integral, checks if the char. poly factors over Q instead of Z
-    #
-    A = convert_to_numpy(adj, **args)
+    A = convert_to_numpy(adj, **kwargs)
     M = sympy.Matrix(A)
     p = M.charpoly()
     return _poly_factorable_over_field(p, "QQ")
 
-
-def is_real_spectrum(adj, **args):
+@require_arguments("N")
+def is_real_spectrum(adj, N, **kwargs):
     # Like is_integral, checks if the char. poly factors over R instead of Z
 
-    A = convert_to_numpy(adj, **args)
-    N = args["N"]
+    A = convert_to_numpy(adj, N)
     M = sympy.Matrix(A)
     p = M.charpoly()
 
@@ -442,11 +429,11 @@ _has_subgraph = graph_tool.topology.subgraph_isomorphism
 def _is_subgraph_free(subg):
     subg_n = len([x for x in subg.vertices()])
 
-    def f(adj, **args):
+    def f(adj, **kwargs):
         # Early breakout if input graph is too small
-        if args["N"] < subg_n:
+        if kwargs["N"] < subg_n:
             return 1
-        g = graph_tool_representation(adj, **args)
+        g = graph_tool_representation(adj, **kwargs)
         return len(_has_subgraph(subg, g, max_n=1)[0]) == 0
     return f
 
@@ -505,13 +492,13 @@ is_subgraph_free_banner = _is_subgraph_free(_banner_graph)
 
 ######################### Bliss code #########################
 
-
-def automorphism_group_n(adj, **args):
+@require_arguments("N")
+def automorphism_group_n(adj, N, **kwargs):
     ''' Calls the BLISS program from the command line '''
 
-    A = convert_to_numpy(adj, **args)
+    A = convert_to_numpy(adj, N)
     edges = np.where(A)
-    s = ["p edge {N} {}".format(A.sum() / 2, **args)]
+    s = ["p edge {} {}".format(N, A.sum() / 2, **kwargs)]
     for i, j in zip(*edges):
         if i <= j:
             s.append("e {} {}".format(i + 1, j + 1))
@@ -529,7 +516,6 @@ def automorphism_group_n(adj, **args):
     raise ValueError(err)
 
 ######################### PuLP code (Integer programming) ###
-
 
 def _is_connected_edge_list(prob, N):
     # Checks if an edge_solution from PuLP is connected

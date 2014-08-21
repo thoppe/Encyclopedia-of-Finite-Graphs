@@ -7,11 +7,13 @@ import json
 import itertools
 import logging
 import multiprocessing
+from functools import wraps
 
 
 def require_arguments(*reqargs):
     ''' Decorator to check for optional arguments of a function '''
     def decorator(func):
+        @wraps(func)
         def wrapper(*args, **kwargs):
             err_msg = "{} requires argument {}"
             for arg in reqargs:
