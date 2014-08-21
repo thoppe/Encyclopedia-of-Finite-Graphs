@@ -532,13 +532,13 @@ def _is_connected_edge_list(prob, N):
     conn = graph_tool.topology.label_largest_component(g_sol)
     return conn.a.all()
 
+@require_arguments("N")
+def is_hamiltonian(adj, N, **kwargs):
 
-def is_hamiltonian(adj, **args):
-    N = args["N"]
     if N == 1:
         return True
 
-    A = convert_to_numpy(adj, **args)
+    A = convert_to_numpy(adj, N)
     edges = zip(*np.where(A))
     edges = set([edge for edge in edges if edge[0] >= edge[1]])
 
@@ -608,7 +608,7 @@ def is_hamiltonian(adj, **args):
     if is_hamiltonian_match:
         edge_solution = [e for e in prob.variables() if e.varValue]
 
-        gt = graph_tool_representation(adj,**args)
+        gt = graph_tool_representation(adj,**kwargs)
         pos = graph_tool.draw.sfdp_layout(gt, cooling_step=0.99)
         import random
         s_file = "graph_%i.png"%random.randint(0,10000)
@@ -636,9 +636,9 @@ def is_hamiltonian(adj, **args):
 
 ########## Independent set iterator/Fractional programs #################
 
-def fractional_chromatic_number(adj, **args):
+@require_arguments("N")
+def fractional_chromatic_number(adj, N, **kwargs):
     # As a check, the cycle graph should return 2.5 = 5/2
-    N = args["N"]
 
     cmd_idep = "src/independent_vertex_sets/main {N} {adj}"
     cmd = cmd_idep.format(N=N, adj=adj)
@@ -674,37 +674,35 @@ def fractional_chromatic_number(adj, **args):
 
     print status
 
-
-def has_fractional_duality_gap_vertex_chromatic(adj, **args):
-    chi = chromatic_number(adj, **args)
-    a, b = args["fractional_chromatic_number"]
+@require_arguments("fractional_chromatic_number")
+def has_fractional_duality_gap_vertex_chromatic(adj, 
+                                                fractional_chromatic_number,
+                                                **kwargs):
+    chi  = chromatic_number(adj, **kwargs)
+    a, b = fractional_chromatic_number
     chi_f = fractions.Fraction(a, b)
     return chi != chi_f
 
 
-def n_independent_vertex_sets(adj, **args):
-    IVS = args["independent_vertex_sets"]
-    return len(IVS)
+@require_arguments("independent_vertex_sets")
+def n_independent_vertex_sets(adj, independent_vertex_sets, **kwargs):
+    return len(independent_vertex_sets)
 
-
-def maximal_independent_vertex_set(adj, **args):
-    IVS = args["independent_vertex_sets"]
-    active = [bin(x[0]).count('1') for x in IVS]
+@require_arguments("independent_vertex_sets")
+def maximal_independent_vertex_set(adj, independent_vertex_sets, **kwargs):
+    active = [bin(x[0]).count('1') for x in independent_vertex_sets]
     return max(active)
 
+@require_arguments("independent_edge_sets")
+def n_independent_edge_sets(adj, independent_edge_sets, **kwargs):
+    return len(independent_edge_sets)
 
-def n_independent_edge_sets(adj, **args):
-    IES = args["independent_edge_sets"]
-    return len(IES)
-
-
-def maximal_independent_edge_set(adj, **args):
-    IES = args["independent_edge_sets"]
-    active = [bin(x[0]).count('1') for x in IES]
+@require_arguments("independent_edge_sets")
+def maximal_independent_edge_set(adj, independent_edge_sets, **kwargs):
+    active = [bin(x[0]).count('1') for x in independent_edge_sets]
     return max(active)
 
 ######################### Test code #########################
-
 
 def convert_nx_to_adj(g):
     edges = g.edges()
