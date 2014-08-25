@@ -203,7 +203,7 @@ def parallel_compute(itr, func, callback=None, **cargs):
             try:
                 k, args = q_in.get()
             except Exception as ex:
-                print "FAIL?", ex
+                print ("FAIL?", ex)
 
             # Break on final arg
             if args == "COMPLETED":
@@ -215,7 +215,7 @@ def parallel_compute(itr, func, callback=None, **cargs):
                 # Add to result list
 
             except Exception as ex:
-                print "HERE!", args, func
+                print ("HERE!", args, func)
 
                 err = "Error on function %s" % ex
                 raise SyntaxError(err)

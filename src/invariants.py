@@ -68,9 +68,9 @@ def build_representation(graph_type):
                     g_rep  = networkx_representation(adj, **kwargs)
                 elif graph_type == "numpy":
                     g_rep  = convert_to_numpy(adj, **kwargs)
-            else:
-                msg = "Unknown representation {}".format(graph_type)
-                raise SyntaxError(msg)
+                else:
+                    msg = "Unknown representation {}".format(graph_type)
+                    raise SyntaxError(msg)
 
             return func(g_rep, *args, **kwargs)
         return wrapper
@@ -179,7 +179,7 @@ def special_chromatic_polynomial(adj, N, tutte_polynomial,
     C = sympy.poly(C)
 
     coeff_list = []
-    for degree in xrange(0, N + 1):
+    for degree in range(0, N + 1):
         coeff = C.nth(degree)
         if coeff:
             key = (degree, int(coeff))
@@ -264,8 +264,8 @@ def eval_chromatic_from_tutte(z, N, tutte_poly):
     p = 0
     for (coeff,power) in tutte_adjust: p += coeff*x**power
     C = (-1)**(N-1)*x*p.subs(x,1-x).factor()
-    print C.factor()
-    print C.subs(x,z)
+    print (C.factor())
+    print (C.subs(x,z))
     '''
 
     terms = [coeff * (1 - z) ** xd for coeff, xd in tutte_adjust]
@@ -435,8 +435,8 @@ def __generate_CN(n):
         g.add_edge(labels[i], labels[i + 1])
     return g
 
-_complete_graphs = [__generate_KN(n) for n in xrange(0, 15)]
-_cycle_graphs = [__generate_CN(n) for n in xrange(0, 15)]
+_complete_graphs = [__generate_KN(n) for n in range(0, 15)]
+_cycle_graphs = [__generate_CN(n) for n in range(0, 15)]
 _has_subgraph = graph_tool.topology.subgraph_isomorphism
 
 
@@ -595,8 +595,8 @@ def is_hamiltonian(A, N, **kwargs):
         return False
 
     if sol != 1:
-        print "PuLP failed with", sol, pulp.LpStatus[prob.status]
-        print prob.writeLP("debug_save.lp")
+        print ("PuLP failed with", sol, pulp.LpStatus[prob.status])
+        print (prob.writeLP("debug_save.lp"))
 
     # If there is cycle, make sure it is connected
     while not _is_connected_edge_list(prob, N):
@@ -611,8 +611,8 @@ def is_hamiltonian(A, N, **kwargs):
             return False
 
     if sol != 1:
-        print "PuLP failed with", sol, pulp.LpStatus[prob.status]
-        print prob.writeLP("debug_save.lp")
+        print ("PuLP failed with", sol, pulp.LpStatus[prob.status])
+        print (prob.writeLP("debug_save.lp"))
 
     return True
 
@@ -637,8 +637,8 @@ def fractional_chromatic_number(adj, N, **kwargs):
 
     prob += pulp.lpSum(iset_vars), "Objective"
 
-    for idx in xrange(N):
-        isets_with_vertex = [iset_vars[k] for k in xrange(K)
+    for idx in range(N):
+        isets_with_vertex = [iset_vars[k] for k in range(K)
                              if independent_sets[k][idx] == "1"]
         prob += pulp.lpSum(isets_with_vertex) >= 1
 
@@ -651,10 +651,10 @@ def fractional_chromatic_number(adj, N, **kwargs):
         a, b = sol.numerator, sol.denominator
         return ((a, b),)
     else:
-        print "ERROR IN FRACTIONAL CHROMATIC!", adj
+        print ("ERROR IN FRACTIONAL CHROMATIC!", adj)
         return -1
 
-    print status
+    print (status)
 
 @require_arguments("fractional_chromatic_number")
 def has_fractional_duality_gap_vertex_chromatic(adj, 
@@ -720,9 +720,6 @@ if __name__ == "__main__":
     N = 10
     args = {"N": N}
 
-    is_planar(adj, **args)
-    exit()
-
     logging.info("Converting to numpy format")
     A = convert_to_numpy(adj, **args)
 
@@ -735,12 +732,12 @@ if __name__ == "__main__":
     logging.info("Computing the Tutte polynomial")
     p = special_polynomial_tutte(adj, **args)
     args["tutte_polynomial"] = p
-    print p
+    print (p)
 
     logging.info("Computing the chromatic polynomial")
     p = special_chromatic_polynomial(adj, **args)
     args["chromatic_polynomial"] = p
-    print p
+    print (p)
 
     logging.info("Computing the degree sequence")
     p = special_degree_sequence(adj, **args)
@@ -749,27 +746,27 @@ if __name__ == "__main__":
     logging.info("Computing the fractional chromatic number")
     p = fractional_chromatic_number(adj, **args)
     args["fractional_chromatic_number"] = p[0]
-    print p
+    print (p)
 
     logging.info("Computing the characteristic polynomial")
     p = special_characteristic_polynomial(adj, **args)
     args["characteristic_polynomial"] = p
-    print p
+    print (p)
 
     logging.info("Computing the laplacian polynomial")
     p = special_laplacian_polynomial(adj, **args)
     args["laplacian_polynomial"] = p
-    print p
+    print (p)
 
     logging.info("Computing the independent vertex sets")
     p = special_independent_vertex_sets(adj, **args)
     args["independent_vertex_sets"] = p
-    print p
+    print (p)
 
     logging.info("Computing the independent edge sets")
     p = special_independent_edge_sets(adj, **args)
     args["independent_edge_sets"] = p
-    print p
+    print (p)
 
     logging.info("Computing the cycle basis")
     import collections
@@ -785,6 +782,6 @@ if __name__ == "__main__":
     for func in options["invariant_function_names"]:
         logging.info("Computing {}".format(func))
         x = eval(func)(adj, **args)
-        print x
+        print (x)
 
     viz_graph(gt)
