@@ -23,9 +23,10 @@ def viz_graph(g, pos=None, **kwargs):
     graph_tool.draw.graph_draw(g, pos, **kwargs)
 
 def convert_to_numpy(adj, N, **kwargs):
-    possible_edges = (N * (N + 1)) / 2
+    possible_edges = int ((N * (N + 1)) / 2)
+
     edge_map = np.binary_repr(adj, possible_edges)
-    edge_int = map(int, edge_map)
+    edge_int = [int(x) for x in edge_map]
 
     idx = np.triu_indices(N)
     A = np.zeros((N, N), dtype=np.int)
