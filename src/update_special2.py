@@ -29,9 +29,6 @@ logging.info("Templating database via %s" % f_graph_template)
 # The special database
 sconn = load_graph_database(N, check_exist=False, special=True, timeout=20)
 
-# The normal database
-conn = load_graph_database(N)
-
 # Load the graph template
 with open(f_graph_template) as FIN:
     script = FIN.read()
@@ -107,8 +104,8 @@ def check_computed(target_function, pfunc, cmd_custom_insert):
 target_function = "degree_sequence"
 
 
-def pfunc_degree(xxx_todo_changeme):
-    (g_id, adj) = xxx_todo_changeme
+def pfunc_degree(item):
+    (g_id, adj) = item
     return g_id, invariants.special_degree_sequence(adj, N=N)
 
 cmd_insert = '''INSERT INTO {} (graph_id, degree) VALUES (?,?)'''
@@ -120,8 +117,8 @@ check_computed(target_function, pfunc_degree, cmd_insert)
 target_function = "fractional_chromatic_number"
 
 
-def pfunc_frac_chrom(xxx_todo_changeme1):
-    (g_id, adj) = xxx_todo_changeme1
+def pfunc_frac_chrom(item):
+    (g_id, adj) = item
     return g_id, invariants.fractional_chromatic_number(adj, N=N)
 
 cmd_insert = '''INSERT INTO {} (graph_id, a, b) VALUES (?,?,?)'''
@@ -133,8 +130,8 @@ check_computed(target_function, pfunc_frac_chrom, cmd_insert)
 target_function = "tutte_polynomial"
 
 
-def pfunc_tutte(xxx_todo_changeme2):
-    (g_id, adj) = xxx_todo_changeme2
+def pfunc_tutte(item):
+    (g_id, adj) = item
     return g_id, invariants.special_polynomial_tutte(adj, N=N)
 
 cmd_insert    = '''INSERT INTO {}
@@ -147,8 +144,8 @@ check_computed(target_function, pfunc_tutte, cmd_insert)
 target_function = "cycle_basis"
 
 
-def pfunc_cycle_basis(xxx_todo_changeme3):
-    (g_id, adj) = xxx_todo_changeme3
+def pfunc_cycle_basis(item):
+    (g_id, adj) = item
     return g_id, invariants.special_cycle_basis(adj, N=N)
 
 cmd_insert    = '''INSERT INTO {}
@@ -161,8 +158,8 @@ check_computed(target_function, pfunc_cycle_basis, cmd_insert)
 target_function = "independent_vertex_sets"
 
 
-def pfunc_IVS(xxx_todo_changeme4):
-    (g_id, adj) = xxx_todo_changeme4
+def pfunc_IVS(item):
+    (g_id, adj) = item
     return g_id, invariants.special_independent_vertex_sets(adj, N=N)
 
 cmd_insert    = '''INSERT INTO {}
@@ -175,8 +172,8 @@ check_computed(target_function, pfunc_IVS, cmd_insert)
 target_function = "independent_edge_sets"
 
 
-def pfunc_IES(xxx_todo_changeme5):
-    (g_id, adj) = xxx_todo_changeme5
+def pfunc_IES(item):
+    (g_id, adj) = item
     return g_id, invariants.special_independent_edge_sets(adj, N=N)
 
 cmd_insert    = '''INSERT INTO {}
@@ -189,8 +186,8 @@ check_computed(target_function, pfunc_IES, cmd_insert)
 target_function = "laplacian_polynomial"
 
 
-def pfunc_LAP(xxx_todo_changeme6):
-    (g_id, adj) = xxx_todo_changeme6
+def pfunc_LAP(item):
+    (g_id, adj) = item
     return g_id, invariants.special_laplacian_polynomial(adj, N=N)
 
 cmd_insert    = '''INSERT INTO {}
@@ -203,8 +200,8 @@ check_computed(target_function, pfunc_LAP, cmd_insert)
 target_function = "characteristic_polynomial"
 
 
-def pfunc_CHARPOLY(xxx_todo_changeme7):
-    (g_id, adj) = xxx_todo_changeme7
+def pfunc_CHARPOLY(item):
+    (g_id, adj) = item
     return g_id, invariants.special_characteristic_polynomial(adj, N=N)
 
 cmd_insert    = '''INSERT INTO {}
@@ -232,8 +229,8 @@ def iterator_tutte_polynomial(func_name):
         yield (g_id, adj, args)
 
 
-def pfunc_CHROMPOLY(xxx_todo_changeme8):
-    (g_id, adj, args) = xxx_todo_changeme8
+def pfunc_CHROMPOLY(item):
+    (g_id, adj, args) = item
     return g_id, invariants.special_chromatic_polynomial(adj, **args)
 
 cmd_insert    = '''INSERT INTO {}

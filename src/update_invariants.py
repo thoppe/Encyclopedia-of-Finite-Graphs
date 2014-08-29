@@ -206,8 +206,8 @@ for func_name in compute_invariant_functions:
     func = invariant_funcs[func_name]
     targets = itr
 
-    def pfunc(xxx_todo_changeme):
-        (g_id, adj, args) = xxx_todo_changeme
+    def pfunc(items):
+        (g_id, adj, args) = items
         result = int(func(adj, **args))
         return result, ((g_id,),)
 
