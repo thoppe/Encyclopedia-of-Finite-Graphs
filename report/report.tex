@@ -220,7 +220,7 @@ For each graph we computed a series of invariants, which for completeness are de
 A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq}.
 The relations between the invariants are numerous and are indexed online\cite{Travis2014Encyclopdia}.
 
-Since the graphs we consider are loopless and undirected, the edge incidence information for each graph requires $n(n+1)/2$ bits of storage.
+Since the graphs we consider are loopless and undirected, the edge incidence information for each graph requires $n(n-1)/2$ bits of storage.
 The largest we computed is of order 10, which requires 45 bits. 
 This can be efficiently stored as a 64 bit unsigned integer using a binary representation.
 Graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
