@@ -79,7 +79,7 @@
 \newcommand{\VARkregular}{R}
 \newcommand{\VARstronglyregular}{R^*}
 \newcommand{\VARintegral}{I}
-\newcommand{\VARrealspectrum}{I^*}
+\newcommand{\VARdistinctspectrum}{I^*}
 
 \newcommand{\indicatorfunctionX}[1]{{#1}(g)}
 \newcommand{\VARhasfractionaldualitygapvertexchromatic}
@@ -104,8 +104,8 @@
 {\indicatorfunctionX{\VARstronglyregular}}
 \newcommand{\VARisintegral}
 {\indicatorfunctionX{\VARintegral}}
-\newcommand{\VARisrealspectrum}
-{\indicatorfunctionX{\VARrealspectrum}}
+\newcommand{\VARisdistinctspectrum}
+{\indicatorfunctionX{\VARdistinctspectrum}}
 
 \begin{document}
 
@@ -316,7 +316,7 @@ For simple graphs, this is a $\{0,1\}$ matrix with zeros down the diagonal.
 The \textit{characteristic polynomial} for a matrix is given by its eigenvalues, $\det(\lambda I - A)$.
 A sequence of eigenvalues $\lambda_1, \lambda_2, \ldots$ is called the \textit{spectrum}.
 A graph is $integral$ if all the values of the adjacency spectrum are integral, $\lambda_k \in \mathbb{Z}$. 
-A graph is $real$ if $\lambda_k \in \mathbb{R}$.
+A graph has a distinct spectrum if each eigenvalue is distinct.
 
 An \textit{independent vertex/edge set} is a subset of vertices/edges of a graph such that no two vertices/edges in the subset share an edge/vertex. 
 The \textit{maximal independent vertex set} or \textit{independence number}, is the cardinality of the largest independent vertex set.
@@ -462,8 +462,8 @@ $\VARdiameter, \VARgirth$ & diameter, girth \\
 $\VARnarticulationpoints$ & number of articulation points \\
 $\VARmaximalindependentvertexset, \VARmaximalindependentedgeset$ & size of maximal independent vertex/edge set \\
 $\namedsubgraph{h}$ & number of subgraphs of $h$ in $g$ \\
-$\VARtree,\VARhamiltonian,\VAReulerian, \VARintegral, \VARrealspectrum$ & 
-properties: tree, Hamiltonian, Eulerian, integral, real \\
+$\VARtree,\VARhamiltonian,\VAReulerian, \VARintegral, \VARdistinctspectrum$ & 
+properties: tree, Hamiltonian, Eulerian, integral, distinct \\
 $\VARkregular,\VARstronglyregular,\VARdistanceregular, \VARbipartite$ & 
 properties: regular, strongly regular, distance regular, bipartite \\
 $\VARchordal, \VARfractionaldualitygapvertexchromatic$  &
@@ -570,8 +570,8 @@ properties: chordal, chromatic gap
 \OEIS{A241841} & $\VARistree =0$ & 0 & 0 & 1 & 4 & 18 & 106 & 842 & 11094 & 261033 & 11716465 \\
 \OEIS{A241842} & $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 18 & 106 & 846 & 11095 & 261056 & 11716488 \\
 \OEIS{A241843} & $\VARischordal =0$ & 0 & 0 & 0 & 1 & 6 & 54 & 581 & 9503 & 249169 & 11607032 \\
-\OEIS{A242952} & $\VARisrealspectrum =1$ & 1 & 1 & 1 & 3 & 11 & 54 & 539 & 7319 & 209471 & 10000304 \\
-\OEIS{A242953} & $\VARisrealspectrum =0$ & 0 & 0 & 1 & 3 & 10 & 58 & 314 & 3798 & 51609 & 1716267 \\
+\OEIS{A242952} & $\VARisdistinctspectrum =1$ & 1 & 1 & 1 & 3 & 11 & 54 & 539 & 7319 & 209471 & 10000304 \\
+\OEIS{A242953} & $\VARisdistinctspectrum =0$ & 0 & 0 & 1 & 3 & 10 & 58 & 314 & 3798 & 51609 & 1716267 \\
 \OEIS{A243241} & $\VARisstronglyregular =0$ & 0 & 0 & 1 & 4 & 19 & 109 & 852 & 11114 & 261077 & 11716566 \\
 \OEIS{A243251} & $\VARhasfractionaldualitygapvertexchromatic =1$ & 0 & 0 & 0 & 0 & 1 & 3 & 33 & 496 & 16464 & 969293 \\
 \OEIS{A243252} & $\VARhasfractionaldualitygapvertexchromatic =0$ & 1 & 1 & 2 & 6 & 20 & 109 & 820 & 10621 & 244616 & 10747278 \\
