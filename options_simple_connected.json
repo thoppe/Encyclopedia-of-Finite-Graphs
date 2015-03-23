@@ -33,7 +33,7 @@
     "is_tree",
     "is_chordal",
     "k_max_clique",
-    "is_real_spectrum",
+    "is_distinct_spectrum",
     "is_subgraph_free_bull",
     "is_subgraph_free_bowtie",
     "is_subgraph_free_diamond",

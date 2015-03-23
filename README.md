@@ -103,7 +103,9 @@ If the database has been updated, you can grab a new copy by running:
 Spectrum invariants
 
 + [`is_integral`](http://mathworld.wolfram.com/IntegralGraph.html), (sympy)
-+ `is_rational_spectrum`, `is_real_spectrum`
++ `is_rational_spectrum`, `is_distinct_spectrum`
+
+Note that older versions of the databaseincorrectly labeled `is_distinct_spectrum` as `is_real_spectrum`.
 
 Subgraph invariants
 

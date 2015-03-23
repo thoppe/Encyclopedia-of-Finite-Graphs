@@ -410,11 +410,10 @@ def is_rational_spectrum(A, **kwargs):
 
 @require_arguments("N")
 @build_representation("numpy")
-def is_real_spectrum(A, N, **kwargs):
-    # Like is_integral, checks if the char. poly factors over R instead of Z
+def is_distinct_spectrum(A, N, **kwargs):
+    # Checks if all eigenvalues are unique
     M = sympy.Matrix(A)
     p = M.charpoly()
-
     return p.rep.count_real_roots() == N
 
 ######################### Subgraph code #########################
