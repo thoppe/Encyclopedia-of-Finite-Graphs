@@ -229,7 +229,7 @@ Most of the invariants were stored as integers and compressed, the invariant dat
 Some non-integer invariants, such as the Tutte polynomial, were stored in a separate, specialized database.
 
 The creation of the database started with the full enumeration of the graphs themselves.
-The calculation of the invariants was an embarrassingly parallel problem, as each graph was independent.
+Since each invariant calculation was an independent problem, the computation was especially well-suited for parallelization across multiple processing cores.
 The invariants were stored in a denormalized database with each graph stored as a row and each column containing the value of a particular invariant for that graph. 
 We placed an index on each of the invariant columns to allow for fast querying at the expense of disk space.
 
@@ -279,7 +279,7 @@ The Encyclopedia allows users to query specific invariant conditions and visuali
 As an example, there are exactly three graphs with 10 vertices that are simultaneously bipartite, integral and Eulerian. 
 These graphs are illustrated in Figure \ref{fig:examplequery}.
 As the Encyclopedia grows however, the published static database will be insufficient to handle these extensions.
-We plan to create a web interface that would allow users to query a specific graph based on a commonly assumed name (e.g. the ``Peterson graph") or query the set of graphs that match a selection of invariant conditions.
+We plan to create a web interface that would allow users to query a specific graph based on a commonly assumed name (e.g. the ``Petersen graph") or query the set of graphs that match a selection of invariant conditions.
 
 \begin{figure}[p]
 \begin{center}
@@ -414,7 +414,7 @@ Let $\VARsubgraph(g,h)$ equal the number of vertex sets that form subgraphs of $
 The \textit{maximum clique number} is the largest non-zero value of $\VARsubgraph(g, K_n)$, where $K_n$ is the complete graph on $n$ vertices. 
 A graph is \textit{triangle free} or \textit{square free} if $\VARsubgraph(g,C_3)=0$ or $\VARsubgraph(g,C_4)=0$ respectively, where $C_n$ is the cycle graph on $n$ vertices.
 In addition, we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and several named graphs.
-Illustrated below from left-to-right are the 
+Illustrated below from left-to-right are
 the bull graph $\subgraphBULL{}$,
 the bowtie graph $\subgraphBOWTIE{}$, 
 the open-bowtie graph $\subgraphOPENBOWTIE{}$,
@@ -445,7 +445,8 @@ The secondary sequences involve two invariants and are listed in Section \ref{se
 
 Each sequence was hand-checked against the OEIS.
 We validated that either the sequence was unique or the invariant description matched the sequence found.
-We reiterate that all results shown are for simple, connected graphs. 
+We reiterate that all results shown are for simple, connected graphs.
+The definition for each invariant is given in Section \ref{app:invariants}.
 For some invariants the definition may be ambiguous for small orders.
 When possible, we tried to refer to conventions found in the literature and the OEIS for these cases.
 For brevity the symbols describing the invariants are shown below. 
