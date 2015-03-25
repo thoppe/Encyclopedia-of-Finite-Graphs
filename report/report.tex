@@ -79,7 +79,7 @@
 \newcommand{\VARkregular}{R}
 \newcommand{\VARstronglyregular}{R^*}
 \newcommand{\VARintegral}{I}
-\newcommand{\VARdistinctspectrum}{I^*}
+\newcommand{\VARuniquespectrum}{I^*}
 
 \newcommand{\indicatorfunctionX}[1]{{#1}(g)}
 \newcommand{\VARhasfractionaldualitygapvertexchromatic}
@@ -104,8 +104,8 @@
 {\indicatorfunctionX{\VARstronglyregular}}
 \newcommand{\VARisintegral}
 {\indicatorfunctionX{\VARintegral}}
-\newcommand{\VARisdistinctspectrum}
-{\indicatorfunctionX{\VARdistinctspectrum}}
+\newcommand{\VARisuniquespectrum}
+{\indicatorfunctionX{\VARuniquespectrum}}
 
 \begin{document}
 
@@ -197,7 +197,7 @@ While a few sequences were merely extended, other invariants, such as the indepe
 In addition to contributing to the OEIS, a secondary goal is to identify relationships between graph invariants.
 Two queries of the same class are subsets of each other $\QUERY_a(f,\CLASS) \subseteq \QUERY_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
 Equality of two queries $\QUERY_a = \QUERY_b$, implies $\QUERY_a \subseteq \QUERY_b$ and $\QUERY_b \subseteq \QUERY_a$. 
-We say that a relation between two invariants conditions is \textit{suggestive} to order $n$, $\QUERY_a \subseteq_n \QUERY_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
+We say that a relation between two invariant conditions is \textit{suggestive} to order $n$, $\QUERY_a \subseteq_n \QUERY_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
 They are \textit{exclusive} to order $n$, $\QUERY_a \cap_n \QUERY_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
 We can quickly filter candidate relations by noting that it is necessary but not sufficient for the same conditions to hold for sequences, \eg $\SEQ_a \ne \SEQ_b \implies  \QUERY_a \ne \QUERY_b$.
 
@@ -212,7 +212,7 @@ Exhaustive generation algorithms are known for many specialized classes such as 
 
 \section{Methods}
 
-Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the the simple connected graphs up to order $n \le 10$.
+Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the simple connected graphs up to order $n \le 10$.
 Our calculations drew upon a large number of open source libraries and tools. 
 Many of the graph invariant calculations were done with either \texttt{networkx} \cite{SciPyProceedings_11} or \texttt{graph-tool} \cite{Tiago2014graph}.
 The invariants that were computable with integer or linear programming were done with PuLP \cite{mitchell2011pulp}.
@@ -240,7 +240,7 @@ A sequence with only a single invariant condition is called a primary sequence, 
 For a sequence to be considered for submission to the OEIS, it must have at least four non-zero entries. 
 
 The suggestive relations described in the previous section were built in a similar way.
-For each pair of invariants conditions, the sets of graphs related to the sequences were compared for set equality, exclusivity, or as subsets.
+For each pair of invariant conditions, the sets of graphs related to the sequences were compared for set equality, exclusivity, or as subsets.
 In addition to providing useful information, some of these relations provided a check on the accuracy of the algorithms.
 For example, one of the equality relations states that: a graph is a tree $\Leftrightarrow$ a graph has infinite girth.
 This obviously follows from the fact that trees contain no cycles and the girth of a graph is the length of the shortest cycle (which is defined to be infinite for graphs without cycles).
@@ -259,7 +259,7 @@ We have computed the Encyclopedia of Finite Graphs, an exhaustive enumeration of
 This database was utilized to investigate integer sequences among the invariants and supplement the OEIS.
 While fully functional, there are several immediate extensions to the project that we aim to implement in the future.
 
-From a technological standpoint, it is currently possible to extend to database to simple connected graphs of larger orders.
+From a technological standpoint, it is currently possible to extend the database to simple connected graphs of larger orders.
 There are 1,006,700,565 and 164,059,830,476 graphs with 11 and 12 vertices respectively, a large but tractable size for local storage. 
 Larger orders would require prohibitive storage requirements as the number of graphs grows quickly (sequence \OEIS{A001349}).
 We choose a cutoff of order ten as a reasonable compromise between database size, distribution options and computational cost. 
@@ -315,8 +315,8 @@ The \textit{adjacency matrix} $A$ has the value at $A_{ij}$ equal to the number 
 For simple graphs, this is a $\{0,1\}$ matrix with zeros down the diagonal. 
 The \textit{characteristic polynomial} for a matrix is given by its eigenvalues, $\det(\lambda I - A)$.
 A sequence of eigenvalues $\lambda_1, \lambda_2, \ldots$ is called the \textit{spectrum}.
-A graph is $integral$ if all the values of the adjacency spectrum are integral, $\lambda_k \in \mathbb{Z}$. 
-A graph has a distinct spectrum if each eigenvalue is distinct.
+A graph is \textit{integral} if all the values of the adjacency spectrum are integral, $\lambda_k \in \mathbb{Z}$ for all $k$. 
+A graph is \textit{unique} if each eigenvalue in the spectrum is distinct.
 
 An \textit{independent vertex/edge set} is a subset of vertices/edges of a graph such that no two vertices/edges in the subset share an edge/vertex. 
 The \textit{maximal independent vertex set} or \textit{independence number}, is the cardinality of the largest independent vertex set.
@@ -324,7 +324,7 @@ A graph is \textit{bipartite} if there exists two disjoint independent subsets o
 The \textit{maximal independent edge set} is the cardinality of the largest independent edge set.
 The total number of independent edges sets is sometimes referred to as the number of \textit{edge matchings}, or the \textit{Hosoya index}\cite{hosoya1971topological}.
 For graphs that are bounded in treewidth the Hosoya index is fixed-parameter tractable.
-In general however, the Hosoya index $\mathcal{\#P}$-complete\cite{jerrum1987two}.
+In general however, the Hosoya index is $\mathcal{\#P}$-complete\cite{jerrum1987two}.
 
 The \textit{automorphism group} is formed by all mappings of the vertices onto themselves which preserve isomorphism. 
 The cardinality of this group is the \textit{automorphism number}.
@@ -355,7 +355,7 @@ The fractional coloring number is defined to be
 \inf _ {b} \frac{\VARfractionalchromaticnumber{b}}{b} 
 \end{equation}
 Not only does the limit exist, but $\VARfractionalchromaticnumber{f} \in \mathbb{Q}$\cite{scheinerman2011fractional}.
-The integral chromatic number need not be equal to its fractional counter part, in fact 
+The integral chromatic number need not be equal to its fractional counterpart, in fact 
 $\VARfractionalchromaticnumber{f} \le \VARchromaticnumber$.
 If the equality does not hold, we say the graph has a \textit{fractional chromatic gap}.
 Additionally, we can formulate $\VARfractionalchromaticnumber{f}$ as a solution to a linear program.
@@ -462,8 +462,8 @@ $\VARdiameter, \VARgirth$ & diameter, girth \\
 $\VARnarticulationpoints$ & number of articulation points \\
 $\VARmaximalindependentvertexset, \VARmaximalindependentedgeset$ & size of maximal independent vertex/edge set \\
 $\namedsubgraph{h}$ & number of subgraphs of $h$ in $g$ \\
-$\VARtree,\VARhamiltonian,\VAReulerian, \VARintegral, \VARdistinctspectrum$ & 
-properties: tree, Hamiltonian, Eulerian, integral, distinct \\
+$\VARtree,\VARhamiltonian,\VAReulerian, \VARintegral, \VARuniquespectrum$ & 
+properties: tree, Hamiltonian, Eulerian, integral, unique \\
 $\VARkregular,\VARstronglyregular,\VARdistanceregular, \VARbipartite$ & 
 properties: regular, strongly regular, distance regular, bipartite \\
 $\VARchordal, \VARfractionaldualitygapvertexchromatic$  &
@@ -570,8 +570,8 @@ properties: chordal, chromatic gap
 \OEIS{A241841} & $\VARistree =0$ & 0 & 0 & 1 & 4 & 18 & 106 & 842 & 11094 & 261033 & 11716465 \\
 \OEIS{A241842} & $\VARisintegral =0$ & 0 & 0 & 1 & 4 & 18 & 106 & 846 & 11095 & 261056 & 11716488 \\
 \OEIS{A241843} & $\VARischordal =0$ & 0 & 0 & 0 & 1 & 6 & 54 & 581 & 9503 & 249169 & 11607032 \\
-\OEIS{A242952} & $\VARisdistinctspectrum =1$ & 1 & 1 & 1 & 3 & 11 & 54 & 539 & 7319 & 209471 & 10000304 \\
-\OEIS{A242953} & $\VARisdistinctspectrum =0$ & 0 & 0 & 1 & 3 & 10 & 58 & 314 & 3798 & 51609 & 1716267 \\
+\OEIS{A242952} & $\VARisuniquespectrum =1$ & 1 & 1 & 1 & 3 & 11 & 54 & 539 & 7319 & 209471 & 10000304 \\
+\OEIS{A242953} & $\VARisuniquespectrum =0$ & 0 & 0 & 1 & 3 & 10 & 58 & 314 & 3798 & 51609 & 1716267 \\
 \OEIS{A243241} & $\VARisstronglyregular =0$ & 0 & 0 & 1 & 4 & 19 & 109 & 852 & 11114 & 261077 & 11716566 \\
 \OEIS{A243251} & $\VARhasfractionaldualitygapvertexchromatic =1$ & 0 & 0 & 0 & 0 & 1 & 3 & 33 & 496 & 16464 & 969293 \\
 \OEIS{A243252} & $\VARhasfractionaldualitygapvertexchromatic =0$ & 1 & 1 & 2 & 6 & 20 & 109 & 820 & 10621 & 244616 & 10747278 \\
