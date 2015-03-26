@@ -23,7 +23,7 @@
 % Counters for number of edits made to OEIS
 % Counts of sequences added: Extended (6), Distinct (5), Primaray (68), Secondary (68)
 \newcommand{\OEISeditsMain}{141\xspace}
-\newcommand{\OEISeditsExtended}{6\xspace}
+\newcommand{\OEISeditsExtended}{six\xspace}
 
 % Helper command to link to the OEIS
 \newcommand{\OEIS}[1]
@@ -121,7 +121,7 @@
 \begin{abstract}
 We have exhaustively enumerated all simple, connected graphs of a finite order and have computed a selection of invariants over this set.
 Integer sequences were constructed from these invariants and checked against the Online Encyclopedia of Integer Sequences (OEIS).
-\OEISeditsMain new sequences were added and \OEISeditsExtended sequences were appended or corrected.
+\OEISeditsMain new sequences were added and \OEISeditsExtended sequences were extended.
 From the graph database, we were able to programmatically suggest relationships among the invariants.
 It will be shown that we can readily visualize any sequence of graphs with a given criteria. 
 The code has been released as an open-source framework for further analysis and the database was constructed to be extensible to invariants not considered in this work.
@@ -131,7 +131,7 @@ The code has been released as an open-source framework for further analysis and 
 
 There is a long history of public graph databases. 
 Databases originally found only in print, such as the \textit{Atlas of Graphs}\cite{read1998atlas}, have rapidly expanded to the electronic medium.
-These databases range from those of mathematical and algorithmic interest \cite{de2003large, brinkmann2013house}, to those cataloging structures found in the applied sciences such as ChemSpider\cite{pence2010chemspider}, RNA topologies\cite{gan2004rag, laing2013predicting} or social databases \cite{mcauley2014circles,brandes2009wikipedia,oestreicher2006amazon}.
+These databases range from those of mathematical and algorithmic interest\cite{de2003large, brinkmann2013house}, to those cataloging structures found in the applied sciences such as ChemSpider\cite{pence2010chemspider}, RNA topologies\cite{gan2004rag, laing2013predicting} or social databases\cite{mcauley2014circles,brandes2009wikipedia,oestreicher2006amazon}.
 Due to the rapid growth in the number of unique isomorphic graphs, the currently available databases are specialized in the number of graphs considered; 
 a judicious choice often restricts the study to an interesting and more manageable subset.
 
@@ -145,8 +145,8 @@ Since the input to GraPHedron consists of a set of invariants, a larger input se
 Additionally, the creation of a large, centralized database will serve as a useful reference for benchmarking various algorithms.
 Finally, a comprehensive database provides pedagogic value, as representative graphs from any considered sequence can be rapidly visualized.
 
-To this end, we have created the \textit{Encyclopedia of Finite Graphs} (henceforth Encyclopedia), a database of invariants\cite{Travis2014SimpleConnectedGraphs} and the software to fully populate it\cite{Travis2014Encyclopdia}. 
-The code and the database have been released under an open source license.
+To this end, we have created the \textit{Encyclopedia of Finite Graphs} (henceforth Encyclopedia) which includes a database of graphs and invariants\cite{Travis2014SimpleConnectedGraphs}.
+The software to fully populate the database has been released under an open source license\cite{Travis2014Encyclopdia}.
 The intention is for new invariants to be an added to the project as various algorithms become available.
 
 Once built, the Encyclopedia readily yields integer sequences formed by matching the number of graphs to an invariant constraint at each order.
@@ -195,11 +195,11 @@ We have evaluated a range of invariants, from those that are computable in polyn
 While a few sequences were merely extended, other invariants, such as the independence number, were hitherto unknown to OEIS and have produced novel sequences (\OEIS{A243781}-\OEIS{A243784}).
 
 In addition to contributing to the OEIS, a secondary goal is to identify relationships between graph invariants.
-Two queries of the same class are subsets of each other $\QUERY_a(f,\CLASS) \subseteq \QUERY_b(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
-Equality of two queries $\QUERY_a = \QUERY_b$, implies $\QUERY_a \subseteq \QUERY_b$ and $\QUERY_b \subseteq \QUERY_a$. 
-We say that a relation between two invariant conditions is \textit{suggestive} to order $n$, $\QUERY_a \subseteq_n \QUERY_b$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
-They are \textit{exclusive} to order $n$, $\QUERY_a \cap_n \QUERY_b$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
-We can quickly filter candidate relations by noting that it is necessary but not sufficient for the same conditions to hold for sequences, \eg $\SEQ_a \ne \SEQ_b \implies  \QUERY_a \ne \QUERY_b$.
+Two queries of the same class are subsets of each other $\QUERY(f,\CLASS) \subseteq \QUERY(g, \CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for all $i\ge0$. 
+Equality of two queries $\QUERY(f,\CLASS) = \QUERY(g,\CLASS)$, implies $\QUERY(f,\CLASS) \subseteq \QUERY(g,\CLASS)$ and $\QUERY(g,\CLASS) \subseteq \QUERY(f,\CLASS)$. 
+We say that a relation between two invariant conditions is \textit{suggestive} to order $n$, $\QUERY(f,\CLASS) \subseteq_n \QUERY(g,\CLASS)$, if $f(\CLASS_i) \subseteq g(\CLASS_i)$ for $0 \le i \le n$.
+They are \textit{exclusive} to order $n$, $\QUERY(f,\CLASS) \cap_n \QUERY(g,\CLASS)$, if $f(\CLASS_i) \cap g(\CLASS_i) = \emptyset$ for $0 \le i \le n$.
+We can quickly filter candidate relations by noting that it is necessary but not sufficient for the same conditions to hold for sequences, \eg $\SEQ_a \ne \SEQ_b \implies  \QUERY(f,\CLASS) \ne \QUERY(g,\CLASS)$.
 
 We consider a final type of integer sequence, the number of distinct values an invariant could obtain for a given order.
 These sequences are not restricted to integer invariants. 
@@ -212,10 +212,10 @@ Exhaustive generation algorithms are known for many specialized classes such as 
 
 \section{Methods}
 
-Using the \texttt{geng -c} command from \texttt{nauty} \cite{mckay2014practical}, we enumerated the simple connected graphs up to order $n \le 10$.
+Using the \texttt{geng -c} command from \texttt{nauty}\cite{mckay2014practical}, we enumerated the simple connected graphs up to order $n \le 10$.
 Our calculations drew upon a large number of open source libraries and tools. 
-Many of the graph invariant calculations were done with either \texttt{networkx} \cite{SciPyProceedings_11} or \texttt{graph-tool} \cite{Tiago2014graph}.
-The invariants that were computable with integer or linear programming were done with PuLP \cite{mitchell2011pulp}.
+Many of the graph invariant calculations were done with either \texttt{networkx}\cite{SciPyProceedings_11} or \texttt{graph-tool}\cite{Tiago2014graph}.
+The invariants that were computable with integer or linear programming were done with \texttt{PuLP}\cite{mitchell2011pulp}.
 For each graph we computed a series of invariants, which for completeness are described in Appendix \ref{app:invariants}.
 A full table of all sequences submitted to the OEIS can be found in Appendix \ref{app:submittedseq}.
 The relations between the invariants are numerous and are indexed online\cite{Travis2014Encyclopdia}.
@@ -225,18 +225,18 @@ The largest we computed is of order 10, which requires 45 bits.
 This can be efficiently stored as a 64 bit unsigned integer using a binary representation.
 Graphs of order 11 would also be possible to be stored in this representation, but graphs of order 12 would not (requiring 66 bits).
 Internally, we used SQLite3 as the database back end for portability reasons.
-Most of the invariants were stored as integers and compressed, the invariant database is about $850$ MB.
+Most of the invariants were stored as integers; the invariant database is about $850$ MB when compressed.
 Some non-integer invariants, such as the Tutte polynomial, were stored in a separate, specialized database.
 
 The creation of the database started with the full enumeration of the graphs themselves.
 Since each invariant calculation was an independent problem, the computation was especially well-suited for parallelization across multiple processing cores.
 The invariants were stored in a denormalized database with each graph stored as a row and each column containing the value of a particular invariant for that graph. 
-We placed an index on each of the invariant columns to allow for fast querying at the expense of disk space.
+We placed an index on each of the invariant columns, at the expense of disk space, to allow for fast querying.
 
 Sequences were constructed by first enumerating all the unique values for each invariant and applying a condition of inequality. 
 For example, the sequence \OEIS{A241454} describes the graphs whose automorphism group has cardinality equal to two, while the sequence \OEIS{A086216} describes graphs with a vertex connectivity greater than or equal to three. 
 Sequences can involve more than one invariant condition.
-A sequence with only a single invariant condition is called a primary sequence, while a sequence involving two or more invariant conditions is called a secondary sequence.
+We refer to sequences with only a single invariant condition as primary sequences, while sequences involving two or more invariant conditions we call secondary sequences.
 For a sequence to be considered for submission to the OEIS, it must have at least four non-zero entries. 
 
 The suggestive relations described in the previous section were built in a similar way.
@@ -262,11 +262,11 @@ While fully functional, there are several immediate extensions to the project th
 From a technological standpoint, it is currently possible to extend the database to simple connected graphs of larger orders.
 There are 1,006,700,565 and 164,059,830,476 graphs with 11 and 12 vertices respectively, a large but tractable size for local storage. 
 Larger orders would require prohibitive storage requirements as the number of graphs grows quickly (sequence \OEIS{A001349}).
-We choose a cutoff of order ten as a reasonable compromise between database size, distribution options and computational cost. 
+We choose a cutoff of order ten as a reasonable compromise between database size, distribution options, and computational cost. 
 
 There are many other classes of graphs to consider.
 As mentioned earlier, not only are there other enumeration algorithms, but other projects have enumerated graphs of larger order with particular characteristics, such as bipartite, Eulerian, cubic, or certain regular graphs\cite{mckay2014combinatorial,royle2014small,meringer2014regular}.
-An extension of the Encyclopedia could incorporate graphs that others have already determined along with a computation of their respective invariants.
+An extension of the Encyclopedia could incorporate graphs that others have already determined, along with a computation of their respective invariants.
 
 In addition to expanding the volume of graphs considered, we can extend the number of computed invariants. 
 Since the Encyclopedia code is openly available\cite{Travis2014Encyclopdia}, programs to compute additional invariants can be added by anyone. 
@@ -287,7 +287,7 @@ We plan to create a web interface that would allow users to query a specific gra
 \end{center}
   \caption{
     An example query to the Encyclopedia using specific invariant conditions. 
-    The command \texttt{python viewer.py 10 -i is\_bipartite 1 -i is\_integral 1 -i is\_eulerian 1} displays the three graphs that are simultaneously bipartite, integral and Eulerian with ten vertices. 
+    The command \texttt{python viewer.py 10 -i is\_bipartite 1 -i is\_integral 1 -i is\_eulerian 1} displays the three graphs that are simultaneously bipartite, integral, and Eulerian with ten vertices. 
   }
   \label{fig:examplequery}
 \end{figure}
@@ -307,7 +307,7 @@ We plan to create a web interface that would allow users to query a specific gra
 \label{app:invariants}
 
 The invariant descriptions are broadly organized into sections of algebraic graph theory, topological graph theory, and invariants related to structure-like connectivity.
-Readers are instructed to look to standard references for more comprehensive definitions \cite{diestel2010graph, bondy2008graph, bollobas1998modern}.
+Readers are instructed to look to standard references for more comprehensive definitions\cite{diestel2010graph, bondy2008graph, bollobas1998modern}.
 
 \subsubsection*{Algebraic Graph Theory}
 
@@ -328,7 +328,7 @@ In general however, the Hosoya index is $\mathcal{\#P}$-complete\cite{jerrum1987
 
 The \textit{automorphism group} is formed by all mappings of the vertices onto themselves which preserve isomorphism. 
 The cardinality of this group is the \textit{automorphism number}.
-Both \texttt{nauty} and \texttt{BLISS} \cite{junttila2007engineering,mckay2014practical} can compute the automorphism group and the number.
+Both \texttt{nauty} and \texttt{BLISS}\cite{junttila2007engineering,mckay2014practical} can compute the automorphism group and the number.
 
 The \textit{Tutte polynomial} is a bivariate polynomial which encodes information about the graph's connectedness.
 The polynomial $T_g(x,y)$ is defined via the recurrence relation, $T_g = T_{g-e} + T_{g/e}$ for any edge $e \in E$ that is not a loop or a bridge. 
