@@ -307,6 +307,8 @@ We plan to create a web interface that would allow users to query a specific gra
 \label{app:invariants}
 
 The invariant descriptions are broadly organized into sections of algebraic graph theory, topological graph theory, and invariants related to structure-like connectivity.
+Unless otherwise noted, all invariants listed below in italics were computed and stored in the Encyclopedia.
+Many of them were already present in the OEIS and their corresponding integer sequences were cross-referenced as a consistency check.
 Readers are instructed to look to standard references for more comprehensive definitions\cite{diestel2010graph, bondy2008graph, bollobas1998modern}.
 
 \subsubsection*{Algebraic Graph Theory}
@@ -410,7 +412,7 @@ A \textit{chord} of a cycle is an edge with one vertex belonging to the cycle an
 In a \textit{chordal graph}, all cycles of order four or more have a cycle chord.   
  
 A \textit{vertex subgraph} or simply a subgraph, is a subset of vertices and the edges which are common to all members of this subset. 
-Let $\VARsubgraph(g,h)$ equal the number of vertex sets that form subgraphs of $h$ in $g$.
+Let $g, h \in \CLASS$ be graphs from the same class and denote $s(g, h)$ as the the number of vertex sets that form subgraphs of $h$ in $g$.
 The \textit{maximum clique number} is the largest non-zero value of $\VARsubgraph(g, K_n)$, where $K_n$ is the complete graph on $n$ vertices. 
 A graph is \textit{triangle free} or \textit{square free} if $\VARsubgraph(g,C_3)=0$ or $\VARsubgraph(g,C_4)=0$ respectively, where $C_n$ is the cycle graph on $n$ vertices.
 In addition, we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and several named graphs.
