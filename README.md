@@ -135,7 +135,7 @@ Trivial invariants
 + [`is_arc_transitive`](http://mathworld.wolfram.com/Arc-TransitiveGraph.html), [`is_vertex_transitive`](http://mathworld.wolfram.com/Vertex-TransitiveGraph.html)
 + [`characteristic_polynomial`](http://mathworld.wolfram.com/CharacteristicPolynomial.html)
 + [`spectrum`](http://mathworld.wolfram.com/GraphSpectrum.html)
-+ [`is_cartesian_product`](mathworld.wolfram.com/GraphCartesianProduct.html) (SAGE)
++ [`is_cartesian_product`](http://mathworld.wolfram.com/GraphCartesianProduct.html) (SAGE)
 + [`is_well_covered`](http://mathworld.wolfram.com/Well-CoveredGraph.html)
 
 Other Invariants (hard)
