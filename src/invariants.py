@@ -448,7 +448,9 @@ def _is_subgraph_free(subg):
         if kwargs["N"] < subg_n:
             return 1
         g = graph_tool_representation(adj, **kwargs)
-        return len(_has_subgraph(subg, g, max_n=1)[0]) == 0
+
+        return len(_has_subgraph(subg, g, max_n=1))==0
+
     return f
 
 # is_subgraph_free_K3=1, OEIS:A024607
