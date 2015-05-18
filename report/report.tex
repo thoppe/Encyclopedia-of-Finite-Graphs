@@ -151,7 +151,7 @@ Finally, a comprehensive database provides pedagogic value, as representative gr
 
 To this end, we have created the \textit{Encyclopedia of Finite Graphs} (henceforth Encyclopedia) which includes a database of graphs and invariants\cite{Travis2014SimpleConnectedGraphs}.
 The software to fully populate the database has been released under an open source license\cite{Travis2014Encyclopdia}.
-The intention is for new invariants to be an added to the project as various algorithms become available.
+The intention is for new invariants to be added to the project as various algorithms become available.
 
 Once built, the Encyclopedia readily yields integer sequences formed by matching the number of graphs to an invariant constraint at each order.
 Many such sequences have already been found and cataloged in another database, the Online Encyclopedia of Integer Sequences (OEIS)\cite{sloane2003line}.
@@ -264,7 +264,7 @@ This database was utilized to investigate integer sequences among the invariants
 While fully functional, there are several immediate extensions to the project that we aim to implement in the future.
 
 From a technological standpoint, it is currently possible to extend the database to simple connected graphs of larger orders.
-There are 1,006,700,565 and 164,059,830,476 graphs with 11 and 12 vertices respectively, a large but tractable size for local storage. 
+There are 1,006,700,565 and 164,059,830,476 graphs with 11 and 12 vertices, respectively, a large but tractable size for local storage. 
 Larger orders would require prohibitive storage requirements as the number of graphs grows quickly (sequence \OEIS{A001349}).
 We choose a cutoff of order ten as a reasonable compromise between database size, distribution options, and computational cost. 
 
@@ -328,7 +328,7 @@ An \textit{independent vertex/edge set} is a subset of vertices/edges of a graph
 The \textit{maximal independent vertex set} or \textit{independence number}, is the cardinality of the largest independent vertex set.
 A graph is \textit{bipartite} if there exists two disjoint independent subsets of the vertices whose union is $V$.
 The \textit{maximal independent edge set} is the cardinality of the largest independent edge set.
-The total number of independent edges sets is sometimes referred to as the number of \textit{edge matchings}, or the \textit{Hosoya index}\cite{hosoya1971topological}.
+The total number of independent edge sets is sometimes referred to as the number of \textit{edge matchings}, or the \textit{Hosoya index}\cite{hosoya1971topological}.
 For graphs that are bounded in treewidth the Hosoya index is fixed-parameter tractable.
 In general however, the Hosoya index is $\mathcal{\#P}$-complete\cite{jerrum1987two}.
 
@@ -347,12 +347,12 @@ The \textit{chromatic polynomial} is a specialization of the Tutte polynomial
 \end{equation}
 where $c$ is the number of connected components of the graph.
 The chromatic polynomial $\VARchromaticpolynomial{k}$ gives the number of proper $k$-colorings on a graph. 
-A proper $k$-coloring of a graph is an assignment of $k$ colors to each vertex so that no two adjacent vertices have the same color. 
+A \textit{proper $k$-coloring} of a graph is an assignment of $k$ colors to each vertex so that no two adjacent vertices have the same color. 
 The \textit{chromatic number} $\VARchromaticnumber$, is the smallest non-zero $k$ such that $\VARchromaticpolynomial{k}>0$.
 
 The \textit{fractional coloring number} is motivated by the chromatic number.
 A graph is \textit{$a:b$ colorable} if each vertex is assigned $b$ colors out of a palette of $a$ total colors such that the coloring of each adjacent vertex is disjoint. 
-The smallest $a$ such that the graph can be assigned to $b$ colors is the $b$-fold chromatic number and is denoted by $\VARfractionalchromaticnumber{b}$. 
+The smallest $a$ such that the graph can be assigned to $b$ colors is the \textit{$b$-fold chromatic number} and is denoted by $\VARfractionalchromaticnumber{b}$. 
 Note that the standard chromatic number is $\VARchromaticnumber{} = \VARfractionalchromaticnumber{1}$.
 The fractional coloring number is defined to be
 \begin{equation}
@@ -415,8 +415,8 @@ Due to technical limitations we record this value as a zero which is unambiguous
 A \textit{chord} of a cycle is an edge with one vertex belonging to the cycle and one edge outside of the cycle.
 In a \textit{chordal graph}, all cycles of order four or more have a cycle chord.   
  
-A \textit{vertex subgraph} or simply a subgraph, is a subset of vertices and the edges which are common to all members of this subset. 
-Let $g, h \in \CLASS$ be graphs from the same class and denote $s(g, h)$ as the the number of vertex sets that form subgraphs of $h$ in $g$.
+A \textit{vertex subgraph} or simply a subgraph, is a subset of vertices and edges which are common to all members of this subset. 
+Let $g, h \in \CLASS$ be graphs from the same class and denote $s(g, h)$ as the number of vertex sets that form subgraphs of $h$ in $g$.
 The \textit{maximum clique number} is the largest non-zero value of $\VARsubgraph(g, K_n)$, where $K_n$ is the complete graph on $n$ vertices. 
 A graph is \textit{triangle free} or \textit{square free} if $\VARsubgraph(g,C_3)=0$ or $\VARsubgraph(g,C_4)=0$ respectively, where $C_n$ is the cycle graph on $n$ vertices.
 In addition, we have checked for the subgraphs $K_4, K_5, C_5, C_6$ and several named graphs.
