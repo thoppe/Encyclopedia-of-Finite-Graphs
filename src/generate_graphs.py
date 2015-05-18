@@ -91,7 +91,7 @@ def insert_graph_list(index_list):
     msg = "Inserting {} values into graph.adj"
     logging.info(msg.format(len(index_list)))
 
-    cmd_add = "INSERT INTO graph (adj) VALUES (?)"
+    cmd_add = "INSERT OR IGNORE INTO graph (adj) VALUES (?)"
     conn.executemany(cmd_add, zip(*[index_list]))
 
 ######################################################################
