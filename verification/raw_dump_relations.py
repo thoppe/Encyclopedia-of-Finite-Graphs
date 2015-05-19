@@ -36,7 +36,7 @@ func_names = ref_lookup.keys()
 
 # Grab the ref_sequence_level1 data
 cmd = '''
-SELECT sequence_id,invariant_val_id,conditional,value
+SELECT sequence_id,invariant_id,conditional,value
 FROM ref_sequence_level1'''
 SEQ_QUERY = {}
 for item in grab_all(seq_conn, cmd):

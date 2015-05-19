@@ -47,9 +47,9 @@ ref_lookup = dict(grab_all(conn, cmd))
 ref_lookup_inv = {v: k for k, v in ref_lookup.items()}
 func_names = ref_lookup.keys()
 
-# Iterate over the pairs that have different invariant_val_ids
+# Iterate over the pairs that have different invariant_ids
 cmd = '''
-SELECT sequence_id, invariant_val_id FROM ref_sequence_level1'''
+SELECT sequence_id, invariant_id FROM ref_sequence_level1'''
 choices = grab_all(conn, cmd)
 
 possible_pairs = []
@@ -76,7 +76,7 @@ for item in grab_all(conn, cmd):
 
 # Grab the ref_sequence_level1 data
 cmd = '''
-SELECT sequence_id,invariant_val_id,conditional,value
+SELECT sequence_id,invariant_id,conditional,value
 FROM ref_sequence_level1'''
 SEQ_QUERY = {}
 for item in grab_all(conn, cmd):
@@ -110,16 +110,20 @@ if missing_subset:
 
 
 def check_subset(s1, s2):
-    cmd_find = '''SELECT graph_id FROM invariant_integer WHERE {} {} {}'''
+    cmd_find = '''
+    SELECT graph_id FROM invariant_integer
+    WHERE invariant_id={}
+    AND value {} {}
+    '''
 
-    invar_val_id1, c1, v1 = SEQ_QUERY[s1]
-    invar_val_id2, c2, v2 = SEQ_QUERY[s2]
+    invar_id1, c1, v1 = SEQ_QUERY[s1]
+    invar_id2, c2, v2 = SEQ_QUERY[s2]
 
-    func_name1 = ref_lookup_inv[invar_val_id1]
-    func_name2 = ref_lookup_inv[invar_val_id2]
+    func_name1 = ref_lookup_inv[invar_id1]
+    func_name2 = ref_lookup_inv[invar_id2]
 
-    cmd1 = cmd_find.format(func_name1, c1, v1)
-    cmd2 = cmd_find.format(func_name2, c2, v2)
+    cmd1 = cmd_find.format(invar_id1, c1, v1)
+    cmd2 = cmd_find.format(invar_id2, c2, v2)
 
     for n in range(cargs["min_n"], cargs["max_n"] + 1):
 
@@ -193,16 +197,20 @@ logging.info(msg.format(len(missing_ex)))
 
 
 def check_exclusive(s1, s2):
-    cmd_find = '''SELECT graph_id FROM invariant_integer WHERE {} {} {}'''
+    cmd_find = '''
+    SELECT graph_id FROM invariant_integer
+    WHERE invariant_id={}
+    AND value {} {}
+    '''
 
-    invar_val_id1, c1, v1 = SEQ_QUERY[s1]
-    invar_val_id2, c2, v2 = SEQ_QUERY[s2]
+    invar_id1, c1, v1 = SEQ_QUERY[s1]
+    invar_id2, c2, v2 = SEQ_QUERY[s2]
 
-    func_name1 = ref_lookup_inv[invar_val_id1]
-    func_name2 = ref_lookup_inv[invar_val_id2]
+    func_name1 = ref_lookup_inv[invar_id1]
+    func_name2 = ref_lookup_inv[invar_id2]
 
-    cmd1 = cmd_find.format(func_name1, c1, v1)
-    cmd2 = cmd_find.format(func_name2, c2, v2)
+    cmd1 = cmd_find.format(invar_id1, c1, v1)
+    cmd2 = cmd_find.format(invar_id2, c2, v2)
 
     for n in range(cargs["min_n"], cargs["max_n"] + 1):
         GID1 = set(grab_vector(search_conn[n], cmd1))
