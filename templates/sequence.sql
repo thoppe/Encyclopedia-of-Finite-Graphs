@@ -1,14 +1,14 @@
+
 CREATE TABLE IF NOT EXISTS ref_invariant_integer(
-    invariant_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    function_name STRING,
-    UNIQUE(function_name)
+    invariant_id INTEGER PRIMARY KEY,
+    function_name TEXT UNIQUE
 );
 
 -- Keeps tracks of all unique values for each invariant
 CREATE TABLE IF NOT EXISTS unique_invariant_val(
-  unique_invariant_id integer primary key autoincrement,
-  invariant_val_id integer,
-  value integer
+  unique_invariant_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  invariant_id INTEGER,
+  value INTEGER
 );
 
 --- Tracks if various items have been computed
@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS sequence(
   s8  INTEGER,
   s9  INTEGER,
   s10 INTEGER,
-
   UNIQUE (sequence_id, query_level)
 );  
 
@@ -43,10 +42,10 @@ CREATE TABLE IF NOT EXISTS ref_sequence_level1(
 
   unique_invariant_id INTEGER,
   conditional STRING NOT NULL,
-  invariant_val_id NOT NULL,
+  invariant_id NOT NULL,
   value INTEGER NOT NULL,
 
-  UNIQUE (invariant_val_id, value, conditional)
+  UNIQUE (invariant_id, value, conditional)
 );
 
 CREATE TABLE IF NOT EXISTS ref_sequence_level2( 
@@ -54,16 +53,16 @@ CREATE TABLE IF NOT EXISTS ref_sequence_level2(
 
   unique_invariant_id1 INTEGER,
   conditional1 STRING1 NOT NULL,
-  invariant_val_id1 NOT NULL,
+  invariant_id1 NOT NULL,
   value1 INTEGER NOT NULL,
 
   unique_invariant_id2 INTEGER,
   conditional2 STRING NOT NULL,
-  invariant_val_id2 NOT NULL,
+  invariant_id2 NOT NULL,
   value2 INTEGER NOT NULL,
 
-  UNIQUE (invariant_val_id1, value1, conditional1,
-          invariant_val_id2, value2, conditional2)
+  UNIQUE (invariant_id1, value1, conditional1,
+          invariant_id2, value2, conditional2)
 );
 
 

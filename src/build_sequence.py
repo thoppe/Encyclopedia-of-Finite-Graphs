@@ -4,8 +4,8 @@ import argparse
 import os
 import collections
 import itertools
-from helper_functions import grab_vector, grab_all, grab_scalar
-from helper_functions import load_graph_database, load_options
+from helper_functions import (grab_vector, grab_all, grab_scalar,
+                            load_graph_database, load_options)
 
 desc = "Runs initial queries over the databases"
 parser = argparse.ArgumentParser(description=desc)
@@ -37,6 +37,16 @@ search_conn = collections.OrderedDict()
 for n in range(1, cargs["max_n"] + 1):
     search_conn[n] = load_graph_database(n)
 
+# Get the invariant_ids
+cmd_get_invariant_ids = '''
+SELECT invariant_id, function_name  FROM
+invariant_integer_functions
+'''
+invariant_func_lookup = dict(grab_all(search_conn[1],
+                             cmd_get_invariant_ids))
+invariant_id_lookup = dict((v, k) for k, v in
+                           invariant_func_lookup.iteritems())
+
 # Load the list of invariants to compute
 options = load_options()
 func_names = options["invariant_function_names"]
@@ -48,31 +58,39 @@ special_conditionals = options["sequence_info"]["special_conditionals"]
 excluded_terms = options["sequence_info"]["excluded_terms"]
 
 # Look for missing values or errors in the database
-cmd_find_NULL = '''
-SELECT COUNT(*) FROM invariant_integer
-WHERE {} IS NULL'''
-logging.info("Checking database consistency")
-err_msg = "{} at n={} missing {} values"
-missing_err_list = []
-for name in func_names:
-    if name not in excluded_terms:
-        for n, conn in search_conn.items():
-            check = grab_scalar(conn, cmd_find_NULL.format(name))
-            if check:
-                missing_err_list.append(err_msg.format(name, n, check))
-if missing_err_list:
-    raise ValueError('\n'.join(missing_err_list))
+cmd_find_NULL ='''
+SELECT invariant_id FROM invariant_integer
+WHERE value IS NULL
+GROUP BY invariant_id
+'''
+for n, conn in search_conn.items():
+    bad_idx = grab_vector(conn,cmd_find_NULL)
+    for idx in bad_idx:
+        msg = "invariant {} not completed for N={}"
+        logging.error(msg.format(invariant_func_lookup[idx],n))
+    if bad_idx:
+        err = "Invariant calculation incomplete"
+        raise ValueError(err)
 
 # Add the known functions to the reference list
-cmd_insert = '''INSERT OR IGNORE INTO ref_invariant_integer
-(function_name) VALUES (?)'''
-seq_conn.executemany(cmd_insert, [(x,) for x in func_names])
+cmd_insert = '''
+INSERT OR IGNORE INTO ref_invariant_integer
+(invariant_id, function_name) VALUES (?,?)'''
+
+cursor = search_conn[1].execute('''
+    SELECT invariant_id, function_name FROM
+    invariant_integer_functions''')
+seq_conn.executemany(cmd_insert, cursor)
 seq_conn.commit()
 
 # Build the lookup table
-cmd = '''SELECT function_name,invariant_id FROM ref_invariant_integer
-ORDER BY invariant_id'''
-ref_lookup = dict(grab_all(seq_conn, cmd))
+cmd_lookup = '''
+SELECT function_name,invariant_id
+FROM ref_invariant_integer
+ORDER BY invariant_id
+'''
+
+ref_lookup = dict(grab_all(seq_conn, cmd_lookup))
 ref_lookup_inv = {v: k for k, v in ref_lookup.items()}
 func_names = ref_lookup.keys()
 
@@ -82,34 +100,42 @@ unique_computed_functions = set(grab_vector(seq_conn, cmd))
 
 # Find all the unique values for each invariant,
 # skipping those that have been computed already
-cmd_find = '''SELECT DISTINCT {} FROM invariant_integer'''
-cmd_save = '''INSERT INTO unique_invariant_val(invariant_val_id, value)
-VALUES (?,?)'''
-cmd_mark_computed = '''INSERT OR REPLACE INTO
-computed(function_name) VALUES ("{}")'''
+cmd_find = '''
+SELECT DISTINCT value FROM invariant_integer
+WHERE invariant_id=?
+'''
 
-for k, f in enumerate(set(func_names).difference(unique_computed_functions)):
+cmd_save = '''
+INSERT OR IGNORE INTO unique_invariant_val
+(invariant_id, value) VALUES ({},?)
+'''
+
+cmd_mark_computed = '''
+INSERT OR REPLACE INTO
+computed(function_name) VALUES (?)
+'''
+
+
+remaining_compute_funcs = set(func_names).difference(unique_computed_functions)
+
+for f in remaining_compute_funcs:
     logging.info("Computing unique values for {}".format(f))
 
-    unique_vals = set()
+    idx = invariant_id_lookup[f]
+
     for n in search_conn:
-        vals = grab_vector(search_conn[n], cmd_find.format(f))
-        unique_vals.update(vals)
+        cursor = search_conn[n].execute(cmd_find, (idx,))
+        cmd    = cmd_save.format(idx)
+        seq_conn.executemany(cmd, cursor)
 
-    invar_id = ref_lookup[f]
-
-    for x in unique_vals:
-        seq_conn.execute(cmd_save, (invar_id, x))
-
-    seq_conn.execute(cmd_mark_computed.format(f))
-
-    if k and k % cargs["commit_freq"] == 0:
-        seq_conn.commit()
-
+    seq_conn.execute(cmd_mark_computed,(f,))
 seq_conn.commit()
 
+
 # Check unique values for consistancy
-cmd_find = '''SELECT invariant_val_id, value FROM unique_invariant_val'''
+cmd_find = '''
+SELECT invariant_id, value
+FROM unique_invariant_val'''
 warn_flag = False
 for invar_id, val in grab_all(seq_conn, cmd_find):
     if not isinstance(val, int):
@@ -123,11 +149,11 @@ if warn_flag:
 
 # Build a list of all level 1 sequences
 cmd_find = '''
-SELECT unique_invariant_id, invariant_val_id, value FROM
-unique_invariant_val ORDER BY invariant_val_id,value'''
+SELECT unique_invariant_id, invariant_id, value FROM
+unique_invariant_val ORDER BY invariant_id,value'''
 cmd_add = '''
 INSERT OR IGNORE INTO ref_sequence_level1
-(unique_invariant_id, invariant_val_id, conditional, value)
+(unique_invariant_id, invariant_id, conditional, value)
 VALUES (?,?,?,?)'''
 
 for uid, invar_id, value in grab_all(seq_conn, cmd_find):
@@ -149,28 +175,34 @@ seq_conn.commit()
 # Compute all level 1 sequences
 cmd_find_remaining = '''
 SELECT
-sequence_id,conditional,invariant_val_id,value
+sequence_id,conditional,invariant_id,value
 FROM ref_sequence_level1 WHERE sequence_id NOT IN
 (SELECT sequence_id FROM sequence WHERE query_level=1)'''
 
 remaining_seq_info = grab_all(seq_conn, cmd_find_remaining)
 if remaining_seq_info:
-    msg = "Starting {} level 1 sequences".format(len(remaining_seq_info))
-    logging.info(msg)
+    msg = "Starting {} level 1 sequences"
+    logging.info(msg.format(len(remaining_seq_info)))
 
 cmd_sequence = '''
-SELECT COUNT(*) FROM invariant_integer WHERE {} {} {}'''
+SELECT COUNT(*) FROM invariant_integer
+WHERE invariant_id=?
+AND value{conditional}?
+'''.strip()
 
 cmd_save = '''INSERT INTO sequence({}) VALUES ({})'''
-s_string = ["sequence_id", "query_level"] + ["s%i" % i for i in search_conn]
+s_string = (["sequence_id", "query_level"] +
+            ["s%i" % i for i in search_conn])
 q_string = ["?"] * len(s_string)
 cmd_save = cmd_save.format(','.join(s_string),
                            ','.join(q_string))
 
-for k, (s_id, conditional, invar_id, value) in enumerate(remaining_seq_info):
+for k, item in enumerate(remaining_seq_info):
+    (s_id, conditional, invar_id, value) = item
     func_name = ref_lookup_inv[invar_id]
-    cmd = cmd_sequence.format(func_name, conditional, value)
-    seq = [grab_scalar(search_conn[n], cmd) for n in search_conn]
+    cmd = cmd_sequence.format(conditional=conditional)
+    seq = [grab_scalar(search_conn[n], cmd, (invar_id,value))
+           for n in search_conn]
 
     items = [s_id, 1] + seq
     seq_conn.execute(cmd_save, items)
@@ -182,7 +214,6 @@ for k, (s_id, conditional, invar_id, value) in enumerate(remaining_seq_info):
         seq_conn.commit()
 
 seq_conn.commit()
-
 
 # Function to compute the number of non-zero terms in a seq and record it
 
@@ -206,14 +237,13 @@ def compute_non_zero_terms(level):
         non_zero_n = sum([1 for x in seq if x > 0])
         seq_conn.execute(cmd_mark, (non_zero_n, sid, level))
 
-
 compute_non_zero_terms(1)
 seq_conn.commit()
+
 
 # Build a list of all level 2 sequences
 # They must have at least 4 non-zero terms in them
 
-logging.info("Starting level 2 sequences")
 
 cmd_select_valid = '''
 SELECT sequence_id FROM stat_sequence
@@ -223,7 +253,7 @@ valid_seqs = grab_vector(seq_conn, cmd_select_valid)
 
 # Filter for those not valid
 cmd_select = '''
-SELECT sequence_id, invariant_val_id, conditional, value
+SELECT sequence_id, invariant_id, conditional, value
 FROM ref_sequence_level1'''
 
 base_seq = [x for x in grab_all(seq_conn, cmd_select) if x[0] in valid_seqs]
@@ -231,8 +261,8 @@ pair_terms = itertools.combinations(base_seq, 2)
 
 cmd_add = '''
 INSERT OR IGNORE INTO ref_sequence_level2
-(unique_invariant_id1, invariant_val_id1, conditional1, value1,
- unique_invariant_id2, invariant_val_id2, conditional2, value2)
+(unique_invariant_id1, invariant_id1, conditional1, value1,
+ unique_invariant_id2, invariant_id2, conditional2, value2)
 VALUES (?,?,?,?, ?,?,?,?)'''
 
 # Remove those that share an invariant_val_id
@@ -245,8 +275,8 @@ seq_conn.commit()
 cmd_find_remaining = '''
 SELECT
  sequence_id,
- invariant_val_id1, conditional1, value1,
- invariant_val_id2, conditional2, value2
+ invariant_id1, conditional1, value1,
+ invariant_id2, conditional2, value2
  FROM ref_sequence_level2 WHERE sequence_id NOT IN
  (SELECT sequence_id FROM sequence WHERE query_level=2)'''
 
@@ -258,21 +288,29 @@ if remaining_seq_info:
 # Compute level 2 sequences
 
 cmd_sequence = '''
-SELECT COUNT(*) FROM invariant_integer WHERE {} {} {} AND {} {} {}'''
+SELECT COUNT(*) FROM invariant_integer AS A
+JOIN invariant_integer AS B
+ON A.graph_id=B.graph_id
+WHERE
+A.invariant_id=? AND A.value{conditional1}?
+AND
+B.invariant_id=? AND B.value{conditional2}?
+'''
 
 for k, (s_id, id1, c1, v1, id2, c2, v2) in enumerate(remaining_seq_info):
     func_name1 = ref_lookup_inv[id1]
     func_name2 = ref_lookup_inv[id2]
 
-    cmd = cmd_sequence.format(func_name1, c1, v1, func_name2, c2, v2)
-    seq = [grab_scalar(search_conn[n], cmd) for n in search_conn]
+    cmd = cmd_sequence.format(conditional1=c1,conditional2=c2)
+    seq = [grab_scalar(search_conn[n], cmd, (id1,v1,id2,v2))
+           for n in search_conn]
 
     items = [s_id, 2] + seq
     seq_conn.execute(cmd_save, items)
 
-    msg = "Level 2 seq: {} {} {} AND {} {} {}\n{}".format(func_name1, c1, v1,
-                                                          func_name2, c2, v2,
-                                                          seq)
+    msg = "Level 2 seq: \n\t{}{}{} AND \n\t{}{}{}\n\t\t{}".format(func_name1, c1, v1,
+                                                      func_name2, c2, v2,
+                                                      seq)
     logging.info(msg)
 
     if k and k % cargs["commit_freq"] == 0:
