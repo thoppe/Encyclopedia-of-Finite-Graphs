@@ -1,10 +1,9 @@
 import itertools
 import os
+import sys
 import fractions
 import subprocess
 import networkx as nx
-import graph_tool.topology
-import graph_tool.draw
 
 import numpy as np
 import sympy
@@ -12,6 +11,13 @@ import pulp
 
 from functools import wraps
 from helper_functions import require_arguments
+
+try:
+    import graph_tool.topology
+    import graph_tool.draw
+except ImportError:
+    print "ERROR: The module graph_tool must be installed externally."
+    sys.exit(1)
 
 __script_dir = os.path.dirname(os.path.realpath(__file__))
 

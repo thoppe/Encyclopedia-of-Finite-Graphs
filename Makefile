@@ -1,11 +1,28 @@
 # Debugging/Testing commands
+test_N = 4
 
-test_N = 7
+max_n = 10
+possible_N_values = $(shell seq 1 ${max_n})
+
 all:
 	python src/generate_graphs.py $(test_N)
 	python src/update_special2.py $(test_N)
 	python src/update_invariants.py $(test_N)
 	python src/build_distinct_seq.py $(test_N)
+
+# Must be called first
+compile:
+	pip install -r requirements.txt
+	(cd src/bliss && make gmp)
+	(cd src/independent_edge_sets && make)
+	(cd src/independent_vertex_sets && make)
+
+# Build all databases
+build:
+	make generate
+	make compute
+	make sequence
+
 clean:
 	rm -vf database/special/graph$(test_N)_special.db
 	rm -vf database/graph$(test_N).db
@@ -21,14 +38,6 @@ view_special:
 
 report_lvl1:
 	python verification/lvl1_report.py > verification/raw_lvl1.md
-
-max_n = 7
-possible_N_values = $(shell seq 1 ${max_n})
-
-build:
-	make generate
-	make compute
-	make sequence
 
 generate:
 	$(foreach n,$(possible_N_values),python src/generate_graphs.py $(n);)
@@ -65,22 +74,6 @@ options:
 test:
 	python src/unit_tests.py
 
-commit:
-	-@make push
-
-push:
-#	-@make all
-	git add -u
-	git status
-	-git commit
-	git push
-pull:
-	git pull
-
 full_clean:
 	rm -rvf database/*
 
-compile:
-	(cd src/bliss && make gmp)
-	(cd src/independent_edge_sets && make)
-	(cd src/independent_vertex_sets && make)

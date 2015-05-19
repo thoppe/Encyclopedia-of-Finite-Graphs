@@ -1,0 +1,5 @@
+sympy>=0.7.6
+PuLP>=1.5.9
+networkx>=1.9.1
+numpy>=1.9.2
+pygraphviz>=1.2
