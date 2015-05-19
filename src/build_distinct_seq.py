@@ -21,7 +21,7 @@ logging.root.setLevel(logging.INFO)
 # Load the list of invariants to compute
 distinct_seq_names = load_options()["distinct_sequences"]
 
-##########################################################################
+######################################################################
 
 # Load the special database
 sconn = load_graph_database(N, check_exist=True, special=True)
@@ -33,23 +33,31 @@ load_sql_script(dconn, "templates/distinct.sql")
 # Create an index on graph_id if it doesn't exist yet!
 cmd_index = '''CREATE INDEX IF NOT EXISTS idx_{} ON {} (graph_id)'''
 for name in distinct_seq_names:
+    #msg = "Creating index {}"
+    #logging.info(msg.format(name))
     sconn.execute(cmd_index.format(name, name))
 sconn.commit()
 
 # If forced, drop the terms previously computed
-cmd_remove = '''DELETE FROM distinct_sequence WHERE N=(?) AND function_name=(?)'''
+cmd_remove = '''
+DELETE FROM distinct_sequence
+WHERE N=(?) AND function_name=?
+'''
+
 if cargs["force"]:
     for name in distinct_seq_names:
         dconn.execute(cmd_remove, (N, name))
 
 # Skip terms that have already been computed
-cmd_computed = '''SELECT function_name FROM distinct_sequence WHERE N=(?)'''
+cmd_computed = '''
+SELECT function_name FROM distinct_sequence WHERE N=?'''
 known_terms = set(grab_vector(dconn, cmd_computed, (N,)))
+
 
 for term in known_terms.intersection(distinct_seq_names):
     del distinct_seq_names[term]
 
-##########################################################################
+######################################################################
 
 
 def build_collection(target_function, target_columns):

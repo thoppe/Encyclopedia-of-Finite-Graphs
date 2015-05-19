@@ -332,3 +332,8 @@ def compute_parallel(
     os.fsync(FOUT.fileno())
     FOUT.close()
     import_csv_to_table(function_name, N, connection, cmd_insert)
+
+    P.close()
+    P.join()
+    P.terminate()
+    del P

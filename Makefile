@@ -1,6 +1,6 @@
 # Debugging/Testing commands
 
-test_N = 8
+test_N = 4
 all:
 	python src/generate_graphs.py $(test_N)
 	python src/update_special2.py $(test_N)
@@ -22,7 +22,7 @@ view_special:
 report_lvl1:
 	python verification/lvl1_report.py > verification/raw_lvl1.md
 
-max_n = 10
+max_n = 7
 possible_N_values = $(shell seq 1 ${max_n})
 
 build:
