@@ -1,6 +1,7 @@
 import logging
 import argparse
 import inspect
+import itertools
 import collections
 from helper_functions import (load_graph_database, select_itr,
                               grab_vector, grab_all, grab_scalar,
@@ -14,9 +15,13 @@ parser.add_argument('--chunksize', type=int,
                     help="Entries to compute before insert is called",
                     default=1000)
 
-help_msg = "Runs the computation in debug mode [not parallel, no commit]"
+msg = "Runs the computation in debug mode [not parallel, no commit]"
 parser.add_argument('--debug', default=False, action="store_true",
-                    help=help_msg)
+                    help=msg)
+
+msg = "Runs the in serial mode [no parallel]"
+parser.add_argument('--no_parallel', default=False, action="store_true",
+                    help=msg)
 
 cargs = vars(parser.parse_args())
 N = cargs["N"]
@@ -25,7 +30,7 @@ N = cargs["N"]
 logging.root.setLevel(logging.INFO)
 
 # Load the database
-conn = load_graph_database(cargs["N"])
+conn  = load_graph_database(cargs["N"])
 sconn = load_graph_database(cargs["N"], special=True)
 
 logging.info("Starting invariant calculation for {N}".format(**cargs))
@@ -44,37 +49,21 @@ for name in invariant_names:
         err = "Invariant function {} not defined".format(name)
         raise KeyError(err)
 
-# Get a list of the column names
-col_names = grab_col_names(conn, "invariant_integer")
-
-# Add any columns that do not exist yet
-cmd_insert = '''
-ALTER TABLE invariant_integer
-ADD COLUMN {name} INTEGER;
+# Insert the list of invariants to compute, ignore if already done
+cmd_insert_names = '''
+INSERT OR IGNORE INTO invariant_integer_functions
+(function_name) VALUES (?)
 '''
+name_ITR = zip(*[invariant_names])
+conn.executemany(cmd_insert_names, name_ITR)
+conn.commit()
 
-alter_script = []
-for name in invariant_names:
-    if name not in col_names:
-        logging.info("Adding column {name}".format(name=name))
-        alter_script.append(cmd_insert.format(name=name))
-if alter_script:
-    alter_script = '\n'.join(alter_script)
-    conn.executescript(alter_script)
-    conn.commit()
-
-# Add in the graph_id's from one table to another if missing
-n_graph = grab_scalar(conn, "SELECT COUNT(*) FROM graph")
-n_invariant_conn = grab_scalar(conn, "SELECT COUNT(*) FROM invariant_integer")
-cmd_insert_new = '''
-INSERT OR IGNORE INTO invariant_integer (graph_id)
-SELECT graph_id FROM graph
+# Get the invariant_ids
+cmd_get_invariant_ids = '''
+SELECT function_name, invariant_id FROM
+invariant_integer_functions
 '''
-
-if n_graph != n_invariant_conn:
-    logging.info("Adding rows to table invariant_integer")
-    conn.execute(cmd_insert_new)
-    conn.commit()
+invariant_id_lookup = dict(grab_all(conn,cmd_get_invariant_ids))
 
 # List any special rules for the invariants
 special_invariants = {
@@ -96,16 +85,48 @@ special_invariants = {
 
 ######################################################################
 
+# Allocate the space for all the invariants
+cmd_allocate = '''
+INSERT INTO invariant_integer (graph_id, invariant_id)
+VALUES (?,{})
+'''
+
+cmd_check_if_allocated = '''
+SELECT COUNT(*) FROM invariant_integer
+WHERE invariant_id=? LIMIT 1
+'''
+msg = "Allocating space for {}"
+
+for name in invariant_names:
+    idx = invariant_id_lookup[name]
+    is_allocated = grab_scalar(conn, cmd_check_if_allocated, (idx,))
+
+    if not is_allocated:
+        logging.info(msg.format(name))
+        cmd = cmd_allocate.format(idx)
+        ITR = conn.execute("SELECT graph_id FROM graph")
+        conn.executemany(cmd, ITR)
+
+conn.commit()
+
+
+######################################################################
+
 def graph_target_iterator(func_name):
 
+    idx = invariant_id_lookup[name]
     cmd_grab = '''
-      SELECT a.graph_id, a.adj FROM graph AS a
-      JOIN invariant_integer AS b
-      ON a.graph_id == b.graph_id WHERE b.{} IS NULL
-      '''.format(func_name)
+        SELECT A.graph_id, A.adj FROM graph AS A
+        JOIN invariant_integer B ON A.graph_id=B.graph_id
+        WHERE B.value IS NULL
+        AND   B.invariant_id=?
+    '''
+    cursor = conn.execute(cmd_grab, (idx,))
 
-    for g_id, adj in select_itr(conn, cmd_grab):
+    for g_id, adj in cursor:
         yield (g_id, adj, {"N": N})
+
+
 
 def iterator_degree_sequence(func_name):
     itr = graph_target_iterator(func_name)
@@ -174,15 +195,19 @@ def iterator_IES(func_name):
 
 ######################################################################
 
-# Identify the invariants that have been computed
-cmd = '''SELECT function_name FROM computed'''
-computed_invariant_functions = grab_vector(conn, cmd)
-remaining_invariant_functions = [x for x in invariant_names
-                                 if x not in computed_invariant_functions]
-
+# Identify the invariants yet to be computed
+cmd_find_remaining = '''
+SELECT function_name FROM invariant_integer_functions
+WHERE is_computed=0
+'''
+remaining_invariant_functions = grab_vector(conn,cmd_find_remaining)
 ignored_invariants = []
 
-cmd_mark_success = '''INSERT OR IGNORE INTO computed (function_name) VALUES (?)'''
+cmd_mark_success = '''
+UPDATE invariant_integer_functions SET
+is_computed=1
+WHERE function_name = ?
+'''
 
 compute_invariant_functions = [x for x in remaining_invariant_functions
                                if x not in ignored_invariants]
@@ -196,18 +221,24 @@ special_iterator_mapping = {
     "independent_edge_sets": iterator_IES,
 }
 
-if compute_invariant_functions:
-    msg = "Remaining invariants to compute {}"
-    # logging.info(msg.format(compute_invariant_functions))
+#if compute_invariant_functions:
+#    msg = "Remaining invariants to compute {}"
+#    logging.info(msg.format(compute_invariant_functions))
+
 
 for func_name in compute_invariant_functions:
 
     msg = "Starting calculation for {name}"
     logging.info(msg.format(name=func_name))
 
+    function_idx = invariant_id_lookup[func_name]
+    
     cmd_insert = '''
-      UPDATE invariant_integer SET {} = (?)
-      WHERE  graph_id=(?)'''.format(func_name)
+      UPDATE invariant_integer
+      SET value=?
+      WHERE graph_id=?
+      AND   invariant_id={}
+      '''.format(function_idx)
 
     import_csv_to_table(func_name, N, conn, cmd_insert)
 
@@ -228,16 +259,36 @@ for func_name in compute_invariant_functions:
     def pfunc(items):
         (g_id, adj, args) = items
         result = int(func(adj, **args))
-        return result, ((g_id,),)
+
+        msg = "Computing {} for graph_id {}".format(func_name, g_id)
+        if (g_id-1)%1000==0:
+            logging.info(msg)
+        
+        return result, g_id
 
     logging.info("Computing N={}, {} ".format(N, func_name))
 
     if not cargs["debug"]:
-        compute_parallel(func_name, conn, pfunc,
-                         cmd_insert, targets, N)
+
+        if not cargs["no_parallel"]:
+            import multiprocessing
+            P = multiprocessing.Pool()
+            P_ITR = P.imap(pfunc, targets)
+        else:
+            P_ITR = itertools.imap(pfunc, targets)
+            
+        conn.executemany(cmd_insert, P_ITR)
         conn.execute(cmd_mark_success, (func_name,))
-        logging.info("Commiting changes")
         conn.commit()
+        logging.info("Completed {}".format(func_name))
+
+        if not cargs["no_parallel"]:
+            P.close()
+            P.join()
+            P.terminate()
+            del P
+            
+        
 
     else:
         print func_name
@@ -246,15 +297,13 @@ for func_name in compute_invariant_functions:
             print g_id, adj, result
 
 
-exit()
-
-            
 # Create any missing indicies
-cmd_index = '''CREATE INDEX IF NOT EXISTS
-"idx_{name}" ON "invariant_integer" ("{name}" ASC);'''
+cmd_index = '''
+CREATE INDEX IF NOT EXISTS
+idx_invariant_id ON
+invariant_integer (invariant_id ASC)'''
 logging.info("Creating indices {N}".format(N=N))
-for name in invariant_names:
-    conn.executescript(cmd_index.format(name=name))
-    conn.commit()
 
+conn.executescript(cmd_index.format(name=name))
+conn.commit()
 conn.close()

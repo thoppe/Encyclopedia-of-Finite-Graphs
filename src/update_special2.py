@@ -18,7 +18,8 @@ logging.root.setLevel(logging.INFO)
 
 # Load the database
 conn = load_graph_database(N)
-logging.info("Starting special invariant calculation for {N}".format(**cargs))
+msg = "Starting special invariant calculation for {N}"
+logging.info(msg.format(**cargs))
 
 ######################################################################
 
@@ -46,13 +47,13 @@ special_names = [x for x in special_names if x not in ignored]
 cmd_check = '''SELECT function_name FROM computed'''
 computed_functions = set(grab_vector(sconn, cmd_check))
 
-#########################################################################
+######################################################################
 # Count the total number of graphs
 #cmd_check = '''SELECT COUNT(graph_id) FROM graph'''
 #gn = grab_scalar(conn,cmd_check)
 #logging.info("Total graphs found for N={}, {}".format(N,gn))
 
-#########################################################################
+######################################################################
 # Helper commands
 
 
@@ -101,7 +102,7 @@ def check_computed(target_function, pfunc, cmd_custom_insert):
         sconn.execute(cmd_mark_computed, (target_function,))
         sconn.commit()
 
-#########################################################################
+######################################################################
 # First compute the degree sequence
 
 target_function = "degree_sequence"
@@ -113,7 +114,7 @@ def pfunc_degree(item):
 cmd_insert = '''INSERT INTO {} (graph_id, degree) VALUES (?,?)'''
 check_computed(target_function, pfunc_degree, cmd_insert)
 
-#########################################################################
+######################################################################
 # Now compute the fractional chromatic number
 
 target_function = "fractional_chromatic_number"
@@ -126,7 +127,7 @@ def pfunc_frac_chrom(item):
 cmd_insert = '''INSERT INTO {} (graph_id, a, b) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_frac_chrom, cmd_insert)
 
-#########################################################################
+######################################################################
 # Now compute the Tutte polynomials
 
 target_function = "tutte_polynomial"
@@ -140,7 +141,7 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, x_degree, y_degree, coeff) VALUES (?,?,?,?)'''
 check_computed(target_function, pfunc_tutte, cmd_insert)
 
-#########################################################################
+######################################################################
 # Now compute the cycle basis
 
 target_function = "cycle_basis"
@@ -154,7 +155,7 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, cycle_k, idx) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_cycle_basis, cmd_insert)
 
-#########################################################################
+######################################################################
 # Now compute the independent vertex sets
 
 target_function = "independent_vertex_sets"
@@ -168,7 +169,7 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, vertex_map) VALUES (?,?)'''
 check_computed(target_function, pfunc_IVS, cmd_insert)
 
-#########################################################################
+######################################################################
 # Now compute the independent edge sets
 
 target_function = "independent_edge_sets"
@@ -182,7 +183,7 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, edge_map) VALUES (?,?)'''
 check_computed(target_function, pfunc_IES, cmd_insert)
 
-#########################################################################
+######################################################################
 # Now compute the graph Laplacian
 
 target_function = "laplacian_polynomial"
@@ -196,7 +197,7 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, x_degree, coeff) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_LAP, cmd_insert)
 
-#########################################################################
+######################################################################
 # Now compute the characteristic polynomial of the adj matrix
 
 target_function = "characteristic_polynomial"
@@ -210,7 +211,7 @@ cmd_insert    = '''INSERT INTO {}
 (graph_id, x_degree, coeff) VALUES (?,?,?)'''
 check_computed(target_function, pfunc_CHARPOLY, cmd_insert)
 
-#########################################################################
+######################################################################
 # Now compute the chromatic polynomial, this is special since it needs
 # the previously computed Tutte polynomial as input
 

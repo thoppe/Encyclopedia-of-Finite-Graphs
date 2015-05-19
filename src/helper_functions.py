@@ -306,7 +306,7 @@ def compute_parallel(
     f_landing_table = generate_landing_table_name(function_name, N)
 
     P = multiprocessing.Pool()
-    sol = P.imap(pfunc, targets, chunksize=5)
+    sol = P.imap(pfunc, targets, chunksize=100)
 
     # if os.path.exists(f_landing_table):
     #    err_msg = "{} already exists (it should not)!"

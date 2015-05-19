@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS invariant_integer(
 -- Integer invariant function names
 CREATE TABLE IF NOT EXISTS invariant_integer_functions (
     invariant_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    function_name TEXT,
+    function_name TEXT UNIQUE,
     -- Marks if an invariant has been computed
     is_computed BOOL DEFAULT 0
 );
