@@ -6,13 +6,17 @@ CREATE TABLE IF NOT EXISTS graph(
 );
 
 -- Invariant table for integers
-
 CREATE TABLE IF NOT EXISTS invariant_integer(
-      graph_id   INTEGER PRIMARY KEY
+    graph_id      INTEGER NOT NULL,
+    invariant_id  INTEGER NOT NULL,
+    value         INTEGER,
+    PRIMARY KEY (graph_id, invariant_id)
 );
 
--- Marks if an invariant has been computed
-
-CREATE TABLE IF NOT EXISTS computed(
-  function_name TEXT PRIMARY KEY
+-- Integer invariant function names
+CREATE TABLE IF NOT EXISTS invariant_integer_functions (
+    invariant_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    function_name TEXT,
+    -- Marks if an invariant has been computed
+    is_computed BOOL DEFAULT 0
 );

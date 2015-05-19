@@ -2,6 +2,7 @@ import logging
 import argparse
 import os
 import subprocess
+import itertools
 import numpy as np
 import helper_functions
 
@@ -30,7 +31,6 @@ does_db_file_exist = os.path.exists(f_database)
 conn = helper_functions.load_graph_database(cargs["N"], False)
 
 f_graph_template = "templates/graphs.sql"
-
 logging.info("Templating database via %s" % f_graph_template)
 
 # Load the graph template
@@ -40,14 +40,13 @@ with open(f_graph_template) as FIN:
     conn.commit()
 
 # Check if the database is populated, if so exit
-cmd_check = '''SELECT COUNT(*) FROM computed WHERE function_name="adj"'''
+cmd_check = '''SELECT COUNT(*) FROM graph'''
 is_populated = helper_functions.grab_scalar(conn, cmd_check)
-
 if is_populated:
     err = "Database {N} has been populated. Skipping nauty."
     logging.info(err.format(**cargs))
     exit()
-
+    
 ######################################################################
 
 
@@ -91,8 +90,9 @@ def insert_graph_list(index_list):
     msg = "Inserting {} values into graph.adj"
     logging.info(msg.format(len(index_list)))
 
-    cmd_add = "INSERT OR IGNORE INTO graph (adj) VALUES (?)"
-    conn.executemany(cmd_add, zip(*[index_list]))
+    cmd_add = "INSERT INTO graph (adj) VALUES (?)"
+    data_ITR = itertools.izip(*[index_list])
+    conn.executemany(cmd_add, data_ITR)
 
 ######################################################################
 
@@ -105,9 +105,6 @@ PC = helper_functions.parallel_compute
 PC(all_graph_itr,
    convert_edge_to_adj,
    callback=insert_graph_list, **cargs)
-
-cmd_mark = '''INSERT OR IGNORE INTO computed VALUES ("adj")'''
-conn.execute(cmd_mark)
 
 # Double check we added this many
 cmd = "SELECT COUNT(*) from graph"
