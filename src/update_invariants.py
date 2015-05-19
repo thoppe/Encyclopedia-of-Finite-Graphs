@@ -2,9 +2,10 @@ import logging
 import argparse
 import inspect
 import collections
-from helper_functions import load_graph_database, select_itr
-from helper_functions import grab_vector, grab_all, grab_scalar, import_csv_to_table
-from helper_functions import compute_parallel, grab_col_names, load_options
+from helper_functions import (load_graph_database, select_itr,
+                              grab_vector, grab_all, grab_scalar,
+                              import_csv_to_table, compute_parallel,
+                              grab_col_names, load_options)
 
 desc = "Updates the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -12,6 +13,7 @@ parser.add_argument('N', type=int)
 parser.add_argument('--chunksize', type=int,
                     help="Entries to compute before insert is called",
                     default=1000)
+
 help_msg = "Runs the computation in debug mode [not parallel, no commit]"
 parser.add_argument('--debug', default=False, action="store_true",
                     help=help_msg)
@@ -33,7 +35,8 @@ invariant_names = options["invariant_function_names"]
 
 # Create a mapping to all the known invariant functions
 import invariants
-invariant_funcs = dict(inspect.getmembers(invariants, inspect.isfunction))
+invariant_funcs = dict(inspect.getmembers(invariants,
+                                          inspect.isfunction))
 
 # Make sure all invariant functions are defined
 for name in invariant_names:
@@ -45,7 +48,11 @@ for name in invariant_names:
 col_names = grab_col_names(conn, "invariant_integer")
 
 # Add any columns that do not exist yet
-cmd_insert = '''ALTER TABLE invariant_integer ADD COLUMN {name} INTEGER;'''
+cmd_insert = '''
+ALTER TABLE invariant_integer
+ADD COLUMN {name} INTEGER;
+'''
+
 alter_script = []
 for name in invariant_names:
     if name not in col_names:
@@ -87,7 +94,7 @@ special_invariants = {
     "maximal_independent_edge_set": "independent_edge_sets",
 }
 
-#########################################################################
+######################################################################
 
 def graph_target_iterator(func_name):
 
@@ -165,7 +172,7 @@ def iterator_IES(func_name):
         args["independent_edge_sets"] = grab_all(sconn, cmd, (g_id,))
         yield (g_id, adj, args)
 
-#########################################################################
+######################################################################
 
 # Identify the invariants that have been computed
 cmd = '''SELECT function_name FROM computed'''
