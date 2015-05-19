@@ -124,10 +124,9 @@ def grab_vector(connection, cmd, *args):
     return [x[0] for x in connection.execute(cmd, *args).fetchall()]
 
 # Helper function to only grab a scalar, like COUNT(*)
-
-
 def grab_scalar(connection, cmd, *args):
-    return [x[0] for x in connection.execute(cmd, *args).fetchall()][0]
+    cursor = connection.execute(cmd, *args)
+    return cursor.next()[0]
 
 # Helper function to get the column names
 

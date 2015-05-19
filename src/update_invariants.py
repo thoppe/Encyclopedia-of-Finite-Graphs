@@ -3,7 +3,7 @@ import argparse
 import inspect
 import collections
 from helper_functions import load_graph_database, select_itr
-from helper_functions import grab_vector, grab_all, import_csv_to_table
+from helper_functions import grab_vector, grab_all, grab_scalar, import_csv_to_table
 from helper_functions import compute_parallel, grab_col_names, load_options
 
 desc = "Updates the database for fixed N"
@@ -56,6 +56,19 @@ if alter_script:
     conn.executescript(alter_script)
     conn.commit()
 
+# Add in the graph_id's from one table to another if missing
+n_graph = grab_scalar(conn, "SELECT COUNT(*) FROM graph")
+n_invariant_conn = grab_scalar(conn, "SELECT COUNT(*) FROM invariant_integer")
+cmd_insert_new = '''
+INSERT OR IGNORE INTO invariant_integer (graph_id)
+SELECT graph_id FROM graph
+'''
+
+if n_graph != n_invariant_conn:
+    logging.info("Adding rows to table invariant_integer")
+    conn.execute(cmd_insert_new)
+    conn.commit()
+
 # List any special rules for the invariants
 special_invariants = {
     "n_cycle_basis": "cycle_basis",
@@ -76,18 +89,16 @@ special_invariants = {
 
 #########################################################################
 
-
 def graph_target_iterator(func_name):
 
     cmd_grab = '''
       SELECT a.graph_id, a.adj FROM graph AS a
       JOIN invariant_integer AS b
-      ON a.graph_id = b.graph_id WHERE b.{} IS NULL
+      ON a.graph_id == b.graph_id WHERE b.{} IS NULL
       '''.format(func_name)
 
     for g_id, adj in select_itr(conn, cmd_grab):
         yield (g_id, adj, {"N": N})
-
 
 def iterator_degree_sequence(func_name):
     itr = graph_target_iterator(func_name)
@@ -195,6 +206,7 @@ for func_name in compute_invariant_functions:
 
     if func_name not in special_invariants:
         itr = graph_target_iterator(func_name)
+        
     elif special_invariants[func_name] in special_iterator_mapping:
         special_name = special_invariants[func_name]
         itr = special_iterator_mapping[special_name](func_name)
@@ -214,17 +226,22 @@ for func_name in compute_invariant_functions:
     logging.info("Computing N={}, {} ".format(N, func_name))
 
     if not cargs["debug"]:
-        compute_parallel(func_name, conn, pfunc, cmd_insert, targets, N)
+        compute_parallel(func_name, conn, pfunc,
+                         cmd_insert, targets, N)
         conn.execute(cmd_mark_success, (func_name,))
         logging.info("Commiting changes")
         conn.commit()
 
     else:
+        print func_name
         for (g_id, adj, args) in itr:
             result = func(adj, **args)
             print g_id, adj, result
 
 
+exit()
+
+            
 # Create any missing indicies
 cmd_index = '''CREATE INDEX IF NOT EXISTS
 "idx_{name}" ON "invariant_integer" ("{name}" ASC);'''

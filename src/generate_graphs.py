@@ -109,13 +109,9 @@ PC(all_graph_itr,
 cmd_mark = '''INSERT OR IGNORE INTO computed VALUES ("adj")'''
 conn.execute(cmd_mark)
 
-cmd_copy = '''
-INSERT INTO invariant_integer (graph_id) SELECT graph_id FROM graph'''
-conn.execute(cmd_copy)
-
-conn.commit()
-
 # Double check we added this many
 cmd = "SELECT COUNT(*) from graph"
 actually_present = conn.execute(cmd).fetchone()[0]
 logging.info("Database reports %i entries." % actually_present)
+
+conn.commit()

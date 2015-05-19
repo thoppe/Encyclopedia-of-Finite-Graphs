@@ -1,10 +1,10 @@
 import logging
 import argparse
 
-from helper_functions import load_graph_database, select_itr, load_options
-from helper_functions import attach_table, generate_special_database_name
-from helper_functions import grab_vector, grab_all
-from helper_functions import compute_parallel
+from helper_functions import (load_graph_database, select_itr,
+                              load_options, attach_table,
+                              generate_special_database_name,
+                              grab_vector, grab_all,compute_parallel)
 import invariants
 
 desc = "Updates the special invariants for fixed N"
@@ -20,7 +20,7 @@ logging.root.setLevel(logging.INFO)
 conn = load_graph_database(N)
 logging.info("Starting special invariant calculation for {N}".format(**cargs))
 
-#########################################################################
+######################################################################
 
 # Create the special invariant table
 f_graph_template = "templates/special_invariants.sql"
@@ -67,15 +67,18 @@ def run_compute(function_name, pfunc, cmd_insert, targets=None):
     #logging.info(msg.format(function_name, gn-g_id_n,gn))
     index_name = "idx_{}".format(function_name)
 
-    cmd_grab_targets = '''SELECT graph_id,adj FROM graph
-    WHERE graph_id NOT IN (SELECT graph_id FROM {})'''
+    cmd_grab_targets = '''
+    SELECT graph_id,adj FROM graph
+    WHERE graph_id NOT IN (SELECT graph_id FROM {})
+    '''
+    
     cmd = cmd_grab_targets.format(function_name)
     if targets is None:
         targets = select_itr(conn, cmd, chunksize=10000)
 
     # Drop an index if it exists
-    cmd_drop = '''DROP INDEX IF EXISTS "{}";'''
-    sconn.execute(cmd_drop.format(index_name))
+    cmd_drop = '''DROP INDEX IF EXISTS "{}"'''
+    sconn.execute(cmd_drop.format(index_name,))
 
     compute_parallel(function_name, sconn, pfunc, cmd_insert, targets, N)
 
@@ -102,7 +105,6 @@ def check_computed(target_function, pfunc, cmd_custom_insert):
 # First compute the degree sequence
 
 target_function = "degree_sequence"
-
 
 def pfunc_degree(item):
     (g_id, adj) = item
