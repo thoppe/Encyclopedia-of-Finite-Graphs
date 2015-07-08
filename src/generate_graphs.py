@@ -5,10 +5,15 @@ import subprocess
 import itertools
 import numpy as np
 import helper_functions
+import h5py
+import json
 
 desc = "Builds the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
+parser.add_argument('-o', '--options',
+                    default="options_simple_connected.json",
+                    help="option file")
 parser.add_argument('-f', '--force', default=False, action='store_true')
 parser.add_argument('--chunksize', type=int,
                     help="Entries to compute before insert is called",
@@ -18,7 +23,18 @@ cargs = vars(parser.parse_args())
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-f_database = helper_functions.generate_database_name(cargs["N"])
+# Load the options
+with open(cargs["options"]) as FIN:
+    options = json.loads(FIN.read())
+
+f_db = os.path.join("db", "{graph_types}_{N}.h5"
+                    .format(N=cargs["N"],**options))
+print f_db
+
+#f_db = "db/
+#f_database = helper_functions.generate_database_name(cargs["N"])
+#print f_database
+exit()
 
 # If forced, removed the old database
 if cargs["force"] and os.path.exists(f_database):

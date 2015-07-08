@@ -1,4 +1,6 @@
 {
+  "graph_types" : "simple_connected",
+
   "invariant_function_names" : [  
     "automorphism_group_n",
     "chromatic_number",
