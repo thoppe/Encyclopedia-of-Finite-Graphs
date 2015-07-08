@@ -4,9 +4,10 @@ import os
 import subprocess
 import itertools
 import numpy as np
-import helper_functions
 import h5py
 import json
+
+_max_uint_size = 18446744073709551615
 
 desc = "Builds the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -27,44 +28,19 @@ logging.root.setLevel(logging.INFO)
 with open(cargs["options"]) as FIN:
     options = json.loads(FIN.read())
 
-f_db = os.path.join("db", "{graph_types}_{N}.h5"
-                    .format(N=cargs["N"],**options))
-print f_db
+f_database = os.path.join("db", "{graph_types}_{N}.h5"
+                        .format(N=cargs["N"],**options))
 
-#f_db = "db/
-#f_database = helper_functions.generate_database_name(cargs["N"])
-#print f_database
-exit()
 
-# If forced, removed the old database
-if cargs["force"] and os.path.exists(f_database):
-    logging.warning("Removing database %s" % f_database)
-    os.remove(f_database)
-
-does_db_file_exist = os.path.exists(f_database)
-
-# Connect to the database
-conn = helper_functions.load_graph_database(cargs["N"], False)
-
-f_graph_template = "templates/graphs.sql"
-logging.info("Templating database via %s" % f_graph_template)
-
-# Load the graph template
-with open(f_graph_template) as FIN:
-    script = FIN.read()
-    conn.executescript(script)
-    conn.commit()
-
-# Check if the database is populated, if so exit
-cmd_check = '''SELECT COUNT(*) FROM graph'''
-is_populated = helper_functions.grab_scalar(conn, cmd_check)
-if is_populated:
-    err = "Database {N} has been populated. Skipping nauty."
+if os.path.exists(f_database) and not cargs["force"]:
+    err = "Database {N} has been created. Skipping generation."
     logging.info(err.format(**cargs))
     exit()
-    
-######################################################################
 
+if os.path.exists(f_database):
+    logging.warning("Removing database {}".format(f_database))
+
+######################################################################
 
 def nauty_simple_graph_itr(**args):
     ''' Creates a generator for all simple graphs using nauty '''
@@ -99,32 +75,31 @@ def convert_edge_to_adj(edges):
     # Convert the binary string to an int
     int_index = int(au, 2)
 
+    assert(int_index < _max_uint_size)
+
     return int_index
-
-
-def insert_graph_list(index_list):
-    msg = "Inserting {} values into graph.adj"
-    logging.info(msg.format(len(index_list)))
-
-    cmd_add = "INSERT INTO graph (adj) VALUES (?)"
-    data_ITR = itertools.izip(*[index_list])
-    conn.executemany(cmd_add, data_ITR)
 
 ######################################################################
 
 # Process input in parallel
 logging.info("Generating graphs in parallel from nauty")
 
-all_graph_itr = nauty_simple_graph_itr(**cargs)
+all_graph_ITR = nauty_simple_graph_itr(**cargs)
 
-PC = helper_functions.parallel_compute
-PC(all_graph_itr,
-   convert_edge_to_adj,
-   callback=insert_graph_list, **cargs)
+import multiprocessing
+P = multiprocessing.Pool()
+ITR = P.imap(convert_edge_to_adj, all_graph_ITR)
 
-# Double check we added this many
-cmd = "SELECT COUNT(*) from graph"
-actually_present = conn.execute(cmd).fetchone()[0]
-logging.info("Database reports %i entries." % actually_present)
+# Convert the data to a list before storage, we must know the size beforehand
+data = list(ITR)
 
-conn.commit()
+h5   = h5py.File(f_database, 'w')
+dset = h5.create_dataset("graphs",data=data,
+                        dtype='uint64', compression="gzip")
+
+actually_present = dset.shape[0]
+logging.info("Database reports {} entries.".format(actually_present))
+
+h5.close()
+
+
