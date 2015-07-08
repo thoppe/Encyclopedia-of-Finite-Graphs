@@ -30,6 +30,12 @@ To fully repopulate the database, it requires
 [`nauty`](http://cs.anu.edu.au/~bdm/nauty/).
 As an alternative, there is a standalone version of of the simple connected graph database for [download](http://dx.doi.org/10.5281/zenodo.11203). 
 
+*Installation*:
++ Install [`graph-tool`](https://graph-tool.skewed.de/download)
++ Create a virtualenv using the site packages `mkvirtualenv EoGF --system-site-packages`
++ Install the requirements `pip install -r requirements.txt`
+
+
 *Writeup*: 
 [_Integer sequence discovery from small graphs_](http://arxiv-web3.library.cornell.edu/abs/1408.3644)
 
