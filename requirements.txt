@@ -1,5 +1,8 @@
-sympy>=0.7.6
-PuLP>=1.5.9
-networkx>=1.9.1
-numpy>=1.9.2
-pygraphviz>=1.2
+decorator==3.4.2
+networkx==1.9.1
+numpy==1.9.2
+PuLP==1.6.0
+pygraphviz==1.2
+pyparsing==1.5.7
+sympy==0.7.6
+wheel==0.24.0
