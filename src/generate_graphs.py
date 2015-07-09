@@ -7,6 +7,8 @@ import numpy as np
 import h5py
 import json
 
+import helper_functions as helper
+
 _max_uint_size = 18446744073709551615
 _nauty_geng_exec = 'src/nauty/geng'
 _nauty_showg_exec = 'src/nauty/showg'
@@ -18,21 +20,18 @@ parser.add_argument('-o', '--options',
                     default="options_simple_connected.json",
                     help="option file")
 parser.add_argument('-f', '--force', default=False, action='store_true')
-parser.add_argument('--chunksize', type=int,
-                    help="Entries to compute before insert is called",
-                    default=10000)
 cargs = vars(parser.parse_args())
 
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
 # Load the options
-with open(cargs["options"]) as FIN:
-    options = json.loads(FIN.read())
+options = helper.load_options(cargs["options"])
 
-f_database = os.path.join("db", "{graph_types}_{N}.h5"
-                        .format(N=cargs["N"],**options))
+# Combine the options together with cargs
+cargs.update(options)
 
+f_database = helper.get_database_graph(cargs)
 
 if os.path.exists(f_database) and not cargs["force"]:
     err = "Database {N} has been created. Skipping generation."
@@ -61,7 +60,6 @@ def nauty_simple_graph_itr(**args):
         yield edge_line.strip()
 
 __upper_matrix_index = np.triu_indices(cargs["N"])
-
 
 def convert_edge_to_adj(edges):
 

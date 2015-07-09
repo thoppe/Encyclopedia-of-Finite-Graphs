@@ -1,4 +1,3 @@
-import sqlite3
 import gc
 import csv
 import os
@@ -33,7 +32,7 @@ def mkdir_p(path):
             raise
 
 
-def load_options(f_option_file="options_simple_connected.json"):
+def load_options(f_option_file):
     # Load the file into a string
     try:
         with open(f_option_file) as FIN:
@@ -49,6 +48,12 @@ def load_options(f_option_file="options_simple_connected.json"):
         msg = "Couldn't parse JSON file {}, {}".format(f_option_file, Ex)
         raise IOError(msg)
 
+
+def get_database_graph(options):
+    fname = "{graph_types}_{N}.h5"
+    return os.path.join("database",fname.format(**options))
+
+'''
 
 def generate_database_name(N):
     return os.path.join("database", "graph{}.db".format(N))
@@ -77,8 +82,8 @@ def load_distinct_database(check_exist=True, timeout=5):
 
 
 def load_graph_database(N, check_exist=True, special=False, timeout=5):
-    ''' Given an input value of N, return a connection to the
-        cooresponding database '''
+    '' Given an input value of N, return a connection to the
+        cooresponding database ''
 
     # Build the needed directories
     mkdir_p("database")
@@ -108,7 +113,7 @@ def load_sql_script(conn, f_script):
 
 
 def attach_table(conn, f_attach, as_name):
-    cmd_attach = '''ATTACH database "{}" AS "{}"'''
+    cmd_attach = ''ATTACH database "{}" AS "{}"''
     conn.execute(cmd_attach.format(f_attach, as_name))
 
 # Helper function to grab all data
@@ -132,7 +137,7 @@ def grab_scalar(connection, cmd, *args):
 
 
 def grab_col_names(connection, table):
-    cmd = '''SELECT * FROM {} LIMIT 1;'''.format(table)
+    cmd = ''SELECT * FROM {} LIMIT 1;''.format(table)
     cursor = connection.execute(cmd)
     return [x[0] for x in cursor.description]
 
@@ -145,7 +150,7 @@ def grab_col_names(connection, table):
 #                val = [ix[n] for n in index_args]
 #                VALS.append(val)
 #            yield VALS
-
+'''
 
 def select_itr(conn, cmd, chunksize=5000):
     ''' Creates an iterator over an SQL query so the

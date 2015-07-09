@@ -1,7 +1,7 @@
 # Debugging/Testing commands
 test_N = 4
 
-max_n = 10
+max_n = 8
 possible_N_values = $(shell seq 1 ${max_n})
 
 all:
