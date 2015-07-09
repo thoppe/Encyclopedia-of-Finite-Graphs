@@ -6,6 +6,8 @@ import json
 import itertools
 import logging
 import multiprocessing
+from contextlib import contextmanager
+
 from functools import wraps
 
 
@@ -52,6 +54,17 @@ def load_options(f_option_file):
 def get_database_graph(options):
     fname = "{graph_types}_{N}.h5"
     return os.path.join("database",fname.format(**options))
+
+def get_database_special(options):
+    fname = "{graph_types}_special_{N}.h5"
+    return os.path.join("database",fname.format(**options))
+
+
+def graph_iterator(graphs, N, offset=0, chunksize=1000):   
+    for i in xrange(offset, graphs.shape[0], chunksize):
+        for rep in graphs[i:i+chunksize]:
+            yield {"packed_representation":rep,"N":N}
+
 
 '''
 
@@ -152,193 +165,20 @@ def grab_col_names(connection, table):
 #            yield VALS
 '''
 
-def select_itr(conn, cmd, chunksize=5000):
-    ''' Creates an iterator over an SQL query so the
-        result isn't spammed in memory '''
+######################################################################
 
-    itr = conn.execute(cmd)
-
-    while True:
-        results = itr.fetchmany(chunksize)
-
-        if not results:
-            break
-        for result in results:
-            yield result
-
-
-def grouper(iterable, n):
-    ''' Groups an iterator into chunks of at most size n '''
-    it = iter(iterable)
-    while True:
-        chunk = tuple(itertools.islice(it, n))
-        if not chunk:
-            return
-        yield chunk
-
-
-def parallel_compute(itr, func, callback=None, **cargs):
-    '''
-    Helper to compute a function over the graphs in parallel. Uses a
-    grouper to prevent loading too much into memory at one time.
-    Returns True/False if any exceptions have been called.
-    '''
-
-    max_size = 100
-    dump_size = cargs["chunksize"]
-
-    if "CORES" not in cargs:
-        processes = multiprocessing.cpu_count()
+@contextmanager
+def parallel_compute(data_ITR, func, debug=False):
+    if debug:
+        pfunc = itertools.imap
     else:
-        processes = cargs["CORES"]
-
-    Q_IN = multiprocessing.Queue(max_size)
-    Q_OUT = multiprocessing.Queue()
-
-    def handle_CB(results):
-        if callback is not None:
-            callback(results)
-
-    def worker(q_in, q_out):
-
-        while True:
-
-            # Grab an item from the queue
-            try:
-                k, args = q_in.get()
-            except Exception as ex:
-                print ("FAIL?", ex)
-
-            # Break on final arg
-            if args == "COMPLETED":
-                break
-
-            # Process the item
-            try:
-                val = func(args)
-                # Add to result list
-
-            except Exception as ex:
-                print ("HERE!", args, func)
-
-                err = "Error on function %s" % ex
-                raise SyntaxError(err)
-                return False
-
-            q_out.put(val)
-
-        return True
-
-    # Start the processes
-    P = []
-    for _ in range(processes):
-        proc = multiprocessing.Process(target=worker,
-                                       args=(Q_IN, Q_OUT))
-        proc.damon = True
-        proc.start()
-        P.append(proc)
-
-    # Keep track of what has been added
-    counter = 0
-
-    for k, g in enumerate(itr):
-        Q_IN.put((k, g))
-        counter += 1
-
-        while Q_OUT.qsize() >= dump_size:
-            results = [Q_OUT.get() for _ in xrange(dump_size)]
-            counter -= dump_size
-            handle_CB(results)
-            gc.collect()
-
-    # Signal the End
-    for _ in range(processes):
-        Q_IN.put((None, "COMPLETED"))
-
-    Q_IN.close()
-    Q_IN.join_thread()
-
-    while counter > dump_size:
-        results = [Q_OUT.get() for _ in xrange(dump_size)]
-        counter -= dump_size
-        handle_CB(results)
-
-    final_results = [Q_OUT.get() for _ in xrange(counter)]
-    handle_CB(final_results)
-
-    # Need to properly check for errors
-    return True
-
-########################################################################
-
-
-def generate_landing_table_name(function_name, N):
-    f_landing_table = os.path.join("landing_table_{}_{}"
-                                   .format(function_name, N))
-    return f_landing_table
-
-
-def csv_validator(contents, cmd_insert):
-    # Check for the extra bit written at the end
-    expected_args = len([x for x in cmd_insert if x == "?"]) + 1
-    for k, item in enumerate(contents):
-        msg = "Inserting from landing table {}".format(k)
-        if k and k % 10000 == 0:
-            logging.info(msg)
-        if len(item) == expected_args:
-            yield item[:-1]
-
-
-def import_csv_to_table(function_name, N, table, cmd_insert):
-    f_landing_table = generate_landing_table_name(function_name, N)
-
-    if os.path.exists(f_landing_table):
-        logging.info("Saving from landing table {}".format(f_landing_table))
-
-        with open(f_landing_table) as csvfile:
-            contents = csv.reader(csvfile, delimiter=',')
-            valid_contents = csv_validator(contents, cmd_insert)
-            table.executemany(cmd_insert, valid_contents)
-            table.commit()
-        os.remove(f_landing_table)
-
-
-def compute_parallel(
-        function_name,
-        connection,
-        pfunc, cmd_insert, targets, N):
-
-    f_landing_table = generate_landing_table_name(function_name, N)
-
-    P = multiprocessing.Pool()
-    sol = P.imap(pfunc, targets, chunksize=100)
-
-    # if os.path.exists(f_landing_table):
-    #    err_msg = "{} already exists (it should not)!"
-    #    raise ValueError(err_msg.format(f_landing_table))
-
-    cmd_insert = cmd_insert.format(function_name)
-    FOUT = open(f_landing_table, 'w')
-
-    for k, (g_id, terms) in enumerate(sol):
-
-        for item in terms:
-            s = ','.join(["{}"] * (len(item) + 1))
-            s = s.format(g_id, *item)
-            s += ',1\n'  # Validator bit
-            FOUT.write(s)
-
-        if k and k % 5000 == 0:
-            msg = "Saving {} graphs ({})".format(function_name, k)
-            logging.info(msg)
-            FOUT.flush()
-            # os.fsync(FOUT.fileno())
-
-    os.fsync(FOUT.fileno())
-    FOUT.close()
-    import_csv_to_table(function_name, N, connection, cmd_insert)
-
-    P.close()
-    P.join()
-    P.terminate()
-    del P
+        P     = multiprocessing.Pool()
+        pfunc = P.imap
+    yield pfunc(func,data_ITR)
+    
+    if not debug:
+        P.close()
+        P.join()
+        P.terminate()
+        del P
+        

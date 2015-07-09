@@ -2,7 +2,6 @@ import logging
 import argparse
 import os
 import subprocess
-import itertools
 import numpy as np
 import h5py
 import json

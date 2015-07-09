@@ -1,60 +1,109 @@
 import logging
 import argparse
-
-from helper_functions import (load_graph_database, select_itr,
-                              load_options, attach_table,
-                              generate_special_database_name,
-                              grab_vector, grab_all,compute_parallel)
-import invariants
+import os
+import helper_functions as helper
+import h5py
 
 desc = "Updates the special invariants for fixed N"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
+parser.add_argument('-o', '--options',
+                    default="options_simple_connected.json",
+                    help="option file")
+parser.add_argument('-d', '--debug',
+                    default=False,
+                    help="Turns off multiprocessing")
+parser.add_argument('-f', '--force', default=False, action='store_true')
+cargs = vars(parser.parse_args())
+
 cargs = vars(parser.parse_args())
 N = cargs["N"]
 
 # Start the logger
 logging.root.setLevel(logging.INFO)
 
-# Load the database
-conn = load_graph_database(N)
-msg = "Starting special invariant calculation for {N}"
+# Load the options
+options = helper.load_options(cargs["options"])
+
+# Combine the options together with cargs
+cargs.update(options)
+
+f_database = helper.get_database_graph(cargs)
+h5_graphs = h5py.File(f_database)
+graphs = h5_graphs["graphs"]
+
+# Count the number of graphs
+gn = graphs.shape[0]
+
+f_database_special = helper.get_database_special(cargs)
+if not os.path.exists(f_database_special):
+    h5py.File(f_database_special,'w').close()
+
+h5s = h5py.File(f_database_special,'r+')
+
+######################################################################
+# Allocate space for all the data
+msg = "Allocating space for special invariants {graph_types} ({N})"
 logging.info(msg.format(**cargs))
 
-######################################################################
+h5args = {'dtype':'int32',
+          'compression':'gzip',
+          'compression_opts':9}
 
-# Create the special invariant table
-f_graph_template = "templates/special_invariants.sql"
-logging.info("Templating database via %s" % f_graph_template)
+datashapes = {
+    "degree_sequence" :N+1,
+    "characteristic_polynomial":N+1,
+    "laplacian_polynomial":N+1,
+    
+    "tutte_polynomial":(N+1)**2,
+    "fractional_chromatic_number":2,
+    "chromatic_polynomial":N+1,
+}
 
-# The special database
-sconn = load_graph_database(N, check_exist=False, special=True, timeout=20)
+datasets = {}
 
-# Load the graph template
-with open(f_graph_template) as FIN:
-    script = FIN.read()
-    sconn.executescript(script)
+for key in options["special_function_names"]:
 
-attach_table(conn, generate_special_database_name(N), "sconn")
+    shape = (gn, datashapes[key])
+    dset = h5s.require_dataset(key,shape=shape,**h5args)
+    
+    if "compute_start" not in dset.attrs:
+        dset.attrs["compute_start"] = 0
 
-# Load the list of invariants to compute
-options = load_options()
-special_names = options["special_function_names"]
-ignored = options["ignored_special_function_names"]
-special_names = [x for x in special_names if x not in ignored]
+    datasets[key] = dset
+  
 
-# Find out which variables have been computed
-cmd_check = '''SELECT function_name FROM computed'''
-computed_functions = set(grab_vector(sconn, cmd_check))
+###################################################################
 
-######################################################################
-# Count the total number of graphs
-#cmd_check = '''SELECT COUNT(graph_id) FROM graph'''
-#gn = grab_scalar(conn,cmd_check)
-#logging.info("Total graphs found for N={}, {}".format(N,gn))
+import invariants
+
+thing = ["tutte_polynomial"]
+#for key in options["special_function_names"]:
+for key in thing:
+
+    dset = datasets[key]
+    remaining_n = gn-dset.attrs["compute_start"]
+
+    print "{} left for {}".format(remaining_n,key)
+    GITR = helper.graph_iterator(graphs, N, dset.attrs["compute_start"])
+    func = getattr(invariants, "special_{}".format(key))
+
+    for x in GITR:
+        print x, func(x)
+
+
+
+    #print key    
+    #with helper.parallel_compute(GITR,func,True) as ITR:
+    #    for x in ITR:
+    #        print "DONE!", x
+
+exit()
 
 ######################################################################
 # Helper commands
+
+
 
 
 def run_compute(function_name, pfunc, cmd_insert, targets=None):

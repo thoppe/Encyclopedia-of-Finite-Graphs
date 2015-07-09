@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS fractional_chromatic_number(
     b          INTEGER
 );
 
+----------------------------------------------------------------
+  
 CREATE TABLE IF NOT EXISTS independent_vertex_sets(
     graph_id   INTEGER,
     vertex_map UNSIGNED BIG INTEGER

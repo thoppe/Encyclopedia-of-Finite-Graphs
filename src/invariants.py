@@ -28,7 +28,8 @@ def viz_graph(g, pos=None, **kwargs):
         pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
     graph_tool.draw.graph_draw(g, pos, **kwargs)
 
-def convert_to_numpy(adj, N, **kwargs):
+@require_arguments("N")
+def numpy_representation(adj, N, **kwargs):
     possible_edges = int ((N * (N + 1)) / 2)
 
     edge_map = np.binary_repr(adj, possible_edges)
@@ -63,23 +64,20 @@ def build_representation(graph_type):
     ''' From the adj int, builds a graph using the requested library '''
     def decorator(func):
         @wraps(func)
-        def wrapper(g_rep, *args, **kwargs):
-            
-            # If the input representation is an integer, 
-            # convert to requested type
-            if type(g_rep) == int:
-                adj = g_rep
-                if graph_type == "graph_tool":
-                    g_rep = graph_tool_representation(adj,**kwargs)
-                elif graph_type == "networkx":
-                    g_rep  = networkx_representation(adj, **kwargs)
-                elif graph_type == "numpy":
-                    g_rep  = convert_to_numpy(adj, **kwargs)
-                else:
-                    msg = "Unknown representation {}".format(graph_type)
-                    raise SyntaxError(msg)
 
-            return func(g_rep, *args, **kwargs)
+        def wrapper(items):
+            
+            x = items.pop("packed_representation")
+
+            rep_funcs = {"graph_tool":graph_tool_representation,
+                         "networkx"  :networkx_representation,
+                         "numpy"     :numpy_representation,}
+            
+            convert_func = rep_funcs[graph_type]
+
+            adj = convert_func(x,**items)
+            return func(adj, **items)
+
         return wrapper
     return decorator
 
@@ -101,17 +99,45 @@ def special_cycle_basis(g, **kwargs):
 @build_representation("numpy")
 def special_degree_sequence(A, **kwargs):
     deg = sorted(A.sum(axis=0))
-    return tuple([(x,) for x in deg])
+    return deg
 
-@require_arguments("N")
 @build_representation("numpy")
-def special_polynomial_tutte(A, N, **kwargs):
+def special_characteristic_polynomial(A, **kwargs):
+    ''' This is the characteristic polynomial of the adjaceny matrix '''
+    p = np.poly(A)
+    return p.astype(np.int32)
+
+@build_representation("numpy")
+def special_laplacian_polynomial(A, **kwargs):
+    '''
+    This is the characteristic polynomial of the Laplacian matrix
+    L = A - D
+    '''
+    L = np.zeros(A.shape)
+    np.fill_diagonal(L, A.sum(axis=0))
+    L -= A
+    p = np.round(np.poly(L))
+
+    return p.astype(np.int32)
+
+@build_representation("numpy")
+def special_tutte_polynomial(A, N, **kwargs):
+    N = A.shape[0]
 
     cmd = os.path.join(__script_dir, 'tutte', 'tutte_bhkk')
     tutte_args = ' '.join(map(str, [N,] + A.ravel().tolist()))
     cmd += ' ' + tutte_args
     proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
-    sval = [[int(x) for x in line.split()] for line in proc.stdout]
+    sval = [np.array([int(x) for x in line.split()])
+            for line in proc.stdout]
+
+    print sval
+    for x in sval:
+        x.reshape(N)
+    print sval 
+    print [np.array(x).resize(N) for x in sval]
+    
+    
 
     terms = []
     for xi in range(len(sval)):
@@ -147,25 +173,6 @@ def coeff_list_from_poly(p):
             key = (degree, int(coeff))
             coeff_list.append(key)
     return tuple(coeff_list)
-
-@build_representation("numpy")
-def special_characteristic_polynomial(A, **kwargs):
-    ''' This is the characteristic polynomial of the adjaceny matrix '''
-    p = np.round(np.poly(A))
-    return coeff_list_from_poly(p)
-
-@build_representation("numpy")
-def special_laplacian_polynomial(A, **kwargs):
-    '''
-    This is the characteristic polynomial of the Laplacian matrix
-    L = A - D
-    '''
-    L = np.zeros(A.shape)
-    np.fill_diagonal(L, A.sum(axis=0))
-    L -= A
-    p = np.round(np.poly(L))
-
-    return coeff_list_from_poly(p)
 
 @require_arguments("N", "tutte_polynomial")
 def special_chromatic_polynomial(adj, N, tutte_polynomial,

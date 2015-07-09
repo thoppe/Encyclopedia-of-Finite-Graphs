@@ -41,27 +41,30 @@
     "is_subgraph_free_diamond",
     "is_subgraph_free_open_bowtie",
     "is_hamiltonian",
-    "has_fractional_duality_gap_vertex_chromatic", 
-    "n_independent_vertex_sets", 
-    "maximal_independent_vertex_set", 
-    "n_independent_edge_sets", 
-    "maximal_independent_edge_set"
+    "has_fractional_duality_gap_vertex_chromatic"
   ],
 
+    "removed_invariants" : [
+        "n_independent_vertex_sets", 
+        "maximal_independent_vertex_set", 
+        "n_independent_edge_sets", 
+        "maximal_independent_edge_set"
+    ],
+
+
   "special_function_names" : [  
-      "independent_edge_sets",
-      "independent_vertex_sets",
-      "independent_edge_sets",
       "degree_sequence",
-      "cycle_basis",
       "tutte_polynomial",
       "fractional_chromatic_number",
       "laplacian_polynomial",
       "characteristic_polynomial",
       "chromatic_polynomial"
   ],
+    
   "ignored_special_function_names" : [
-
+      "cycle_basis",
+      "independent_vertex_sets",
+      "independent_edge_sets"
   ],
 
   "distinct_sequences" :       
