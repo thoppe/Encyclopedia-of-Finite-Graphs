@@ -3,14 +3,16 @@ import os
 import sys
 import fractions
 import subprocess
-import networkx as nx
+import collections
 
+import networkx as nx
 import numpy as np
 import sympy
 import pulp
 
 from functools import wraps
 from helper_functions import require_arguments
+
 
 try:
     import graph_tool.topology
@@ -21,6 +23,10 @@ except ImportError:
 
 __script_dir = os.path.dirname(os.path.realpath(__file__))
 
+####################### Invariant requirements ####################
+# Next to each function define any extra requirements needed to be passed
+invariant_requirements = collections.defaultdict(list)
+
 ######################### Conversion code #########################
 
 def viz_graph(g, pos=None, **kwargs):
@@ -28,11 +34,12 @@ def viz_graph(g, pos=None, **kwargs):
         pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
     graph_tool.draw.graph_draw(g, pos, **kwargs)
 
-@require_arguments("N")
-def numpy_representation(adj, N, **kwargs):
+@require_arguments("N", "twos_representation")
+def numpy_representation(twos_representation, N):
+    
     possible_edges = int ((N * (N + 1)) / 2)
 
-    edge_map = np.binary_repr(adj, possible_edges)
+    edge_map = np.binary_repr(twos_representation, possible_edges)
     edge_int = [int(x) for x in edge_map]
 
     idx = np.triu_indices(N)
@@ -40,13 +47,12 @@ def numpy_representation(adj, N, **kwargs):
 
     A[idx] = edge_int
 
-    # Works for loopless graphs only
-    A += A.T
+    A = A + A.T - np.diag(A)
     return A
 
-@require_arguments("N")
-def graph_tool_representation(adj, N, **kwargs):
-    A = convert_to_numpy(adj, N)
+@require_arguments("N", "twos_representation")
+def graph_tool_representation(twos_representation, N):
+    A = convert_to_numpy(twos_representation, N)
     g = graph_tool.Graph(directed=False)
     g.add_vertex(N)
     for edge in zip(*np.where(A)):
@@ -55,9 +61,9 @@ def graph_tool_representation(adj, N, **kwargs):
             g.add_edge(n0, n1)
     return g
 
-@require_arguments("N")
-def networkx_representation(adj, N, **kwargs):
-    A = convert_to_numpy(adj, N)
+@require_arguments("N", "twos_representation")
+def networkx_representation(twos_representation, N):
+    A = convert_to_numpy(twos_representation, N)
     return nx.from_numpy_matrix(A)
 
 def build_representation(graph_type):
@@ -65,23 +71,78 @@ def build_representation(graph_type):
     def decorator(func):
         @wraps(func)
 
-        def wrapper(items):
-            
-            x = items.pop("packed_representation")
+        def wrapper(items,**kwargs):
 
             rep_funcs = {"graph_tool":graph_tool_representation,
                          "networkx"  :networkx_representation,
                          "numpy"     :numpy_representation,}
+
+            rep_variable = {"graph_tool":"ggt",
+                            "networkx"  :"gnx",
+                            "numpy"     :"A",}
             
             convert_func = rep_funcs[graph_type]
-
-            adj = convert_func(x,**items)
-            return func(adj, **items)
+            items[rep_variable[graph_type]] = convert_func(items)
+            return func(items)
 
         return wrapper
     return decorator
 
 ######################### Special invariant code #################
+
+@build_representation("numpy")
+@require_arguments("A")
+def special_degree_sequence(A):
+    deg = sorted(A.sum(axis=0))
+    return deg
+
+@build_representation("numpy")
+@require_arguments("A")
+def special_characteristic_polynomial(A):
+    ''' This is the characteristic polynomial of the adjaceny matrix '''
+    p = np.poly(A)
+    return p.astype(np.int32)
+
+@build_representation("numpy")
+@require_arguments("A")
+def special_laplacian_polynomial(A):
+    '''
+    This is the characteristic polynomial of the Laplacian matrix
+    L = A - D
+    '''
+    L = np.zeros(A.shape)
+    np.fill_diagonal(L, A.sum(axis=0))
+    L -= A
+    p = np.round(np.poly(L))
+
+    return p.astype(np.int32)
+
+@build_representation("numpy")
+@require_arguments("A", "N")
+def special_tutte_polynomial(A, N):
+
+    cmd = os.path.join(__script_dir, 'tutte', 'tutte_bhkk')
+    tutte_args = ' '.join(map(str, [N,] + A.ravel().tolist()))
+    cmd += ' ' + tutte_args
+    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
+    
+    sval = [[int(x) for x in line.split()] for line in proc.stdout]
+    return sval
+    print sval
+
+    terms = []
+    tpoly = np.zeros((N+1,N+1),dtype='int32')
+    
+    for xi in range(len(sval)):
+        for yi in range(len(sval[xi])):
+            val = sval[xi][yi]
+            print xi,yi, val
+    
+            if val:
+                tpoly[xi][yi] = sval[xi][yi]
+
+    return tpoly.ravel()
+
 
 @build_representation("networkx")
 def special_cycle_basis(g, **kwargs):
@@ -96,56 +157,6 @@ def special_cycle_basis(g, **kwargs):
         return ((None, None),)
     return tuple(terms)
 
-@build_representation("numpy")
-def special_degree_sequence(A, **kwargs):
-    deg = sorted(A.sum(axis=0))
-    return deg
-
-@build_representation("numpy")
-def special_characteristic_polynomial(A, **kwargs):
-    ''' This is the characteristic polynomial of the adjaceny matrix '''
-    p = np.poly(A)
-    return p.astype(np.int32)
-
-@build_representation("numpy")
-def special_laplacian_polynomial(A, **kwargs):
-    '''
-    This is the characteristic polynomial of the Laplacian matrix
-    L = A - D
-    '''
-    L = np.zeros(A.shape)
-    np.fill_diagonal(L, A.sum(axis=0))
-    L -= A
-    p = np.round(np.poly(L))
-
-    return p.astype(np.int32)
-
-@build_representation("numpy")
-def special_tutte_polynomial(A, N, **kwargs):
-    N = A.shape[0]
-
-    cmd = os.path.join(__script_dir, 'tutte', 'tutte_bhkk')
-    tutte_args = ' '.join(map(str, [N,] + A.ravel().tolist()))
-    cmd += ' ' + tutte_args
-    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
-    sval = [np.array([int(x) for x in line.split()])
-            for line in proc.stdout]
-
-    print sval
-    for x in sval:
-        x.reshape(N)
-    print sval 
-    print [np.array(x).resize(N) for x in sval]
-    
-    
-
-    terms = []
-    for xi in range(len(sval)):
-        for yi in range(len(sval[xi])):
-            val = sval[xi][yi]
-            if val:
-                terms.append((xi + 1, yi + 1, val))
-    return tuple(terms)
 
 @require_arguments("N")
 def special_independent_vertex_sets(adj, **kwargs):
@@ -165,7 +176,7 @@ def special_independent_edge_sets(adj, **kwargs):
     independent_sets = [int(line) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
 
-
+'''
 def coeff_list_from_poly(p):
     coeff_list = []
     for degree, coeff in enumerate(p[::-1]):
@@ -173,33 +184,34 @@ def coeff_list_from_poly(p):
             key = (degree, int(coeff))
             coeff_list.append(key)
     return tuple(coeff_list)
+'''
 
-@require_arguments("N", "tutte_polynomial")
-def special_chromatic_polynomial(adj, N, tutte_polynomial,
-                                 **kwargs):
+#invariant_requirements["chromatic_polynomial"].append("tutte_polynomial")
+@require_arguments("twos_representation","N")
+def special_chromatic_polynomial(twos_representation,N):
     '''
     This is the chromatic polynomial, derived from the Tutte polynomial
     The chromatic polynomial for a connected graphs evaluates T(x,y)
     at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*N
     '''
-    tutte_adjust = [(coeff, xd - 1) for xd, yd, coeff 
-                    in tutte_polynomial if yd == 1]
+    repack = {"twos_representation":twos_representation,"N":N}
+    T = special_tutte_polynomial(repack)
 
+    # Extract only the x component of the tutte poly
     from sympy.abc import x
     p = 0
-    for (coeff, power) in tutte_adjust:
-        p += coeff * x ** power
+    for power,row in enumerate(T):
+        if row and row[0]:
+            p += row[0] * x ** power
+
     C = (-1) ** (N - 1) * x * p.subs(x, 1 - x)
     C = sympy.poly(C)
+    coeffs = C.all_coeffs()
 
-    coeff_list = []
-    for degree in range(0, N + 1):
-        coeff = C.nth(degree)
-        if coeff:
-            key = (degree, int(coeff))
-            coeff_list.append(key)
+    # Resize coeffs to match desired length
+    coeffs = [0,]*(N+1-len(coeffs)) + coeffs
+    return np.array(coeffs).astype(np.int32)
 
-    return tuple(coeff_list)
 
 ######################### REQUIRES [degree_sequence] #################
 
@@ -633,12 +645,12 @@ def is_hamiltonian(A, N, **kwargs):
 
 ########## Independent set iterator/Fractional programs #################
 
-@require_arguments("N")
-def fractional_chromatic_number(adj, N, **kwargs):
+@require_arguments("twos_representation", "N")
+def special_fractional_chromatic_number(twos_representation, N):
     # As a check, the cycle graph should return 2.5 = 5/2
 
     cmd_idep = "src/independent_vertex_sets/main {N} {adj}"
-    cmd = cmd_idep.format(N=N, adj=adj)
+    cmd = cmd_idep.format(N=N, adj=twos_representation)
     proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     independent_sets = [line.strip() for line in proc.stdout]
 
@@ -664,12 +676,10 @@ def fractional_chromatic_number(adj, N, **kwargs):
         f_sol = map(fractions.Fraction, sol)
         sol = sum([x.limit_denominator(20 * N * K) for x in f_sol])
         a, b = sol.numerator, sol.denominator
-        return ((a, b),)
+        return [a,b]
     else:
-        print ("ERROR IN FRACTIONAL CHROMATIC!", adj)
-        return -1
-
-    print (status)
+        err_msg = "ERROR IN FRACTIONAL CHROMATIC! rep: {}"
+        raise ValueError(err_msg.format(twos_representation))
 
 @require_arguments("fractional_chromatic_number")
 def has_fractional_duality_gap_vertex_chromatic(adj, 

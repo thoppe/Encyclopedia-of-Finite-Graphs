@@ -12,17 +12,53 @@ from functools import wraps
 
 
 def require_arguments(*reqargs):
-    ''' Decorator to check for optional arguments of a function '''
+    '''
+    Decorator to check that the packed arguments contain proper keywords.
+    All arguments that do not match will be filtered out before being passed.
+    '''
+    
+    err_msg = "{} requires argument {}"
+    
     def decorator(func):
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(items,**kwargs):
+
+            passed_items = {}
+
+            for arg in reqargs:
+                if not arg in items:
+                    raise TypeError(err_msg.format(func,arg))
+
+            for arg in items:
+                if arg in reqargs:
+                    passed_items[arg] = items[arg]
+            
+            return func(**passed_items)
+        return wrapper
+    return decorator
+
+
+'''
+def require_arguments(*reqargs):
+    '' Decorator to check for optional arguments of a function ''
+    def decorator(func):
+        @wraps(func)
+        def wrapper(items,*args,**kwargs):
+
+            #if not kwargs:
+            #    kwargs = items
+            #    items  = None
+
+            print "THIS!", items, args, kwargs
             err_msg = "{} requires argument {}"
+
             for arg in reqargs:
                 if not arg in kwargs:
                     raise TypeError(err_msg.format(func,arg))
-            return func(*args, **kwargs)
+            return func(items,*args,**kwargs)
         return wrapper
     return decorator
+'''
 
 def mkdir_p(path):
     try:
@@ -60,10 +96,28 @@ def get_database_special(options):
     return os.path.join("database",fname.format(**options))
 
 
-def graph_iterator(graphs, N, offset=0, chunksize=1000):   
-    for i in xrange(offset, graphs.shape[0], chunksize):
-        for rep in graphs[i:i+chunksize]:
-            yield {"packed_representation":rep,"N":N}
+def graph_iterator(graphs, N, offset=0, chunksize=1000,
+                   requirement_db_list=[]):
+
+    gn = graphs.shape[0]
+    
+    G = chunked_iterator(graphs,gn,offset,chunksize)
+    ITRS = {"twos_representation":G}
+
+    for name, db in requirement_db_list:
+        ITRS[name] = chunked_iterator(db,gn,offset,chunksize)
+
+    while G:
+        item = {"N":N}
+        for key in ITRS:
+            item[key] = ITRS[key].next()
+        yield item
+
+def chunked_iterator(ITR, ITR_n, offset=0, chunksize=1000):
+    for i in xrange(offset, ITR_n, chunksize):
+        for item in ITR[i:i+chunksize]:
+            yield item
+    
 
 
 '''

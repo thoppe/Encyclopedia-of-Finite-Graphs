@@ -1,7 +1,7 @@
 import subprocess
 import numpy as np
 
-_nauty_geng_exec = 'src/nauty/geng'
+_nauty_geng_exec  = 'src/nauty/geng'
 _nauty_showg_exec = 'src/nauty/showg'
 
 def nauty_simple_graph_itr(**args):

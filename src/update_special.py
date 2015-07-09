@@ -11,11 +11,9 @@ parser.add_argument('-o', '--options',
                     default="options_simple_connected.json",
                     help="option file")
 parser.add_argument('-d', '--debug',
-                    default=False,
+                    default=False,action="store_true",
                     help="Turns off multiprocessing")
 parser.add_argument('-f', '--force', default=False, action='store_true')
-cargs = vars(parser.parse_args())
-
 cargs = vars(parser.parse_args())
 N = cargs["N"]
 
@@ -29,14 +27,14 @@ options = helper.load_options(cargs["options"])
 cargs.update(options)
 
 f_database = helper.get_database_graph(cargs)
-h5_graphs = h5py.File(f_database)
+h5_graphs = h5py.File(f_database,'r')
 graphs = h5_graphs["graphs"]
 
 # Count the number of graphs
 gn = graphs.shape[0]
 
 f_database_special = helper.get_database_special(cargs)
-if not os.path.exists(f_database_special):
+if not os.path.exists(f_database_special) or cargs["force"]:
     h5py.File(f_database_special,'w').close()
 
 h5s = h5py.File(f_database_special,'r+')
@@ -51,11 +49,9 @@ h5args = {'dtype':'int32',
           'compression_opts':9}
 
 datashapes = {
-    "degree_sequence" :N+1,
+    "degree_sequence" :N,
     "characteristic_polynomial":N+1,
-    "laplacian_polynomial":N+1,
-    
-    "tutte_polynomial":(N+1)**2,
+    "laplacian_polynomial":N+1,    
     "fractional_chromatic_number":2,
     "chromatic_polynomial":N+1,
 }
@@ -77,26 +73,49 @@ for key in options["special_function_names"]:
 
 import invariants
 
-thing = ["tutte_polynomial"]
-#for key in options["special_function_names"]:
+# Load the requirements
+INV_REQ = invariants.invariant_requirements
+
+###################################################################
+
+thing = [
+    "degree_sequence",
+    "characteristic_polynomial",
+    "laplacian_polynomial",   
+    "fractional_chromatic_number",
+    "chromatic_polynomial",
+    ]
+#thing = [thing,]
+
 for key in thing:
 
     dset = datasets[key]
     remaining_n = gn-dset.attrs["compute_start"]
 
     print "{} left for {}".format(remaining_n,key)
-    GITR = helper.graph_iterator(graphs, N, dset.attrs["compute_start"])
     func = getattr(invariants, "special_{}".format(key))
 
-    for x in GITR:
-        print x, func(x)
+    offset = dset.attrs["compute_start"]
+    
 
+    req_list = [(req, h5s[req]) for req in INV_REQ[key]]
+    GITR = helper.graph_iterator(graphs, N,
+                                 requirement_db_list=req_list,
+                                 offset=offset)
 
+    with helper.parallel_compute(GITR,func,cargs["debug"]) as ITR:
+        for k,result in enumerate(ITR):
+            idx = k+offset
 
-    #print key    
-    #with helper.parallel_compute(GITR,func,True) as ITR:
-    #    for x in ITR:
-    #        print "DONE!", x
+            #print "Computing {}, {}".format(key, idx)
+            
+            dset[idx] = result
+            dset.attrs["compute_start"] = idx+1
+            
+
+print "CLEANUP FROM HERE!"
+print "ALLOW SAFE EXITS FROM MULTIPROCESSING!"
+print "GET __MAIN__ tests working again!
 
 exit()
 

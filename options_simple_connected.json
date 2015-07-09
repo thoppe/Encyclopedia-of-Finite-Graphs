@@ -55,7 +55,6 @@
 
   "special_function_names" : [  
       "degree_sequence",
-      "tutte_polynomial",
       "fractional_chromatic_number",
       "laplacian_polynomial",
       "characteristic_polynomial",
