@@ -5,10 +5,10 @@ max_n = 8
 possible_N_values = $(shell seq 1 ${max_n})
 
 all:
-	python src/generate_graphs.py $(test_N)
-	python src/update_special.py $(test_N)
-	python src/update_invariants.py $(test_N)
-	python src/build_distinct_seq.py $(test_N)
+	python src/update_graphs.py $(test_N)
+#	python src/update_special.py $(test_N)
+#	python src/update_invariants.py $(test_N)
+#	python src/build_distinct_seq.py $(test_N)
 
 # Must be called first
 compile:

@@ -52,7 +52,7 @@ def load_options(f_option_file):
 
 
 def get_database_graph(options):
-    fname = "{graph_types}_{N}.h5"
+    fname = "{graph_types}_graphs_{N}.h5"
     return os.path.join("database",fname.format(**options))
 
 def get_database_special(options):

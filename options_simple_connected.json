@@ -1,5 +1,6 @@
 {
   "graph_types" : "simple_connected",
+  "graph_generator_function" : "nauty_simple_graph_itr",
 
   "invariant_function_names" : [  
     "automorphism_group_n",

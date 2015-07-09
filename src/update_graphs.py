@@ -1,16 +1,13 @@
 import logging
 import argparse
 import os
-import subprocess
-import numpy as np
 import h5py
-import json
+import numpy as np
 
 import helper_functions as helper
+import graph_generators
 
 _max_uint_size = 18446744073709551615
-_nauty_geng_exec = 'src/nauty/geng'
-_nauty_showg_exec = 'src/nauty/showg'
 
 desc = "Builds the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -40,23 +37,16 @@ if os.path.exists(f_database) and not cargs["force"]:
 if os.path.exists(f_database):
     logging.warning("Removing database {}".format(f_database))
 
+# Try to load the update function
+generator_func_name = cargs["graph_generator_function"]
+
+try:
+    generator_func = getattr(graph_generators,generator_func_name)    
+except:
+    err = "{} is not defined in graph_generators"
+    raise SyntaxError(err.format(generator_func_name))
+
 ######################################################################
-
-def nauty_simple_graph_itr(**args):
-    ''' Creates a generator for all simple graphs using nauty '''
-
-    cmd = "{geng} {N} -cq | {showg} -eq -l0"
-    cmd = cmd.format(geng=_nauty_geng_exec,
-                     showg=_nauty_showg_exec,
-                     **args)
-
-    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
-    while True:
-        header_line = proc.stdout.readline()
-        edge_line = proc.stdout.readline()
-        if not header_line:
-            break
-        yield edge_line.strip()
 
 __upper_matrix_index = np.triu_indices(cargs["N"])
 
@@ -83,9 +73,9 @@ def convert_edge_to_adj(edges):
 ######################################################################
 
 # Process input in parallel
-logging.info("Generating graphs in parallel from nauty")
+logging.info("Generating graphs from {}".format(generator_func_name))
 
-all_graph_ITR = nauty_simple_graph_itr(**cargs)
+all_graph_ITR = generator_func(**cargs)
 
 import multiprocessing
 P = multiprocessing.Pool()
@@ -102,5 +92,3 @@ actually_present = dset.shape[0]
 logging.info("Database reports {} entries.".format(actually_present))
 
 h5.close()
-
-
