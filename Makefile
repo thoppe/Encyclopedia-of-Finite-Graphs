@@ -13,9 +13,10 @@ all:
 # Must be called first
 compile:
 	pip install -r requirements.txt
-	(cd src/bliss && make gmp)
-	(cd src/independent_edge_sets && make)
-	(cd src/independent_vertex_sets && make)
+	(cd src/bliss && make -j gmp)
+	(cd src/independent_edge_sets && make -j)
+	(cd src/independent_vertex_sets && make -j)
+	(cd src/nauty/ && ./configure && make -j)
 
 # Build all databases
 build:

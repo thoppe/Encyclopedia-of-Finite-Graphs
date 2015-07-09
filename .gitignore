@@ -66,3 +66,37 @@ report/*.blg
 report/*.tdo
 report/auto
 
+# nauty build files
+src/nauty/config.log
+src/nauty/config.status
+src/nauty/makefile
+src/nauty/gtools.h
+src/nauty/*.o
+src/nauty/naututil.h
+src/nauty/nauty.h
+src/nauty/showg
+src/nauty/dreadnaut
+src/nauty/planarg
+src/nauty/shortg
+src/nauty/labelg
+src/nauty/geng
+src/nauty/genbg
+src/nauty/pickg
+src/nauty/multig
+src/nauty/gentourng
+src/nauty/countg
+src/nauty/genrang
+src/nauty/directg
+src/nauty/newedgeg
+src/nauty/addedgeg
+src/nauty/NRswitchg
+src/nauty/complg
+src/nauty/listg
+src/nauty/dretog
+src/nauty/amtog
+src/nauty/deledgeg
+src/nauty/biplabg
+src/nauty/copyg
+src/nauty/catg
+
+

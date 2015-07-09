@@ -8,6 +8,8 @@ import h5py
 import json
 
 _max_uint_size = 18446744073709551615
+_nauty_geng_exec = 'src/nauty/geng'
+_nauty_showg_exec = 'src/nauty/showg'
 
 desc = "Builds the database for fixed N"
 parser = argparse.ArgumentParser(description=desc)
@@ -45,8 +47,10 @@ if os.path.exists(f_database):
 def nauty_simple_graph_itr(**args):
     ''' Creates a generator for all simple graphs using nauty '''
 
-    cmd = "geng {N} -cq | showg -eq -l0"
-    cmd = cmd.format(**args)
+    cmd = "{geng} {N} -cq | {showg} -eq -l0"
+    cmd = cmd.format(geng=_nauty_geng_exec,
+                     showg=_nauty_showg_exec,
+                     **args)
 
     proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     while True:
