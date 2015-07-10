@@ -11,54 +11,14 @@ from contextlib import contextmanager
 from functools import wraps
 
 
-def require_arguments(*reqargs):
-    '''
-    Decorator to check that the packed arguments contain proper keywords.
-    All arguments that do not match will be filtered out before being passed.
-    '''
-    
-    err_msg = "{} requires argument {}"
-    
-    def decorator(func):
-        @wraps(func)
-        def wrapper(items,**kwargs):
+import signal, sys
 
-            passed_items = {}
+def siginthndlr(sig, frame):
+    msg = "Shutting down processes. Will exit with a NameError after timeout."
+    print msg
+    raise NotARealError
 
-            for arg in reqargs:
-                if not arg in items:
-                    raise TypeError(err_msg.format(func,arg))
-
-            for arg in items:
-                if arg in reqargs:
-                    passed_items[arg] = items[arg]
-            
-            return func(**passed_items)
-        return wrapper
-    return decorator
-
-
-'''
-def require_arguments(*reqargs):
-    '' Decorator to check for optional arguments of a function ''
-    def decorator(func):
-        @wraps(func)
-        def wrapper(items,*args,**kwargs):
-
-            #if not kwargs:
-            #    kwargs = items
-            #    items  = None
-
-            print "THIS!", items, args, kwargs
-            err_msg = "{} requires argument {}"
-
-            for arg in reqargs:
-                if not arg in kwargs:
-                    raise TypeError(err_msg.format(func,arg))
-            return func(items,*args,**kwargs)
-        return wrapper
-    return decorator
-'''
+signal.signal(signal.SIGINT, siginthndlr) #Register SIGINT handler function
 
 def mkdir_p(path):
     try:
@@ -92,7 +52,7 @@ def get_database_graph(options):
     return os.path.join("database",fname.format(**options))
 
 def get_database_special(options):
-    fname = "{graph_types}_special_{N}.h5"
+    fname = "{graph_types}_invariants_{N}.h5"
     return os.path.join("database",fname.format(**options))
 
 
@@ -113,126 +73,37 @@ def graph_iterator(graphs, N, offset=0, chunksize=1000,
             item[key] = ITRS[key].next()
         yield item
 
-def chunked_iterator(ITR, ITR_n, offset=0, chunksize=1000):
+def chunked_iterator(ITR, ITR_n, offset=0, chunksize=10000):
     for i in xrange(offset, ITR_n, chunksize):
         for item in ITR[i:i+chunksize]:
             yield item
     
-
-
-'''
-
-def generate_database_name(N):
-    return os.path.join("database", "graph{}.db".format(N))
-
-
-def generate_special_database_name(N):
-    return os.path.join("database", "special", "graph{}_special.db".format(N))
-
-
-def generate_distinct_sequence_database_name():
-    return os.path.join("database", "distinct_seq.db")
-
-
-def load_distinct_database(check_exist=True, timeout=5):
-
-    f_database = generate_distinct_sequence_database_name()
-
-    # Check if database exists, if so exit!
-    if check_exist and not os.path.exists(f_database):
-        err = "Database %s does not exist." % f_database
-        logging.critical(err)
-        exit()
-
-    return sqlite3.connect(f_database, check_same_thread=False,
-                           timeout=timeout)
-
-
-def load_graph_database(N, check_exist=True, special=False, timeout=5):
-    '' Given an input value of N, return a connection to the
-        cooresponding database ''
-
-    # Build the needed directories
-    mkdir_p("database")
-    mkdir_p("database/special")
-
-    if not special:
-        f_database = generate_database_name(N)
-    else:
-        f_database = generate_special_database_name(N)
-
-    # Check if database exists, if so exit!
-    if check_exist and not os.path.exists(f_database):
-        err = "Database %s does not exist." % f_database
-        logging.critical(err)
-        exit()
-
-    return sqlite3.connect(f_database, check_same_thread=False,
-                           timeout=timeout)
-
-
-def load_sql_script(conn, f_script):
-
-    with open(f_script) as FIN:
-        script = FIN.read()
-        conn.executescript(script)
-        conn.commit()
-
-
-def attach_table(conn, f_attach, as_name):
-    cmd_attach = ''ATTACH database "{}" AS "{}"''
-    conn.execute(cmd_attach.format(f_attach, as_name))
-
-# Helper function to grab all data
-
-
-def grab_all(connection, cmd, *args):
-    return connection.execute(cmd, *args).fetchall()
-
-# Helper functions to grab a vector of data
-
-
-def grab_vector(connection, cmd, *args):
-    return [x[0] for x in connection.execute(cmd, *args).fetchall()]
-
-# Helper function to only grab a scalar, like COUNT(*)
-def grab_scalar(connection, cmd, *args):
-    cursor = connection.execute(cmd, *args)
-    return cursor.next()[0]
-
-# Helper function to get the column names
-
-
-def grab_col_names(connection, table):
-    cmd = ''SELECT * FROM {} LIMIT 1;''.format(table)
-    cursor = connection.execute(cmd)
-    return [x[0] for x in cursor.description]
-
-# def landing_table_itr(f_landing_table, index_args, max_iter=50000):
-#    with open(f_landing_table,'r') as FIN:
-#        for group in grouper(FIN,max_iter):
-#            VALS = []
-#            for item in group:
-#                ix = item.strip().split()
-#                val = [ix[n] for n in index_args]
-#                VALS.append(val)
-#            yield VALS
-'''
-
 ######################################################################
 
+_global_pool_object = None
+
 @contextmanager
-def parallel_compute(data_ITR, func, debug=False):
+def parallel_compute(data_ITR, func, debug=False,
+                     chunksize=100, CORES=None):
+
+    pfunc_args = {}
+    
     if debug:
         pfunc = itertools.imap
     else:
-        P     = multiprocessing.Pool()
+        P     = multiprocessing.Pool(CORES)
         pfunc = P.imap
-    yield pfunc(func,data_ITR)
-    
-    if not debug:
-        P.close()
-        P.join()
-        P.terminate()
-        del P
+        pfunc_args["chunksize"] = chunksize
+        
+    try:
+        yield pfunc(func,data_ITR,**pfunc_args)
+        
+    finally:        
+        if not debug:
+            P.close()
+            P.join()
+            P.terminate()
+            del P
+        
+
         
