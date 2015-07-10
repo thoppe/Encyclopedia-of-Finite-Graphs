@@ -14,6 +14,9 @@ parser.add_argument('-o', '--options',
 parser.add_argument('-d', '--debug',
                     default=False,action="store_true",
                     help="Turns off multiprocessing")
+parser.add_argument('-v', '--verbose',
+                    default=False,action="store_true",
+                    help="Prints every output")
 parser.add_argument('-i', '--invariant_type',
                     default="polynomial", help="Invariant type to compute")
 
@@ -116,8 +119,11 @@ for key in invariant_names:
 
     with helper.parallel_compute(GITR,func,cargs["debug"]) as ITR:
         for k,result in enumerate(ITR):
-            
+
             idx = k+offset
+
+            if cargs["verbose"]:
+                print idx, result            
 
             if rc==result_save_size: 
                 print "  status ({}/{}) {}, {}".format(idx+1, gn, key, result)

@@ -4,12 +4,12 @@
 
   "invariant_calculations" : {
       "polynomial" : [
-          "degree_sequence"
+          "degree_sequence",
+          "laplacian_polynomial", 
+          "characteristic_polynomial"
 
       ],
       "other" : [
-          "laplacian_polynomial", 
-          "characteristic_polynomial",
           "chromatic_polynomial"
       ]
   }
