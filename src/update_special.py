@@ -44,7 +44,7 @@ if cargs["invariant_type"] == "polynomial":
 elif cargs["invariant_type"] == "fraction":
     import invariants.fraction as INVLIB
 elif cargs["invariant_type"] == "integer":
-    raise NotImplemented
+    import invariants.integer as INVLIB
 else:
     raise NotImplemented
 

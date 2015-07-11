@@ -12,6 +12,9 @@
       "fraction" : [
 	  "fractional_chromatic_number"
       ],
+      "integer" : [
+	  "automorphism_group_n"
+      ],
       "other" : [
 	  "chromatic_polynomial"
       ]

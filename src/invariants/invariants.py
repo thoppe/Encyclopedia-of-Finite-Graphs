@@ -479,27 +479,6 @@ is_subgraph_free_banner = _is_subgraph_free(_banner_graph)
 
 ######################### Bliss code #########################
 
-@require_arguments("N")
-@build_representation("numpy")
-def automorphism_group_n(A, N, **kwargs):
-    ''' Calls the BLISS program from the command line '''
-    edges = np.where(A)
-    s = ["p edge {} {}".format(N, A.sum() / 2, **kwargs)]
-    for i, j in zip(*edges):
-        if i <= j:
-            s.append("e {} {}".format(i + 1, j + 1))
-    s_echo = '"%s"' % ('\n'.join(s))
-    bliss_exec = os.path.join(__script_dir, 'bliss', 'bliss')
-
-    cmd = "echo %s | %s" % (s_echo, bliss_exec)
-
-    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
-    for line in proc.stdout:
-        if "|Aut|" in line:
-            return int(line.split()[-1])
-
-    err = "BLISS failed with adj: " + adj
-    raise ValueError(err)
 
 ######################### PuLP code (Integer programming) ###
 
@@ -590,42 +569,6 @@ def is_hamiltonian(A, N, **kwargs):
     return True
 
 ########## Independent set iterator/Fractional programs #################
-
-@require_arguments("twos_representation", "N")
-def special_fractional_chromatic_number(twos_representation, N):
-    # As a check, the cycle graph should return 2.5 = 5/2
-
-    cmd_idep = "src/independent_vertex_sets/main {N} {adj}"
-    cmd = cmd_idep.format(N=N, adj=twos_representation)
-    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
-    independent_sets = [line.strip() for line in proc.stdout]
-
-    prob = pulp.LpProblem("fractional_chrom",
-                          pulp.LpMinimize)
-
-    K = len(independent_sets)
-
-    iset_vars = pulp.LpVariable.dicts("iset", range(K),
-                                      lowBound=0)
-
-    prob += pulp.lpSum(iset_vars), "Objective"
-
-    for idx in range(N):
-        isets_with_vertex = [iset_vars[k] for k in range(K)
-                             if independent_sets[k][idx] == "1"]
-        prob += pulp.lpSum(isets_with_vertex) >= 1
-
-    status = prob.solve()
-
-    if status == 1:
-        sol = [x.value() for x in prob.variables()]
-        f_sol = map(fractions.Fraction, sol)
-        sol = sum([x.limit_denominator(20 * N * K) for x in f_sol])
-        a, b = sol.numerator, sol.denominator
-        return [a,b]
-    else:
-        err_msg = "ERROR IN FRACTIONAL CHROMATIC! rep: {}"
-        raise ValueError(err_msg.format(twos_representation))
 
 @require_arguments("fractional_chromatic_number")
 def has_fractional_duality_gap_vertex_chromatic(adj, 
