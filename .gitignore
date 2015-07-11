@@ -13,7 +13,7 @@ dump_graphs.py
 # Tutte src files
 src/tutte/* 
 *tutte/tutte_bhkk
-src/bliss/*
+src/invariants/bliss/*
 
 *.py[cod]
 .\#*

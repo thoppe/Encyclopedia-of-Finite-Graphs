@@ -37,7 +37,7 @@ class graph_invariant(object):
 
     def convert_types(self, args):
         key = (self.input_type, self.output_type)
-        
+
         if self.output_type is not None:
             func,name = type_conversion_funcs[key]
             args[name] = func(**args)
