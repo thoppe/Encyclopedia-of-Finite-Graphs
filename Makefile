@@ -16,7 +16,7 @@ compile:
 	(cd src/invariants/bliss && make -j gmp)
 	(cd src/invariants/independent_edge_sets && make -j)
 	(cd src/invariants/independent_vertex_sets && make -j)
-	(cd src/invariants/nauty/ && ./configure && make -j)
+	(cd src/nauty/ && ./configure && make -j)
 
 # Build all databases
 build:
