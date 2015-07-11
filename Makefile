@@ -14,9 +14,9 @@ all:
 compile:
 	pip install -r requirements.txt
 	(cd src/invariants/bliss && make -j gmp)
-	(cd src/independent_edge_sets && make -j)
-	(cd src/independent_vertex_sets && make -j)
-	(cd src/nauty/ && ./configure && make -j)
+	(cd src/invariants/independent_edge_sets && make -j)
+	(cd src/invariants/independent_vertex_sets && make -j)
+	(cd src/invariants/nauty/ && ./configure && make -j)
 
 # Build all databases
 build:
@@ -27,15 +27,6 @@ build:
 clean:
 	rm -vf database/special/graph$(test_N)_special.db
 	rm -vf database/graph$(test_N).db
-
-view:
-	sqlitebrowser database/graph$(test_N).db
-view_seq:
-	sqlitebrowser database/sequence.db
-view_distinct:
-	sqlitebrowser database/distinct_seq.db
-view_special:
-	sqlitebrowser database/special/graph$(test_N)_special.db
 
 report_lvl1:
 	python verification/lvl1_report.py > verification/raw_lvl1.md

@@ -1,27 +1,35 @@
 import subprocess
+import os
 import fractions
-
 import numpy as np
 
 from base_invariant import graph_invariant
 
-class fractional_chromatic_number(graph_invariant):
+_script_dir = os.path.dirname(os.path.realpath(__file__))
+
+class fraction_invariant(graph_invariant):
+    def shape(self, **kwargs):
+        return 2
+
+class fractional_chromatic_number(fraction_invariant):
 
     import_requirements = ["pulp"]
 
     # No conversion needed
     output_type = None
 
-    def shape(self, **kwargs):
-        return 2
-
     def calculate(self, twos_representation, N, **kwargs):
         pulp = self.imports["pulp"]
         
         # As a check, the cycle graph should return 2.5 = 5/2
 
-        cmd_idep = "src/independent_vertex_sets/main {N} {twos_rep}"
+        
+        cmd_idep = os.path.join(_script_dir,
+                                "independent_vertex_sets",
+                                "main {N} {twos_rep}")
+        
         cmd = cmd_idep.format(N=N, twos_rep=twos_representation)
+        
         proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
         independent_sets = [line.strip() for line in proc.stdout]
 

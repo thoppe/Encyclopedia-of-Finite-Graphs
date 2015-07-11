@@ -11,8 +11,8 @@ landing_table_*
 dump_graphs.py
 
 # Tutte src files
-src/tutte/* 
-*tutte/tutte_bhkk
+src/invariants/tutte/* 
+src/invariants/*tutte/tutte_bhkk
 src/invariants/bliss/*
 
 *.py[cod]
@@ -67,36 +67,36 @@ report/*.tdo
 report/auto
 
 # nauty build files
-src/nauty/config.log
-src/nauty/config.status
-src/nauty/makefile
-src/nauty/gtools.h
-src/nauty/*.o
-src/nauty/naututil.h
-src/nauty/nauty.h
-src/nauty/showg
-src/nauty/dreadnaut
-src/nauty/planarg
-src/nauty/shortg
-src/nauty/labelg
-src/nauty/geng
-src/nauty/genbg
-src/nauty/pickg
-src/nauty/multig
-src/nauty/gentourng
-src/nauty/countg
-src/nauty/genrang
-src/nauty/directg
-src/nauty/newedgeg
-src/nauty/addedgeg
-src/nauty/NRswitchg
-src/nauty/complg
-src/nauty/listg
-src/nauty/dretog
-src/nauty/amtog
-src/nauty/deledgeg
-src/nauty/biplabg
-src/nauty/copyg
-src/nauty/catg
+src/invariants/nauty/config.log
+src/invariants/nauty/config.status
+src/invariants/nauty/makefile
+src/invariants/nauty/gtools.h
+src/invariants/nauty/*.o
+src/invariants/nauty/naututil.h
+src/invariants/nauty/nauty.h
+src/invariants/nauty/showg
+src/invariants/nauty/dreadnaut
+src/invariants/nauty/planarg
+src/invariants/nauty/shortg
+src/invariants/nauty/labelg
+src/invariants/nauty/geng
+src/invariants/nauty/genbg
+src/invariants/nauty/pickg
+src/invariants/nauty/multig
+src/invariants/nauty/gentourng
+src/invariants/nauty/countg
+src/invariants/nauty/genrang
+src/invariants/nauty/directg
+src/invariants/nauty/newedgeg
+src/invariants/nauty/addedgeg
+src/invariants/nauty/NRswitchg
+src/invariants/nauty/complg
+src/invariants/nauty/listg
+src/invariants/nauty/dretog
+src/invariants/nauty/amtog
+src/invariants/nauty/deledgeg
+src/invariants/nauty/biplabg
+src/invariants/nauty/copyg
+src/invariants/nauty/catg
 
 
