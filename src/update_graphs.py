@@ -27,6 +27,9 @@ options = helper.load_options(cargs["options"])
 # Combine the options together with cargs
 cargs.update(options)
 
+# Create database directory if missing
+helper.mkdir_p("database")
+
 f_database = helper.get_database_graph(cargs)
 
 if os.path.exists(f_database) and not cargs["force"]:
