@@ -54,8 +54,7 @@ class fractional_chromatic_number(graph_invariant):
             raise ValueError(err_msg.format(twos_representation))
 
 if __name__ == "__main__":
-    pass
-    #B = degree_sequence()
-    #item = {"twos_representation":474, "N":4}
-    #print B(item)
-    #print B.shape(**item)
+    B = fractional_chromatic_number()
+    item = {"twos_representation":474, "N":4}
+    print B(item)
+    print B.shape(**item)
