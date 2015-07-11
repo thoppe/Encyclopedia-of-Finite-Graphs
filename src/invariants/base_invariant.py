@@ -12,20 +12,35 @@ import numpy as np
 #_script_dir = os.path.dirname(os.path.realpath(__file__))
 
 class graph_invariant(object):
+    
+    _has_imported = False
     import_requirements = []
+    imports = {}
+    
     input_type  = 'twos'
     output_type = 'numpy'
     dtype = np.int32
 
-    def __init__(self): pass
+    def __init__(self):
+        if not self._has_imported:
+            for key in self.import_requirements:
+                print "Importing", key
+                line = "import {}".format(key)
+                exec line
+                self.imports[key] = eval(key)
+                
+            self._has_imported = True
+        pass
 
     def shape(self, N, **kwargs):
         return 1
 
     def convert_types(self, args):
         key = (self.input_type, self.output_type)
-        func,name = type_conversion_funcs[key]
-        args[name] = func(**args)
+        
+        if self.output_type is not None:
+            func,name = type_conversion_funcs[key]
+            args[name] = func(**args)
 
     def calculate(self,A,N,**kwargs):
         return None

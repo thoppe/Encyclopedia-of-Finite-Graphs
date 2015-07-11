@@ -6,11 +6,14 @@
       "polynomial" : [
           "degree_sequence",
           "laplacian_polynomial", 
-          "characteristic_polynomial",
-          "chromatic_polynomial"
+          "characteristic_polynomial"
+          
+      ],
+      "fraction" : [
+	  "fractional_chromatic_number"
       ],
       "other" : [
-
+	  "chromatic_polynomial"
       ]
   }
 }

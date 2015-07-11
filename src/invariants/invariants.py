@@ -61,61 +61,7 @@ def graph_tool_representation(twos_representation, N):
             g.add_edge(n0, n1)
     return g
 
-@require_arguments("N", "twos_representation")
-def networkx_representation(twos_representation, N):
-    A = convert_to_numpy(twos_representation, N)
-    return nx.from_numpy_matrix(A)
-
-def build_representation(graph_type):
-    ''' From the adj int, builds a graph using the requested library '''
-    def decorator(func):
-        @wraps(func)
-
-        def wrapper(items,**kwargs):
-
-            rep_funcs = {"graph_tool":graph_tool_representation,
-                         "networkx"  :networkx_representation,
-                         "numpy"     :numpy_representation,}
-
-            rep_variable = {"graph_tool":"ggt",
-                            "networkx"  :"gnx",
-                            "numpy"     :"A",}
-            
-            convert_func = rep_funcs[graph_type]
-            items[rep_variable[graph_type]] = convert_func(items)
-            return func(items)
-
-        return wrapper
-    return decorator
-
 ######################### Special invariant code #################
-
-@build_representation("numpy")
-@require_arguments("A")
-def special_degree_sequence(A):
-    deg = sorted(A.sum(axis=0))
-    return deg
-
-@build_representation("numpy")
-@require_arguments("A")
-def special_characteristic_polynomial(A):
-    ''' This is the characteristic polynomial of the adjaceny matrix '''
-    p = np.poly(A)
-    return p.astype(np.int32)
-
-@build_representation("numpy")
-@require_arguments("A")
-def special_laplacian_polynomial(A):
-    '''
-    This is the characteristic polynomial of the Laplacian matrix
-    L = A - D
-    '''
-    L = np.zeros(A.shape)
-    np.fill_diagonal(L, A.sum(axis=0))
-    L -= A
-    p = np.round(np.poly(L))
-
-    return p.astype(np.int32)
 
 @build_representation("numpy")
 @require_arguments("A", "N")

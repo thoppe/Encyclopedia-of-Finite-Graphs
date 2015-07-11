@@ -28,7 +28,7 @@ N = cargs["N"]
 logging.root.setLevel(logging.INFO)
 
 # Validate the invariant_type
-if cargs["invariant_type"] not in ["integer","polynomial"]:
+if cargs["invariant_type"] not in ["integer","polynomial","fraction"]:
     msg = "Invariant type {invariant_type} not permitted yet".format(**cargs)
     raise KeyError(msg)
 
@@ -41,7 +41,11 @@ invariant_names = options["invariant_calculations"][cargs["invariant_type"]]
 # Import the right library
 if cargs["invariant_type"] == "polynomial":
     import invariants.polynomial as INVLIB
-if cargs["invariant_type"] == "integer":
+elif cargs["invariant_type"] == "fraction":
+    import invariants.fraction as INVLIB
+elif cargs["invariant_type"] == "integer":
+    raise NotImplemented
+else:
     raise NotImplemented
 
 # Combine the options together with cargs
