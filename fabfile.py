@@ -1,5 +1,11 @@
 from fabric.api import *
 
+def push():
+    # Helper function for development
+    local("git status")
+    local("git commit -a")
+    local("git push")
+
 def gen():
     cmd = "python src/update_graphs.py 4 -f"
     local(cmd)

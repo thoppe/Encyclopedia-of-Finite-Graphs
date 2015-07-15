@@ -35,22 +35,6 @@ def viz_graph(g, pos=None, **kwargs):
     graph_tool.draw.graph_draw(g, pos, **kwargs)
 
 @require_arguments("N", "twos_representation")
-def numpy_representation(twos_representation, N):
-    
-    possible_edges = int ((N * (N + 1)) / 2)
-
-    edge_map = np.binary_repr(twos_representation, possible_edges)
-    edge_int = [int(x) for x in edge_map]
-
-    idx = np.triu_indices(N)
-    A = np.zeros((N, N), dtype=np.int)
-
-    A[idx] = edge_int
-
-    A = A + A.T - np.diag(A)
-    return A
-
-@require_arguments("N", "twos_representation")
 def graph_tool_representation(twos_representation, N):
     A = convert_to_numpy(twos_representation, N)
     g = graph_tool.Graph(directed=False)
@@ -122,15 +106,6 @@ def special_independent_edge_sets(adj, **kwargs):
     independent_sets = [int(line) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
 
-'''
-def coeff_list_from_poly(p):
-    coeff_list = []
-    for degree, coeff in enumerate(p[::-1]):
-        if coeff:
-            key = (degree, int(coeff))
-            coeff_list.append(key)
-    return tuple(coeff_list)
-'''
 
 #invariant_requirements["chromatic_polynomial"].append("tutte_polynomial")
 @require_arguments("twos_representation","N")
