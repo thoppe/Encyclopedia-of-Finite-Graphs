@@ -96,9 +96,6 @@ for key in invariant_names:
 
 ######################################################################
 
-msg = "Allocating space for {invariant_type} invariants {graph_types} ({N})"
-logging.info(msg.format(**cargs))
-
 for key in invariant_names:
 
     func = functionals[key]
@@ -107,7 +104,9 @@ for key in invariant_names:
     offset = dset.attrs["compute_start"]
     remaining_n = gn-offset
 
-    print "{} left for {}".format(remaining_n,key)
+
+    msg = "{} left to compute for {}".format(remaining_n,key)
+    logging.info(msg)
 
     req_list = []
 
@@ -143,5 +142,3 @@ for key in invariant_names:
         result_block = result_block[:rc]
         dset[idx-rc:idx] = result_block
         dset.attrs["compute_start"] = idx
-
-print "GET __MAIN__ tests working again!"
