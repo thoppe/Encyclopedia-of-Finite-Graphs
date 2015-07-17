@@ -37,12 +37,14 @@ class n_edge(integer_invariant):
     # This is only valid for undirected graphs
        
     def calculate(self, A, **kwargs):
+        assert((A==A.T).all())
         return np.triu(A).sum()
 
 class n_endpoints(integer_invariant):
     # This is only valid for undirected graphs
        
     def calculate(self, A, **kwargs):
+        assert((A==A.T).all())
         return (A.sum(axis=0)==2).sum()
 
 class k_regular(integer_invariant):
@@ -52,12 +54,18 @@ class k_regular(integer_invariant):
     
     invariant_requirements = ["degree_sequence"]
        
-    def calculate(self, A, degree_sequence, **kwargs):
-                
+    def calculate(self, A, degree_sequence, **kwargs):                
         if len(set(degree_sequence)) == 1:
             return degree_sequence[0]
         else:
             return 0
+
+
+#class n_edge(integer_invariant):
+#    # This is only valid for undirected graphs
+#       
+#    def calculate(self, A, **kwargs):
+#        return np.triu(A).sum()
 
 '''
 
