@@ -6,7 +6,6 @@ args["debug"] = "-d"
 args["verbose"] = "-v"
 args["force"] = "-f"
 
-
 args["calc_exec"] = "python src/update_special.py"
 options = " -d -v "
 
@@ -19,8 +18,8 @@ def commit():
     push()
 
 def generate():
-    cmd = "python src/update_graphs.py 4 -f"
-    local(cmd)
+    cmd = "python src/update_graphs.py {N} -f"
+    local(cmd.format(**args))
 
 def clean():
     local("rm -vf database/*{N}*".format(**args)) 

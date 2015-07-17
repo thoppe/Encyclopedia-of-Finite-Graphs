@@ -13,6 +13,7 @@
 	  "fractional_chromatic_number"
       ],
       "integer" : [
+	  "edge_connectivity",
 	  "vertex_connectivity",
 	  "k_max_clique",
 	  "diameter",
@@ -24,7 +25,12 @@
       ],
 
       "boolean" : [
+	  "is_distance_regular",
+	  "is_chordal",
+	  "is_chordal",
+	  "is_distinct_spectrum",
 	  "is_strongly_regular",
+	  "is_rational",
 	  "is_integral"
       ],
 

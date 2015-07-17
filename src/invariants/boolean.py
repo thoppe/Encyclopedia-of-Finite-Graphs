@@ -1,4 +1,6 @@
 import numpy as np
+import networkx as nx
+
 import itertools
 import os
 
@@ -54,12 +56,13 @@ def _poly_factorable_over_field(p, domain, sympy):
             return fp.base
         except:
             return fp
-
+    
     # Loop over the factors
     for term in pz.as_ordered_factors():
         term_poly = sympy.poly(reduce_power(term))
         # Check if the base factors are not linear
         # indicates can't be factored over choosen domain
+        
         if term_poly.degree() > 1:
             return False
     return True
@@ -77,35 +80,47 @@ class is_integral(boolean_invariant):
         return _poly_factorable_over_field(p, "ZZ", sympy)
 
 
-'''
-
-@build_representation("numpy")
-def is_rational_spectrum(A, **kwargs):
+class is_rational(boolean_invariant):
+    import_requirements = ["sympy"]
     # Like is_integral, checks if the char. poly factors over Q instead of Z
-    M = sympy.Matrix(A)
-    p = M.charpoly()
-    return _poly_factorable_over_field(p, "QQ")
 
-@require_arguments("N")
-@build_representation("numpy")
-def is_distinct_spectrum(A, N, **kwargs):
+    def calculate(self, A, **kwargs):
+        sympy = self.imports["sympy"]
+        M = sympy.Matrix(A)
+        p = M.charpoly()
+        return _poly_factorable_over_field(p, "QQ", sympy)
+
+class is_distinct_spectrum(boolean_invariant):
+    import_requirements = ["sympy"]
     # Checks if all eigenvalues are unique
-    M = sympy.Matrix(A)
-    p = M.charpoly()
-    return p.rep.count_real_roots() == N
     
-@build_representation("networkx")
-def is_chordal(g, **kwargs):
-    return nx.is_chordal(g)
+    def calculate(self, A, N, **kwargs):
+        sympy = self.imports["sympy"]
 
-@build_representation("networkx")
-def is_eulerian(g, **kwargs):
-    return nx.is_eulerian(g)
+        M = sympy.Matrix(A)
+        p = M.charpoly()
+        return p.rep.count_real_roots() == N
+    
 
-@build_representation("networkx")
-def is_distance_regular(g, **kwargs):
-    return nx.is_distance_regular(g)
+class is_chordal(boolean_invariant):
+    output_type = "networkx"
+    
+    def calculate(self, gx, **kwargs):
+        return nx.is_chordal(gx)
 
+class is_eulerian(boolean_invariant):
+    output_type = "networkx"
+    
+    def calculate(self, gx, **kwargs):
+        return nx.is_eulerian(gx)
+
+class is_distance_regular(boolean_invariant):
+    output_type = "networkx"
+    
+    def calculate(self, gx, **kwargs):
+        return nx.is_distance_regular(gx)
+    
+'''
 @build_representation("graph_tool")
 def is_planar(g, **kwargs):
     return graph_tool.topology.is_planar(g)

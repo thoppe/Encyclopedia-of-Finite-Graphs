@@ -96,7 +96,7 @@ class edge_connectivity(integer_invariant):
     output_type = "networkx"
     
     def calculate(self, gx, **kwargs):
-        return nx.edge_connectivity(g)
+        return nx.edge_connectivity(gx)
 
 
 
