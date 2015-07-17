@@ -1,4 +1,6 @@
 import os
+import logging
+
 from functools import wraps
 
 from type_convert import type_conversion_funcs
@@ -34,20 +36,11 @@ class graph_invariant(object):
     def __init__(self):
         if not self._has_imported:
             for key in self.import_requirements:
-                print "Importing", key
+                logging.info("Importing {}".format(key))
                 line = "import {}".format(key)
                 exec line
                 self.imports[key] = eval(key)
-            '''
-            for key in self.invariant_requirements:
-                print key
-                exit()
-                lib, name = key.split()
-                print "Importing invariant", key
-                line = "from {} import {}".format(lib, name)
-                exec line
-                self.invariants[name] = eval(name)().calculate
-            '''
+
             self._has_imported = True
         pass
 

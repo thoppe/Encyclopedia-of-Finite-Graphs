@@ -90,26 +90,6 @@ def vertex_connectivity(g, **kwargs):
 def edge_connectivity(g, **kwargs):
     return nx.edge_connectivity(g)
 
-def _poly_factorable_over_field(p, domain):
-    # Factor the char poly over the integers
-    pz = sympy.factor(p, domain=domain)
-
-    # Change expression like (a+b)**n -> (a+b)
-    def reduce_power(fp):
-        try:
-            return fp.base
-        except:
-            return fp
-
-    # Loop over the factors
-    for term in pz.as_ordered_factors():
-        term_poly = sympy.poly(reduce_power(term))
-        # Check if the base factors are not linear
-        # indicates can't be factored over choosen domain
-        if term_poly.degree() > 1:
-            return False
-    return True
-
 '''
 
 

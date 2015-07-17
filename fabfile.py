@@ -1,5 +1,13 @@
 from fabric.api import *
 
+args = {}
+args["N"] = 4
+args["debug"] = "-d"
+args["verbose"] = "-v"
+args["force"] = "-f"
+
+
+args["calc_exec"] = "python src/update_special.py"
 options = " -d -v "
 
 def push():
@@ -7,29 +15,39 @@ def push():
     local("git status")
     local("git commit -a")
     local("git push")
+def commit():
+    push()
 
-def gen():
+def generate():
     cmd = "python src/update_graphs.py 4 -f"
     local(cmd)
 
+def clean():
+    local("rm -vf database/*{N}*".format(**args)) 
+
 def test():
+    args["verbose"] = ""
+    clean()
+    generate()
     polynomial()
     fraction()
     integer()
     boolean()
 
+
+cmd_invar_calc = "{calc_exec} {N} {debug} {verbose} {force} -i {name}"
+
 def polynomial():
-    local("python src/update_special.py 4 {} -i polynomial".format(options))
+    local(cmd_invar_calc.format(name="polynomial",**args))
 
 def fraction():
-    local("python src/update_special.py 4 -d -v -i fraction")
+    local(cmd_invar_calc.format(name="fraction",**args))
 
 def integer():
-    local("python src/update_special.py 4 -d -v -i integer")
+    local(cmd_invar_calc.format(name="integer",**args))
 
 def boolean():
-    local("python src/update_special.py 4 -d -v -i boolean")
-
+    local(cmd_invar_calc.format(name="boolean",**args))
 
     
     
