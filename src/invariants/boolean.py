@@ -121,6 +121,13 @@ class is_distance_regular(boolean_invariant):
         return nx.is_distance_regular(gx)
     
 '''
+
+####################################################################
+
+def is_tree(adj, cycle_basis, **kwargs):
+    # Trees have no cycles
+    return int(len(cycle_basis) == 0)
+    
 @build_representation("graph_tool")
 def is_planar(g, **kwargs):
     return graph_tool.topology.is_planar(g)
@@ -128,4 +135,95 @@ def is_planar(g, **kwargs):
 @build_representation("graph_tool")
 def is_bipartite(g, **kwargs):
     return graph_tool.topology.is_bipartite(g)
+
+####################################################################
+
+
+def _is_connected_edge_list(prob, N):
+    # Checks if an edge_solution from PuLP is connected
+    edge_solution = [e for e in prob.variables() if e.varValue]
+
+    g_sol = graph_tool.Graph(directed=False)
+    g_sol.add_vertex(N)
+    for edge in edge_solution:
+        _, e0, e1 = edge.name.split('_')
+        e0 = int(e0[1:-1])
+        e1 = int(e1[:-1])
+        g_sol.add_edge(e0, e1)
+
+    conn = graph_tool.topology.label_largest_component(g_sol)
+    return conn.a.all()
+
+@require_arguments("N")
+@build_representation("numpy")
+def is_hamiltonian(A, N, **kwargs):
+
+    if N == 1:
+        return True
+
+    edges = zip(*np.where(A))
+    edges = set([edge for edge in edges if edge[0] >= edge[1]])
+
+    prob = pulp.LpProblem("hamiltonian_cycle",
+                          pulp.LpMinimize)
+
+    # For each edge, create a binary variable.
+    # If it is part of the path/cycle then it will be 1
+    edge_strings = [(e0, e1) for e0, e1 in edges]
+    e_vars = pulp.LpVariable.dicts("edge", (edge_strings,),
+                                   0, 1, pulp.LpInteger)
+
+    # Arbitrary objective function (since we are trying to uniquely find sol)
+    prob += pulp.lpSum(e_vars), "TSP objective"
+
+    # Find unique vertices
+    verts = set()
+    for e0, e1 in edges:
+        verts.add(e0)
+        verts.add(e1)
+
+    # For each vertex, add the constraint that is must appear exactly twice
+    # e.g. each vertex in a Ham. cycle has an inbound and outbound edge
+
+    for v in verts:
+        # Find all edges that contain this vert
+        edge_match = []
+        for e in e_vars:
+            if v in e:
+                edge_match.append(e)
+
+        prob += pulp.lpSum([e_vars[x] for x in edge_match]) == 2, ""
+
+    # Add the constaint the exactly n edges must be selected
+    prob += pulp.lpSum([e_vars[x] for x in e_vars]) == N, "total_edges"
+
+    sol = prob.solve()
+
+    # PuLP returns -1 if solution is infeasible
+    if sol == -1 or sol == -3:
+        return False
+
+    if sol != 1:
+        print ("PuLP failed with", sol, pulp.LpStatus[prob.status])
+        print (prob.writeLP("debug_save.lp"))
+
+    # If there is cycle, make sure it is connected
+    while not _is_connected_edge_list(prob, N):
+
+        # A disjoint solution was found, add it to the list of constaints
+        edge_solution = [e for e in prob.variables() if e.varValue]
+        prob += pulp.lpSum(edge_solution) <= N - 1, ""
+        sol = prob.solve()
+
+        # No solution possible
+        if sol == -1 or sol == -3:
+            return False
+
+    if sol != 1:
+        print ("PuLP failed with", sol, pulp.LpStatus[prob.status])
+        print (prob.writeLP("debug_save.lp"))
+
+    return True
+
+
 '''

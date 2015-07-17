@@ -26,6 +26,7 @@ def clean():
 
 def test():
     args["verbose"] = ""
+    args["force"] = ""
     clean()
     generate()
     polynomial()

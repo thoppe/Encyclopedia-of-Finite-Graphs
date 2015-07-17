@@ -21,7 +21,10 @@
 	  "automorphism_group_n",
 	  "n_edge",
 	  "n_endpoints",
-	  "k_regular"
+	  "k_regular",
+	  "n_cycle_basis",
+	  "girth",
+	  "circumference"
       ],
 
       "boolean" : [

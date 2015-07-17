@@ -99,9 +99,50 @@ class edge_connectivity(integer_invariant):
         return nx.edge_connectivity(gx)
 
 
+class n_cycle_basis(integer_invariant):
+    output_type = "networkx"
+    
+    def calculate(self, gx, **kwargs):
+        return len(nx.cycle_basis(gx))
+
+class girth(integer_invariant):
+    '''
+    Since the cycle basis is the minimal set of fundemental cycles
+    the girth has to be the length of the smallest of these cycles.
+    Graphs with no cycles have girth=0 (defined) as placeholder for infinity.
+    '''
+    output_type = "networkx"
+    
+    def calculate(self, gx, **kwargs):
+        CB = nx.cycle_basis(gx)
+        if not CB: return 0
+        return min(map(len, CB))
+    
+
+class circumference(integer_invariant):
+    '''
+    The circumference is found from the cycle_basis be the largest
+    direct combination of terms. Graphs with no cycles have
+    cir=0 (defined) as placeholder for infinity.
+    '''
+    output_type = "networkx"
+    
+    
+    def calculate(self, gx, N, **kwargs):
+
+        CB = nx.cycle_basis(gx)
+        if not CB: return 0
+
+        def combine_cycle(C):
+            idx = np.zeros(N, dtype=int)
+            for c in C:
+                idx[c] = 1
+            return np.where(idx)[0].tolist()
+
+        return len(combine_cycle(CB))
 
 '''
-    
+
 @build_representation("graph_tool")
 def n_articulation_points(g, **kwargs):
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)

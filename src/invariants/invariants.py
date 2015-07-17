@@ -24,8 +24,6 @@ except ImportError:
 __script_dir = os.path.dirname(os.path.realpath(__file__))
 
 ####################### Invariant requirements ####################
-# Next to each function define any extra requirements needed to be passed
-invariant_requirements = collections.defaultdict(list)
 
 ######################### Conversion code #########################
 
@@ -73,21 +71,6 @@ def special_tutte_polynomial(A, N):
 
     return tpoly.ravel()
 
-
-@build_representation("networkx")
-def special_cycle_basis(g, **kwargs):
-    cycles = nx.cycle_basis(g)
-    sorted_cycles = tuple(sorted([tuple(sorted(c)) for c in cycles]))
-
-    terms = []
-    for cycle_k in range(len(sorted_cycles)):
-        for idx in sorted_cycles[cycle_k]:
-            terms.append((cycle_k, idx))
-    if not terms:
-        return ((None, None),)
-    return tuple(terms)
-
-
 @require_arguments("N")
 def special_independent_vertex_sets(adj, **kwargs):
     cmd_idep = "main {N} {adj}".format(adj=adj, **kwargs)
@@ -105,7 +88,6 @@ def special_independent_edge_sets(adj, **kwargs):
     # Already in two's representation
     independent_sets = [int(line) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
-
 
 #invariant_requirements["chromatic_polynomial"].append("tutte_polynomial")
 @require_arguments("twos_representation","N")
@@ -134,42 +116,6 @@ def special_chromatic_polynomial(twos_representation,N):
     return np.array(coeffs).astype(np.int32)
 
 ######################### REQUIRES [cycle_basis] #################
-
-@require_arguments("cycle_basis")
-def n_cycle_basis(adj, cycle_basis, **kwargs):
-    return len(cycle_basis)
-
-@require_arguments("cycle_basis")
-def is_tree(adj, cycle_basis, **kwargs):
-    # Trees have no cycles
-    return int(len(cycle_basis) == 0)
-
-@require_arguments("cycle_basis")
-def girth(adj, cycle_basis, **kwargs):
-    # Since the cycle basis is the minimal set of fundemental cycles
-    # the girth has to be the length of the smallest of these cycles
-    # Graphs with no cycles have girth=0 (defined) as placeholder for infinity
-    if not cycle_basis:
-        return 0
-
-    return min(map(len, cycle_basis))
-
-@require_arguments("N", "cycle_basis")
-def circumference(adj, cycle_basis, N, **kwargs):
-    # The circumference is found from the cycle_basis be the largest
-    # direct combination of terms
-    # Graphs with no cycles have cir=0 (defined) as placeholder for infinity
-
-    if not cycle_basis:
-        return 0
-
-    def combine_cycle(C):
-        idx = np.zeros(N, dtype=int)
-        for c in C:
-            idx[c] = 1
-        return np.where(idx)[0].tolist()
-
-    return len(combine_cycle(cycle_basis))
 
 ######################### REQUIRES [polynomial_tutte] #################
 
@@ -307,92 +253,6 @@ is_subgraph_free_banner = _is_subgraph_free(_banner_graph)
 
 ######################### PuLP code (Integer programming) ###
 
-def _is_connected_edge_list(prob, N):
-    # Checks if an edge_solution from PuLP is connected
-    edge_solution = [e for e in prob.variables() if e.varValue]
-
-    g_sol = graph_tool.Graph(directed=False)
-    g_sol.add_vertex(N)
-    for edge in edge_solution:
-        _, e0, e1 = edge.name.split('_')
-        e0 = int(e0[1:-1])
-        e1 = int(e1[:-1])
-        g_sol.add_edge(e0, e1)
-
-    conn = graph_tool.topology.label_largest_component(g_sol)
-    return conn.a.all()
-
-@require_arguments("N")
-@build_representation("numpy")
-def is_hamiltonian(A, N, **kwargs):
-
-    if N == 1:
-        return True
-
-    edges = zip(*np.where(A))
-    edges = set([edge for edge in edges if edge[0] >= edge[1]])
-
-    prob = pulp.LpProblem("hamiltonian_cycle",
-                          pulp.LpMinimize)
-
-    # For each edge, create a binary variable.
-    # If it is part of the path/cycle then it will be 1
-    edge_strings = [(e0, e1) for e0, e1 in edges]
-    e_vars = pulp.LpVariable.dicts("edge", (edge_strings,),
-                                   0, 1, pulp.LpInteger)
-
-    # Arbitrary objective function (since we are trying to uniquely find sol)
-    prob += pulp.lpSum(e_vars), "TSP objective"
-
-    # Find unique vertices
-    verts = set()
-    for e0, e1 in edges:
-        verts.add(e0)
-        verts.add(e1)
-
-    # For each vertex, add the constraint that is must appear exactly twice
-    # e.g. each vertex in a Ham. cycle has an inbound and outbound edge
-
-    for v in verts:
-        # Find all edges that contain this vert
-        edge_match = []
-        for e in e_vars:
-            if v in e:
-                edge_match.append(e)
-
-        prob += pulp.lpSum([e_vars[x] for x in edge_match]) == 2, ""
-
-    # Add the constaint the exactly n edges must be selected
-    prob += pulp.lpSum([e_vars[x] for x in e_vars]) == N, "total_edges"
-
-    sol = prob.solve()
-
-    # PuLP returns -1 if solution is infeasible
-    if sol == -1 or sol == -3:
-        return False
-
-    if sol != 1:
-        print ("PuLP failed with", sol, pulp.LpStatus[prob.status])
-        print (prob.writeLP("debug_save.lp"))
-
-    # If there is cycle, make sure it is connected
-    while not _is_connected_edge_list(prob, N):
-
-        # A disjoint solution was found, add it to the list of constaints
-        edge_solution = [e for e in prob.variables() if e.varValue]
-        prob += pulp.lpSum(edge_solution) <= N - 1, ""
-        sol = prob.solve()
-
-        # No solution possible
-        if sol == -1 or sol == -3:
-            return False
-
-    if sol != 1:
-        print ("PuLP failed with", sol, pulp.LpStatus[prob.status])
-        print (prob.writeLP("debug_save.lp"))
-
-    return True
-
 ########## Independent set iterator/Fractional programs #################
 
 @require_arguments("fractional_chromatic_number")
@@ -424,24 +284,6 @@ def maximal_independent_edge_set(adj, independent_edge_sets, **kwargs):
     return max(active)
 
 ######################### Test code #########################
-
-def convert_nx_to_adj(g):
-    edges = g.edges()
-    N = len(g.nodes())
-    idx = zip(*edges)
-
-    # Since graph in undirected assign both sides
-    A = np.zeros((N, N), dtype=int)
-    A[idx[0], idx[1]] = 1
-
-    __upper_matrix_index = np.triu_indices(N)
-    # The string representation of the upper triangular adj matrix
-    au = ''.join(map(str, A[__upper_matrix_index]))
-
-    # Convert the binary string to an int
-    int_index = int(au, 2)
-
-    return int_index
 
 if __name__ == "__main__":
     import logging
