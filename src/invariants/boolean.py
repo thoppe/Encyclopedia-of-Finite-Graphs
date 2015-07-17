@@ -119,14 +119,17 @@ class is_distance_regular(boolean_invariant):
     
     def calculate(self, gx, **kwargs):
         return nx.is_distance_regular(gx)
+
+class is_tree(boolean_invariant):
+    # Trees have no cycles
+    output_type = "networkx"
+    
+    def calculate(self, gx, **kwargs):
+        return len(nx.cycle_basis(gx)) == 0
     
 '''
 
 ####################################################################
-
-def is_tree(adj, cycle_basis, **kwargs):
-    # Trees have no cycles
-    return int(len(cycle_basis) == 0)
     
 @build_representation("graph_tool")
 def is_planar(g, **kwargs):

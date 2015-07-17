@@ -28,6 +28,7 @@
       ],
 
       "boolean" : [
+	  "is_tree",
 	  "is_distance_regular",
 	  "is_chordal",
 	  "is_chordal",
