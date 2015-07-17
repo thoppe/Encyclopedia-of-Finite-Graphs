@@ -19,6 +19,9 @@ def fraction():
 def integer():
     local("python src/update_special.py 4 -f -d -v -i integer")
 
+def boolean():
+    local("python src/update_special.py 4 -f -d -v -i boolean")
+
 
     
     

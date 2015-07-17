@@ -28,7 +28,9 @@ N = cargs["N"]
 logging.root.setLevel(logging.INFO)
 
 # Validate the invariant_type
-if cargs["invariant_type"] not in ["integer","polynomial","fraction"]:
+known_INV_types = ["integer","polynomial","fraction","boolean"]
+
+if cargs["invariant_type"] not in known_INV_types:
     msg = "Invariant type {invariant_type} not permitted yet".format(**cargs)
     raise KeyError(msg)
 
@@ -45,6 +47,8 @@ elif cargs["invariant_type"] == "fraction":
     import invariants.fraction as INVLIB
 elif cargs["invariant_type"] == "integer":
     import invariants.integer as INVLIB
+elif cargs["invariant_type"] == "boolean":
+    import invariants.boolean as INVLIB
 else:
     raise NotImplemented
 

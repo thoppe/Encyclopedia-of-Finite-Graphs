@@ -18,6 +18,9 @@
 	  "n_endpoints",
 	  "k_regular"
       ],
+      "boolean" : [
+	  "is_strongly_regular"
+      ],
       "other" : [
 	  "chromatic_polynomial"
       ]
