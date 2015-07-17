@@ -13,7 +13,10 @@
 	  "fractional_chromatic_number"
       ],
       "integer" : [
-	  "automorphism_group_n"
+	  "automorphism_group_n",
+	  "n_edge",
+	  "n_endpoints",
+	  "k_regular"
       ],
       "other" : [
 	  "chromatic_polynomial"
