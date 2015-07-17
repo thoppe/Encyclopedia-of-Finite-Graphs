@@ -7,15 +7,25 @@ import networkx as nx
 import numpy as np
 
 #import sympy
-#import pulp
 #_imported_list = []
 #_script_dir = os.path.dirname(os.path.realpath(__file__))
 
 class graph_invariant(object):
+    '''
+    Generic invariant. All import_requirements will be load on the first
+    instantiation in the dictionary self.imports. The default input type
+    and output type (for automatic conversion) and dtype can be overridden.
+
+    If another invariant is required from these libraries, place it in
+    invariant_requirements.
+    '''
     
     _has_imported = False
     import_requirements = []
     imports = {}
+
+    invariant_requirements = []
+    invariants = {}
     
     input_type  = 'twos'
     output_type = 'numpy'
@@ -28,6 +38,13 @@ class graph_invariant(object):
                 line = "import {}".format(key)
                 exec line
                 self.imports[key] = eval(key)
+
+            for key in self.invariant_requirements:
+                lib, name = key.split()
+                print "Importing invariant", key
+                line = "from {} import {}".format(lib, name)
+                exec line
+                self.invariants[name] = eval(name)().calculate
                 
             self._has_imported = True
         pass

@@ -49,15 +49,11 @@ class k_regular(integer_invariant):
     # Returns the value of k if it is k regular, otherwise 0
     # Note that the singular graph is 0_regular
     # Cubic graphs are related to http://oeis.org/A002851
-    import_requirements = ["polynomial"]
-
-    deg_seq = None
+    
+    invariant_requirements = ["polynomial degree_sequence"]
        
     def calculate(self, A, **kwargs):
-        if self.deg_seq is None:
-             self.deg_seq = self.imports["polynomial"].degree_sequence()
-             
-        seq = self.deg_seq.calculate(A)
+        seq = self.invariants["degree_sequence"](A)
         
         if len(set(seq)) == 1:
             return seq[0]
