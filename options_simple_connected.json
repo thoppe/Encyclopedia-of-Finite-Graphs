@@ -13,6 +13,7 @@
 	  "fractional_chromatic_number"
       ],
       "integer" : [
+	  "diameter",
 	  "automorphism_group_n",
 	  "n_edge",
 	  "n_endpoints",

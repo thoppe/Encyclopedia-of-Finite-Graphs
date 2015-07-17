@@ -24,7 +24,7 @@ def twos_C_numpy(twos_representation, N, **kwargs):
 
 
 def twos_C_networkx(twos_representation, N, **kwargs):
-    A = convert_to_numpy(twos_representation, N)
+    A = twos_C_numpy(twos_representation, N)
     return nx.from_numpy_matrix(A)
 
 

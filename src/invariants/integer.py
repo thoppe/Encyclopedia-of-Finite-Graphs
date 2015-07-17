@@ -1,4 +1,6 @@
 import numpy as np
+import networkx as nx
+
 import os
 import subprocess
 
@@ -61,19 +63,16 @@ class k_regular(integer_invariant):
             return 0
 
 
-#class n_edge(integer_invariant):
-#    # This is only valid for undirected graphs
-#       
-#    def calculate(self, A, **kwargs):
-#        return np.triu(A).sum()
+class diameter(integer_invariant):
+    output_type = "networkx"
+    
+    def calculate(self, gx, N, **kwargs):
+        if N == 1:
+            return 0
+        return nx.diameter(gx)
+        
 
 '''
-
-@require_arguments("N")
-@build_representation("networkx")
-def diameter(g, N, **kwargs):
-    if N == 1: return 0
-    return nx.diameter(g)
 
 @require_arguments("N")
 @build_representation("networkx")
