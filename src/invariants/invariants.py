@@ -133,30 +133,6 @@ def special_chromatic_polynomial(twos_representation,N):
     coeffs = [0,]*(N+1-len(coeffs)) + coeffs
     return np.array(coeffs).astype(np.int32)
 
-
-######################### REQUIRES [degree_sequence] #################
-
-@require_arguments("degree_sequence")
-def n_edge(adj, degree_sequence, **kwargs):
-    # Defined this way for loopless simple graphs
-    return sum(degree_sequence) / 2
-
-@require_arguments("degree_sequence")
-def n_endpoints(adj, degree_sequence, **kwargs):
-    # Defined this way for loopless simple graphs
-    return sum([True for d in degree_sequence if d == 1])
-
-@require_arguments("degree_sequence")
-def is_k_regular(adj, degree_sequence, **kwargs):
-    # Returns the value of k if it is k regular, otherwise 0
-    # Note that the singular graph is 0_regular
-    # Cubic graphs are related to http://oeis.org/A002851
-
-    if len(set(degree_sequence)) == 1:
-        return degree_sequence[0]
-    else:
-        return 0
-
 ######################### REQUIRES [cycle_basis] #################
 
 @require_arguments("cycle_basis")
