@@ -19,8 +19,22 @@
 	  "k_regular"
       ],
       "boolean" : [
-	  "is_strongly_regular"
+	  "is_strongly_regular",
+	  "is_integral"
       ],
+
+      "NOT_IMPLEMENTED_BOOL" : [
+	  
+	  "is_rational_spectrum",
+	  "is_distinct_spectrum",
+	  "is_chordal",
+	  "is_eulerian",
+	  "is_distance_regular",
+	  "is_planar",
+	  "is_bipartite"
+      ],
+
+
       "other" : [
 	  "chromatic_polynomial"
       ]

@@ -61,36 +61,6 @@ class k_regular(integer_invariant):
             return 0
 
 '''
-@require_arguments("N")
-@build_representation("numpy")
-def is_strongly_regular(A, N, **kwargs):
-    # Check with http://oeis.org/A088741
-    # Returns the value of k if it is k strongly regular, otherwise 0
-    # Strongly regular graphs satisfy AJ = kJ, where J is a ones matrix
-    # Assume that N=1,2 is are strongly regular to match with OEIS
-    if N <= 2:
-        return 1
-
-    K = A.sum(axis=0)
-
-    if len(set(K)) != 1:
-        return False
-
-    L, V = None, None
-
-    for v0, v1 in itertools.combinations(range(N), 2):
-        common = (A[v0] * A[v1]).sum()
-        if A[v0, v1]:
-            if L is None:
-                L = common
-            if L and common != L:
-                return False
-        if not A[v0, v1]:
-            if V is None:
-                V = common
-            if V and common != V:
-                return False
-    return True
 
 @require_arguments("N")
 @build_representation("networkx")
@@ -107,26 +77,6 @@ def radius(g, N, **kwargs):
 @build_representation("networkx")
 def k_max_clique(g, **kwargs):
     return nx.graph_clique_number(g)
-
-@build_representation("networkx")
-def is_chordal(g, **kwargs):
-    return nx.is_chordal(g)
-
-@build_representation("networkx")
-def is_eulerian(g, **kwargs):
-    return nx.is_eulerian(g)
-
-@build_representation("networkx")
-def is_distance_regular(g, **kwargs):
-    return nx.is_distance_regular(g)
-
-@build_representation("graph_tool")
-def is_planar(g, **kwargs):
-    return graph_tool.topology.is_planar(g)
-
-@build_representation("graph_tool")
-def is_bipartite(g, **kwargs):
-    return graph_tool.topology.is_bipartite(g)
 
 @build_representation("graph_tool")
 def n_articulation_points(g, **kwargs):
@@ -161,28 +111,6 @@ def _poly_factorable_over_field(p, domain):
             return False
     return True
 
-@build_representation("numpy")
-def is_integral(A, **kwargs):
-    # Check with http://oeis.org/A064731
-    # Symbolically determine if char poly factors over Z
-    M = sympy.Matrix(A)
-    p = M.charpoly()
-    return _poly_factorable_over_field(p, "ZZ")
-
-@build_representation("numpy")
-def is_rational_spectrum(A, **kwargs):
-    # Like is_integral, checks if the char. poly factors over Q instead of Z
-    M = sympy.Matrix(A)
-    p = M.charpoly()
-    return _poly_factorable_over_field(p, "QQ")
-
-@require_arguments("N")
-@build_representation("numpy")
-def is_distinct_spectrum(A, N, **kwargs):
-    # Checks if all eigenvalues are unique
-    M = sympy.Matrix(A)
-    p = M.charpoly()
-    return p.rep.count_real_roots() == N
 '''
 
 
