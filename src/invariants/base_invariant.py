@@ -38,14 +38,16 @@ class graph_invariant(object):
                 line = "import {}".format(key)
                 exec line
                 self.imports[key] = eval(key)
-
+            '''
             for key in self.invariant_requirements:
+                print key
+                exit()
                 lib, name = key.split()
                 print "Importing invariant", key
                 line = "from {} import {}".format(lib, name)
                 exec line
                 self.invariants[name] = eval(name)().calculate
-                
+            '''
             self._has_imported = True
         pass
 

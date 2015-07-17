@@ -50,13 +50,12 @@ class k_regular(integer_invariant):
     # Note that the singular graph is 0_regular
     # Cubic graphs are related to http://oeis.org/A002851
     
-    invariant_requirements = ["polynomial degree_sequence"]
+    invariant_requirements = ["degree_sequence"]
        
-    def calculate(self, A, **kwargs):
-        seq = self.invariants["degree_sequence"](A)
-        
-        if len(set(seq)) == 1:
-            return seq[0]
+    def calculate(self, A, degree_sequence, **kwargs):
+                
+        if len(set(degree_sequence)) == 1:
+            return degree_sequence[0]
         else:
             return 0
 

@@ -7,7 +7,7 @@ import networkx as nx
 #    print "ERROR: The module graph_tool must be installed externally."
 #    sys.exit(1)
 
-def twos_C_numpy(twos_representation, N):
+def twos_C_numpy(twos_representation, N, **kwargs):
     
     possible_edges = int ((N * (N + 1)) / 2)
 
@@ -23,7 +23,7 @@ def twos_C_numpy(twos_representation, N):
     return A
 
 
-def twos_C_networkx(twos_representation, N):
+def twos_C_networkx(twos_representation, N, **kwargs):
     A = convert_to_numpy(twos_representation, N)
     return nx.from_numpy_matrix(A)
 

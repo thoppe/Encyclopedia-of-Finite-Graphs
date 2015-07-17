@@ -52,26 +52,59 @@ def get_database_graph(options):
     return os.path.join("database",fname.format(**options))
 
 def get_database_special(options):
-    fname = "{graph_types}_invariants_{N}.h5"
+    fname = "{graph_types}_{N}_invariants.h5"
     return os.path.join("database",fname.format(**options))
 
-
-def graph_iterator(graphs, N, offset=0, chunksize=1000,
-                   requirement_db_list=[]):
-
-    gn = graphs.shape[0]
+def is_invariant_calc_complete(name, invariant_db):
     
-    G = chunked_iterator(graphs,gn,offset,chunksize)
-    ITRS = {"twos_representation":G}
+    if name not in invariant_db:
+        return False
+    
+    dset = invariant_db[name]
+    gn   = dset.shape[0]
+    offset = dset.attrs["compute_start"]
+    remaining_n = gn-offset
+    return not remaining_n
 
-    for name, db in requirement_db_list:
-        ITRS[name] = chunked_iterator(db,gn,offset,chunksize)
 
-    while G:
-        item = {"N":N}
-        for key in ITRS:
-            item[key] = ITRS[key].next()
-        yield item
+#def graph_iterator(graph_db, N, invariant_db,
+#                   offset=0, chunksize=1000,
+#                   requirement_db_list=[]):
+
+class graph_iterator(object):
+    '''
+    Iterates over the graphs and adds in any requested invariants.
+    '''
+    
+    def __init__(self, graph_db, N, invariant_db,
+                    offset=0, chunksize=1000,
+                    requirement_db_list=[]):
+    
+        gn = graph_db.shape[0]
+        self.N  = N
+        self.G = chunked_iterator(graph_db,gn,offset,chunksize)
+        self.ITRS = {"twos_representation":self.G}
+        
+        for name in requirement_db_list:
+
+            # Check that invariant requirements have been met
+            if not is_invariant_calc_complete(name, invariant_db):
+                raise KeyError(name)
+
+            # Add in the invariant
+            dset = invariant_db[name]
+            self.ITRS[name] = chunked_iterator(dset,gn,offset,chunksize)
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+
+        while self.G:
+            item = {"N":self.N}
+            for key in self.ITRS:
+                item[key] = self.ITRS[key].next()
+            return item
 
 def chunked_iterator(ITR, ITR_n, offset=0, chunksize=10000):
     for i in xrange(offset, ITR_n, chunksize):

@@ -76,6 +76,7 @@ class is_integral(boolean_invariant):
         p = M.charpoly()
         return _poly_factorable_over_field(p, "ZZ", sympy)
 
+
 '''
 
 @build_representation("numpy")

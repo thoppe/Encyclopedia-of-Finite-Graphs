@@ -105,19 +105,26 @@ for key in invariant_names:
     func = functionals[key]
     dset = datasets[key]
 
+    if helper.is_invariant_calc_complete(key, h5s):
+        continue
+    
     offset = dset.attrs["compute_start"]
     remaining_n = gn-offset
-
 
     msg = "{} left to compute for {}".format(remaining_n,key)
     logging.info(msg)
 
-    req_list = []
+    req_list = func.invariant_requirements
 
-    GITR = helper.graph_iterator(graphs, N,
-                                 requirement_db_list=req_list,
-                                 offset=offset)
-
+    try:
+        GITR = helper.graph_iterator(graphs, N, h5s,
+                                     requirement_db_list=req_list,
+                                     offset=offset)
+    except KeyError as EX:
+        msg = "Skipping {}. Requires {} to be computed."
+        logging.warning(msg.format(key,EX))
+        continue
+    
     # Used for caching the results
     result_save_size = 100
     result_shape = (result_save_size,func.shape(N=N))
