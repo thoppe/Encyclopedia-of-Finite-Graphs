@@ -70,32 +70,42 @@ class diameter(integer_invariant):
         if N == 1:
             return 0
         return nx.diameter(gx)
-        
+
+
+class radius(integer_invariant):
+    output_type = "networkx"
+    
+    def calculate(self, gx, N, **kwargs):
+        if N == 1:
+            return 0
+        return nx.radius(gx)
+
+class k_max_clique(integer_invariant):
+    output_type = "networkx"
+    
+    def calculate(self, gx, **kwargs):
+        return nx.graph_clique_number(gx)
+
+class vertex_connectivity(integer_invariant):
+    output_type = "networkx"
+    
+    def calculate(self, gx, **kwargs):
+        return nx.node_connectivity(gx)
+
+class edge_connectivity(integer_invariant):
+    output_type = "networkx"
+    
+    def calculate(self, gx, **kwargs):
+        return nx.edge_connectivity(g)
+
+
 
 '''
-
-@require_arguments("N")
-@build_representation("networkx")
-def radius(g, N, **kwargs):
-    if N == 1: return 0
-    return nx.radius(g)
-
-@build_representation("networkx")
-def k_max_clique(g, **kwargs):
-    return nx.graph_clique_number(g)
-
+    
 @build_representation("graph_tool")
 def n_articulation_points(g, **kwargs):
     bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
     return sum(art.a)
-
-@build_representation("networkx")
-def vertex_connectivity(g, **kwargs):
-    return nx.node_connectivity(g)
-
-@build_representation("networkx")
-def edge_connectivity(g, **kwargs):
-    return nx.edge_connectivity(g)
 
 '''
 

@@ -13,7 +13,10 @@
 	  "fractional_chromatic_number"
       ],
       "integer" : [
+	  "vertex_connectivity",
+	  "k_max_clique",
 	  "diameter",
+	  "radius",
 	  "automorphism_group_n",
 	  "n_edge",
 	  "n_endpoints",
