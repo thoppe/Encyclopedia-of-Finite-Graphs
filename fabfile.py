@@ -15,6 +15,7 @@ def push():
     local("git commit -a")
     local("git push")
 def commit():
+    test()
     push()
 
 def generate():

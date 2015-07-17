@@ -25,7 +25,11 @@ cargs = vars(parser.parse_args())
 N = cargs["N"]
 
 # Start the logger
-logging.root.setLevel(logging.INFO)
+logging.root.setLevel(logging.WARNING)
+
+if cargs["verbose"]:
+    logging.basicConfig(level=logging.INFO)
+
 
 # Validate the invariant_type
 known_INV_types = ["integer","polynomial","fraction","boolean"]
