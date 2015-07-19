@@ -170,6 +170,12 @@ class is_bipartite(boolean_invariant):
         gtop = self.imports["graph_tool.topology"]
         return gtop.is_bipartite(gtx)
 
+class is_k_regular(boolean_invariant):
+    output_type = None
+    invariant_requirements = ["k_regular"]
+    
+    def calculate(self, k_regular, **kwargs):
+        return k_regular > 0
     
 ####################################################################
 

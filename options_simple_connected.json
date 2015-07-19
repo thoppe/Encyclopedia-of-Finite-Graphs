@@ -13,8 +13,6 @@
 	  "fractional_chromatic_number"
       ],
       "integer" : [
-	  "n_independent_vertex_sets",
-	  "n_independent_edge_sets",
 	  "chromatic_number",
 	  "edge_connectivity",
 	  "vertex_connectivity",
@@ -28,13 +26,15 @@
 	  "n_cycle_basis",
 	  "girth",
 	  "circumference",
-	  "n_articulation_points"
+	  "n_articulation_points",
+	  "n_independent_vertex_sets",
+	  "n_independent_edge_sets"
       ],
 
       "boolean" : [
+	  "is_k_regular",
 	  "is_eulerian",
 	  "is_hamiltonian",
-	  "has_fractional_chromatic_gap",
 	  "is_bipartite",
 	  "is_planar",
 	  "is_tree",
@@ -43,7 +43,8 @@
 	  "is_distinct_spectrum",
 	  "is_strongly_regular",
 	  "is_rational",
-	  "is_integral"
+	  "is_integral",
+	  "has_fractional_chromatic_gap"
       ],
 
       "subgraph" : [
