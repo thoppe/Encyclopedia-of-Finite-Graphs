@@ -14,6 +14,51 @@ class integer_invariant(graph_invariant):
 
 ####################################################################
 
+class n_independent_vertex_sets(integer_invariant):
+    import_requirements = ["unstructured"]
+    output_type = None
+    
+    def calculate(self,twos_representation,N,**kwargs):
+        func = self.imports["unstructured"].independent_vertex_sets
+        vsets = func(twos_representation,N)
+        return len(vsets)
+
+class n_independent_edge_sets(integer_invariant):
+    import_requirements = ["unstructured"]
+    output_type = None
+    
+    def calculate(self,twos_representation,N,**kwargs):
+        func = self.imports["unstructured"].independent_edge_sets
+        esets = func(twos_representation,N)
+        return len(esets)
+    
+class maximal_independent_vertex_set(integer_invariant):
+
+    import_requirements = ["unstructured"]
+    output_type = None
+    
+    def calculate(self,twos_representation,N,**kwargs):
+        func = self.imports["unstructured"].independent_vertex_sets
+        vsets = func(twos_representation,N)
+        #active = [bin(x[0]).count('1') for x in independent_vertex_sets]
+        #return max(active)
+        raise NotImplemented
+
+class maximal_independent_edge_set(integer_invariant):
+    import_requirements = ["unstructured"]
+    output_type = None
+    
+    def calculate(self,twos_representation,N,**kwargs):
+        func = self.imports["unstructured"].independent_edge_sets
+        esets = func(twos_representation,N)
+        #active = [bin(x[0]).count('1') for x in independent_edge_sets]
+        #return max(active)
+        raise NotImplemented
+
+
+####################################################################
+
+
 class chromatic_number(integer_invariant):
     ''' Evaluates the chromatic number from the chromatic polynomial. '''
     invariant_requirements = ["chromatic_polynomial"]

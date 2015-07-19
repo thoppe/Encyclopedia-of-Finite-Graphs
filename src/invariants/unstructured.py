@@ -19,3 +19,21 @@ def tutte_polynomial(A, N):
     
     sval = [[int(x) for x in line.split()] for line in proc.stdout]
     return sval
+
+def independent_vertex_sets(twos_representation, N):
+    cmd_idep = "main {N} {adj}".format(adj=twos_representation,N=N)
+    cmd = os.path.join(__script_dir, 'independent_vertex_sets', cmd_idep)
+    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
+
+    # Convert to two's representation
+    independent_sets = [int(line, 2) for line in proc.stdout]
+    return independent_sets
+
+def independent_edge_sets(twos_representation, N):
+    cmd_idep = "main {N} {adj}".format(adj=twos_representation,N=N)
+    cmd = os.path.join(__script_dir, 'independent_edge_sets', cmd_idep)
+    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)    
+    independent_sets = [int(line) for line in proc.stdout]
+
+    # Already in two's representation
+    return independent_sets
