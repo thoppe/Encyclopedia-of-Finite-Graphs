@@ -1,8 +1,6 @@
 # Subgraph testing code
 # Requires graph_tool
 
-# RAW NOT IMPORTED PROPERLY YET
-
 import sys
 import itertools
 import graph_tool
@@ -35,6 +33,7 @@ _cycle_graphs = [__generate_CN(n) for n in range(0, _largest_N_subgraph)]
 _has_subgraph = graph_tool.topology.subgraph_isomorphism
 
 #######################################################################
+# Defined graphs
 
 # Bull graph
 _bull_graph = _cycle_graphs[3].copy()
