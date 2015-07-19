@@ -9,7 +9,10 @@ import graph_tool
 import graph_tool.topology
 from base_invariant import graph_invariant
 
-_largest_N_subgraph = 30
+_largest_N_subgraph = 20
+
+#######################################################################
+# Graph Generators
 
 def __generate_KN(n):
     # Generates a complete graph
@@ -30,6 +33,8 @@ def __generate_CN(n):
 _complete_graphs = [__generate_KN(n) for n in range(0, _largest_N_subgraph)]
 _cycle_graphs = [__generate_CN(n) for n in range(0, _largest_N_subgraph)]
 _has_subgraph = graph_tool.topology.subgraph_isomorphism
+
+#######################################################################
 
 # Bull graph
 _bull_graph = _cycle_graphs[3].copy()
@@ -70,6 +75,7 @@ _banner_graph_v1 = _banner_graph.add_vertex()
 _banner_graph.add_edge(_banner_graph_v1, _banner_graph.vertex(0))
 
 #######################################################################
+# Detection class factories
 
 class _is_subgraph_free(graph_invariant):
 
@@ -95,6 +101,8 @@ class _is_subgraph_free(graph_invariant):
 
 
 def subgraph_builder(name, input_subg):
+    # Add the named class to the current module
+    
     thismodule = sys.modules[__name__]
     
     class x(_is_subgraph_free):
@@ -105,7 +113,7 @@ def subgraph_builder(name, input_subg):
 
 
 #######################################################################
-##### Detection code
+# Explict detection code
 
 subgraph_builder("paw",_paw_graph)
 subgraph_builder("banner",_banner_graph)
@@ -113,28 +121,15 @@ subgraph_builder("open_bowtie",_open_bowtie_graph)
 subgraph_builder("bowtie",_bowtie_graph)
 subgraph_builder("bull",_bull_graph)
 
-'''
+for K in xrange(3, _largest_N_subgraph):
+    # is_subgraph_free_K3=1, OEIS:A024607
+    subgraph_builder("K{}".format(K),_complete_graphs[K])
+    subgraph_builder("C{}".format(K),_cycle_graphs[K])
 
-# is_subgraph_free_K3=1, OEIS:A024607
-is_subgraph_free_K3 = _is_subgraph_free(_complete_graphs[3])
-is_subgraph_free_K4 = _is_subgraph_free(_complete_graphs[4])
-is_subgraph_free_K5 = _is_subgraph_free(_complete_graphs[5])
-
-is_subgraph_free_C4 = _is_subgraph_free(_cycle_graphs[4])
-is_subgraph_free_C5 = _is_subgraph_free(_cycle_graphs[5])
-
-is_subgraph_free_C6 = _is_subgraph_free(_cycle_graphs[6])
-is_subgraph_free_C7 = _is_subgraph_free(_cycle_graphs[7])
-is_subgraph_free_C8 = _is_subgraph_free(_cycle_graphs[8])
-is_subgraph_free_C9 = _is_subgraph_free(_cycle_graphs[9])
-is_subgraph_free_C10 = _is_subgraph_free(_cycle_graphs[10])
-'''
-
-
-#####################
+#######################################################################
 
 if __name__ == "__main__":
-    B = is_subgraph_free_bull()
+    B = is_subgraph_free_K3()
     item = {"twos_representation":474, "N":4}
     print B(item)
     print B.shape(**item)
