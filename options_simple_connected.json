@@ -4,10 +4,10 @@
 
   "invariant_calculations" : {
       "polynomial" : [
+	  "chromatic_polynomial",
           "degree_sequence",
           "laplacian_polynomial", 
           "characteristic_polynomial"
-          
       ],
       "fraction" : [
 	  "fractional_chromatic_number"
@@ -34,27 +34,14 @@
 	  "is_tree",
 	  "is_distance_regular",
 	  "is_chordal",
-	  "is_chordal",
 	  "is_distinct_spectrum",
 	  "is_strongly_regular",
 	  "is_rational",
 	  "is_integral"
       ],
 
-      "NOT_IMPLEMENTED_BOOL" : [
-	  
-	  "is_rational_spectrum",
-	  "is_distinct_spectrum",
-	  "is_chordal",
-	  "is_eulerian",
-	  "is_distance_regular",
-	  "is_planar",
-	  "is_bipartite"
-      ],
-
-
       "other" : [
-	  "chromatic_polynomial"
+	  
       ]
   }
 }

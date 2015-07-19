@@ -32,17 +32,6 @@ def viz_graph(g, pos=None, **kwargs):
         pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
     graph_tool.draw.graph_draw(g, pos, **kwargs)
 
-@require_arguments("N", "twos_representation")
-def graph_tool_representation(twos_representation, N):
-    A = convert_to_numpy(twos_representation, N)
-    g = graph_tool.Graph(directed=False)
-    g.add_vertex(N)
-    for edge in zip(*np.where(A)):
-        n0, n1 = edge
-        if n0 > n1:
-            g.add_edge(n0, n1)
-    return g
-
 ######################### Special invariant code #################
 
 @build_representation("numpy")
@@ -115,7 +104,6 @@ def special_chromatic_polynomial(twos_representation,N):
     coeffs = [0,]*(N+1-len(coeffs)) + coeffs
     return np.array(coeffs).astype(np.int32)
 
-######################### REQUIRES [cycle_basis] #################
 
 ######################### REQUIRES [polynomial_tutte] #################
 
