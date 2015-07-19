@@ -32,6 +32,7 @@
       ],
 
       "boolean" : [
+	  "is_eulerian",
 	  "is_hamiltonian",
 	  "has_fractional_chromatic_gap",
 	  "is_bipartite",
