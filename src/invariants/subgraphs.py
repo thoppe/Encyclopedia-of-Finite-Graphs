@@ -6,17 +6,18 @@
 import itertools
 import graph_tool
 import graph_tool.topology
+from base_invariant import graph_invariant
 
-_largest_N_subgraph = 15
+_largest_N_subgraph = 30
 
 
 def __generate_KN(n):
+    # Generates a complete graph
     g = graph_tool.Graph(directed=False)
     g.add_vertex(n)
     for i, j in itertools.combinations(range(n), 2):
         g.add_edge(i, j)
     return g
-
 
 def __generate_CN(n):
     g = graph_tool.Graph(directed=False)
