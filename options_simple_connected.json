@@ -44,6 +44,10 @@
 	  "is_integral"
       ],
 
+      "subgraph" : [
+	  "is_subgraph_free_K4"
+      ],
+
       "NotImplemented" : [
 	  "maximal_independent_vertex_set",
 	  "maximal_independent_edge_set"

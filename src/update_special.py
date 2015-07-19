@@ -32,7 +32,8 @@ if cargs["verbose"]:
 
 
 # Validate the invariant_type
-known_INV_types = ["integer","polynomial","fraction","boolean"]
+known_INV_types = ["integer","polynomial","fraction",
+                   "boolean","subgraph"]
 
 if cargs["invariant_type"] not in known_INV_types:
     msg = "Invariant type {invariant_type} not permitted yet".format(**cargs)
@@ -53,6 +54,8 @@ elif cargs["invariant_type"] == "integer":
     import invariants.integer as INVLIB
 elif cargs["invariant_type"] == "boolean":
     import invariants.boolean as INVLIB
+elif cargs["invariant_type"] == "subgraph":
+    import invariants.subgraph as INVLIB
 else:
     raise NotImplemented
 

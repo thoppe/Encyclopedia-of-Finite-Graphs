@@ -90,6 +90,7 @@ class _is_subgraph_free(graph_invariant):
         return len(list(verts))
     
     def calculate(self,gtx,N,**kwargs):
+
         # Early breakout if input graph is too small
         if N < self.subg_N():
             return True
@@ -97,7 +98,7 @@ class _is_subgraph_free(graph_invariant):
         # Only look for a single subgraph, break early if found
         has_sub = _has_subgraph(self.subg, gtx, max_n=1)
         
-        return has_sub == 0
+        return len(has_sub) == 0
 
 
 def subgraph_builder(name, input_subg):
@@ -115,6 +116,7 @@ def subgraph_builder(name, input_subg):
 #######################################################################
 # Explict detection code
 
+subgraph_builder("diamond",_diamond_graph)
 subgraph_builder("paw",_paw_graph)
 subgraph_builder("banner",_banner_graph)
 subgraph_builder("open_bowtie",_open_bowtie_graph)

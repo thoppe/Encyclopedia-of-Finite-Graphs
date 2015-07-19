@@ -23,7 +23,9 @@ def generate():
     local(cmd.format(**args))
 
 def clean():
-    local("rm -vf database/*{N}*".format(**args)) 
+    local("rm -vf database/*{N}*".format(**args))
+    local("find . -name '*.pyc' | xargs -I {} rm -v {}")
+    local("find . -name '*~' | xargs -I {} rm -v {}") 
 
 def test():
     args["verbose"] = ""
@@ -34,6 +36,7 @@ def test():
     fraction()
     integer()
     boolean()
+    subgraph()
 
 
 cmd_invar_calc = "{calc_exec} {N} {debug} {verbose} {force} -i {name}"
@@ -49,6 +52,9 @@ def integer():
 
 def boolean():
     local(cmd_invar_calc.format(name="boolean",**args))
+
+def subgraph():
+    local(cmd_invar_calc.format(name="subgraph",**args))
 
     
     
