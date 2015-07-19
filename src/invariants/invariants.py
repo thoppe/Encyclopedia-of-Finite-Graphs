@@ -52,6 +52,31 @@ def special_independent_edge_sets(adj, **kwargs):
     independent_sets = [int(line) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
 
+
+######################### PuLP code (Integer programming) ###
+
+########## Independent set iterator/Fractional programs #################
+
+@require_arguments("independent_vertex_sets")
+def n_independent_vertex_sets(adj, independent_vertex_sets, **kwargs):
+    return len(independent_vertex_sets)
+
+@require_arguments("independent_vertex_sets")
+def maximal_independent_vertex_set(adj, independent_vertex_sets, **kwargs):
+    active = [bin(x[0]).count('1') for x in independent_vertex_sets]
+    return max(active)
+
+@require_arguments("independent_edge_sets")
+def n_independent_edge_sets(adj, independent_edge_sets, **kwargs):
+    return len(independent_edge_sets)
+
+@require_arguments("independent_edge_sets")
+def maximal_independent_edge_set(adj, independent_edge_sets, **kwargs):
+    active = [bin(x[0]).count('1') for x in independent_edge_sets]
+    return max(active)
+
+
+
 ######################### Subgraph code #########################
 
 
@@ -143,39 +168,6 @@ _banner_graph.add_edge(_banner_graph_v1, _banner_graph.vertex(0))
 is_subgraph_free_banner = _is_subgraph_free(_banner_graph)
 
 ######################### Bliss code #########################
-
-
-######################### PuLP code (Integer programming) ###
-
-########## Independent set iterator/Fractional programs #################
-
-@require_arguments("fractional_chromatic_number")
-def has_fractional_duality_gap_vertex_chromatic(adj, 
-                                                fractional_chromatic_number,
-                                                **kwargs):
-    chi  = chromatic_number(adj, **kwargs)
-    a, b = fractional_chromatic_number
-    chi_f = fractions.Fraction(a, b)
-    return chi != chi_f
-
-
-@require_arguments("independent_vertex_sets")
-def n_independent_vertex_sets(adj, independent_vertex_sets, **kwargs):
-    return len(independent_vertex_sets)
-
-@require_arguments("independent_vertex_sets")
-def maximal_independent_vertex_set(adj, independent_vertex_sets, **kwargs):
-    active = [bin(x[0]).count('1') for x in independent_vertex_sets]
-    return max(active)
-
-@require_arguments("independent_edge_sets")
-def n_independent_edge_sets(adj, independent_edge_sets, **kwargs):
-    return len(independent_edge_sets)
-
-@require_arguments("independent_edge_sets")
-def maximal_independent_edge_set(adj, independent_edge_sets, **kwargs):
-    active = [bin(x[0]).count('1') for x in independent_edge_sets]
-    return max(active)
 
 ######################### Test code #########################
 

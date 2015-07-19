@@ -17,7 +17,6 @@ class integer_invariant(graph_invariant):
 class chromatic_number(integer_invariant):
     ''' Evaluates the chromatic number from the chromatic polynomial. '''
     invariant_requirements = ["chromatic_polynomial"]
-    import_requirements = ["sympy"]    
 
     # No conversion needed
     output_type = None

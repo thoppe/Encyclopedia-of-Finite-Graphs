@@ -30,6 +30,7 @@
       ],
 
       "boolean" : [
+	  "has_fractional_chromatic_gap",
 	  "is_bipartite",
 	  "is_planar",
 	  "is_tree",

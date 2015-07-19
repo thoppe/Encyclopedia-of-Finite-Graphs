@@ -13,6 +13,32 @@ class boolean_invariant(graph_invariant):
     dtype = np.bool
     def shape(self, **kwargs): return 1
 
+######################################################################
+
+class has_fractional_chromatic_gap(boolean_invariant):
+    '''
+    Returns True if the fraction chromatic number differs
+    from the tradtional chromatic number.
+    '''
+    invariant_requirements = ["chromatic_number",
+                              "fractional_chromatic_number"]
+        
+    import_requirements = ["fractions"]        
+    # No conversion needed
+    output_type = None
+
+    def calculate(self, chromatic_number,
+                  fractional_chromatic_number, **kwargs):
+
+        chi = chromatic_number[0]
+        chi_f = fractional_chromatic_number
+        chi_f = self.imports["fractions"].Fraction(*chi_f)
+
+        return chi != chi_f
+    
+
+######################################################################
+
 class is_strongly_regular(boolean_invariant):
 
     def calculate(self, A, N, **kwargs):
