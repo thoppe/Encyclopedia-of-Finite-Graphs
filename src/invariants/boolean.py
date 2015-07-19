@@ -1,5 +1,6 @@
 import numpy as np
 import networkx as nx
+import graph_tool as gt
 
 import itertools
 import os
@@ -11,7 +12,6 @@ _script_dir = os.path.dirname(os.path.realpath(__file__))
 class boolean_invariant(graph_invariant):
     dtype = np.bool
     def shape(self, **kwargs): return 1
-
 
 class is_strongly_regular(boolean_invariant):
 
@@ -101,6 +101,7 @@ class is_distinct_spectrum(boolean_invariant):
         p = M.charpoly()
         return p.rep.count_real_roots() == N
     
+######################################################################
 
 class is_chordal(boolean_invariant):
     output_type = "networkx"
@@ -126,19 +127,24 @@ class is_tree(boolean_invariant):
     
     def calculate(self, gx, **kwargs):
         return len(nx.cycle_basis(gx)) == 0
+
+class is_planar(boolean_invariant):
+    output_type = "graph_tool"
+    import_requirements = ["graph_tool.topology"]
+    
+    def calculate(self, gtx, **kwargs):
+        gtop = self.imports["graph_tool.topology"]
+        return gtop.is_planar(gtx)
+
+class is_bipartite(boolean_invariant):
+    output_type = "graph_tool"
+    import_requirements = ["graph_tool.topology"]
+    
+    def calculate(self, gtx, **kwargs):
+        gtop = self.imports["graph_tool.topology"]
+        return gtop.is_bipartite(gtx)
     
 '''
-
-####################################################################
-    
-@build_representation("graph_tool")
-def is_planar(g, **kwargs):
-    return graph_tool.topology.is_planar(g)
-
-@build_representation("graph_tool")
-def is_bipartite(g, **kwargs):
-    return graph_tool.topology.is_bipartite(g)
-
 ####################################################################
 
 
@@ -227,6 +233,5 @@ def is_hamiltonian(A, N, **kwargs):
         print (prob.writeLP("debug_save.lp"))
 
     return True
-
 
 '''

@@ -141,14 +141,17 @@ class circumference(integer_invariant):
 
         return len(combine_cycle(CB))
 
-'''
 
-@build_representation("graph_tool")
-def n_articulation_points(g, **kwargs):
-    bicomp, art, nc = graph_tool.topology.label_biconnected_components(g)
-    return sum(art.a)
 
-'''
+class n_articulation_points(integer_invariant):
+    output_type = "graph_tool"
+    import_requirements = ["graph_tool.topology"]
+    
+    def calculate(self, gtx, **kwargs):
+        gtop = self.imports["graph_tool.topology"]
+        bicomp, art, nc = gtop.label_biconnected_components(gtx)
+        return sum(art.a)    
+
 
 
 if __name__ == "__main__":

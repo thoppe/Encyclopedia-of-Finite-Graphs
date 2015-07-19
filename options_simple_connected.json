@@ -24,10 +24,13 @@
 	  "k_regular",
 	  "n_cycle_basis",
 	  "girth",
-	  "circumference"
+	  "circumference",
+	  "n_articulation_points"
       ],
 
       "boolean" : [
+	  "is_bipartite",
+	  "is_planar",
 	  "is_tree",
 	  "is_distance_regular",
 	  "is_chordal",
