@@ -1,309 +1,162 @@
 import logging
 import argparse
-import inspect
-import itertools
-import collections
-from helper_functions import (load_graph_database, select_itr,
-                              grab_vector, grab_all, grab_scalar,
-                              import_csv_to_table, compute_parallel,
-                              grab_col_names, load_options)
+import os
+import helper_functions as helper
+import h5py
+import numpy as np
 
-desc = "Updates the database for fixed N"
+desc = "Updates the special invariants for fixed N"
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('N', type=int)
-parser.add_argument('--chunksize', type=int,
-                    help="Entries to compute before insert is called",
-                    default=1000)
+parser.add_argument('-o', '--options',
+                    default="options_simple_connected.json",
+                    help="option file")
+parser.add_argument('-d', '--debug',
+                    default=False,action="store_true",
+                    help="Turns off multiprocessing")
+parser.add_argument('-v', '--verbose',
+                    default=False,action="store_true",
+                    help="Prints every output")
+parser.add_argument('-i', '--invariant_type',
+                    default="polynomial", help="Invariant type to compute")
 
-msg = "Runs the computation in debug mode [not parallel, no commit]"
-parser.add_argument('--debug', default=False, action="store_true",
-                    help=msg)
-
-msg = "Runs the in serial mode [no parallel]"
-parser.add_argument('--no_parallel', default=False, action="store_true",
-                    help=msg)
-
+parser.add_argument('-f', '--force', default=False, action='store_true')
 cargs = vars(parser.parse_args())
 N = cargs["N"]
 
 # Start the logger
-logging.root.setLevel(logging.INFO)
+logging.root.setLevel(logging.WARNING)
 
-# Load the database
-conn  = load_graph_database(cargs["N"])
-sconn = load_graph_database(cargs["N"], special=True)
+if cargs["verbose"]:
+    logging.basicConfig(level=logging.INFO)
 
-logging.info("Starting invariant calculation for {N}".format(**cargs))
 
-options = load_options()
-invariant_names = options["invariant_function_names"]
+# Validate the invariant_type
+known_INV_types = ["integer","polynomial","fraction",
+                   "boolean","subgraph"]
 
-# Create a mapping to all the known invariant functions
-import invariants
-invariant_funcs = dict(inspect.getmembers(invariants,
-                                          inspect.isfunction))
+if cargs["invariant_type"] not in known_INV_types:
+    msg = "Invariant type {invariant_type} not permitted yet".format(**cargs)
+    raise KeyError(msg)
 
-# Make sure all invariant functions are defined
-for name in invariant_names:
-    if name not in invariant_funcs:
-        err = "Invariant function {} not defined".format(name)
-        raise KeyError(err)
+# Load the options
+options = helper.load_options(cargs["options"])
 
-# Insert the list of invariants to compute, ignore if already done
-cmd_insert_names = '''
-INSERT OR IGNORE INTO invariant_integer_functions
-(function_name) VALUES (?)
-'''
-name_ITR = zip(*[invariant_names])
-conn.executemany(cmd_insert_names, name_ITR)
-conn.commit()
+# Determine the invariant names
+invariant_names = options["invariant_calculations"][cargs["invariant_type"]]
 
-# Get the invariant_ids
-cmd_get_invariant_ids = '''
-SELECT function_name, invariant_id FROM
-invariant_integer_functions
-'''
-invariant_id_lookup = dict(grab_all(conn,cmd_get_invariant_ids))
+# Import the right library
+if cargs["invariant_type"] == "polynomial":
+    import invariants.polynomial as INVLIB
+elif cargs["invariant_type"] == "fraction":
+    import invariants.fraction as INVLIB
+elif cargs["invariant_type"] == "integer":
+    import invariants.integer as INVLIB
+elif cargs["invariant_type"] == "boolean":
+    import invariants.boolean as INVLIB
+elif cargs["invariant_type"] == "subgraph":
+    import invariants.subgraph as INVLIB
+else:
+    raise NotImplemented
 
-# List any special rules for the invariants
-special_invariants = {
-    "n_cycle_basis": "cycle_basis",
-    "is_tree": "cycle_basis",
-    "girth": "cycle_basis",
-    "circumference": "cycle_basis",
-    "n_edge": "degree_sequence",
-    "n_endpoints": "degree_sequence",
-    "is_k_regular": "degree_sequence",
-    "chromatic_number": "tutte_polynomial",
-    "has_fractional_duality_gap_vertex_chromatic":
-    "fractional_chromatic_number",
-    "n_independent_vertex_sets": "independent_vertex_sets",
-    "maximal_independent_vertex_set": "independent_vertex_sets",
-    "n_independent_edge_sets": "independent_edge_sets",
-    "maximal_independent_edge_set": "independent_edge_sets",
-}
+# Combine the options together with cargs
+cargs.update(options)
+
+f_database = helper.get_database_graph(cargs)
+h5_graphs = h5py.File(f_database,'r')
+graphs = h5_graphs["graphs"]
+
+# Count the number of graphs
+gn = graphs.shape[0]
+
+f_database_special = helper.get_database_special(cargs)
+if not os.path.exists(f_database_special) or cargs["force"]:
+    h5py.File(f_database_special,'w').close()
+
+h5s = h5py.File(f_database_special,'r+')
+
+msg = "Starting calculation for ({graph_types}) ({invariant_type}) ({N})"
+logging.info(msg.format(**cargs))
 
 ######################################################################
+# Allocate space for all the data
 
-# Allocate the space for all the invariants
-cmd_allocate = '''
-INSERT INTO invariant_integer (graph_id, invariant_id)
-VALUES (?,{})
-'''
+msg = "Allocating space for {invariant_type} invariants {graph_types} ({N})"
+logging.info(msg.format(**cargs))
 
-cmd_check_if_allocated = '''
-SELECT COUNT(*) FROM invariant_integer
-WHERE invariant_id=? LIMIT 1
-'''
-msg = "Allocating space for {}"
+h5args = {'compression':'gzip',
+          'compression_opts':9}
 
-for name in invariant_names:
-    idx = invariant_id_lookup[name]
-    is_allocated = grab_scalar(conn, cmd_check_if_allocated, (idx,))
+datasets    = {}
+functionals = {}
 
-    if not is_allocated:
-        logging.info(msg.format(name))
-        cmd = cmd_allocate.format(idx)
-        ITR = conn.execute("SELECT graph_id FROM graph")
-        conn.executemany(cmd, ITR)
+for key in invariant_names:
 
-conn.commit()
+    functionals[key] = getattr(INVLIB, key)()
+    size  = functionals[key].shape(N=N)
+    shape = (gn, size)
 
-
-######################################################################
-
-def graph_target_iterator(func_name):
-
-    idx = invariant_id_lookup[name]
-    cmd_grab = '''
-        SELECT A.graph_id, A.adj FROM graph AS A
-        JOIN invariant_integer B ON A.graph_id=B.graph_id
-        WHERE B.value IS NULL
-        AND   B.invariant_id=?
-    '''
-    cursor = conn.execute(cmd_grab, (idx,))
-
-    for g_id, adj in cursor:
-        yield (g_id, adj, {"N": N})
-
-
-
-def iterator_degree_sequence(func_name):
-    itr = graph_target_iterator(func_name)
-    cmd = '''SELECT degree FROM degree_sequence WHERE graph_id=(?)'''
-
-    for g_id, adj, args in itr:
-        args["degree_sequence"] = grab_vector(sconn, cmd, (g_id,))
-        yield (g_id, adj, args)
-
-
-def iterator_cycle_basis(func_name):
-    itr = graph_target_iterator(func_name)
-    cmd = '''SELECT cycle_k,idx FROM cycle_basis WHERE graph_id=(?)'''
-
-    for g_id, adj, args in itr:
-        cycle_basis = grab_all(sconn, cmd, (g_id,))
-        if cycle_basis[0][0] == u"None":
-            cycle_basis = []
-        else:
-            # Convert the flat representation to a nested list
-            cb = collections.defaultdict(list)
-            for cycle_k, idx in cycle_basis:
-                cb[cycle_k].append(idx)
-            cycle_basis = cb.values()
-
-        args["cycle_basis"] = cycle_basis
-        yield (g_id, adj, args)
-
-
-def iterator_tutte_polynomial(func_name):
-    itr = graph_target_iterator(func_name)
-    cmd = '''SELECT x_degree,y_degree,coeff FROM tutte_polynomial WHERE graph_id=(?)'''
-
-    for g_id, adj, args in itr:
-        args["tutte_polynomial"] = grab_all(sconn, cmd, (g_id,))
-        yield (g_id, adj, args)
-
-
-def iterator_fractional_chromatic_number(func_name):
-    itr = graph_target_iterator(func_name)
-    cmd_f = '''SELECT a,b FROM fractional_chromatic_number WHERE graph_id=(?) LIMIT 1'''
-    cmd_t = '''SELECT x_degree,y_degree,coeff FROM tutte_polynomial WHERE graph_id=(?)'''
-
-    for g_id, adj, args in itr:
-        args["fractional_chromatic_number"] = grab_all(sconn, cmd_f, (g_id,))[0]
-        args["tutte_polynomial"] = grab_all(sconn, cmd_t, (g_id,))
-        yield (g_id, adj, args)
-
-
-def iterator_IVS(func_name):
-    itr = graph_target_iterator(func_name)
-    cmd = '''SELECT vertex_map FROM independent_vertex_sets WHERE graph_id=(?)'''
-
-    for g_id, adj, args in itr:
-        args["independent_vertex_sets"] = grab_all(sconn, cmd, (g_id,))
-        yield (g_id, adj, args)
-
-
-def iterator_IES(func_name):
-    itr = graph_target_iterator(func_name)
-    cmd = '''SELECT edge_map FROM independent_edge_sets WHERE graph_id=(?)'''
-
-    for g_id, adj, args in itr:
-        args["independent_edge_sets"] = grab_all(sconn, cmd, (g_id,))
-        yield (g_id, adj, args)
-
-######################################################################
-
-# Identify the invariants yet to be computed
-cmd_find_remaining = '''
-SELECT function_name FROM invariant_integer_functions
-WHERE is_computed=0
-'''
-remaining_invariant_functions = grab_vector(conn,cmd_find_remaining)
-ignored_invariants = []
-
-cmd_mark_success = '''
-UPDATE invariant_integer_functions SET
-is_computed=1
-WHERE function_name = ?
-'''
-
-compute_invariant_functions = [x for x in remaining_invariant_functions
-                               if x not in ignored_invariants]
-
-special_iterator_mapping = {
-    "degree_sequence": iterator_degree_sequence,
-    "cycle_basis": iterator_cycle_basis,
-    "tutte_polynomial": iterator_tutte_polynomial,
-    "fractional_chromatic_number": iterator_fractional_chromatic_number,
-    "independent_vertex_sets": iterator_IVS,
-    "independent_edge_sets": iterator_IES,
-}
-
-#if compute_invariant_functions:
-#    msg = "Remaining invariants to compute {}"
-#    logging.info(msg.format(compute_invariant_functions))
-
-
-for func_name in compute_invariant_functions:
-
-    msg = "Starting calculation for {name}"
-    logging.info(msg.format(name=func_name))
-
-    function_idx = invariant_id_lookup[func_name]
+    dset = h5s.require_dataset(key,shape=shape,
+                               dtype=functionals[key].dtype,
+                               **h5args)
     
-    cmd_insert = '''
-      UPDATE invariant_integer
-      SET value=?
-      WHERE graph_id=?
-      AND   invariant_id={}
-      '''.format(function_idx)
+    if "compute_start" not in dset.attrs:
+        dset.attrs["compute_start"] = 0
 
-    import_csv_to_table(func_name, N, conn, cmd_insert)
+    datasets[key] = dset
 
-    if func_name not in special_invariants:
-        itr = graph_target_iterator(func_name)
-        
-    elif special_invariants[func_name] in special_iterator_mapping:
-        special_name = special_invariants[func_name]
-        itr = special_iterator_mapping[special_name](func_name)
-    else:
-        err_msg = "Invariant {} unknown! Skipping.".format(func_name)
-        print special_invariants
-        raise SyntaxError(err_msg)
+######################################################################
 
-    func = invariant_funcs[func_name]
-    targets = itr
+for key in invariant_names:
 
-    def pfunc(items):
-        (g_id, adj, args) = items
-        result = int(func(adj, **args))
+    func = functionals[key]
+    dset = datasets[key]
 
-        msg = "Computing {} for graph_id {}".format(func_name, g_id)
-        if (g_id-1)%1000==0:
-            logging.info(msg)
-        
-        return result, g_id
+    if helper.is_invariant_calc_complete(key, h5s):
+        continue
+    
+    offset = dset.attrs["compute_start"]
+    remaining_n = gn-offset
 
-    logging.info("Computing N={}, {} ".format(N, func_name))
+    msg = "{} left to compute for {}".format(remaining_n,key)
+    logging.info(msg)
 
-    if not cargs["debug"]:
+    req_list = func.invariant_requirements
 
-        if not cargs["no_parallel"]:
-            import multiprocessing
-            P = multiprocessing.Pool()
-            P_ITR = P.imap(pfunc, targets)
-        else:
-            P_ITR = itertools.imap(pfunc, targets)
-            
-        conn.executemany(cmd_insert, P_ITR)
-        conn.execute(cmd_mark_success, (func_name,))
-        conn.commit()
-        logging.info("Completed {}".format(func_name))
+    try:
+        GITR = helper.graph_iterator(graphs, N, h5s,
+                                     requirement_db_list=req_list,
+                                     offset=offset)
+    except KeyError as EX:
+        msg = "Skipping {}. Requires {} to be computed."
+        logging.warning(msg.format(key,EX))
+        continue
+    
+    # Used for caching the results
+    result_save_size = 100
+    result_shape = (result_save_size,func.shape(N=N))
+    result_block = np.zeros(result_shape, dtype=func.dtype)
+    rc = 0
 
-        if not cargs["no_parallel"]:
-            P.close()
-            P.join()
-            P.terminate()
-            del P
-            
-        
+    with helper.parallel_compute(GITR,func,cargs["debug"]) as ITR:
+        for k,result in enumerate(ITR):
 
-    else:
-        print func_name
-        for (g_id, adj, args) in itr:
-            result = func(adj, **args)
-            print g_id, adj, result
+            idx = k+offset
 
+            if cargs["verbose"]:
+                print idx, result            
 
-# Create any missing indicies
-cmd_index = '''
-CREATE INDEX IF NOT EXISTS
-idx_invariant_id ON
-invariant_integer (invariant_id ASC)'''
-logging.info("Creating indices {N}".format(N=N))
+            if rc==result_save_size: 
+                print "  status ({}/{}) {}, {}".format(idx+1, gn, key, result)
+                dset[idx-rc:idx] = result_block
+                dset.attrs["compute_start"] = idx+1
+                rc = 0
+    
+            result_block[rc] = result
+            rc += 1
 
-conn.executescript(cmd_index.format(name=name))
-conn.commit()
-conn.close()
+        # Save the final cached results
+        idx = gn
+        result_block = result_block[:rc]
+        dset[idx-rc:idx] = result_block
+        dset.attrs["compute_start"] = idx

@@ -6,7 +6,7 @@ args["debug"] = "-d"
 args["verbose"] = "-v"
 args["force"] = "-f"
 
-args["calc_exec"] = "python src/update_special.py"
+args["calc_exec"] = "python src/update_invariants.py"
 options = " -d -v "
 
 def push():
