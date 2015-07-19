@@ -11,6 +11,30 @@ _script_dir = os.path.dirname(os.path.realpath(__file__))
 class integer_invariant(graph_invariant):
     def shape(self, **kwargs): return 1
 
+
+####################################################################
+
+class chromatic_number(integer_invariant):
+    ''' Evaluates the chromatic number from the chromatic polynomial. '''
+    invariant_requirements = ["chromatic_polynomial"]
+    import_requirements = ["sympy"]    
+
+    # No conversion needed
+    output_type = None
+
+    def calculate(self, N, chromatic_polynomial, **kwargs):
+        if N==1: return 0
+    
+        cpoly = np.poly1d(chromatic_polynomial)
+        
+        for k in range(1, N + 1):
+            if cpoly(k) != 0:
+                return k
+
+        msg = "Chromatic polynomial calculation failed"
+        raise ValueError(msg)
+        
+
 class automorphism_group_n(integer_invariant):
     ''' Calls the BLISS program from the command line '''
 

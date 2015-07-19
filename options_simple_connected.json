@@ -13,6 +13,7 @@
 	  "fractional_chromatic_number"
       ],
       "integer" : [
+	  "chromatic_number",
 	  "edge_connectivity",
 	  "vertex_connectivity",
 	  "k_max_clique",

@@ -34,32 +34,6 @@ def viz_graph(g, pos=None, **kwargs):
 
 ######################### Special invariant code #################
 
-@build_representation("numpy")
-@require_arguments("A", "N")
-def special_tutte_polynomial(A, N):
-
-    cmd = os.path.join(__script_dir, 'tutte', 'tutte_bhkk')
-    tutte_args = ' '.join(map(str, [N,] + A.ravel().tolist()))
-    cmd += ' ' + tutte_args
-    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
-    
-    sval = [[int(x) for x in line.split()] for line in proc.stdout]
-    return sval
-    print sval
-
-    terms = []
-    tpoly = np.zeros((N+1,N+1),dtype='int32')
-    
-    for xi in range(len(sval)):
-        for yi in range(len(sval[xi])):
-            val = sval[xi][yi]
-            print xi,yi, val
-    
-            if val:
-                tpoly[xi][yi] = sval[xi][yi]
-
-    return tpoly.ravel()
-
 @require_arguments("N")
 def special_independent_vertex_sets(adj, **kwargs):
     cmd_idep = "main {N} {adj}".format(adj=adj, **kwargs)
@@ -77,74 +51,6 @@ def special_independent_edge_sets(adj, **kwargs):
     # Already in two's representation
     independent_sets = [int(line) for line in proc.stdout]
     return tuple([(x,) for x in independent_sets])
-
-#invariant_requirements["chromatic_polynomial"].append("tutte_polynomial")
-@require_arguments("twos_representation","N")
-def special_chromatic_polynomial(twos_representation,N):
-    '''
-    This is the chromatic polynomial, derived from the Tutte polynomial
-    The chromatic polynomial for a connected graphs evaluates T(x,y)
-    at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*N
-    '''
-    repack = {"twos_representation":twos_representation,"N":N}
-    T = special_tutte_polynomial(repack)
-
-    # Extract only the x component of the tutte poly
-    from sympy.abc import x
-    p = 0
-    for power,row in enumerate(T):
-        if row and row[0]:
-            p += row[0] * x ** power
-
-    C = (-1) ** (N - 1) * x * p.subs(x, 1 - x)
-    C = sympy.poly(C)
-    coeffs = C.all_coeffs()
-
-    # Resize coeffs to match desired length
-    coeffs = [0,]*(N+1-len(coeffs)) + coeffs
-    return np.array(coeffs).astype(np.int32)
-
-
-######################### REQUIRES [polynomial_tutte] #################
-
-
-def eval_chromatic_from_tutte(z, N, tutte_poly):
-    # First adjust the indices, and remove those where k>0 in y**k
-    tutte_adjust = [(coeff, xd - 1) for xd, yd, coeff in tutte_poly if yd == 1]
-
-    # The chromatic polynomial for a connected graphs evaluates T(x,y)
-    # at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*k
-
-    # Testing against sympy
-    '''
-    from sympy.abc import x
-    p = 0
-    for (coeff,power) in tutte_adjust: p += coeff*x**power
-    C = (-1)**(N-1)*x*p.subs(x,1-x).factor()
-    print (C.factor())
-    print (C.subs(x,z))
-    '''
-
-    terms = [coeff * (1 - z) ** xd for coeff, xd in tutte_adjust]
-    chi = sum(terms) * ((-1) ** (N - 1)) * z
-
-    return chi
-
-@require_arguments("N", "tutte_polynomial")
-def chromatic_number(adj, N, tutte_polynomial, **kwargs):
-    # Return 0 for the singleton graph (it's really infinity)
-    if N == 1:
-        return 0
-
-    for k in range(1, N + 1):
-        if eval_chromatic_from_tutte(k, N, tutte_polynomial) != 0:
-            return k
-
-    msg = "Should have exited by now"
-    raise ValueError(msg)
-
-######################### Invariant code #########################
-
 
 ######################### Subgraph code #########################
 
