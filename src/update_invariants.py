@@ -63,13 +63,17 @@ else:
 cargs.update(options)
 
 f_database = helper.get_database_graph(cargs)
+if not os.path.exists(f_database):
+    msg = "Graph database {} must be created first.".format(f_database)
+    raise IOError(msg)
+
 h5_graphs = h5py.File(f_database,'r')
 graphs = h5_graphs["graphs"]
 
 # Count the number of graphs
 gn = graphs.shape[0]
 
-f_database_special = helper.get_database_special(cargs)
+f_database_special = helper.get_database_invariants(cargs)
 if not os.path.exists(f_database_special) or cargs["force"]:
     h5py.File(f_database_special,'w').close()
 

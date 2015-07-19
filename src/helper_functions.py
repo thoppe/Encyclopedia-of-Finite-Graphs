@@ -1,5 +1,3 @@
-import gc
-import csv
 import os
 import errno
 import json
@@ -49,11 +47,13 @@ def load_options(f_option_file):
 
 def get_database_graph(options):
     fname = "{graph_types}_graphs_{N}.h5"
-    return os.path.join("database",fname.format(**options))
+    fname = os.path.join("database",fname.format(**options))
+    return fname
 
-def get_database_special(options):
+def get_database_invariants(options):
     fname = "{graph_types}_{N}_invariants.h5"
-    return os.path.join("database",fname.format(**options))
+    fname = os.path.join("database",fname.format(**options))
+    return fname
 
 def is_invariant_calc_complete(name, invariant_db):
     
