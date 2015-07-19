@@ -45,7 +45,18 @@
       ],
 
       "subgraph" : [
-	  "is_subgraph_free_K4"
+	  "is_subgraph_free_K3",
+	  "is_subgraph_free_K4",
+	  "is_subgraph_free_K5",
+	  "is_subgraph_free_C4",
+	  "is_subgraph_free_C5",
+	  "is_subgraph_free_C6",
+	  "is_subgraph_free_bull",
+	  "is_subgraph_free_bowtie",
+	  "is_subgraph_free_open_bowtie",
+	  "is_subgraph_free_diamond",
+	  "is_subgraph_free_paw",
+	  "is_subgraph_free_banner"
       ],
 
       "NotImplemented" : [
