@@ -95,42 +95,50 @@ class _is_subgraph_free(graph_invariant):
             return True
 
         # Only look for a single subgraph, break early if found
-        has_sub = _has_subgraph(self.subg, gtx, max_n=1)
+        subgraph_result = _has_subgraph(self.subg, gtx, max_n=1)
+        has_sub = len(subgraph_result[0])
         
-        return len(has_sub) == 0
+        return has_sub == 0
 
 
 def subgraph_builder(name, input_subg):
-    # Add the named class to the current module
+    # Add the named class to the current module,
+    # need to use eval trick to fool multiprocessing.
+
+    full_name = "is_subgraph_free_{}".format(name)
+
+    code = '''class {function_name}(_is_subgraph_free):\n\tsubg = {subgraph}
+    '''.format(function_name=full_name, subgraph=input_subg).strip()
+    return code
     
     thismodule = sys.modules[__name__]
-    
+        
     class x(_is_subgraph_free):
         subg = input_subg
         
-    full_name = "is_subgraph_free_{}".format(name)
+    
     setattr(thismodule, full_name, x)
 
 
 #######################################################################
 # Explict detection code
 
-subgraph_builder("diamond",_diamond_graph)
-subgraph_builder("paw",_paw_graph)
-subgraph_builder("banner",_banner_graph)
-subgraph_builder("open_bowtie",_open_bowtie_graph)
-subgraph_builder("bowtie",_bowtie_graph)
-subgraph_builder("bull",_bull_graph)
+exec subgraph_builder("diamond","_diamond_graph")
+exec subgraph_builder("paw","_paw_graph")
+exec subgraph_builder("banner","_banner_graph")
+exec subgraph_builder("open_bowtie","_open_bowtie_graph")
+exec subgraph_builder("bowtie","_bowtie_graph")
+exec subgraph_builder("bull","_bull_graph")
 
 for K in xrange(3, _largest_N_subgraph):
-    # is_subgraph_free_K3=1, OEIS:A024607
-    subgraph_builder("K{}".format(K),_complete_graphs[K])
-    subgraph_builder("C{}".format(K),_cycle_graphs[K])
+    #    # is_subgraph_free_K3=1, OEIS:A024607
+    exec subgraph_builder("K{}".format(K),"_complete_graphs[K]")
+    exec subgraph_builder("C{}".format(K),"_cycle_graphs[K]")
 
 #######################################################################
 
 if __name__ == "__main__":
-    B = is_subgraph_free_K3()
+    B = is_subgraph_free_K8()
     item = {"twos_representation":474, "N":4}
     print B(item)
     print B.shape(**item)

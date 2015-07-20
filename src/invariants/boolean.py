@@ -175,7 +175,7 @@ class is_k_regular(boolean_invariant):
     invariant_requirements = ["k_regular"]
     
     def calculate(self, k_regular, **kwargs):
-        return k_regular > 0
+        return k_regular[0] > 0
     
 ####################################################################
 

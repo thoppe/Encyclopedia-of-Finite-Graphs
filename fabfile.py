@@ -2,9 +2,9 @@ from fabric.api import *
 
 args = {}
 args["N"] = 4
-args["debug"] = "-d"
+args["debug"]   = "-d"
 args["verbose"] = "-v"
-args["force"] = "-f"
+args["force"]   = "-f"
 
 args["calc_exec"] = "python src/update_invariants.py"
 options = " -d -v "
@@ -29,14 +29,15 @@ def clean():
 
 def test():
     args["verbose"] = ""
-    args["force"] = ""
+    args["debug"]   = ""
+    args["force"]   = ""
     clean()
     generate()
     polynomial()
     fraction()
     integer()
     boolean()
-    subgraph()
+    #subgraph()
 
 
 cmd_invar_calc = "{calc_exec} {N} {debug} {verbose} {force} -i {name}"
