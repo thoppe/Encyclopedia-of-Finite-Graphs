@@ -33,6 +33,11 @@ class n_independent_edge_sets(integer_invariant):
         return len(esets)
     
 class maximal_independent_vertex_set(integer_invariant):
+    ''' 
+    A maximum independent vertex set is an independent vertex set of a graph containing 
+    the largest possible number of vertices for the given graph, and the cardinality of this 
+    set is called the independence number of the graph.
+    '''
 
     import_requirements = ["unstructured"]
     output_type = None
@@ -40,9 +45,7 @@ class maximal_independent_vertex_set(integer_invariant):
     def calculate(self,twos_representation,N,**kwargs):
         func = self.imports["unstructured"].independent_vertex_sets
         vsets = func(twos_representation,N)
-        #active = [bin(x[0]).count('1') for x in independent_vertex_sets]
-        #return max(active)
-        raise NotImplemented
+        return max([bin(x).count('1')  for x in vsets])
 
 class maximal_independent_edge_set(integer_invariant):
     import_requirements = ["unstructured"]
@@ -51,10 +54,18 @@ class maximal_independent_edge_set(integer_invariant):
     def calculate(self,twos_representation,N,**kwargs):
         func = self.imports["unstructured"].independent_edge_sets
         esets = func(twos_representation,N)
-        #active = [bin(x[0]).count('1') for x in independent_edge_sets]
-        #return max(active)
-        raise NotImplemented
-
+        return max([bin(x).count('1') for x in esets])
+    
+class independence_number(integer_invariant):
+    import_requirements = ["unstructured"]
+    invariant_requirements = ["maximal_independent_vertex_set"]
+    output_type = None
+    
+    def calculate(self,twos_representation,N,maximal_independent_vertex_set,**kwargs):
+        func = self.imports["unstructured"].independent_vertex_sets       
+        vsets = func(twos_representation,N)
+        cardinality = [bin(x).count('1') for x in vsets]
+        return len([x for x in cardinality if x == maximal_independent_vertex_set])
 
 ####################################################################
 

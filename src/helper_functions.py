@@ -12,11 +12,13 @@ from functools import wraps
 import signal, sys
 
 def siginthndlr(sig, frame):
-    msg = "Shutting down processes. Will exit with a NameError after timeout."
+    msg = ("Shutting down processes. Will exit with a NameError "
+           "after timeout.")
     print msg
     raise NotARealError
 
-signal.signal(signal.SIGINT, siginthndlr) #Register SIGINT handler function
+# Register SIGINT handler function
+signal.signal(signal.SIGINT, siginthndlr) 
 
 def mkdir_p(path):
     try:
@@ -41,8 +43,8 @@ def load_options(f_option_file):
     try:
         return json.loads(raw_text)
     except Exception as Ex:
-        msg = "Couldn't parse JSON file {}, {}".format(f_option_file, Ex)
-        raise IOError(msg)
+        msg = "Couldn't parse JSON file {}, {}"
+        raise IOError(msg.format(f_option_file, Ex))
 
 
 def get_database_graph(options):
@@ -65,11 +67,6 @@ def is_invariant_calc_complete(name, invariant_db):
     offset = dset.attrs["compute_start"]
     remaining_n = gn-offset
     return not remaining_n
-
-
-#def graph_iterator(graph_db, N, invariant_db,
-#                   offset=0, chunksize=1000,
-#                   requirement_db_list=[]):
 
 class graph_iterator(object):
     '''
