@@ -28,7 +28,7 @@ def clean():
     local("find . -name '*~' | xargs -I {} rm -v {}")
 
 def nose():
-    local("nosetests-2.7 -x -s -v")
+    local("nosetests-2.7 -s -v")
 
 
 def test():

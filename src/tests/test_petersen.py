@@ -6,6 +6,9 @@ import networkx as nx
 import numpy as np
 
 from invariants.integer import *
+from invariants.boolean import *
+from invariants.subgraph import *
+from invariants.polynomial import *
 
 options = helper.load_options("options_simple_connected.json")
 
@@ -16,8 +19,29 @@ options = helper.load_options("options_simple_connected.json")
 petersen_graph = [
     ("automorphism_group_n", 120),
     ("diameter", 2),
+    ("n_edge", 15),
+    ("radius", 2),
+    ("girth", 5),
+    ("is_planar", False),
+    ("is_subgraph_free_K3", True),
+    ("is_subgraph_free_C4", True),
+    ("vertex_connectivity", 3),
+    ("k_max_clique", 2),
+    ("is_eulerian", False),
+    ("is_hamiltonian", False),
+    ("is_integral", True),
+    ("edge_connectivity", 3),
+    ("n_endpoints", 0),
+    ("is_tree", False),
+    ("is_chordal", False),   
+    ("is_strongly_regular", True),
+    ("is_distance_regular", True),
+    ("maximal_independent_vertex_set", 4),
+    ("degree_sequence",[3,]*10),
+    ("k_regular", 3),
+    ("characteristic_polynomial", [1,0,-15,0,75,-24,-165,120,120,-160,48]),
+#    ("chromatic_number",3)
 ]
-
 
 class test_petersen(object):
 
@@ -38,7 +62,13 @@ class test_petersen(object):
         
         func = globals()[name]()
         result = func(data)
-        assert(result == expected_result)
+
+        # Check if result is numpy
+        if type(result).__module__ == np.__name__:
+            assert((result == np.array(expected_result)).all())
+        else:
+            assert(result == expected_result)
+            
         self.known_invariants[name] = result
 
     def test_invariants(self):

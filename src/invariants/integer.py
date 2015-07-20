@@ -106,7 +106,8 @@ class automorphism_group_n(integer_invariant):
 
         cmd = "echo %s | %s" % (s_echo, bliss_exec)
         
-        proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
+        proc = subprocess.Popen([cmd], stdout=subprocess.PIPE,
+                                shell=True)
         for line in proc.stdout:
             if "|Aut|" in line:
                 return int(line.split()[-1])

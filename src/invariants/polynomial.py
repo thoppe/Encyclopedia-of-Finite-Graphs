@@ -54,8 +54,7 @@ class laplacian_polynomial(graph_invariant):
         np.fill_diagonal(L, A.sum(axis=0))
         L -= A
         p = np.round(np.poly(L))
-        return p.astype(np.int32)
-
+        return np.rint(p).astype(np.int32)
 
 class characteristic_polynomial(graph_invariant):
     ''' Characteristic polynomial of the adjacency matrix '''
@@ -64,7 +63,7 @@ class characteristic_polynomial(graph_invariant):
 
     def calculate(self, A, **kwargs):
         p = np.poly(A)
-        return p.astype(np.int32)
+        return np.rint(p).astype(np.int32)
 
 if __name__ == "__main__":
 
