@@ -136,4 +136,11 @@ def parallel_compute(data_ITR, func, debug=False,
             del P
         
 
-        
+######################### Visualization code ##############################
+
+def viz_graph(g, pos=None, **kwargs):
+    if pos is None:
+        pos = graph_tool.draw.sfdp_layout(g, cooling_step=0.99)
+    graph_tool.draw.graph_draw(g, pos, **kwargs)
+
+

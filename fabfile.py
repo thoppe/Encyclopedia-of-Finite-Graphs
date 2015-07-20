@@ -28,7 +28,7 @@ def clean():
     local("find . -name '*~' | xargs -I {} rm -v {}")
 
 def nose():
-    local("nosetests-2.7 -x -s")
+    local("nosetests-2.7 -x -s -v")
 
 
 def test():
@@ -41,7 +41,8 @@ def test():
     fraction()
     integer()
     boolean()
-    #subgraph()
+    subgraph()
+    nose()
 
 
 cmd_invar_calc = "{calc_exec} {N} {debug} {verbose} {force} -i {name}"
