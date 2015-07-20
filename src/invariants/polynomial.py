@@ -1,6 +1,6 @@
 import numpy as np
 from base_invariant import graph_invariant
-
+import unstructured
 
 class chromatic_polynomial(graph_invariant):
     '''    
@@ -9,13 +9,13 @@ class chromatic_polynomial(graph_invariant):
     at C(k) = T(x=1-k,y=0)*(-1)**N*(1-k)*N
     '''
 
-    import_requirements = ["unstructured","sympy"]
+    import_requirements = ["sympy"]
 
     def shape(self, N, **kwargs):
         return N+1
     
     def calculate(self, A, N, **kwargs):
-        T = self.imports["unstructured"].tutte_polynomial(A,N)
+        T = unstructured.tutte_polynomial(A,N)
 
         # Extract only the x component of the tutte poly
         sympy = self.imports["sympy"]

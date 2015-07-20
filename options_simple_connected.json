@@ -29,9 +29,8 @@
 	  "n_articulation_points",
 	  "n_independent_vertex_sets",
 	  "n_independent_edge_sets",
-    "maximal_independent_vertex_set",
-          "maximal_independent_edge_set",
-          "independence_number"
+    "maximal_independent_edge_set",
+    "independence_number"
       ],
 
       "boolean" : [
@@ -47,7 +46,7 @@
 	  "is_strongly_regular",
 	  "is_rational",
 	  "is_integral",
-	  "has_fractional_chromatic_gap"
+	        "has_fractional_chromatic_gap"
       ],
 
       "subgraph" : [
@@ -63,11 +62,7 @@
 	  "is_subgraph_free_diamond",
 	  "is_subgraph_free_paw",
 	  "is_subgraph_free_banner"
-      ],
-
-      "NotImplemented" : [
-	  "maximal_independent_vertex_set",
-	  "maximal_independent_edge_set"
       ]
+
   }
 }
