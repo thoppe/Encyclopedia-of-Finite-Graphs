@@ -1,4 +1,5 @@
 # TODO:
 
++ Generate sequences from tables
++ Unit tests against sequences
 + Document writeup
-+ Provide unittests for each invariant
