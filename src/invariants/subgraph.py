@@ -96,7 +96,12 @@ class _is_subgraph_free(graph_invariant):
 
         # Only look for a single subgraph, break early if found
         subgraph_result = _has_subgraph(self.subg, gtx, max_n=1)
-        has_sub = len(subgraph_result[0])
+
+        # graph-tool API has different results depending on version...
+        try:
+            has_sub = len(subgraph_result)
+        except:
+            has_sub = len(subgraph_result[0])
         
         return has_sub == 0
 
