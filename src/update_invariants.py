@@ -18,9 +18,12 @@ parser.add_argument('-v', '--verbose',
                     default=False,action="store_true",
                     help="Prints every output")
 parser.add_argument('-i', '--invariant_type',
-                    default="polynomial", help="Invariant type to compute")
+                    default="polynomial",
+                    help="Invariant type to compute")
 
-parser.add_argument('-f', '--force', default=False, action='store_true')
+parser.add_argument('-f', '--force', default=False,
+                    action='store_true')
+
 cargs = vars(parser.parse_args())
 N = cargs["N"]
 
@@ -30,20 +33,12 @@ logging.root.setLevel(logging.WARNING)
 if cargs["verbose"]:
     logging.basicConfig(level=logging.INFO)
 
-
 # Validate the invariant_type
 known_INV_types = ["integer","polynomial","fraction",
                    "boolean","subgraph"]
 
-if cargs["invariant_type"] not in known_INV_types:
-    msg = "Invariant type {invariant_type} not permitted yet".format(**cargs)
-    raise KeyError(msg)
-
 # Load the options
 options = helper.load_options(cargs["options"])
-
-# Determine the invariant names
-invariant_names = options["invariant_calculations"][cargs["invariant_type"]]
 
 # Import the right library
 if cargs["invariant_type"] == "polynomial":
@@ -57,7 +52,12 @@ elif cargs["invariant_type"] == "boolean":
 elif cargs["invariant_type"] == "subgraph":
     import invariants.subgraph as INVLIB
 else:
-    raise NotImplemented
+    msg = "Invariant type {invariant_type} not permitted yet"
+    raise KeyError(msg.format(**cargs))
+
+# Determine the invariant names
+invariant_names_list = options["invariant_calculations"]
+invariant_names = invariant_names_list[cargs["invariant_type"]]
 
 # Combine the options together with cargs
 cargs.update(options)
