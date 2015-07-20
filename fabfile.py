@@ -25,7 +25,11 @@ def generate():
 def clean():
     local("rm -vf database/*{N}*".format(**args))
     local("find . -name '*.pyc' | xargs -I {} rm -v {}")
-    local("find . -name '*~' | xargs -I {} rm -v {}") 
+    local("find . -name '*~' | xargs -I {} rm -v {}")
+
+def nose():
+    local("nosetests-2.7 -x -s")
+
 
 def test():
     args["verbose"] = ""
