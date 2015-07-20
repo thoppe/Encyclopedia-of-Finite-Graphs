@@ -17,40 +17,38 @@ class integer_invariant(graph_invariant):
 
 class n_independent_vertex_sets(integer_invariant):
     output_type = None
-    
-    def calculate(self,twos_representation,N,**kwargs):
-        func  = unstructured.independent_vertex_sets
-        vsets = func(twos_representation,N)
-        return len(vsets)
+    invariant_requirements = ["independent_vertex_set_polynomial"]
+    def calculate(self,independent_vertex_set_polynomial,**kwargs):
+        return sum(independent_vertex_set_polynomial)
 
 class n_independent_edge_sets(integer_invariant):
     output_type = None
-    
-    def calculate(self,twos_representation,N,**kwargs):
-        func  = unstructured.independent_edge_sets
-        esets = func(twos_representation,N)
-        return len(esets)
+    invariant_requirements = ["independent_edge_set_polynomial"]
+    def calculate(self,independent_edge_set_polynomial,**kwargs):
+        return sum(independent_edge_set_polynomial)
     
 class independence_number(integer_invariant):
     ''' 
     A maximum independent vertex set is an independent vertex set of a graph containing 
     the largest possible number of vertices for the given graph, and the cardinality of this 
     set is called the independence number of the graph.
+    Independently, it is the largest coefficient in the independent vertex set polynomial.
     '''
     output_type = None
-    
-    def calculate(self,twos_representation,N,**kwargs):
-        func  = unstructured.independent_vertex_sets
-        vsets = func(twos_representation,N)
-        return max([bin(x).count('1')  for x in vsets])
+    invariant_requirements = ["independent_vertex_set_polynomial"]
+    def calculate(self,independent_vertex_set_polynomial,N,**kwargs):
+        for coeff, k in zip(independent_vertex_set_polynomial, range(N,-1,-1)):
+            if coeff:
+                return k
 
 class maximal_independent_edge_set(integer_invariant):
     output_type = None
-    
-    def calculate(self,twos_representation,N,**kwargs):
-        func  = unstructured.independent_edge_sets
-        esets = func(twos_representation,N)
-        return max([bin(x).count('1') for x in esets])
+
+    invariant_requirements = ["independent_edge_set_polynomial"]
+    def calculate(self,independent_edge_set_polynomial,N,**kwargs):
+        for coeff, k in zip(independent_edge_set_polynomial, range(N,-1,-1)):
+            if coeff:
+                return k
 
 ####################################################################
 

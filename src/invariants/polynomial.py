@@ -2,6 +2,41 @@ import numpy as np
 from base_invariant import graph_invariant
 import unstructured
 
+class independent_vertex_set_polynomial(graph_invariant):
+    '''
+    The IVS polynomial is defined by s(k)*x^k, where s(k) is the number
+    of independent vertex sets of cardinality k.
+    '''
+    output_type = None
+
+    def shape(self, N, **kwargs):
+        return N+1
+
+    def calculate(self, twos_representation, N, **kwargs):
+        func  = unstructured.independent_vertex_sets
+        vsets = func(twos_representation,N)
+        cardinality = [bin(x).count('1')  for x in vsets]
+        poly = [cardinality.count(n) for n in range(N,-1,-1)]
+        return poly
+
+class independent_edge_set_polynomial(graph_invariant):
+    '''
+    The IES polynomial is defined by s(k)*x^k, where s(k) is the number
+    of independent edge sets of cardinality k.
+    '''
+    output_type = None
+
+    def shape(self, N, **kwargs):
+        return N+1
+
+    def calculate(self, twos_representation, N, **kwargs):
+        func  = unstructured.independent_edge_sets
+        vsets = func(twos_representation,N)
+        cardinality = [bin(x).count('1')  for x in vsets]
+        poly = [cardinality.count(n) for n in range(N,-1,-1)]
+        return poly
+
+
 class chromatic_polynomial(graph_invariant):
     '''    
     This is the chromatic polynomial, derived from the Tutte polynomial

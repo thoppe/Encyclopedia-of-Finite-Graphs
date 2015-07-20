@@ -36,10 +36,14 @@ petersen_graph = [
     ("is_distance_regular", True),
     ("is_subgraph_free_K3", True),
     ("is_subgraph_free_C4", True),
+
+    ("independent_vertex_set_polynomial", [0,0,0,0,0,0,5,30,30,10,1]),
     ("independence_number", 4),
     
     ("degree_sequence",[3,]*10),
     ("k_regular", 3),
+
+    
     
     ("characteristic_polynomial", [1,0,-15,0,75,-24,-165,120,120,-160,48]),
     ("chromatic_polynomial", [1,-15,105,-455,1353,-2861,

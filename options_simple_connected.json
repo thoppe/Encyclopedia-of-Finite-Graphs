@@ -4,7 +4,9 @@
 
   "invariant_calculations" : {
       "polynomial" : [
-	  "chromatic_polynomial",
+          "independent_vertex_set_polynomial",
+          "independent_edge_set_polynomial",
+	        "chromatic_polynomial",
           "degree_sequence",
           "laplacian_polynomial", 
           "characteristic_polynomial"
