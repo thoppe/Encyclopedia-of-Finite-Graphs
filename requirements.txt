@@ -8,4 +8,4 @@ pyparsing>=1.5.7
 PuLP>=1.6.0
 sympy>=0.7.6
 pygraphviz>=1.2
-
+mpmath

@@ -62,5 +62,8 @@ def boolean():
 def subgraph():
     local(cmd_invar_calc.format(name="subgraph",**args))
 
+def zeros():
+    local(cmd_invar_calc.format(name="zeros",**args))
+
     
     

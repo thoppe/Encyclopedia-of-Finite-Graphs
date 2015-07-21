@@ -1,70 +1,71 @@
-{
-  "graph_types" : "simple_connected",
-  "graph_generator_function" : "nauty_simple_graph_itr",
-
-  "invariant_calculations" : {
-      "polynomial" : [
-          "independent_vertex_set_polynomial",
-          "independent_edge_set_polynomial",
-	        "chromatic_polynomial",
-          "degree_sequence",
-          "laplacian_polynomial", 
-          "characteristic_polynomial"
+{  
+   "graph_types":"simple_connected",
+   "graph_generator_function":"nauty_simple_graph_itr",
+   "invariant_calculations":{  
+      "polynomial":[  
+         "independent_vertex_set_polynomial",
+         "independent_edge_set_polynomial",
+         "chromatic_polynomial",
+         "degree_sequence",
+         "laplacian_polynomial",
+         "characteristic_polynomial"
       ],
-      "fraction" : [
-	  "fractional_chromatic_number"
+      "_zeros":[
+         "chromatic_polynomial_zeros",
+         "laplacian_polynomial_zeros",
+         "characteristic_polynomial_zeros"          
       ],
-      "integer" : [
-	  "chromatic_number",
-	  "edge_connectivity",
-	  "vertex_connectivity",
-	  "k_max_clique",
-	  "diameter",
-	  "radius",
-	  "automorphism_group_n",
-	  "n_edge",
-	  "n_endpoints",
-	  "k_regular",
-	  "n_cycle_basis",
-	  "girth",
-	  "circumference",
-	  "n_articulation_points",
-	  "n_independent_vertex_sets",
-	  "n_independent_edge_sets",
-    "maximal_independent_edge_set",
-    "independence_number"
+      "fraction":[  
+         "fractional_chromatic_number"
       ],
-
-      "boolean" : [
-	  "is_k_regular",
-	  "is_eulerian",
-	  "is_hamiltonian",
-	  "is_bipartite",
-	  "is_planar",
-	  "is_tree",
-	  "is_distance_regular",
-	  "is_chordal",
-	  "is_distinct_spectrum",
-	  "is_strongly_regular",
-	  "is_rational",
-	  "is_integral",
-	        "has_fractional_chromatic_gap"
+      "integer":[  
+         "chromatic_number",
+         "edge_connectivity",
+         "vertex_connectivity",
+         "k_max_clique",
+         "diameter",
+         "radius",
+         "automorphism_group_n",
+         "n_edge",
+         "n_endpoints",
+         "k_regular",
+         "n_cycle_basis",
+         "girth",
+         "circumference",
+         "n_articulation_points",
+         "n_independent_vertex_sets",
+         "n_independent_edge_sets",
+         "maximal_independent_edge_set",
+         "independence_number"
       ],
-
-      "subgraph" : [
-	  "is_subgraph_free_K3",
-	  "is_subgraph_free_K4",
-	  "is_subgraph_free_K5",
-	  "is_subgraph_free_C4",
-	  "is_subgraph_free_C5",
-	  "is_subgraph_free_C6",
-	  "is_subgraph_free_bull",
-	  "is_subgraph_free_bowtie",
-	  "is_subgraph_free_open_bowtie",
-	  "is_subgraph_free_diamond",
-	  "is_subgraph_free_paw",
-	  "is_subgraph_free_banner"
+      "boolean":[  
+         "is_k_regular",
+         "is_eulerian",
+         "is_hamiltonian",
+         "is_bipartite",
+         "is_planar",
+         "is_tree",
+         "is_distance_regular",
+         "is_chordal",
+         "is_distinct_spectrum",
+         "is_strongly_regular",
+         "is_rational",
+         "is_integral",
+         "has_fractional_chromatic_gap"
+      ],
+      "subgraph":[  
+         "is_subgraph_free_K3",
+         "is_subgraph_free_K4",
+         "is_subgraph_free_K5",
+         "is_subgraph_free_C4",
+         "is_subgraph_free_C5",
+         "is_subgraph_free_C6",
+         "is_subgraph_free_bull",
+         "is_subgraph_free_bowtie",
+         "is_subgraph_free_open_bowtie",
+         "is_subgraph_free_diamond",
+         "is_subgraph_free_paw",
+         "is_subgraph_free_banner"
       ]
-
-  }
+   }
 }

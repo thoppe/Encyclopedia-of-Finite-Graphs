@@ -44,7 +44,7 @@ class graph_invariant(object):
             self._has_imported = True
         pass
 
-    def shape(self, N, **kwargs):
+    def shape(self, **kwargs):
         return 1
 
     def convert_types(self, args):

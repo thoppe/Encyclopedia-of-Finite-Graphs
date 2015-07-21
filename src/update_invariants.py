@@ -33,14 +33,10 @@ logging.root.setLevel(logging.WARNING)
 if cargs["verbose"]:
     logging.basicConfig(level=logging.INFO)
 
-# Validate the invariant_type
-known_INV_types = ["integer","polynomial","fraction",
-                   "boolean","subgraph"]
-
 # Load the options
 options = helper.load_options(cargs["options"])
 
-# Import the right library
+# Import the right library & Validate the invariant_type
 if cargs["invariant_type"] == "polynomial":
     import invariants.polynomial as INVLIB
 elif cargs["invariant_type"] == "fraction":
@@ -51,6 +47,8 @@ elif cargs["invariant_type"] == "boolean":
     import invariants.boolean as INVLIB
 elif cargs["invariant_type"] == "subgraph":
     import invariants.subgraph as INVLIB
+elif cargs["invariant_type"] == "zeros":
+    import invariants.zeros as INVLIB
 else:
     msg = "Invariant type {invariant_type} not permitted yet"
     raise KeyError(msg.format(**cargs))
