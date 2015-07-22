@@ -4,10 +4,16 @@
 
     "sequence_options" : {
         "min_N":1,
-        "max_N":7
+        "max_N":8,
+        "cardinality_sequence_groups" : [
+            "fraction",
+            "integer",
+            "boolean",
+            "subgraph"
+        ]
+
     },
 
-    
    "invariant_calculations":{  
       "polynomial":[  
          "independent_vertex_set_polynomial",

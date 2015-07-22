@@ -57,6 +57,11 @@ def get_database_invariants(options):
     fname = os.path.join("database",fname.format(**options))
     return fname
 
+def get_database_sequence(options):
+    fname = "{graph_types}_sequence.h5"
+    fname = os.path.join("database",fname.format(**options))
+    return fname
+
 def is_invariant_calc_complete(name, invariant_db):
     
     if name not in invariant_db:
