@@ -89,19 +89,19 @@ class _is_subgraph_free(graph_invariant):
         return len(list(verts))
     
     def calculate(self,gtx,N,**kwargs):
-
+       
         # Early breakout if input graph is too small
         if N < self.subg_N():
             return True
 
         # Only look for a single subgraph, break early if found
         subgraph_result = _has_subgraph(self.subg, gtx, max_n=1)
-
+        
         # graph-tool API has different results depending on version...
         try:
-            has_sub = len(subgraph_result)
-        except:
             has_sub = len(subgraph_result[0])
+        except:
+            has_sub = len(subgraph_result)
         
         return has_sub == 0
 

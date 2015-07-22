@@ -1,6 +1,9 @@
 {  
    "graph_types":"simple_connected",
    "graph_generator_function":"nauty_simple_graph_itr",
+
+
+    
    "invariant_calculations":{  
       "polynomial":[  
          "independent_vertex_set_polynomial",
