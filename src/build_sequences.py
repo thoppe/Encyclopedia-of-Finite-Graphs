@@ -21,6 +21,9 @@ parser.add_argument('-f', '--force', default=False,
 
 cargs = vars(parser.parse_args())
 
+# Start the logger
+logging.root.setLevel(logging.INFO)
+
 invariant_types = ["polynomial", "fraction",
                    "integer", "boolean", "subgraph"]
 
@@ -66,7 +69,7 @@ def find_unique_items(key):
 
 ########################################################################
 # Count cardinality
-import collections
+
 def count_cardinality(key, unique):
 
     UX = np.zeros(shape=(unique.shape[0],len(N_RANGE)),
@@ -77,35 +80,40 @@ def count_cardinality(key, unique):
         for j,val in enumerate(unique):
             seq_x = ((dset == val).sum(axis=1) == unique.shape[1]).sum()
             UX[j][i] = seq_x
-    print unique
-    print UX
-
-    exit()
+            
+    return UX
 
 def cardinality_compute_keys():
     # Iterator over the keys to compute
-    #cmd_import = "from invariants.{} import {} as _func\nfunc = _func()"
     for group in options["sequence_options"]["cardinality_sequence_groups"]:
         for key in options["invariant_calculations"][group]:
-            #exec cmd_import.format(group,key)
-            yield group,key
+            if key not in options["sequence_options"]["cardinality_ignored_invariants"]:
+                yield group,key
+
+########################################################################
+# Determine which seqeuences are "interesting", at least 3 unique non zero terms
+def compute_interesting_vector(sequences):
+    seq_interest = np.zeros(sequences.shape[0],dtype=np.bool)
+    for i,seq in enumerate(sequences):
+        useq = np.unique(seq)
+        useq = useq[useq > 0]
+        seq_interest[i] = useq.size >= 3
+    return seq_interest
+
+
 
 
 for group,key in cardinality_compute_keys():
-    key = "automorphism_group_n"
     
     h5_group = h5_seq.require_group(key)
     unique   = find_unique_items(key)
-    unique_dset = h5_group.create_dataset("unique", data=unique)
+    h5_group.create_dataset("unique", data=unique)
 
-    count_cardinality(key, unique)
-    #print group, key, unique_dset
-             
+    single_seq  = count_cardinality(key, unique)
+    h5_group.create_dataset("sequences", data=single_seq)
 
-key = "automorphism_group_n"
+    interest_vec = compute_interesting_vector(single_seq)
+    h5_group.create_dataset("interesting", data=interest_vec)
 
-#print H5[7][key]==[8]
-#exit()
-
-#key = "fractional_chromatic_number"
-#print find_unique_items(key)
+    msg = "Completed sequence computation for {} {}".format(key,single_seq.shape)
+    logging.info(msg)
