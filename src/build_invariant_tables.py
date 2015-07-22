@@ -2,11 +2,10 @@ from fabric.api import *
 
 import logging
 import argparse
+import helper_functions as helper
 
 desc = "Builds the invariant tables"
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('maxN', type=int,
-                    help="Largest graph to compute (counted in vertices)")
 parser.add_argument('-o', '--options',
                     default="options_simple_connected.json",
                     help="option file")
@@ -24,7 +23,13 @@ cargs = vars(parser.parse_args())
 invariant_types = ["polynomial", "fraction",
                    "integer", "boolean", "subgraph"]
 
-for N in xrange(1, cargs["maxN"]+1):
+# Load the options
+options = helper.load_options(cargs["options"])
+
+min_N = options["sequence_options"]["min_N"]
+max_N = options["sequence_options"]["max_N"]
+
+for N in xrange(min_N, max_N+1):
     args = cargs.copy()
     args["N"] = N
     local("python src/update_graphs.py {N} -o {options}".format(**args))

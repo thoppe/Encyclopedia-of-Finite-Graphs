@@ -2,6 +2,10 @@
    "graph_types":"simple_connected",
    "graph_generator_function":"nauty_simple_graph_itr",
 
+    "sequence_options" : {
+        "min_N":1,
+        "max_N":7
+    },
 
     
    "invariant_calculations":{  
