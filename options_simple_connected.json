@@ -4,7 +4,7 @@
 
     "sequence_options" : {
         "min_N":1,
-        "max_N":9,
+        "max_N":10,
         "cardinality_sequence_groups" : [
             "fraction",
             "integer",

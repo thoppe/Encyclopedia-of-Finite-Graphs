@@ -100,14 +100,17 @@ def compute_interesting_vector(sequences):
         seq_interest[i] = useq.size >= 3
     return seq_interest
 
-
-
-
 for group,key in cardinality_compute_keys():
-    
+
+    msg = "Counting cardinality for {}".format(key)
+    logging.info(msg)
+
     h5_group = h5_seq.require_group(key)
     unique   = find_unique_items(key)
     h5_group.create_dataset("unique", data=unique)
+
+    msg = "Computing sequence data {}".format(key)
+    logging.info(msg)
 
     single_seq  = count_cardinality(key, unique)
     h5_group.create_dataset("sequences", data=single_seq)
