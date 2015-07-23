@@ -65,7 +65,7 @@ def numpy_unique_rows(A):
 def find_unique_items(key):
     # Finds values unique to all N
     unique_block = [numpy_unique_rows(H5[N][key][:]) for N in N_RANGE]
-    return numpy_unique_rows(np.vstack(unique_block))
+    return unique_block
 
 ########################################################################
 # Count cardinality
@@ -84,11 +84,18 @@ def count_cardinality(key, unique):
     return UX
 
 def cardinality_compute_keys():
-    # Iterator over the keys to compute
+    # Iterator over the keys to compute cardinality sequences
     for group in options["sequence_options"]["cardinality_sequence_groups"]:
         for key in options["invariant_calculations"][group]:
             if key not in options["sequence_options"]["cardinality_ignored_invariants"]:
-                yield group,key
+                yield key
+
+def distinct_compute_keys():
+    # Iterator over the keys to compute distinct sequences
+    for group in options["sequence_options"]["distinct_sequence_groups"]:
+        for key in options["invariant_calculations"][group]:
+            if key not in options["sequence_options"]["distinct_ignored_invariants"]:
+                yield key
 
 ########################################################################
 # Determine which seqeuences are "interesting", at least 3 unique non zero terms
@@ -100,23 +107,37 @@ def compute_interesting_vector(sequences):
         seq_interest[i] = useq.size >= 3
     return seq_interest
 
-for group,key in cardinality_compute_keys():
+########################################################################
 
-    msg = "Counting cardinality for {}".format(key)
+distinct_set = set(list(distinct_compute_keys()))
+cardinality_set = set(list(cardinality_compute_keys()))
+
+
+for key in distinct_set.union(cardinality_set):
+
+    msg = "Starting sequence data for {}".format(key)
     logging.info(msg)
 
     h5_group = h5_seq.require_group(key)
-    unique   = find_unique_items(key)
-    h5_group.create_dataset("unique", data=unique)
+    unique_per_N   = find_unique_items(key)
+    
+    if key in distinct_set:
+        msg = "Computing distinct sequence data {}".format(key)
+        logging.info(msg)
+        distinct = map(lambda x:x.shape[0], unique_per_N)
+        h5_group.create_dataset("distinct", data=distinct)
 
-    msg = "Computing sequence data {}".format(key)
-    logging.info(msg)
 
-    single_seq  = count_cardinality(key, unique)
-    h5_group.create_dataset("sequences", data=single_seq)
+    if key in cardinality_set:
+        unique = numpy_unique_rows(np.vstack(unique_per_N))
+        h5_group.create_dataset("unique", data=unique)
+        
+        msg = "Computing cardinality search for {} {}".format(key, unique.shape)
+        logging.info(msg)
 
-    interest_vec = compute_interesting_vector(single_seq)
-    h5_group.create_dataset("interesting", data=interest_vec)
+        single_seq  = count_cardinality(key, unique)
+        h5_group.create_dataset("sequences", data=single_seq)
 
-    msg = "Completed sequence computation for {} {}".format(key,single_seq.shape)
-    logging.info(msg)
+        interest_vec = compute_interesting_vector(single_seq)
+        h5_group.create_dataset("interesting", data=interest_vec)
+

@@ -5,13 +5,20 @@
     "sequence_options" : {
         "min_N":1,
         "max_N":10,
+
+        "distinct_sequence_groups" : [
+            "polynomial",
+            "fraction",
+            "integer"
+        ],
+        "distinct_ignored_invariants" : [ ],
+
         "cardinality_sequence_groups" : [
             "fraction",
             "integer",
             "boolean",
             "subgraph"
         ],
-
         "cardinality_ignored_invariants" : [
             "n_independent_vertex_sets",
             "n_independent_edge_sets",
