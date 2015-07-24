@@ -1,6 +1,7 @@
 import logging
 import argparse
 import os
+import itertools
 import helper_functions as helper
 import h5py
 import numpy as np
@@ -16,7 +17,7 @@ parser.add_argument('-f', '--force', default=False,
 cargs = vars(parser.parse_args())
 
 # Start the logger
-logging.root.setLevel(logging.INFO)
+#logging.root.setLevel(logging.INFO)
 
 invariant_types = ["polynomial", "fraction",
                    "integer", "boolean", "subgraph"]
@@ -106,7 +107,6 @@ def compute_interesting_vector(sequences):
 distinct_set = set(list(distinct_compute_keys()))
 cardinality_set = set(list(cardinality_compute_keys()))
 
-
 for key in distinct_set.union(cardinality_set):
 
     msg = "Starting sequence data for {}".format(key)
@@ -122,8 +122,6 @@ for key in distinct_set.union(cardinality_set):
         msg = "Computing distinct sequence data {}, {}".format(key,distinct)
         logging.info(msg)
 
-
-
     if key in cardinality_set:
         unique = numpy_unique_rows(np.vstack(unique_per_N))
         h5_group.create_dataset("unique", data=unique)
@@ -137,3 +135,52 @@ for key in distinct_set.union(cardinality_set):
         interest_vec = compute_interesting_vector(single_seq)
         h5_group.create_dataset("interesting", data=interest_vec)
 
+########################################################################
+# Build second-order sequences
+
+def is_true_false_invariant(name):
+    # Checks if an invariant is only True or False by it's type
+    
+    groups = options["invariant_calculations"]
+    if name in groups["subgraph"]:
+        return True
+    elif name in groups["boolean"]:
+        return True
+    else:
+        return False
+    
+
+def cardinality_higher_order_compute_keys(n=2):
+    # Iterator over the keys to compute interesting cardinality sequences
+
+    # Find potential candidates
+    candidates = []
+    for key in h5_seq:        
+        # Only pull out first-order interesting sequences
+        group = h5_seq[key]
+        if key in cardinality_set and "interesting" in group:            
+
+            interesting_idx = np.where(group['interesting'][:])[0]
+            unique = group["unique"][:]
+
+            # If a T/F invariant only choose the true option
+            if is_true_false_invariant(key):
+                interesting_idx = np.where(unique.T[0])[0]
+            
+            for idx in interesting_idx:
+                value = tuple(unique[idx].tolist())
+                candidates.append((key, idx, value))
+
+    for items in itertools.combinations(candidates, r=n):
+        unique_names = set([x[0] for x in items])
+        if len(unique_names) != n:
+            continue
+
+        yield items
+
+for item in cardinality_higher_order_compute_keys(2):
+    print item
+
+
+
+        
