@@ -5,17 +5,11 @@ import helper_functions as helper
 import h5py
 import numpy as np
 
-desc = "Builds the invariant tables"
+desc = "Builds the sequences from the invariant tables."
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('-o', '--options',
                     default="options_simple_connected.json",
                     help="option file")
-parser.add_argument('-d', '--debug',
-                    default=False,action="store_true",
-                    help="Turns off multiprocessing")
-parser.add_argument('-v', '--verbose',
-                    default=False,action="store_true",
-                    help="Prints every output")
 parser.add_argument('-f', '--force', default=False,
                     action='store_true')
 
@@ -134,8 +128,8 @@ for key in distinct_set.union(cardinality_set):
         unique = numpy_unique_rows(np.vstack(unique_per_N))
         h5_group.create_dataset("unique", data=unique)
         
-        msg = "Computing cardinality search for {} {}".format(key, unique.shape)
-        logging.info(msg)
+        msg = "Computing cardinality search for {} {}"
+        logging.info(msg.format(key, unique.shape))
 
         single_seq  = count_cardinality(key, unique)
         h5_group.create_dataset("sequences", data=single_seq)
