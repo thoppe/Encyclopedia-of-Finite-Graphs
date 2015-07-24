@@ -122,10 +122,12 @@ for key in distinct_set.union(cardinality_set):
     unique_per_N   = find_unique_items(key)
     
     if key in distinct_set:
-        msg = "Computing distinct sequence data {}".format(key)
-        logging.info(msg)
         distinct = map(lambda x:x.shape[0], unique_per_N)
         h5_group.create_dataset("distinct", data=distinct)
+
+        msg = "Computing distinct sequence data {}, {}".format(key,distinct)
+        logging.info(msg)
+
 
 
     if key in cardinality_set:
