@@ -6,6 +6,8 @@ import helper_functions as helper
 import h5py
 import numpy as np
 
+_interesting_values_required = 4
+
 desc = "Builds the sequences from the invariant tables."
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('-o', '--options',
@@ -17,7 +19,7 @@ parser.add_argument('-f', '--force', default=False,
 cargs = vars(parser.parse_args())
 
 # Start the logger
-#logging.root.setLevel(logging.INFO)
+logging.root.setLevel(logging.INFO)
 
 invariant_types = ["polynomial", "fraction",
                    "integer", "boolean", "subgraph"]
@@ -99,7 +101,7 @@ def compute_interesting_vector(sequences):
     for i,seq in enumerate(sequences):
         useq = np.unique(seq)
         useq = useq[useq > 0]
-        seq_interest[i] = useq.size >= 3
+        seq_interest[i] = useq.size >= _interesting_values_required
     return seq_interest
 
 ########################################################################
@@ -136,7 +138,7 @@ for key in distinct_set.union(cardinality_set):
         h5_group.create_dataset("interesting", data=interest_vec)
 
 ########################################################################
-# Build second-order sequences
+# Build second-order+ sequences, these look different
 
 def is_true_false_invariant(name):
     # Checks if an invariant is only True or False by it's type
@@ -175,12 +177,55 @@ def cardinality_higher_order_compute_keys(n=2):
         unique_names = set([x[0] for x in items])
         if len(unique_names) != n:
             continue
-
         yield items
 
-for item in cardinality_higher_order_compute_keys(2):
-    print item
 
 
+for N_cardinality in [2,3]:
+
+    local_seq_N = len(list(cardinality_higher_order_compute_keys(N_cardinality)))
+    UX   = np.zeros(shape=(local_seq_N,len(N_RANGE)), dtype=np.uint32)
+    IVEC = np.zeros(shape=(local_seq_N,), dtype=np.bool)
+    higher_order_sequence_names = []
+
+    for k,item in enumerate(cardinality_higher_order_compute_keys(N_cardinality)):
+
+        names, IDXS, values = zip(*item)
+        str_vals = [str(x)[1:-1].strip(',').replace(', ','_') for x in values]
+
+        conjoined_name = ["{}_IS_{}".format(name,val) for name,val in zip(names, str_vals)]
+        conjoined_name = "_AND_".join(conjoined_name)
+
+        msg = "Starting ({}/{}) sequence data for {}"
+        msg = msg.format(k,local_seq_N,conjoined_name)
+        logging.info(msg)
+
+        higher_order_sequence_names.append(conjoined_name)
+
+        conjoined_seq = []
+        for N in N_RANGE:
+            counts = np.hstack([H5[N][name][:]==x for name,x in zip(names,values)]).sum(axis=1)
+            total = (counts==N_cardinality).sum()
+            conjoined_seq.append(total)
+
+        UX[k] = conjoined_seq
+        
+    IVEC = compute_interesting_vector(UX)
+
+    msg = "Found {} interesting {}-order sequences".format(IVEC.sum(), N_cardinality)
+    logging.info(msg)
+
+    compress_args = {'compression':'gzip','compression_opts':9}
+    
+    cardinality_group = h5_seq.require_group("_higher_order_{}".format(N_cardinality))
+    cardinality_group.create_dataset("sequences",data=UX,**compress_args)
+    cardinality_group.create_dataset("interesting_idx",data=IVEC,**compress_args)
+
+    dt = h5py.special_dtype(vlen=bytes)
+    cardinality_group.create_dataset("sequence_names",dtype=dt,
+                                     data=higher_order_sequence_names,
+                                     **compress_args)
+
+    
 
         
