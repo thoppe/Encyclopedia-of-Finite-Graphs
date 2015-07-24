@@ -4,7 +4,7 @@
 
     "sequence_options" : {
         "min_N":1,
-        "max_N":10,
+        "max_N":8,
 
         "distinct_sequence_groups" : [
             "polynomial",
