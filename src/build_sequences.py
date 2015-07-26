@@ -6,7 +6,7 @@ import helper_functions as helper
 import h5py
 import numpy as np
 
-_interesting_values_required = 4
+_interesting_values_required = 3
 
 desc = "Builds the sequences from the invariant tables."
 parser = argparse.ArgumentParser(description=desc)
@@ -19,7 +19,7 @@ parser.add_argument('-f', '--force', default=False,
 cargs = vars(parser.parse_args())
 
 # Start the logger
-logging.root.setLevel(logging.INFO)
+#logging.root.setLevel(logging.INFO)
 
 invariant_types = ["polynomial", "fraction",
                    "integer", "boolean", "subgraph"]
@@ -35,7 +35,8 @@ if not os.path.exists(f_database_sequence) or cargs["force"]:
 else:
     msg = "Will not overwrite sequences information, exiting"
     logging.error(msg)
-    exit()
+    raise IOError
+
 h5_seq = h5py.File(f_database_sequence,'r+')
 
 # Determine the span of N to compute
@@ -67,32 +68,33 @@ def find_unique_items(key):
 ########################################################################
 # Count cardinality
 
-def count_cardinality(key, unique):
+def invariant_mask(key, unique):
+    # For each unique value of invariant name "key", for each N, create a T/F mask
 
-    UX = np.zeros(shape=(unique.shape[0],len(N_RANGE)),
-                  dtype=np.uint32)
-    
-    for i,N in enumerate(N_RANGE):
+    unique_n = unique.shape[0]
+    MASK = {}
+
+    for N in N_RANGE:
         dset = H5[N][key][:]
+        mask = np.zeros(shape=(unique_n,dset.shape[0]), dtype=np.bool)
         for j,val in enumerate(unique):
-            seq_x = ((dset == val).sum(axis=1) == unique.shape[1]).sum()
-            UX[j][i] = seq_x
-            
-    return UX
+            mask[j] = ((dset == val).sum(axis=1) == unique.shape[1])
+        MASK[N] = mask
+    return MASK
 
 def cardinality_compute_keys():
     # Iterator over the keys to compute cardinality sequences
     for group in options["sequence_options"]["cardinality_sequence_groups"]:
         for key in options["invariant_calculations"][group]:
             if key not in options["sequence_options"]["cardinality_ignored_invariants"]:
-                yield key
+                yield str(key)
 
 def distinct_compute_keys():
     # Iterator over the keys to compute distinct sequences
     for group in options["sequence_options"]["distinct_sequence_groups"]:
         for key in options["invariant_calculations"][group]:
             if key not in options["sequence_options"]["distinct_ignored_invariants"]:
-                yield key
+                yield str(key)
 
 ########################################################################
 # Determine which seqeuences are "interesting", at least 3 unique non zero terms
@@ -105,24 +107,99 @@ def compute_interesting_vector(sequences):
     return seq_interest
 
 ########################################################################
+# First build the sequence names for distinct and cardinality
 
-distinct_set = set(list(distinct_compute_keys()))
-cardinality_set = set(list(cardinality_compute_keys()))
+distinct_names    = list(set(distinct_compute_keys()))
+cardinality_names = list(set(cardinality_compute_keys()))
 
-for key in distinct_set.union(cardinality_set):
+compress_args = {'compression':'gzip','compression_opts':9}
+h5_string_dt  = h5py.special_dtype(vlen=bytes)
 
+group_distinct = h5_seq.require_group("distinct")
+group_distinct.create_dataset("names", dtype=h5_string_dt,
+                              data=distinct_names, **compress_args)
+
+group_cardinality = h5_seq.require_group("cardinality")
+group_cardinality.create_dataset("names", dtype=h5_string_dt,
+                                 data=cardinality_names, **compress_args)
+
+# Next build the masks and distinct sequences requested
+dset_distinct  = group_distinct.create_dataset("sequences",
+                                               dtype=np.int32,
+                                               shape=(len(distinct_names),len(N_RANGE)))
+
+group_unique  = group_cardinality.create_group("unique")
+group_mask    = group_cardinality.create_group("mask")
+
+MASKS = {}
+
+for key in set(distinct_names).union(cardinality_names):
     msg = "Starting sequence data for {}".format(key)
     logging.info(msg)
 
     h5_group = h5_seq.require_group(key)
     unique_per_N   = find_unique_items(key)
-    
-    if key in distinct_set:
-        distinct = map(lambda x:x.shape[0], unique_per_N)
-        h5_group.create_dataset("distinct", data=distinct)
 
-        msg = "Computing distinct sequence data {}, {}".format(key,distinct)
-        logging.info(msg)
+    if key in distinct_names:
+        idx = distinct_names.index(key)
+        seq = map(lambda x:x.shape[0], unique_per_N)
+        dset_distinct[idx] = seq
+    
+    if key in cardinality_names:
+        #msg = "Computing mask data {}".format(key)
+        idx = cardinality_names.index(key)
+        
+        # Save the unique values for lookup
+        unique = numpy_unique_rows(np.vstack(unique_per_N))
+        group_unique.create_dataset(key, data=unique)
+
+        # Save the masks in memory for later computation
+        MASKS[key] = {}
+
+        for N,mask in invariant_mask(key, unique).items():
+            MASKS[key][N] = mask
+
+########################################################################
+# Now build the first order sequences
+
+for key in cardinality_names:
+
+    # Compute the sequences
+    seq  = np.vstack([MASK[N].sum(axis=1) for N in N_RANGE]).T
+
+    print MASKS[key]
+    exit()
+
+    #gC = h5_seq["cardinality"]
+    #seq_group = gC.require_group("sequences")
+
+
+
+    # Sanity check
+    unique = gC["unique"][key]
+    assert(seq.shape[0] == unique.shape[0])
+
+    seq_group[key] = seq
+    
+    print key
+    print seq
+        
+
+exit()
+
+
+cardinality_group.create_dataset("sequence_names",dtype=dt,
+                                 data=higher_order_sequence_names,
+                                 **compress_args)
+
+'''
+
+    #single_seq  = count_cardinality(key, unique)
+    #h5_group.create_dataset("sequences", data=single_seq)
+
+    
+    print single_seq
+    exit()
 
     if key in cardinality_set:
         unique = numpy_unique_rows(np.vstack(unique_per_N))
@@ -136,6 +213,7 @@ for key in distinct_set.union(cardinality_set):
 
         interest_vec = compute_interesting_vector(single_seq)
         h5_group.create_dataset("interesting", data=interest_vec)
+'''
 
 ########################################################################
 # Build second-order+ sequences, these look different
