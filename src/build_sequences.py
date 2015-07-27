@@ -34,8 +34,7 @@ if not os.path.exists(f_database_sequence) or cargs["force"]:
     h5py.File(f_database_sequence,'w').close()
 else:
     msg = "Will not overwrite sequences information, exiting"
-    logging.error(msg)
-    raise IOError
+    raise IOError(msg)
 
 h5_seq = h5py.File(f_database_sequence,'r+')
 
@@ -120,16 +119,17 @@ group_distinct.create_dataset("names", dtype=h5_string_dt,
                               data=distinct_names, **compress_args)
 
 group_cardinality = h5_seq.require_group("cardinality")
-group_cardinality.create_dataset("names", dtype=h5_string_dt,
-                                 data=cardinality_names, **compress_args)
+#group_cardinality.create_dataset("names", dtype=h5_string_dt,
+#                                 data=cardinality_names, **compress_args)
 
 # Next build the masks and distinct sequences requested
 dset_distinct  = group_distinct.create_dataset("sequences",
                                                dtype=np.int32,
-                                               shape=(len(distinct_names),len(N_RANGE)))
+                                               shape=(len(distinct_names),
+                                                      len(N_RANGE)))
 
 group_unique  = group_cardinality.create_group("unique")
-group_mask    = group_cardinality.create_group("mask")
+#group_mask    = group_cardinality.create_group("mask")
 
 MASKS = {}
 
@@ -162,58 +162,46 @@ for key in set(distinct_names).union(cardinality_names):
 ########################################################################
 # Now build the first order sequences
 
-for key in cardinality_names:
+def format_sequence_name(name, val):
+    val = str(val)[1:-1].replace(',','').replace(' ','_')
+    val = val.replace('__','_').strip('_').strip()
+    return '{}_IS_{}'.format(name, val)
 
-    # Compute the sequences
-    seq  = np.vstack([MASK[N].sum(axis=1) for N in N_RANGE]).T
-
-    print MASKS[key]
-    exit()
-
-    #gC = h5_seq["cardinality"]
-    #seq_group = gC.require_group("sequences")
-
-
-
-    # Sanity check
-    unique = gC["unique"][key]
-    assert(seq.shape[0] == unique.shape[0])
-
-    seq_group[key] = seq
+def get_first_order_mask(name,val):
+    unique = group_unique[name][:]
+    idx = unique.tolist().index(val.tolist())
+    return dict(zip(N_RANGE,[MASKS[name][N][idx] for N in N_RANGE]))
     
-    print key
-    print seq
-        
+first_order_data = []
 
-exit()
+for name in cardinality_names:
+    for val in group_unique[name][:]:
+        sname = format_sequence_name(name, val)
+        first_order_data.append((sname,name, val))
 
+first_order_desc = zip(*first_order_data)[0]
 
-cardinality_group.create_dataset("sequence_names",dtype=dt,
-                                 data=higher_order_sequence_names,
-                                 **compress_args)
+group_C1 = group_cardinality.require_group("order_1")
+group_C1.create_dataset("names", dtype=h5_string_dt,
+                                 data=first_order_desc, **compress_args)
 
-'''
+UX = np.zeros(shape=(len(first_order_desc),len(N_RANGE)),
+              dtype=np.int32)
 
-    #single_seq  = count_cardinality(key, unique)
-    #h5_group.create_dataset("sequences", data=single_seq)
+for i,(_,name,val) in enumerate(first_order_data):
+    M   = get_first_order_mask(name,val)
+    seq = [M[N].sum() for N in N_RANGE]
+    UX[i] = seq
 
-    
-    print single_seq
-    exit()
+# Find out which ones are interesting
+interest_vec = compute_interesting_vector(UX)
 
-    if key in cardinality_set:
-        unique = numpy_unique_rows(np.vstack(unique_per_N))
-        h5_group.create_dataset("unique", data=unique)
-        
-        msg = "Computing cardinality search for {} {}"
-        logging.info(msg.format(key, unique.shape))
+group_C1.create_dataset("interesting", data=interest_vec)
+group_C1.create_dataset("sequences", data=UX)
 
-        single_seq  = count_cardinality(key, unique)
-        h5_group.create_dataset("sequences", data=single_seq)
+msg = "Found {} interesting first-order seqeuences".format(interest_vec.sum())
+logging.warning(msg)
 
-        interest_vec = compute_interesting_vector(single_seq)
-        h5_group.create_dataset("interesting", data=interest_vec)
-'''
 
 ########################################################################
 # Build second-order+ sequences, these look different
@@ -230,26 +218,22 @@ def is_true_false_invariant(name):
         return False
     
 
-def cardinality_higher_order_compute_keys(n=2):
+def higher_order_compute_keys(n=2):
     # Iterator over the keys to compute interesting cardinality sequences
 
     # Find potential candidates
     candidates = []
-    for key in h5_seq:        
-        # Only pull out first-order interesting sequences
-        group = h5_seq[key]
-        if key in cardinality_set and "interesting" in group:            
 
-            interesting_idx = np.where(group['interesting'][:])[0]
-            unique = group["unique"][:]
-
-            # If a T/F invariant only choose the true option
-            if is_true_false_invariant(key):
-                interesting_idx = np.where(unique.T[0])[0]
+    for i,(_,name,val) in enumerate(first_order_data):
+        
+        if interest_vec[i]:
             
-            for idx in interesting_idx:
-                value = tuple(unique[idx].tolist())
-                candidates.append((key, idx, value))
+            # If a T/F invariant only choose the true option
+            if is_true_false_invariant(name):
+                if sum(val)==0:
+                    continue
+
+            candidates.append((name,i,val))
 
     for items in itertools.combinations(candidates, r=n):
         unique_names = set([x[0] for x in items])
@@ -258,51 +242,47 @@ def cardinality_higher_order_compute_keys(n=2):
         yield items
 
 
-
 for N_cardinality in [2,3]:
 
-    local_seq_N = len(list(cardinality_higher_order_compute_keys(N_cardinality)))
+    print N_cardinality
+    local_seq_N = len(list(higher_order_compute_keys(N_cardinality)))
     UX   = np.zeros(shape=(local_seq_N,len(N_RANGE)), dtype=np.uint32)
     IVEC = np.zeros(shape=(local_seq_N,), dtype=np.bool)
+    
     higher_order_sequence_names = []
 
-    for k,item in enumerate(cardinality_higher_order_compute_keys(N_cardinality)):
-
-        names, IDXS, values = zip(*item)
-        str_vals = [str(x)[1:-1].strip(',').replace(', ','_') for x in values]
-
-        conjoined_name = ["{}_IS_{}".format(name,val) for name,val in zip(names, str_vals)]
-        conjoined_name = "_AND_".join(conjoined_name)
-
-        msg = "Starting ({}/{}) sequence data for {}"
-        msg = msg.format(k,local_seq_N,conjoined_name)
-        logging.info(msg)
-
-        higher_order_sequence_names.append(conjoined_name)
-
-        conjoined_seq = []
-        for N in N_RANGE:
-            counts = np.hstack([H5[N][name][:]==x for name,x in zip(names,values)]).sum(axis=1)
-            total = (counts==N_cardinality).sum()
-            conjoined_seq.append(total)
-
-        UX[k] = conjoined_seq
+    for k,item in enumerate(higher_order_compute_keys(N_cardinality)):
         
-    IVEC = compute_interesting_vector(UX)
+        names, IDXS, values = zip(*item)
+        snames = [format_sequence_name(name,val) for name,_,val in item]
+        sname  = '_AND_'.join(snames)
 
-    msg = "Found {} interesting {}-order sequences".format(IVEC.sum(), N_cardinality)
-    logging.info(msg)
+        if k and k%100==0:
+            msg = "Starting ({}/{}) sequence data for {}"
+            msg = msg.format(k,local_seq_N-1,sname)
+            logging.warning(msg)
 
-    compress_args = {'compression':'gzip','compression_opts':9}
-    
-    cardinality_group = h5_seq.require_group("_higher_order_{}".format(N_cardinality))
-    cardinality_group.create_dataset("sequences",data=UX,**compress_args)
-    cardinality_group.create_dataset("interesting_idx",data=IVEC,**compress_args)
+        higher_order_sequence_names.append(sname)
 
-    dt = h5py.special_dtype(vlen=bytes)
-    cardinality_group.create_dataset("sequence_names",dtype=dt,
-                                     data=higher_order_sequence_names,
-                                     **compress_args)
+        # Build mask block
+        mask_block = [get_first_order_mask(name,val) for name,_,val in item]
+
+        mul = lambda x,y: x*y
+        seq = [reduce(mul, [M[N] for M in mask_block]).sum()
+               for N in N_RANGE]
+        UX[k] = seq
+
+
+    IVEC_K = compute_interesting_vector(UX)
+    msg = "Found {} interesting {}-order sequences"
+    logging.info(msg.format(IVEC_K.sum(), N_cardinality))
+
+    group_CK = group_cardinality.require_group("order_{}".format(N_cardinality))
+    group_CK.create_dataset("names", dtype=h5_string_dt,
+                            data=higher_order_sequence_names, **compress_args)
+
+    group_CK.create_dataset("interesting", data=IVEC_K)
+    group_CK.create_dataset("sequences", data=UX)
 
     
 
