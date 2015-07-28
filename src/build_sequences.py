@@ -19,7 +19,7 @@ parser.add_argument('-f', '--force', default=False,
 cargs = vars(parser.parse_args())
 
 # Start the logger
-#logging.root.setLevel(logging.INFO)
+logging.root.setLevel(logging.INFO)
 
 invariant_types = ["polynomial", "fraction",
                    "integer", "boolean", "subgraph"]
@@ -119,8 +119,6 @@ group_distinct.create_dataset("names", dtype=h5_string_dt,
                               data=distinct_names, **compress_args)
 
 group_cardinality = h5_seq.require_group("cardinality")
-#group_cardinality.create_dataset("names", dtype=h5_string_dt,
-#                                 data=cardinality_names, **compress_args)
 
 # Next build the masks and distinct sequences requested
 dset_distinct  = group_distinct.create_dataset("sequences",
@@ -129,12 +127,11 @@ dset_distinct  = group_distinct.create_dataset("sequences",
                                                       len(N_RANGE)))
 
 group_unique  = group_cardinality.create_group("unique")
-#group_mask    = group_cardinality.create_group("mask")
 
 MASKS = {}
 
 for key in set(distinct_names).union(cardinality_names):
-    msg = "Starting sequence data for {}".format(key)
+    msg = "Computing masking data for {}".format(key)
     logging.info(msg)
 
     h5_group = h5_seq.require_group(key)
