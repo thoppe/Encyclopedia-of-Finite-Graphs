@@ -27,8 +27,13 @@ def invariants():
 
 @task
 def sequences():
-    local("python EoGF/build_sequences.py -f {second_order_flag} {third_order_flag}".format(**args))
+    local("python EoGF/build_sequences.py -f {second_order_flag} "
+          " {third_order_flag}".format(**args))
     local("python EoGF/build_sequence_db.py")
+
+@task
+def review():
+    local("python EoGF/verification/review_sequences.py")
 
 # Push/commit are helper functions for development
 @task

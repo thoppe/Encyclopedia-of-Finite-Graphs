@@ -7,17 +7,14 @@ import h5py
 import sqlite3
 import numpy as np
 
-desc = "Views the sequences for submission to OEIS."
+f_seq_info = "sequence_info.sqlite"
+
+desc = "Build a sequence database that is easily parsed. Stores in sequence_info.sqlite"
+
 parser = argparse.ArgumentParser(description=desc)
 parser.add_argument('-o', '--options',
                     default="options_simple_connected.json",
                     help="option file")
-parser.add_argument('-d', '--debug',
-                    default=False,action="store_true",
-                    help="Turns off multiprocessing")
-parser.add_argument('-v', '--verbose',
-                    default=False,action="store_true",
-                    help="Prints every output")
 parser.add_argument('-f', '--force', default=False,
                     action='store_true')
 
@@ -34,7 +31,6 @@ cargs.update(options)
 f_database_sequence = helper.get_database_sequence(cargs)
 h5 = h5py.File(f_database_sequence,'r+')
 
-f_seq_info = "verification/sequence_info.sqlite"
 conn = sqlite3.connect(f_seq_info)
 
 schema = '''
