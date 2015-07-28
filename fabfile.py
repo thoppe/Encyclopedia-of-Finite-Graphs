@@ -7,6 +7,10 @@ args["debug"]   = "-d"
 args["verbose"] = "-v"
 args["force"]   = "-f"
 
+# Don't build the third order sequences by default
+args["second_order_flag"] = ""
+args["third_order_flag"] = "-3"
+
 args["calc_exec"]       = "python EoGF/update_invariants.py"
 args["calc_generate"]   = "python EoGF/update_graphs.py"
 args["calc_invariants"] = "python EoGF/update_invariants.py"
@@ -20,6 +24,11 @@ def generate():
 @task
 def invariants():
     all_invariants(args["testing_N"])
+
+@task
+def sequences():
+    local("python EoGF/build_sequences.py -f {second_order_flag} {third_order_flag}".format(**args))
+    local("python EoGF/build_sequence_db.py")
 
 # Push/commit are helper functions for development
 @task
