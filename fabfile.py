@@ -9,28 +9,30 @@ args["force"]   = "-f"
 args["calc_exec"] = "python EoGF/update_invariants.py"
 options = " -d -v "
 
+@task
 def push():
-    # Helper function for development
+    # Helper functions for development
     local("git status")
     local("git commit -a")
     local("git push")
+
+@task
 def commit():
     test()
     push()
 
+@task
 def generate():
     cmd = "python EoGF/update_graphs.py {N} -f"
     local(cmd.format(**args))
-
+    
+@task
 def clean():
     local("rm -vf database/*{N}*".format(**args))
     local("find . -name '*.pyc' | xargs -I {} rm -v {}")
     local("find . -name '*~' | xargs -I {} rm -v {}")
 
-def nose():
-    local("nosetests-2.7 -s -v")
-
-
+@task
 def test():
     args["verbose"] = ""
     args["debug"]   = ""
@@ -42,7 +44,7 @@ def test():
     integer()
     boolean()
     subgraph()
-    nose()
+    local("nosetests-2.7 -s -v")
 
 
 cmd_invar_calc = "{calc_exec} {N} {debug} {verbose} {force} -i {name}"
