@@ -18,7 +18,7 @@ parser.add_argument('-v', '--verbose',
                     default=False,action="store_true",
                     help="Prints every output")
 parser.add_argument('-i', '--invariant_type',
-                    default="polynomial",
+                    required=True,
                     help="Invariant type to compute")
 
 parser.add_argument('-f', '--force', default=False,
@@ -48,7 +48,7 @@ elif cargs["invariant_type"] == "boolean":
 elif cargs["invariant_type"] == "subgraph":
     import invariants.subgraph as INVLIB
 elif cargs["invariant_type"] == "zeros":
-    import invariants.zeros as INVLIB
+    import invariants.zeros as INVLIB    
 else:
     msg = "Invariant type {invariant_type} not permitted yet"
     raise KeyError(msg.format(**cargs))

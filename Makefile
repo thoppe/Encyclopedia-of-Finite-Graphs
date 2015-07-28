@@ -1,6 +1,7 @@
 all:
 	echo "Makefile is only for compiling the src"
 	echo "Use fabic [fab --list]"
+	echo "Use Makefile to compile [make compile]"
 
 # Must be called first
 compile:

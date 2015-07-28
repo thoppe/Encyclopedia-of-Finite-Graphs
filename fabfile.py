@@ -1,17 +1,29 @@
 from fabric.api import *
 
+# These arguments are for testing
 args = {}
-args["N"] = 4
+args["testing_N"] = 4
 args["debug"]   = "-d"
 args["verbose"] = "-v"
 args["force"]   = "-f"
 
-args["calc_exec"] = "python EoGF/update_invariants.py"
+args["calc_exec"]       = "python EoGF/update_invariants.py"
+args["calc_generate"]   = "python EoGF/update_graphs.py"
+args["calc_invariants"] = "python EoGF/update_invariants.py"
 options = " -d -v "
 
 @task
+def generate():
+    cmd = "{calc_generate} {testing_N} -f"
+    local(cmd.format(**args))
+
+@task
+def invariants():
+    all_invariants(args["testing_N"])
+
+# Push/commit are helper functions for development
+@task
 def push():
-    # Helper functions for development
     local("git status")
     local("git commit -a")
     local("git push")
@@ -22,16 +34,41 @@ def commit():
     push()
 
 @task
-def generate():
-    cmd = "python EoGF/update_graphs.py {N} -f"
-    local(cmd.format(**args))
-    
-@task
 def clean():
-    local("rm -vf database/*{N}*".format(**args))
+    local("rm -vf database/*{testing_N}*".format(**args))
     local("find . -name '*.pyc' | xargs -I {} rm -v {}")
     local("find . -name '*~' | xargs -I {} rm -v {}")
 
+#######################################################################
+
+cmd_invar_calc = "{calc_exec} {N} {debug} {verbose} {force} -i {name}"
+def all_invariants(N):
+    polynomial(N)
+    fraction(N)
+    integer(N)
+    boolean(N)
+    subgraph(N)
+
+def polynomial(N):
+    local(cmd_invar_calc.format(N=N,name="polynomial",**args))
+
+def fraction(N):
+    local(cmd_invar_calc.format(N=N,name="fraction",**args))
+
+def integer(N):
+    local(cmd_invar_calc.format(N=N,name="integer",**args))
+
+def boolean(N):
+    local(cmd_invar_calc.format(N=N,name="boolean",**args))
+
+def subgraph(N):
+    local(cmd_invar_calc.format(N=N,name="subgraph",**args))
+
+def zeros(N):
+    local(cmd_invar_calc.format(N=N,name="zeros",**args))
+
+#######################################################################
+    
 @task
 def test():
     args["verbose"] = ""
@@ -39,33 +76,5 @@ def test():
     args["force"]   = ""
     clean()
     generate()
-    polynomial()
-    fraction()
-    integer()
-    boolean()
-    subgraph()
+    all_invariants(args["testing_N"])
     local("nosetests-2.7 -s -v")
-
-
-cmd_invar_calc = "{calc_exec} {N} {debug} {verbose} {force} -i {name}"
-
-def polynomial():
-    local(cmd_invar_calc.format(name="polynomial",**args))
-
-def fraction():
-    local(cmd_invar_calc.format(name="fraction",**args))
-
-def integer():
-    local(cmd_invar_calc.format(name="integer",**args))
-
-def boolean():
-    local(cmd_invar_calc.format(name="boolean",**args))
-
-def subgraph():
-    local(cmd_invar_calc.format(name="subgraph",**args))
-
-def zeros():
-    local(cmd_invar_calc.format(name="zeros",**args))
-
-    
-    
