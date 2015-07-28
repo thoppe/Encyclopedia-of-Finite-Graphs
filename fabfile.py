@@ -6,7 +6,7 @@ args["debug"]   = "-d"
 args["verbose"] = "-v"
 args["force"]   = "-f"
 
-args["calc_exec"] = "python src/update_invariants.py"
+args["calc_exec"] = "python EoGF/update_invariants.py"
 options = " -d -v "
 
 def push():
@@ -19,7 +19,7 @@ def commit():
     push()
 
 def generate():
-    cmd = "python src/update_graphs.py {N} -f"
+    cmd = "python EoGF/update_graphs.py {N} -f"
     local(cmd.format(**args))
 
 def clean():

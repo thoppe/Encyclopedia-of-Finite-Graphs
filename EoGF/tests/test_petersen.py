@@ -1,14 +1,14 @@
 from nose.tools import *
 from unittest import TestCase
-import src.helper_functions as helper
+import EoGF.helper_functions as helper
 
 import networkx as nx
 import numpy as np
 
-from invariants.integer import *
-from invariants.boolean import *
-from invariants.subgraph import *
-from invariants.polynomial import *
+from EoGF.invariants.integer import *
+from EoGF.invariants.boolean import *
+from EoGF.invariants.subgraph import *
+from EoGF.invariants.polynomial import *
 
 options = helper.load_options("options_simple_connected.json")
 

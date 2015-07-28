@@ -32,11 +32,11 @@ max_N = options["sequence_options"]["max_N"]
 for N in xrange(min_N, max_N+1):
     args = cargs.copy()
     args["N"] = N
-    local("python src/update_graphs.py {N} -o {options}".format(**args))
+    local("python EoGF/update_graphs.py {N} -o {options}".format(**args))
     
     for inv in invariant_types:
         args["inv"] = inv
-        cmd = "python src/update_invariants.py {N} -o {options} -i {inv}"
+        cmd = "python EoGF/update_invariants.py {N} -o {options} -i {inv}"
         local(cmd.format(**args))
 
 

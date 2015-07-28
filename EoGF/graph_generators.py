@@ -1,8 +1,8 @@
 import subprocess
 import numpy as np
 
-_nauty_geng_exec  = 'src/nauty/geng'
-_nauty_showg_exec = 'src/nauty/showg'
+_nauty_geng_exec  = 'EoGF/nauty/geng'
+_nauty_showg_exec = 'EoGF/nauty/showg'
 
 def nauty_simple_graph_itr(**args):
     ''' Creates a generator for all simple graphs using nauty '''

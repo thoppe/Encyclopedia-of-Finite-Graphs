@@ -1,7 +1,7 @@
 import logging
 import argparse
-from src.helper_functions import grab_vector, load_options, load_graph_database
-from src.invariants import convert_to_numpy
+from EoGF.helper_functions import grab_vector, load_options, load_graph_database
+from EoGF.invariants import convert_to_numpy
 import graph_tool as gt
 import numpy as np
 
@@ -18,7 +18,8 @@ parser.add_argument('--cooling_step', type=float, default=.99,
                     help="Cooling step for the sfdp_layout")
 parser.add_argument('--output', type=str, default=None,
                     help="If given, saves the image to this file")
-parser.add_argument('-i', '--invariant_query', nargs=2, action='append', required=False,
+parser.add_argument('-i', '--invariant_query', nargs=2,
+                    action='append', required=False,
                     help="Invariant to query (can be repeated)")
 cargs = vars(parser.parse_args())
 N = cargs["N"]
