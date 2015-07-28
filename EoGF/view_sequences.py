@@ -34,6 +34,10 @@ cargs.update(options)
 f_database_sequence = helper.get_database_sequence(cargs)
 h5 = h5py.File(f_database_sequence,'r+')
 
+print h5.keys()
+print "WORKING HERE!"
+exit()
+
 f_seq_info = "verification/sequence_info.sqlite"
 conn = sqlite3.connect(f_seq_info)
 

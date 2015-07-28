@@ -15,6 +15,12 @@ parser.add_argument('-o', '--options',
                     help="option file")
 parser.add_argument('-f', '--force', default=False,
                     action='store_true')
+parser.add_argument('-2', '--dont_build_second_order', default=False,
+                    help="Stops building the second-order sequences",
+                    action='store_true')
+parser.add_argument('-3', '--dont_build_third_order', default=False,
+                    help="Stops building the third-order sequences",
+                    action='store_true')
 
 cargs = vars(parser.parse_args())
 
@@ -134,14 +140,13 @@ for key in set(distinct_names).union(cardinality_names):
     msg = "Computing masking data for {}".format(key)
     logging.info(msg)
 
-    h5_group = h5_seq.require_group(key)
     unique_per_N   = find_unique_items(key)
 
     if key in distinct_names:
         idx = distinct_names.index(key)
         seq = map(lambda x:x.shape[0], unique_per_N)
         dset_distinct[idx] = seq
-    
+
     if key in cardinality_names:
         #msg = "Computing mask data {}".format(key)
         idx = cardinality_names.index(key)
@@ -201,7 +206,7 @@ logging.warning(msg)
 
 
 ########################################################################
-# Build second-order+ sequences, these look different
+# Build second-order+ sequences if requested
 
 def is_true_false_invariant(name):
     # Checks if an invariant is only True or False by it's type
@@ -239,7 +244,16 @@ def higher_order_compute_keys(n=2):
         yield items
 
 
-for N_cardinality in [2,3]:
+
+N_cardinality_order = []
+
+if not cargs["dont_build_second_order"]:
+    N_cardinality_order.append(2)
+
+if not cargs["dont_build_third_order"]:
+    N_cardinality_order.append(3)
+    
+for N_cardinality in N_cardinality_order:
 
     print N_cardinality
     local_seq_N = len(list(higher_order_compute_keys(N_cardinality)))
@@ -280,7 +294,3 @@ for N_cardinality in [2,3]:
 
     group_CK.create_dataset("interesting", data=IVEC_K)
     group_CK.create_dataset("sequences", data=UX)
-
-    
-
-        
