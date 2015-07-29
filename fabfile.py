@@ -9,7 +9,7 @@ args["force"]   = "-f"
 
 # Don't build the third order sequences by default
 args["second_order_flag"] = ""
-args["third_order_flag"] = "-3"
+args["third_order_flag"] = ""
 
 args["calc_exec"]       = "python EoGF/update_invariants.py"
 args["calc_generate"]   = "python EoGF/update_graphs.py"
