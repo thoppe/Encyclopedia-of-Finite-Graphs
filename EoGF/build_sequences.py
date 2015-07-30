@@ -6,7 +6,7 @@ import helper_functions as helper
 import h5py
 import numpy as np
 
-_interesting_values_required = 3
+_interesting_values_required = 4
 
 desc = "Builds the sequences from the invariant tables."
 parser = argparse.ArgumentParser(description=desc)
@@ -102,7 +102,7 @@ def distinct_compute_keys():
                 yield str(key)
 
 ########################################################################
-# Determine which seqeuences are "interesting", at least 3 unique non zero terms
+# Determine which seqeuences are "interesting", at least 4 unique non zero terms
 def compute_interesting_vector(sequences):
     seq_interest = np.zeros(sequences.shape[0],dtype=np.bool)
     for i,seq in enumerate(sequences):

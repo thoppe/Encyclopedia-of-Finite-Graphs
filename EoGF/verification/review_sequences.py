@@ -1,10 +1,14 @@
 import logging
+import os
 import argparse
 import json
 import sqlite3
 import requests
 import bs4
 import webbrowser
+
+# Boring sequence to ignore
+simple_seq = range(1,10)
 
 # Allow a local import to parent directory from a non-package
 from os import sys, path
@@ -52,6 +56,16 @@ invariant_name=(:invariant_name) AND
 cardinality_value=(:cardinality_value)
 '''
 
+cmd_mark_future_action = '''
+UPDATE sequence_info
+SET unprocessed_flag=2
+WHERE
+graph_types=(:graph_types) AND
+invariant_type=(:invariant_type) AND
+invariant_name=(:invariant_name) AND
+cardinality_value=(:cardinality_value)
+'''
+
 cmd_save = '''
 UPDATE sequence_info
 SET
@@ -65,7 +79,9 @@ cardinality_value=(:cardinality_value)
 '''
 
 
-def query_OEIS(sequence):
+def query_OEIS(item):
+    sequence = item['sequence']
+    
     url = "http://oeis.org/search"
     params = {"q":sequence,"fmt":""}
     r = requests.get(url,params=params)
@@ -78,7 +94,7 @@ def query_OEIS(sequence):
         if link["href"][:2] == "/A" and link.text.strip()[0] == "A":
             OEIS_ref = link.text.strip()
 
-    print "Press ENTER for yes, i for ignore, s for skip."
+    print "Press ENTER for yes, i for ignore, s for skip, m to mark for future action."
     msg = "Tag sequence found in OEIS as [{}]?\n".format(OEIS_ref)
     response = raw_input(msg).lower().strip()
 
@@ -87,25 +103,44 @@ def query_OEIS(sequence):
 
     return response
 
+def review_task(query_args):
+    cursor = conn.execute(cmd_select_new,query_args)
+
+    for data in cursor:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        
+        item = dict(zip(columns,data))
+
+        # Sequence is so simple we can safely mark ignore:
+        seq = eval(item["sequence"])
+        if set(simple_seq).issubset(seq):
+            q = "i"
+        else:
+            print json.dumps(item,indent=2)
+            q = query_OEIS(item)
+        
+        if q == "i":
+            print "Marking ignored"
+            conn.execute(cmd_ignore, item)
+        if q == "m":
+            print "Marking as interesting for future action"
+            conn.execute(cmd_mark_future_action, item)
+        elif q == "s":
+            print "Skipping sequence"
+        elif not q and item["OEIS_ref"]:
+            print "SAVE"
+            conn.execute(cmd_save, item)
+        else:
+            print "Invalid option, skipping anyways!"
+
+        conn.commit()
+
 
 query_args = cargs.copy()
 query_args["invariant_type"] = "distinct"
-cursor = conn.execute(cmd_select_new,query_args)
+review_task(query_args)
 
-for data in cursor:
-    item = dict(zip(columns,data))
-    print json.dumps(item,indent=2)
-    q = query_OEIS(item["sequence"]) 
-    if q == "i":
-        print "Marking ignored"
-        conn.execute(cmd_ignore, item)
-    elif q == "s":
-        print "Skipping sequence"
-    elif not q and item["OEIS_ref"]:
-        print "SAVE"
-        conn.execute(cmd_save, item)
-    else:
-        print "Invalid option, skipping anyways!"
+query_args["invariant_type"] = "order_1"
+review_task(query_args)
 
-    conn.commit()
 
