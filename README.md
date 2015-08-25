@@ -7,7 +7,7 @@ _Encyclopedia of Finite Graphs code_
 _Simple Connected Graph Invariant database_
 
 [![1408.3644](templates/arXiv_badge.png)](http://arxiv-web3.library.cornell.edu/abs/1408.3644)
-_Integer sequence discovery from small graphs_
+_Integer sequence discovery from small graphs_, also published in August 2015 journal of [Discrete Applied Mathematics, ](http://dx.doi.org/10.1016/j.dam.2015.07.017).
 
 This project has three major aims, 
 
