@@ -4,10 +4,10 @@ Encyclopedia of Finite Graphs
 [![1408.3644](templates/arXiv_badge.png)](http://arxiv-web3.library.cornell.edu/abs/1408.3644)
 _Integer sequence discovery from small graphs_, also published in the August 2015 journal of [Discrete Applied Mathematics](http://dx.doi.org/10.1016/j.dam.2015.07.017).
 
-[![zenodo.11304.png](https://zenodo.org/badge/doi/10.5281/zenodo.11304.png)](http://dx.doi.org/10.5281/zenodo.11304)
+[![DOI](https://zenodo.org/badge/16846194.svg)](https://zenodo.org/badge/latestdoi/16846194)
 _Encyclopedia of Finite Graphs code_
 
-[![zenodo.11280.png](https://zenodo.org/badge/doi/10.5281/zenodo.11280.png)](http://dx.doi.org/10.5281/zenodo.11280)
+[![DOI](https://zenodo.org/badge/22918121.svg)](https://zenodo.org/badge/latestdoi/22918121)
 _Simple Connected Graph Invariant database_
 
 This project has three major aims, 
