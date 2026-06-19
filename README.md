@@ -1,7 +1,7 @@
 Encyclopedia of Finite Graphs
 =============================
 
-[![1408.3644](templates/arXiv_badge.png)](http://arxiv-web3.library.cornell.edu/abs/1408.3644)
+[![1408.3644](templates/arXiv_badge.png)](https://arxiv.org/abs/1408.3644)
 _Integer sequence discovery from small graphs_, also published in the August 2015 journal of [Discrete Applied Mathematics](http://dx.doi.org/10.1016/j.dam.2015.07.017).
 
 [![DOI](https://zenodo.org/badge/16846194.svg)](https://zenodo.org/badge/latestdoi/16846194)
@@ -24,11 +24,11 @@ This project has three major aims,
 The Encyclopedia calls upon many external libraries to generate the data.
 To fully repopulate the database, it requires 
 [`numpy`](http://www.numpy.org/),
-[`networkx`](https://networkx.github.io/),
-[`graph-tool`](http://graph-tool.skewed.de/),
+[`networkx`](https://networkx.org/documentation/stable/),
+[`graph-tool`](https://graph-tool.skewed.de/),
 [`sympy`](http://sympy.org/en/index.html),
-[`pulp`](http://code.google.com/p/pulp-or/) and,
-[`nauty`](http://cs.anu.edu.au/~bdm/nauty/).
+[`pulp`](https://coin-or.github.io/pulp/) and,
+[`nauty`](https://pallini.di.uniroma1.it/).
 As an alternative, there is a standalone version of of the simple connected graph database for [download](http://dx.doi.org/10.5281/zenodo.11203). 
 
 ## Integer Sequences Discovered
